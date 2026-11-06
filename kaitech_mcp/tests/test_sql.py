@@ -1,5 +1,8 @@
+from unittest.mock import patch
+
 from odoo.exceptions import ValidationError
 
+from .. import sql, tools
 from .common import EndpointCase, new_key, new_user, set_setting
 
 SQL_TOOLS = ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update', 'sql_delete']
@@ -117,7 +120,7 @@ class TestSql(EndpointCase):
             self.assertIn('where is required', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
                                                       'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         with self.shared_env() as env:
             env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Padang'")
             self.assertEqual(env.cr.fetchone()[0], 0)
@@ -128,6 +131,62 @@ class TestSql(EndpointCase):
         with self.shared_env() as env:
             env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Padang'")
             self.assertEqual(set(row[0] for row in env.cr.fetchall()), set([self.user.id]))
+
+    def test_over_limit_writes_are_refused_before_touching_a_row(self):
+        with self.shared_env() as env:
+            set_setting(env, 'delete_enabled', 'True')
+            env['kaitech.mcp.key'].browse(self.key_id).sql_table_ids.filtered(
+                lambda row: row.table_name == 'res_partner').write({'can_delete': True})
+            env.cr.execute("""
+                CREATE SEQUENCE mcp_test_touched;
+                CREATE FUNCTION mcp_test_touch() RETURNS trigger LANGUAGE plpgsql AS
+                    $$ BEGIN PERFORM nextval('mcp_test_touched'); RETURN COALESCE(NEW, OLD); END $$;
+                CREATE TRIGGER mcp_test_touch BEFORE UPDATE OR DELETE ON res_partner
+                    FOR EACH ROW EXECUTE FUNCTION mcp_test_touch();""")
+        for tool, arguments in (('sql_update', {'values': {'city': 'Padang'}}), ('sql_update', {'values': {'city': 'Padang'}, 'dry_run': True}),
+                                ('sql_delete', {}), ('sql_delete', {'dry_run': True})):
+            result = self.call(self.token, tool, dict(arguments, table='res_partner', where=[['city', '=', 'Medan']]))
+            self.assertIn('Nothing was changed', result['structuredContent']['error'], (tool, arguments))
+        with self.shared_env() as env:
+            env.cr.execute("SELECT is_called FROM mcp_test_touched")
+            self.assertFalse(env.cr.fetchone()[0])
+
+    def test_audit_columns_are_never_written_by_the_caller(self):
+        forged = (('create_uid', 1), ('write_uid', 1), ('create_date', '2001-01-01 00:00:00'),
+                  ('write_date', '2001-01-01 00:00:00'))
+        for column, value in forged:
+            result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [{'name': 'SQL Forged', column: value}]})
+            self.assertIn('filled in by MCP', result['structuredContent']['error'], column)
+            result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Ambon', column: value},
+                                                          'where': [['id', '=', self.partners[0].id]]})
+            self.assertIn('filled in by MCP', result['structuredContent']['error'], column)
+        with self.shared_env() as env:
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE name = 'SQL Forged' OR city = 'Ambon' "
+                           "OR create_date < '2002-01-01' OR write_date < '2002-01-01'")
+            self.assertEqual(env.cr.fetchone()[0], 0)
+
+    def test_time_limit_applies_to_sql_tools_only(self):
+        with self.shared_env() as env:
+            set_setting(env, 'sql_statement_timeout_ms', '100')
+            _key, token = new_key(env, self.user, {'res.partner': {'read'}}, tables={'res_partner': {'select'}})
+        count_records = tools._count_records
+
+        def slow_count(env, grant, arguments):
+            env.cr.execute("SELECT pg_sleep(0.3)")
+            return count_records(env, grant, arguments)
+
+        select = sql.Run.select
+
+        def slow_select(run, arguments):
+            run.cr.execute("SELECT pg_sleep(0.3)")
+            return select(run, arguments)
+
+        with patch.object(tools, '_count_records', slow_count):
+            result = self.call(token, 'count_records', {'model': 'res.partner'})
+        self.assertFalse(result['isError'], result)
+        with patch.object(sql.Run, 'select', slow_select):
+            result = self.call(token, 'sql_select', {'table': 'res_partner', 'columns': ['id'], 'limit': 1})
+        self.assertIn('timeout', result['structuredContent']['error'])
 
     def statement(self):
         with self.shared_env() as env:
@@ -156,7 +215,7 @@ class TestSql(EndpointCase):
             victim = env['res.partner'].create({'name': 'SQL Victim'})
         self.assertIn('sql_delete', self.tool_names(self.token))
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['id', '=', victim.id]]})
         self.assertEqual(result['structuredContent']['keys'], [victim.id])
         self.assertEqual(self.statement()['statement'], 'DELETE FROM "res_partner" WHERE "id" = %s RETURNING "id"')

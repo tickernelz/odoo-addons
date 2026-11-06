@@ -47,6 +47,15 @@ class TestEndpoint(EndpointCase):
             self.assertEqual(status, 400, body)
             self.assertIn(answer['error']['code'], (protocol.PARSE_ERROR, protocol.INVALID_REQUEST))
 
+    def test_other_methods_get_one_answer_whatever_the_database(self):
+        answers = set()
+        for method in ('GET', 'PUT', 'DELETE', 'OPTIONS'):
+            for path in ('/mcp/%s' % self.db, '/mcp/no_such_db_zz', '/mcp/postgres', '/mcp/'):
+                response = self.client.open(path, method=method)
+                self.assertEqual(response.status_code, 405, (method, path))
+                answers.add((response.data, response.headers.get('Allow')))
+        self.assertEqual(len(answers), 1)
+
     def test_origin_behind_a_reverse_proxy(self):
         proxy_mode = config['proxy_mode']
         config['proxy_mode'] = True

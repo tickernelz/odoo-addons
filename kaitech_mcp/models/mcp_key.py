@@ -135,6 +135,8 @@ class McpKey(models.Model):
     @api.constrains('user_id', 'allow_sql')
     def _check_user(self):
         admin = self.env.ref('base.user_admin', raise_if_not_found=False)
+        creator = self.env.user
+        bounded = self.env.uid != SUPERUSER_ID and not creator._is_system()
         for key in self:
             if key.user_id.id == SUPERUSER_ID or (admin and key.user_id == admin):
                 raise ValidationError(self.env._(
@@ -142,6 +144,9 @@ class McpKey(models.Model):
                     "Create a dedicated user for this client with only the groups it needs."))
             if key.user_id.share:
                 raise ValidationError(self.env._("An MCP key must act as an internal user, not a portal or public user."))
+            if bounded and key.user_id.sudo().all_group_ids - creator.sudo().all_group_ids:
+                raise ValidationError(self.env._(
+                    "An MCP key can only act as a user whose access groups you hold yourself."))
             if key.allow_sql and self.env.ref('base.group_system') in key.user_id.sudo().all_group_ids:
                 raise ValidationError(self.env._(
                     "A key with SQL cannot act as a Settings administrator."))

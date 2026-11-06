@@ -15,7 +15,7 @@ class TestKeys(common.TransactionCase):
         super().setUp()
         self.user = new_user(self.env, 'mcp_key_user')
         self.manager = new_user(self.env, 'mcp_key_manager',
-                                groups=('base.group_user', 'kaitech_mcp.group_mcp_manager'))
+                                groups=('base.group_user', 'base.group_partner_manager', 'kaitech_mcp.group_mcp_manager'))
 
     def test_token_is_shown_once_and_stored_as_a_digest(self):
         key, token = new_key(self.env, self.user, {'res.partner': {'read'}})
@@ -115,6 +115,22 @@ class TestKeys(common.TransactionCase):
         wizard = self.env['kaitech.mcp.key.wizard'].create({'name': 'Reader', 'user_id': reader.id, 'step': 'models'})
         wizard.write({'line_ids': [(0, 0, {'model_id': partner_model.id, 'can_read': True, 'can_create': True})]})
         self.assertIn('Create', wizard.line_ids.access_warning)
+
+    def test_managers_hand_out_keys_only_within_their_own_groups(self):
+        stronger = new_user(self.env, 'mcp_key_stronger', groups=('base.group_user', 'base.group_erp_manager'))
+        as_manager = self.env['kaitech.mcp.key'].with_user(self.manager.id)
+        key = as_manager.create({'name': 'Within', 'user_id': self.user.id})
+        with self.assertRaisesRegex(ValidationError, 'access groups you hold'):
+            as_manager.create({'name': 'Stronger', 'user_id': stronger.id})
+        with self.assertRaisesRegex(ValidationError, 'access groups you hold'):
+            key.write({'user_id': stronger.id})
+        wizard = self.env['kaitech.mcp.key.wizard'].with_user(self.manager.id).create({
+            'name': 'Stronger', 'user_id': stronger.id})
+        with self.assertRaisesRegex(ValidationError, 'access groups you hold'):
+            wizard.action_next()
+        settings_admin = new_user(self.env, 'mcp_key_settings_admin',
+                                  groups=('base.group_system', 'kaitech_mcp.group_mcp_manager'))
+        self.env['kaitech.mcp.key'].with_user(settings_admin.id).create({'name': 'Any', 'user_id': stronger.id})
 
     def test_only_managers_manage_keys(self):
         clerk = new_user(self.env, 'mcp_clerk', groups=('base.group_user',))

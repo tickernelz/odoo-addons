@@ -154,6 +154,12 @@ msgstr ""
 #. module: kaitech_mcp
 #. odoo-python
 #: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "An MCP key can only act as a user whose access groups you hold yourself."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
 msgid "An MCP key must act as an internal user, not a portal or public user."
 msgstr ""
 

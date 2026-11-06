@@ -135,11 +135,13 @@ def _bearer(request):
 
 
 def _answer(request):
-    db = database_of(request.path)
-    if db is None or not database_available(db, request):
+    if not server_wide():
         return _not_found()
     if request.method != 'POST':
         return _json(405, protocol.error(None, protocol.INVALID_REQUEST, "Only POST is served here."), {'Allow': 'POST'})
+    db = database_of(request.path)
+    if db is None or not database_available(db, request):
+        return _not_found()
     if _foreign_origin(request):
         return _json(403, protocol.error(None, protocol.REFUSED_HERE, FOREIGN_ORIGIN))
     body = _body(request)
@@ -366,7 +368,7 @@ class Exchange(object):
                 grant = exchange._grant(self.cr, key)
                 if grant.sql_open and env.ref('base.group_system') in env.user.sudo().all_group_ids:
                     grant.sql_open = False
-                if grant.sql_open:
+                if grant.sql_open and exchange.tool in tools.SQL_METHODS:
                     timeout = int(grant.settings['sql_statement_timeout_ms']) or grants.DEFAULTS['sql_statement_timeout_ms']
                     self.cr.execute("SET LOCAL statement_timeout = %s", (max(100, timeout),))
                 return env, grant
