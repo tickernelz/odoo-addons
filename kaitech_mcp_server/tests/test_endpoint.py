@@ -152,3 +152,93 @@ class TestEndpoint(EndpointCase):
             'model': 'res.partner.category', 'values': {'name': 'MCP Two'}}}, token=self.token)
         self.assertEqual(status, 429)
         self.assertFalse(self.call(self.token, 'count_records', {'model': 'res.partner'})['isError'])
+
+
+KEY_HEADERS = ('Authorization', 'X-API-Key', 'X-Auth-Token')
+
+
+def carry(header, token):
+    return {header: 'Bearer %s' % token if header == 'Authorization' else token}
+
+
+class TestKeyHeaders(EndpointCase):
+
+    def setUp(self):
+        super(TestKeyHeaders, self).setUp()
+        with self.shared_env() as env:
+            self.user = new_user(env, 'mcp_header_user')
+            key, self.token = new_key(env, self.user, {'res.partner': {'read'}})
+            self.key_id = key.id
+        self.wrong = self.token[:-2] + 'xx'
+
+    def listing(self, headers=None, path=None):
+        return self.post({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'params': {}},
+                         headers=headers or {}, path=path)
+
+    def test_one_key_opens_the_door_through_each_header(self):
+        spellings = [
+            ('Authorization', carry('Authorization', self.token)),
+            ('X-API-Key', {'X-API-Key': self.token}),
+            ('X-Auth-Token', {'X-Auth-Token': self.token}),
+            ('x-api-key lower case name', {'x-api-key': self.token}),
+            ('X-API-Key with Bearer', {'X-API-Key': 'Bearer %s' % self.token}),
+            ('X-Auth-Token with bearer', {'X-Auth-Token': 'bearer %s' % self.token}),
+            ('X-API-Key with spaces', {'X-API-Key': '  %s  ' % self.token}),
+        ]
+        for label, headers in spellings:
+            status, body, _headers = self.listing(headers)
+            self.assertEqual(status, 200, label)
+            self.assertTrue(body['result']['tools'], label)
+        for header in KEY_HEADERS:
+            status, body, _headers = self.modern('tools/call', {'name': 'count_records', 'arguments': {
+                'model': 'res.partner'}}, headers=carry(header, self.token))
+            self.assertEqual(status, 200, header)
+            call = self.last_call(self.key_id)
+            self.assertEqual((call['tool'], call['result']), ('count_records', 'ok'), header)
+
+    def test_first_header_with_a_value_decides(self):
+        good, bad = self.token, self.wrong
+        cases = [
+            ('Authorization wins over wrong x headers',
+             {'Authorization': 'Bearer %s' % good, 'X-API-Key': bad, 'X-Auth-Token': bad}, 200),
+            ('wrong Authorization is not rescued by a good x header',
+             {'Authorization': 'Bearer %s' % bad, 'X-API-Key': good, 'X-Auth-Token': good}, 401),
+            ('wrong X-API-Key is not rescued by X-Auth-Token', {'X-API-Key': bad, 'X-Auth-Token': good}, 401),
+            ('X-API-Key wins over wrong X-Auth-Token', {'X-API-Key': good, 'X-Auth-Token': bad}, 200),
+            ('Basic Authorization holds no key', {'Authorization': 'Basic dXNlcjpwYXNz', 'X-API-Key': good}, 200),
+            ('empty Bearer holds no key', {'Authorization': 'Bearer ', 'X-API-Key': good}, 200),
+            ('empty X-API-Key holds no key', {'X-API-Key': '', 'X-Auth-Token': good}, 200),
+        ]
+        for label, headers, expected in cases:
+            self.assertEqual(self.listing(headers)[0], expected, label)
+
+    def test_refused_keys_stay_refused_through_every_header(self):
+        with self.shared_env() as env:
+            revoked, revoked_token = new_key(env, self.user, {'res.partner': {'read'}})
+            revoked.action_revoke()
+            _expired, expired_token = new_key(env, self.user, {'res.partner': {'read'}},
+                                              expires_at='2001-01-01 00:00:00')
+            root, root_token = new_key(env, self.user, {'res.partner': {'read'}})
+            env.cr.execute("UPDATE kaitech_mcp_key SET user_id = %s WHERE id = %s", (odoo.SUPERUSER_ID, root.id))
+        answers = set()
+        refused = (self.wrong, 'nope', 'o10mcp_short', revoked_token, expired_token, root_token)
+        for header in KEY_HEADERS:
+            for token in refused:
+                status, body, headers = self.listing(carry(header, token))
+                self.assertEqual(status, 401, header)
+                answers.add((headers['WWW-Authenticate'], body['error']['code'], body['error']['message']))
+            self.assertEqual(self.last_call(revoked.id)['reason'], 'revoked', header)
+        status, body, headers = self.listing()
+        answers.add((headers['WWW-Authenticate'], body['error']['code'], body['error']['message']))
+        self.assertEqual(status, 401)
+        self.assertEqual(answers, set([('Bearer realm="mcp"', protocol.REFUSED_HERE, endpoint.NO_KEY)]))
+        self.assertEqual(self.last_call(root.id)['reason'], 'superuser')
+
+    def test_a_key_in_the_query_string_or_the_body_is_not_a_key(self):
+        for name in ('access_token', 'api_key', 'x-api-key', 'key', 'token', 'authorization'):
+            status, _body, _headers = self.listing(path='/mcp/%s?%s=%s' % (self.db, name, self.token))
+            self.assertEqual(status, 401, name)
+        body = {'jsonrpc': '2.0', 'id': 1, 'method': 'tools/list', 'x-api-key': self.token,
+                'params': {'api_key': self.token, 'access_token': self.token, 'x-api-key': self.token}}
+        self.assertEqual(self.post(body)[0], 401)
+        self.assertEqual(self.post(body, headers={'X-API-Key': self.token})[0], 200)

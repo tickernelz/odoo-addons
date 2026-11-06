@@ -253,5 +253,10 @@
  "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group.": "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan.",
  "Only administrators can read or change the MCP settings.": "Hanya administrator yang bisa membaca atau mengubah pengaturan MCP.",
  "You cannot create a key for %s: that user has groups you do not have (%s). Ask an administrator, or choose a user with fewer rights.": "Anda tidak bisa membuat kunci untuk %s: user itu punya grup yang tidak Anda miliki (%s). Minta administrator, atau pilih user dengan hak lebih sedikit.",
- "Only MCP managers can manage MCP keys.": "Hanya manajer MCP yang bisa mengelola kunci MCP."
+ "Only MCP managers can manage MCP keys.": "Hanya manajer MCP yang bisa mengelola kunci MCP.",
+ "Claude (Add custom connector)": "Claude (Add custom connector)",
+ "In Claude open Settings, Connectors, Add custom connector, and paste the Endpoint above as the URL.": "Di Claude buka Settings, Connectors, Add custom connector, lalu tempel Endpoint di atas sebagai URL.",
+ "Under Request headers choose x-api-key and paste the Key above as its value. Claude sends it exactly as typed, so no Bearer prefix is needed.": "Di Request headers pilih x-api-key dan tempel Key di atas sebagai nilainya. Claude mengirimnya persis seperti yang diketik, jadi awalan Bearer tidak diperlukan.",
+ "Leave the sign-in choice as Claude offers it: the key in the header is what signs in. Claude does not allow an Authorization header together with OAuth, which is why the key goes in x-api-key.": "Biarkan pilihan masuk seperti yang ditawarkan Claude: kunci di header itulah yang membuat Anda masuk. Claude tidak mengizinkan header Authorization bersama OAuth, itu sebabnya kunci dimasukkan ke x-api-key.",
+ "The name x-auth-token works the same way.": "Nama x-auth-token bekerja dengan cara yang sama."
 }

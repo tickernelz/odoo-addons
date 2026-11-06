@@ -113,9 +113,22 @@ def _body(request):
     return data
 
 
-def _bearer(request):
-    scheme, _space, token = (request.headers.get('Authorization') or '').partition(' ')
+def _bearer(value):
+    scheme, _space, token = (value or '').strip().partition(' ')
     return token.strip() if scheme.lower() == 'bearer' else ''
+
+
+def _plain_or_bearer(value):
+    value = (value or '').strip()
+    return _bearer(value) or value
+
+
+def presented_key(request):
+    """The first of Authorization (Bearer), X-API-Key, X-Auth-Token that holds a key; never the query string or body."""
+    headers = request.headers
+    return (_bearer(headers.get('Authorization'))
+            or _plain_or_bearer(headers.get('X-API-Key'))
+            or _plain_or_bearer(headers.get('X-Auth-Token')))
 
 
 def _answer(request):
@@ -195,7 +208,7 @@ class Exchange(object):
         return self._error(protocol.REFUSED_HERE, NO_KEY, status=401, headers={'WWW-Authenticate': 'Bearer realm="mcp"'})
 
     def _authenticate(self):
-        token = _bearer(self.request)
+        token = presented_key(self.request)
         index = keys.index_of(token)
         if not index:
             return None, 'missing'
