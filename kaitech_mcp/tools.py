@@ -43,6 +43,7 @@ DEFINITIONS = (
             'query': {'type': 'string', 'description': 'Filter on technical or display name.'},
             'all': {'type': 'boolean', 'default': False,
                     'description': "Every model of the database, not only this key's (needs Explore code)."},
+            'field': {'type': 'string', 'description': 'With all: only models that have this field, with its type.'},
             'limit': {'type': 'integer', 'minimum': 1, 'maximum': 100, 'default': 50},
             'offset': _PAGE,
         }, 'additionalProperties': False},
@@ -474,10 +475,13 @@ def _list_models(env, grant, arguments):
         raise ToolArgumentError("query must be a string.")
     limit = _integer(arguments, 'limit', 50, 1, 100)
     offset = _integer(arguments, 'offset', 0, 0, None)
+    field = _text(arguments, 'field')
     if _flag(arguments, 'all'):
         if not grant.explore:
             raise ToolRefused("Listing every model needs a key with Explore code.")
-        return _all_models(env, query, limit, offset)
+        return _all_models(env, query, limit, offset, field)
+    if field:
+        raise ToolArgumentError("field works only with all: true.")
     access = env['ir.model.access']
     found = []
     labels = dict((rec.model, rec.name) for rec in env['ir.model'].sudo().search([('model', 'in', list(grant.rows))]))
@@ -497,7 +501,7 @@ def _list_models(env, grant, arguments):
                    count=len(page))
 
 
-def _all_models(env, query, limit, offset):
+def _all_models(env, query, limit, offset, field=None):
     needle = query.lower()
     rows = []
     for name in sorted(env.registry):
@@ -505,10 +509,18 @@ def _all_models(env, query, limit, offset):
         label = model._description or name
         if needle and needle not in name.lower() and needle not in label.lower():
             continue
-        rows.append([name, label, type(model)._original_module, explore.kind_of(model)])
+        row = [name, label, type(model)._original_module, explore.kind_of(model)]
+        if field:
+            found = model._fields.get(field)
+            if found is None:
+                continue
+            comodel = getattr(found, 'comodel_name', None)
+            row.append('%s(%s)' % (found.type, comodel) if comodel else found.type)
+        rows.append(row)
     page = rows[offset:offset + limit]
     more = len(rows) > offset + limit
-    return Outcome({'columns': ['model', 'description', 'module', 'kind'], 'models': page, 'returned': len(page),
+    columns = ['model', 'description', 'module', 'kind'] + (['field'] if field else [])
+    return Outcome({'columns': columns, 'models': page, 'returned': len(page),
                     'total': len(rows), 'has_more': more, 'next_offset': offset + limit if more else None},
                    count=len(page))
 
@@ -730,7 +742,7 @@ def _call_method(env, grant, arguments):
             raise ToolArgumentError("Records not found on %s: %s" % (model._name, ', '.join(str(item) for item in missing)))
     if context:
         records = records.with_context(**context)
-    watched = grant.default_read_fields(model) if ids else []
+    watched = [name for name in grant.default_read_fields(model) if model._fields[name].type != 'many2many'] if ids else []
     before = _snapshot(records, watched)
     cursor = env.cr
     if dry_run:

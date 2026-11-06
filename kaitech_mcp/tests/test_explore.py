@@ -124,6 +124,13 @@ class TestExplore(EndpointCase):
         self.assertTrue(any(row.startswith('base.view_partner_form -> ir.ui.view,') for row in xmlids['xmlids']))
         models = self.explore('list_models', {'all': True, 'query': 'res.partner.category'})
         self.assertEqual(models['models'][0][:3], ['res.partner.category', 'Partner Tags', 'base'])
+        with self.shared_env() as env:
+            having = sorted(name for name in env.registry if 'country_id' in env.registry[name]._fields)
+        found = self.explore('list_models', {'all': True, 'field': 'country_id', 'limit': 100})
+        self.assertEqual([row[0] for row in found['models']], having[:100])
+        self.assertEqual(found['total'], len(having))
+        self.assertTrue(all(row[4] == 'many2one(res.country)' for row in found['models'] if row[0] == 'res.partner'))
+        self.assertIn('only with all', self.refused('list_models', {'field': 'country_id'}))
 
     def test_the_index_follows_the_registry_and_is_audited(self):
         with self.shared_env() as env:

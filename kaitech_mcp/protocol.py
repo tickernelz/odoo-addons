@@ -38,8 +38,9 @@ INSTRUCTIONS = (
     "(tools missing from tools/list are not allowed). To understand code, go from cheap to deep: "
     "describe_model (fields with their compute methods, modules, public methods), then describe_method or "
     "search_methods, then get_method_source; search_code and read_source for anything else; "
-    "describe_module, list_actions and get_view for what users see. Data: list_models, search_records, "
-    "read_records. Changes: create_record, update_records, or call_method with dry_run first. "
+    "list_models with all and field finds every model having a field; describe_module, list_actions and "
+    "get_view show what users see. Data: search_records, read_records. Changes: create_record, "
+    "update_records, or call_method with dry_run first. "
     "Odoo errors come back as results with isError true; read them and adjust."
 )
 OVERVIEW_RESOURCE = {'uri': 'odoo://overview', 'name': 'overview', 'title': 'Database map',
