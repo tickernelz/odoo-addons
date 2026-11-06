@@ -1,11 +1,16 @@
-"""The eight MCP tools: definitions shown in tools/list and their implementations."""
+"""The MCP tools: definitions shown in tools/list and their implementations."""
+import datetime
 import decimal
 import json
 
-from . import sql
-from .grants import DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids
+from odoo.models import BaseModel
 
-WRITE_TOOLS = ('create_record', 'update_records', 'delete_records', 'sql_insert', 'sql_update', 'sql_delete')
+from . import explore, sql
+from .grants import DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, ToolRefused, check_ids
+
+WRITE_TOOLS = ('create_record', 'update_records', 'delete_records', 'sql_insert', 'sql_update', 'sql_delete',
+               'call_method')
+_READ_ONLY = {'readOnlyHint': True, 'openWorldHint': False}
 
 _MODEL = {'type': 'string', 'description': 'Technical model name, for example res.partner.'}
 _FIELDS = {'type': 'array', 'items': {'type': 'string'},
@@ -22,6 +27,8 @@ _WHERE = {'type': 'array',
                          "=like, =ilike (as given). Values are bound parameters; = null means IS NULL."}
 _DRY_RUN = {'type': 'boolean', 'default': False,
             'description': 'Run the statement, report the rows it would change, and undo it.'}
+_METHOD = {'type': 'string', 'description': 'Method name, for example action_confirm or _compute_amounts.'}
+_PAGE = {'type': 'integer', 'minimum': 0, 'default': 0}
 _SQL_NOTE = (' SQL bypasses Odoo access rights, record rules, constraints, computed fields and tracking; '
              'prefer the record tools when they can do the job.')
 
@@ -34,7 +41,10 @@ DEFINITIONS = (
                        '(both the key permission and the Odoo access rights of the user behind the key).',
         'inputSchema': {'type': 'object', 'properties': {
             'query': {'type': 'string', 'description': 'Filter on technical or display name.'},
+            'all': {'type': 'boolean', 'default': False,
+                    'description': "Every model of the database, not only this key's (needs Explore code)."},
             'limit': {'type': 'integer', 'minimum': 1, 'maximum': 100, 'default': 50},
+            'offset': _PAGE,
         }, 'additionalProperties': False},
         'annotations': {'readOnlyHint': True, 'openWorldHint': False},
     },
@@ -205,6 +215,172 @@ DEFINITIONS = (
         'annotations': {'readOnlyHint': False, 'destructiveHint': True, 'idempotentHint': True, 'openWorldHint': False},
     },
 )
+EXPLORE_DEFINITIONS = (
+    {
+        'name': 'describe_model',
+        'title': 'Describe a model',
+        'action': 'explore',
+        'description': 'One call to understand a model: each field as one line (type, label, compute method with '
+                       'its depends, related, selection keys, defining modules), defining and extending modules, '
+                       'parent models, public methods, and what this key and its user may do.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL,
+            'fields': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Only these fields.'},
+            'query': {'type': 'string', 'description': 'Keep fields and methods whose name contains this.'},
+        }, 'required': ['model'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'search_methods',
+        'title': 'Search methods',
+        'action': 'explore',
+        'description': 'Find methods by name, across all models or in one model (inherited ones included). '
+                       'Private methods such as _compute_amount are included.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'query': {'type': 'string', 'description': 'Words the method name contains, for example confirm.'},
+            'model': _MODEL,
+            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 50},
+            'offset': _PAGE,
+        }, 'required': ['query'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'describe_method',
+        'title': 'Describe a method',
+        'action': 'explore',
+        'description': 'Signature, decorators, docstring, the fields it computes, and every override in MRO order '
+                       '(module, file:line, calls super) of one method.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL, 'method': _METHOD,
+        }, 'required': ['model', 'method'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'get_method_source',
+        'title': 'Method source',
+        'action': 'explore',
+        'description': 'Source code of a method and of every override, most derived first, with file and lines.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL, 'method': _METHOD,
+            'module': {'type': 'string', 'description': 'Only the definition in this module.'},
+            'max_lines': {'type': 'integer', 'minimum': 1, 'maximum': 1000, 'default': 300},
+        }, 'required': ['model', 'method'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'search_code',
+        'title': 'Search code',
+        'action': 'explore',
+        'description': 'Search the code of the installed modules (or one module). Returns module/path:line: text.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'query': {'type': 'string', 'description': 'Text to find; a regular expression when regex is true.'},
+            'module': {'type': 'string'},
+            'file_types': {'type': 'array', 'items': {'type': 'string', 'enum': list(explore.SOURCE_TYPES)},
+                           'description': 'Default: py, xml, js, csv.'},
+            'regex': {'type': 'boolean', 'default': False},
+            'ignore_case': {'type': 'boolean', 'default': False},
+            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 50},
+        }, 'required': ['query'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'read_source',
+        'title': 'Read a code file',
+        'action': 'explore',
+        'description': 'Read numbered lines of one code file of a module (py, xml, js, csv, po, pot).',
+        'inputSchema': {'type': 'object', 'properties': {
+            'path': {'type': 'string', 'description': 'module/relative/path, for example sale/models/sale_order.py.'},
+            'start_line': {'type': 'integer', 'minimum': 1, 'default': 1},
+            'lines': {'type': 'integer', 'minimum': 1, 'maximum': 500, 'default': 200},
+        }, 'required': ['path'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'list_modules',
+        'title': 'List modules',
+        'action': 'explore',
+        'description': 'Modules of this database with title, version, state and folder.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'query': {'type': 'string', 'description': 'Filter on name or title.'},
+            'state': {'type': 'string', 'enum': ['installed', 'uninstalled', 'to upgrade', 'to install', 'all'],
+                      'default': 'installed'},
+            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 50},
+            'offset': _PAGE,
+        }, 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'describe_module',
+        'title': 'Describe a module',
+        'action': 'explore',
+        'description': 'Manifest, dependencies, models a module defines or extends, its wizards, and the views, '
+                       'menus, actions, crons, rules and groups it ships.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'module': {'type': 'string', 'description': 'Technical module name, for example sale.'},
+        }, 'required': ['module'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'get_view',
+        'title': 'Get a view',
+        'action': 'explore',
+        'description': "A model's view as this key's user sees it after every inheritance, and the views it is "
+                       'built from.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL,
+            'view_type': {'type': 'string', 'default': 'form', 'description': 'form, list, kanban, search, ...'},
+            'view': {'description': 'A view xmlid or id instead of the default view.'},
+            'start_line': {'type': 'integer', 'minimum': 1, 'default': 1},
+            'lines': {'type': 'integer', 'minimum': 1, 'maximum': 1000, 'default': 300},
+        }, 'required': ['model'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'list_actions',
+        'title': 'List actions',
+        'action': 'explore',
+        'description': 'Window, server and report actions of a model or matching a name, with the menus that open them.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL,
+            'query': {'type': 'string', 'description': 'Filter on the action name.'},
+            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 100, 'default': 30},
+        }, 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'search_xmlids',
+        'title': 'Search external ids',
+        'action': 'explore',
+        'description': 'Find external ids (module.name) and the record each points to.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'query': {'type': 'string', 'description': 'Part of the id, or module.name_part.'},
+            'model': _MODEL,
+            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 50},
+        }, 'required': ['query'], 'additionalProperties': False},
+        'annotations': _READ_ONLY,
+    },
+    {
+        'name': 'call_method',
+        'title': 'Call a method',
+        'action': 'call',
+        'description': 'Call a public business method (for example action_confirm) as the key user; private and '
+                       'ORM methods (write, unlink, ...) are refused. Returns the result and the fields that changed '
+                       'on the records. dry_run runs it and rolls the database back; email or HTTP calls the method '
+                       'makes are not undone.',
+        'inputSchema': {'type': 'object', 'properties': {
+            'model': _MODEL, 'method': _METHOD,
+            'ids': {'type': 'array', 'items': {'type': 'integer', 'minimum': 1},
+                    'description': 'Records to call it on; omit for @api.model methods.'},
+            'args': {'type': 'array', 'description': 'Positional arguments after the records.'},
+            'kwargs': {'type': 'object'},
+            'context': {'type': 'object', 'description': 'Extra context keys.'},
+            'dry_run': {'type': 'boolean', 'default': False},
+        }, 'required': ['model', 'method'], 'additionalProperties': False},
+        'annotations': {'readOnlyHint': False, 'destructiveHint': True, 'idempotentHint': False, 'openWorldHint': False},
+    },
+)
+DEFINITIONS = DEFINITIONS[:2] + EXPLORE_DEFINITIONS[:-1] + DEFINITIONS[2:] + EXPLORE_DEFINITIONS[-1:]
+
 SQL_METHODS = {'sql_list_tables': 'list_tables', 'sql_select': 'select', 'sql_query': 'query',
                'sql_insert': 'insert', 'sql_update': 'update', 'sql_delete': 'delete'}
 
@@ -218,6 +394,8 @@ def visible(env, grant):
         action = tool['action']
         if action.startswith('sql:'):
             usable = grant.sql_any(env.cr, action[4:])
+        elif action == 'explore':
+            usable = grant.explore
         else:
             usable = grant.any_permitted(env, action)
         if usable:
@@ -228,8 +406,10 @@ def visible(env, grant):
 class Outcome(object):
     """What a tool did, for the answer and the audit row."""
 
-    def __init__(self, payload, model=None, ids=None, count=0, written=None, statement=None, dry_run=False):
+    def __init__(self, payload, model=None, ids=None, count=0, written=None, statement=None, dry_run=False,
+                 undo=False):
         self.payload = payload
+        self.undo = undo
         self.model = model
         self.ids = ids or []
         self.count = count
@@ -241,6 +421,8 @@ class Outcome(object):
 def call(env, grant, name, arguments):
     tool = BY_NAME.get(name)
     if tool is None:
+        raise ToolArgumentError("There is no tool named %s." % (name,))
+    if (tool['action'] == 'explore' and not grant.explore) or (tool['action'] == 'call' and not grant.any_permitted(env, 'call')):
         raise ToolArgumentError("There is no tool named %s." % (name,))
     if not isinstance(arguments, dict):
         raise ToolArgumentError("arguments must be an object.")
@@ -291,6 +473,11 @@ def _list_models(env, grant, arguments):
     if not isinstance(query, str):
         raise ToolArgumentError("query must be a string.")
     limit = _integer(arguments, 'limit', 50, 1, 100)
+    offset = _integer(arguments, 'offset', 0, 0, None)
+    if _flag(arguments, 'all'):
+        if not grant.explore:
+            raise ToolRefused("Listing every model needs a key with Explore code.")
+        return _all_models(env, query, limit, offset)
     access = env['ir.model.access']
     found = []
     labels = dict((rec.model, rec.name) for rec in env['ir.model'].sudo().search([('model', 'in', list(grant.rows))]))
@@ -302,9 +489,28 @@ def _list_models(env, grant, arguments):
         for action in ('read', 'create', 'update', 'delete'):
             mode = {'read': 'read', 'create': 'create', 'update': 'write', 'delete': 'unlink'}[action]
             can[action] = bool(grant.permitted(env, name, action) and access.check(name, mode, raise_exception=False))
+        if grant.call_open:
+            can['call'] = grant.permitted(env, name, 'call')
         found.append({'model': name, 'name': label, 'can': can})
-    return Outcome({'models': found[:limit], 'returned': len(found[:limit]), 'has_more': len(found) > limit},
-                   count=len(found[:limit]))
+    page = found[offset:offset + limit]
+    return Outcome({'models': page, 'returned': len(page), 'has_more': len(found) > offset + limit},
+                   count=len(page))
+
+
+def _all_models(env, query, limit, offset):
+    needle = query.lower()
+    rows = []
+    for name in sorted(env.registry):
+        model = env[name]
+        label = model._description or name
+        if needle and needle not in name.lower() and needle not in label.lower():
+            continue
+        rows.append([name, label, type(model)._original_module, explore.kind_of(model)])
+    page = rows[offset:offset + limit]
+    more = len(rows) > offset + limit
+    return Outcome({'columns': ['model', 'description', 'module', 'kind'], 'models': page, 'returned': len(page),
+                    'total': len(rows), 'has_more': more, 'next_offset': offset + limit if more else None},
+                   count=len(page))
 
 
 def _get_model_fields(env, grant, arguments):
@@ -397,6 +603,186 @@ def _delete_records(env, grant, arguments):
     deleted = [{'id': rec.id, 'display_name': rec.display_name} for rec in records]
     records.unlink()
     return Outcome({'deleted': deleted}, model=model._name, ids=[item['id'] for item in deleted], count=len(deleted))
+
+
+def _text(arguments, name, required=False):
+    value = arguments.get(name)
+    if value is None and not required:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ToolArgumentError("%s must be a non-empty string." % name)
+    return value.strip()
+
+
+def _names(arguments, name):
+    value = arguments.get(name)
+    if value is None:
+        return None
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise ToolArgumentError("%s must be a list of names." % name)
+    return value
+
+
+def _explored(payload, model=None, count=0):
+    return Outcome(payload, model=model, count=count)
+
+
+def _describe_model(env, grant, arguments):
+    model = _text(arguments, 'model', True)
+    payload = explore.describe_model(env, grant, model, _names(arguments, 'fields'), _text(arguments, 'query'))
+    return _explored(payload, model, sum(len(group) for group in payload['fields'].values()))
+
+
+def _search_methods(env, grant, arguments):
+    payload = explore.search_methods(env, _text(arguments, 'query', True), _text(arguments, 'model'),
+                                     _integer(arguments, 'limit', 50, 1, 200), _integer(arguments, 'offset', 0, 0, None))
+    return _explored(payload, arguments.get('model'), payload['returned'])
+
+
+def _describe_method(env, grant, arguments):
+    model = _text(arguments, 'model', True)
+    return _explored(explore.describe_method(env, model, _text(arguments, 'method', True)), model, 1)
+
+
+def _get_method_source(env, grant, arguments):
+    model = _text(arguments, 'model', True)
+    payload = explore.method_source(env, model, _text(arguments, 'method', True), _text(arguments, 'module'),
+                                    _integer(arguments, 'max_lines', 300, 1, 1000))
+    return _explored(payload, model, len(payload['definitions']))
+
+
+def _search_code(env, grant, arguments):
+    payload = explore.search_code(env, arguments.get('query'), _text(arguments, 'module'), _names(arguments, 'file_types'),
+                                  _flag(arguments, 'regex'), _flag(arguments, 'ignore_case'),
+                                  _integer(arguments, 'limit', 50, 1, 200))
+    return _explored(payload, count=payload['returned'])
+
+
+def _read_source(env, grant, arguments):
+    payload = explore.read_source(env, arguments.get('path'), _integer(arguments, 'start_line', 1, 1, None),
+                                  _integer(arguments, 'lines', 200, 1, 500))
+    return _explored(payload, count=payload['end_line'] - payload['start_line'] + 1)
+
+
+def _list_modules(env, grant, arguments):
+    state = arguments.get('state', 'installed')
+    if state not in ('installed', 'uninstalled', 'to upgrade', 'to install', 'all'):
+        raise ToolArgumentError("state must be installed, uninstalled, to upgrade, to install or all.")
+    payload = explore.list_modules(env, _text(arguments, 'query'), state, _integer(arguments, 'limit', 50, 1, 200),
+                                   _integer(arguments, 'offset', 0, 0, None))
+    return _explored(payload, count=payload['returned'])
+
+
+def _describe_module(env, grant, arguments):
+    return _explored(explore.describe_module(env, _text(arguments, 'module', True)), count=1)
+
+
+def _get_view(env, grant, arguments):
+    model = _text(arguments, 'model', True)
+    view_type = _text(arguments, 'view_type') or 'form'
+    payload = explore.get_view(env, model, view_type, arguments.get('view'),
+                               _integer(arguments, 'start_line', 1, 1, None), _integer(arguments, 'lines', 300, 1, 1000))
+    return _explored(payload, model, 1)
+
+
+def _list_actions(env, grant, arguments):
+    model = _text(arguments, 'model')
+    payload = explore.list_actions(env, model, _text(arguments, 'query'), _integer(arguments, 'limit', 30, 1, 100))
+    return _explored(payload, model, payload['returned'])
+
+
+def _search_xmlids(env, grant, arguments):
+    model = _text(arguments, 'model')
+    payload = explore.search_xmlids(env, _text(arguments, 'query', True), model, _integer(arguments, 'limit', 50, 1, 200))
+    return _explored(payload, model, payload['returned'])
+
+
+def _refuse_commit():
+    raise ToolRefused("This method commits by itself, so dry_run cannot undo it; nothing was changed.")
+
+
+def _call_method(env, grant, arguments):
+    model = grant.require(env, arguments.get('model'), 'call')
+    method = _text(arguments, 'method', True)
+    allowed, reason = explore.callable_by_tool(env, model._name, method)
+    if not allowed:
+        raise ToolRefused("%s.%s cannot be called through MCP: %s." % (model._name, method, reason))
+    is_model_method = getattr(getattr(type(model), method), '_api_model', False)
+    ids = arguments.get('ids')
+    if ids is not None:
+        if is_model_method:
+            raise ToolArgumentError("%s.%s works on the model, not on records; call it without ids." % (model._name, method))
+        ids = check_ids(ids, grant.max_write())
+    args = arguments.get('args') or []
+    kwargs = arguments.get('kwargs') or {}
+    context = arguments.get('context') or {}
+    if not isinstance(args, list):
+        raise ToolArgumentError("args must be a list.")
+    if not isinstance(kwargs, dict) or 'context' in kwargs:
+        raise ToolArgumentError("kwargs must be an object; pass context separately.")
+    if not isinstance(context, dict):
+        raise ToolArgumentError("context must be an object.")
+    dry_run = _flag(arguments, 'dry_run')
+    records = model.browse(ids or [])
+    if ids:
+        missing = [item for item in ids if item not in records.exists().ids]
+        if missing:
+            raise ToolArgumentError("Records not found on %s: %s" % (model._name, ', '.join(str(item) for item in missing)))
+    if context:
+        records = records.with_context(**context)
+    watched = grant.default_read_fields(model) if ids else []
+    before = _snapshot(records, watched)
+    cursor = env.cr
+    if dry_run:
+        cursor.commit = _refuse_commit
+    try:
+        result = getattr(records, method)(*args, **kwargs)
+        env.flush_all()
+    finally:
+        if dry_run:
+            del cursor.commit
+    records.invalidate_recordset()
+    after = _snapshot(records.exists(), watched)
+    changes = {}
+    written = set()
+    for record_id, old in before.items():
+        new = after.get(record_id)
+        if new is None:
+            changes[record_id] = 'deleted'
+            continue
+        diff = dict((name, [old[name], new[name]]) for name in watched if old.get(name) != new.get(name))
+        if diff:
+            changes[record_id] = diff
+            written.update('%s.%s' % (model._name, name) for name in diff)
+    payload = {'result': _jsonable(result), 'changes': changes, 'dry_run': dry_run}
+    statement = dumps({'method': method, 'ids': ids, 'args': args, 'kwargs': kwargs, 'context': context})
+    return Outcome(payload, model=model._name, ids=ids or [], count=len(ids or []), written=written,
+                   statement='%s.%s %s' % (model._name, method, statement), dry_run=dry_run, undo=dry_run)
+
+
+def _snapshot(records, fields):
+    if not records or not fields:
+        return {}
+    return dict((row['id'], row) for row in records.read(fields))
+
+
+def _jsonable(value, depth=0):
+    if depth > 6:
+        return '%s' % (value,)
+    if isinstance(value, BaseModel):
+        shown = {'model': value._name, 'ids': value.ids[:100]}
+        if len(value) <= 20:
+            shown['names'] = [record.display_name for record in value]
+        return shown
+    if isinstance(value, dict):
+        return dict(('%s' % (key,), _jsonable(item, depth + 1)) for key, item in value.items())
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return [_jsonable(item, depth + 1) for item in value]
+    if isinstance(value, (datetime.date, datetime.datetime)):
+        return value.isoformat()
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    return _plain(value)
 
 
 def dumps(payload):

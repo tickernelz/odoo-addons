@@ -160,6 +160,46 @@ def test_negative_control_without_server_wide_every_endpoint_is_404(tokens):
         assert modern(db, "tools/list", token=tokens[db]).status_code == 404
 
 
+def tool(db, token, name, arguments):
+    response = modern(db, "tools/call", {"name": name, "arguments": arguments}, token=token)
+    assert response.status_code == 200, response.text
+    return response.json()["result"]
+
+
+@pytest.mark.open
+def test_explore_and_call_method_answer_per_database(tokens):
+    switch_tools(True)
+    try:
+        explore_and_call_each_database(tokens)
+    finally:
+        switch_tools(False)
+
+
+def switch_tools(on):
+    for db in ("db_a", "db_b"):
+        call = admin_rpc(db)
+        key_id = call("kaitech.mcp.key", "search", [("name", "=", "harness %s" % db)], order="id desc", limit=1)[0]
+        permission = call("kaitech.mcp.permission", "search", [("key_id", "=", key_id)])
+        call("kaitech.mcp.key", "write", [key_id], {"allow_explore": on, "allow_call": on})
+        call("kaitech.mcp.permission", "write", permission, {"can_call": on})
+
+
+def explore_and_call_each_database(tokens):
+    for db in ("db_a", "db_b"):
+        module = tool(db, tokens[db], "describe_module", {"module": "kaitech_mcp"})
+        assert module["isError"] is False, module
+        assert "kaitech.mcp.key" in module["structuredContent"]["models_defined"]
+        partner = tool(db, tokens[db], "search_records", {
+            "model": "res.partner", "domain": [["name", "=", "Marker %s %s" % (db, RUN)]], "fields": ["name"]})
+        partner_id = partner["structuredContent"]["records"][0]["id"]
+        found = tool(db, tokens[db], "call_method", {
+            "model": "res.partner", "method": "address_get", "ids": [partner_id], "args": [["contact"]], "dry_run": True})
+        assert found["isError"] is False, found
+        assert found["structuredContent"]["result"] == {"contact": partner_id}
+    other = modern("db_b", "tools/call", {"name": "describe_module", "arguments": {"module": "base"}}, token=tokens["db_a"])
+    assert other.status_code == 401
+
+
 async def sdk_session(db, token, mode):
     client = httpx2.AsyncClient(headers={"Authorization": "Bearer %s" % token}, timeout=60)
     transport = streamable_http_client("%s/mcp/%s" % (URL, db), http_client=client)

@@ -11,6 +11,8 @@
                 <field name="model_count"/>
                 <field name="can_delete"/>
                 <field name="allow_sql"/>
+                <field name="allow_explore" optional="show"/>
+                <field name="allow_call" optional="show"/>
                 <field name="rate_per_minute" optional="hide"/>
                 <field name="expires_at"/>
                 <field name="last_used_at"/>
@@ -79,6 +81,18 @@
                                 Never available: technical models (ir.*, base.*, bus.*), users and groups, the MCP models
                                 themselves, password and token fields, and binary fields.
                             </p>
+                            <group name="agent_tools">
+                                <group>
+                                    <field name="allow_explore" widget="boolean_toggle"/>
+                                    <div colspan="2" class="text-muted">Models, fields, methods, source code, views and
+                                        menus of the installed modules. Never records or files outside the module folders.</div>
+                                </group>
+                                <group>
+                                    <field name="allow_call" widget="boolean_toggle"/>
+                                    <div colspan="2" class="text-muted">Public business methods of the models ticked in the
+                                        Call column, as the key's user. dry_run lets the client try a call and undo it.</div>
+                                </group>
+                            </group>
                             <field name="permission_ids">
                                 <list editable="bottom">
                                     <field name="model_id" options="{'no_create': True}"/>
@@ -88,6 +102,7 @@
                                     <field name="can_update"/>
                                     <field name="delete_enabled" column_invisible="1"/>
                                     <field name="can_delete" readonly="not delete_enabled"/>
+                                    <field name="can_call" column_invisible="not parent.allow_call"/>
                                     <field name="field_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field name="access_warning" decoration-warning="access_warning"/>
                                 </list>

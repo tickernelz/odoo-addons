@@ -96,7 +96,7 @@ class TestEndpoint(EndpointCase):
         self.assertEqual(body['result']['protocolVersion'], protocol.HANDSHAKE_VERSIONS[0])
         status, body, _headers = self.post({'jsonrpc': '2.0', 'method': 'notifications/initialized'}, token=self.token)
         self.assertEqual((status, body), (202, None))
-        status, body, _headers = self.legacy('resources/list', token=self.token)
+        status, body, _headers = self.legacy('prompts/list', token=self.token)
         self.assertEqual(body['error']['code'], protocol.METHOD_NOT_FOUND)
         self.assertEqual(self.last_call(self.key_id)['result'], 'invalid_arguments')
 

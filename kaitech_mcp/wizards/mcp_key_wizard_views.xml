@@ -17,6 +17,14 @@
                 <div invisible="step != 'models'">
                     <p class="text-muted">Step 2 of 3. Tick what the client may do per model. The Odoo access column
                         warns when the user's own rights do not allow a ticked action; Odoo will refuse it either way.</p>
+                    <group name="agent_tools">
+                        <group>
+                            <field name="allow_explore" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="allow_call" widget="boolean_toggle"/>
+                        </group>
+                    </group>
                     <field name="line_ids">
                         <list editable="bottom">
                             <field name="model_id" options="{'no_create': True}"/>
@@ -25,6 +33,7 @@
                             <field name="can_update"/>
                             <field name="delete_enabled" column_invisible="1"/>
                             <field name="can_delete" readonly="not delete_enabled"/>
+                            <field name="can_call" column_invisible="not parent.allow_call"/>
                             <field name="field_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="access_warning" decoration-warning="access_warning"/>
                         </list>

@@ -14,6 +14,18 @@ SQL_HELP = (
 )
 
 
+EXPLORE_HELP = (
+    "The client may read how the installed modules are built: models, fields, methods and their source code, "
+    "views, actions, menus and other code files inside the module folders. These tools never return records, "
+    "settings values or files outside the module folders."
+)
+CALL_HELP = (
+    "The client may call public business methods, for example Confirm on a sales order, of the models ticked "
+    "in the Call column. They run as the key's user with its access rights and record rules, and change whatever "
+    "the same button changes in Odoo. Private methods and ORM methods such as write or unlink are always refused."
+)
+
+
 def _setting(env, name):
     return grants.current_settings(env)[name]
 
@@ -45,6 +57,8 @@ class McpKey(models.Model):
     allow_sql = fields.Boolean('Allow SQL', copy=True, help=SQL_HELP)
     sql_table_ids = fields.One2many('kaitech.mcp.sql.table', 'key_id', 'SQL tables', copy=True, help=SQL_HELP)
     sql_enabled = fields.Boolean('SQL allowed in settings', compute='_compute_sql_enabled')
+    allow_explore = fields.Boolean('Explore code', copy=True, help=EXPLORE_HELP)
+    allow_call = fields.Boolean('Call methods', copy=True, help=CALL_HELP)
     call_ids = fields.One2many('kaitech.mcp.call', 'key_id', 'Calls', readonly=True)
     state = fields.Selection(STATES, 'Status', compute='_compute_state', search='_search_state')
     model_count = fields.Integer('Models and tables', compute='_compute_permission_summary')
@@ -103,10 +117,11 @@ class McpKey(models.Model):
             key.sql_enabled = enabled
 
     @api.depends('permission_ids.can_read', 'permission_ids.can_create', 'permission_ids.can_update',
-                 'permission_ids.can_delete', 'allow_sql', 'sql_table_ids.can_delete')
+                 'permission_ids.can_delete', 'permission_ids.can_call', 'allow_call', 'allow_sql', 'sql_table_ids.can_delete')
     def _compute_permission_summary(self):
         for key in self:
-            rows = key.permission_ids.filtered(lambda row: row.can_read or row.can_create or row.can_update or row.can_delete)
+            rows = key.permission_ids.filtered(lambda row: row.can_read or row.can_create or row.can_update or row.can_delete
+                                               or (row.can_call and key.allow_call))
             tables = key.sql_table_ids if key.allow_sql else key.sql_table_ids.browse()
             key.model_count = len(rows) + len(tables)
             key.can_delete = any(row.can_delete for row in rows) or any(row.can_delete for row in tables)

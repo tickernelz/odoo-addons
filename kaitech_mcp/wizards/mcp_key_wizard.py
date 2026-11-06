@@ -4,6 +4,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 
 from .. import grants
+from ..models.mcp_key import CALL_HELP, EXPLORE_HELP
 from ..models.mcp_permission import MODEL_DOMAIN, MODES, access_warning
 
 STEPS = [('client', 'Client and user'), ('models', 'Models and actions'), ('done', 'Copy the key')]
@@ -21,6 +22,8 @@ class McpKeyWizard(models.TransientModel):
         help="Every call runs as this Odoo user, with all of its access rights and record rules.")
     expires_at = fields.Datetime('Expires on', default=lambda self: self.env['kaitech.mcp.key']._default_expiry())
     line_ids = fields.One2many('kaitech.mcp.key.wizard.line', 'wizard_id', 'Models')
+    allow_explore = fields.Boolean('Explore code', help=EXPLORE_HELP)
+    allow_call = fields.Boolean('Call methods', help=CALL_HELP)
     key_id = fields.Many2one('kaitech.mcp.key', 'Key', readonly=True)
     token = fields.Char('Key', readonly=True)
     endpoint_url = fields.Char('Endpoint', compute='_compute_examples')
@@ -77,14 +80,18 @@ class McpKeyWizard(models.TransientModel):
         self.ensure_one()
         if self.key_id:
             raise UserError(self.env._("This key was already created."))
-        lines = self.line_ids.filtered(lambda line: line.can_read or line.can_create or line.can_update or line.can_delete)
+        lines = self.line_ids.filtered(lambda line: line.can_read or line.can_create or line.can_update or line.can_delete
+                                       or (line.can_call and self.allow_call))
         key = self.env['kaitech.mcp.key'].create({
             'name': self.name,
             'user_id': self.user_id.id,
             'expires_at': self.expires_at,
+            'allow_explore': self.allow_explore,
+            'allow_call': self.allow_call,
             'permission_ids': [fields.Command.create({
                 'model_id': line.model_id.id, 'can_read': line.can_read, 'can_create': line.can_create,
                 'can_update': line.can_update, 'can_delete': line.can_delete,
+                'can_call': line.can_call and self.allow_call,
                 'field_ids': [fields.Command.set(line.field_ids.ids)]}) for line in lines],
         })
         self.write({'key_id': key.id, 'token': key._issue_token(), 'step': 'done'})
@@ -111,6 +118,7 @@ class McpKeyWizardLine(models.TransientModel):
     can_create = fields.Boolean('Create')
     can_update = fields.Boolean('Update')
     can_delete = fields.Boolean('Delete')
+    can_call = fields.Boolean('Call')
     field_ids = fields.Many2many(
         'ir.model.fields', 'kaitech_mcp_wizard_line_field_rel', 'line_id', 'field_id', 'Only these fields',
         domain="[('model_id', '=', model_id), ('ttype', '!=', 'binary')]")

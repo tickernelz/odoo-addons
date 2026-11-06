@@ -31,6 +31,7 @@ class McpPermission(models.Model):
     can_create = fields.Boolean('Create')
     can_update = fields.Boolean('Update')
     can_delete = fields.Boolean('Delete')
+    can_call = fields.Boolean('Call', help="Public business methods of this model may be called when the key allows method calls.")
     field_ids = fields.Many2many(
         'ir.model.fields', 'kaitech_mcp_permission_field_rel', 'permission_id', 'field_id', 'Only these fields',
         domain="[('model_id', '=', model_id), ('ttype', '!=', 'binary')]",
