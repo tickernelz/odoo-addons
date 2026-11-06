@@ -30,7 +30,7 @@ odoo_run() {
     docker run --rm --network "$net" --memory 2g -v "$data:/var/lib/odoo" --entrypoint odoo "$name-odoo-image" \
         --db_host "$db" --db_user odoo --db_password odoo --without-demo=all --stop-after-init "$@"
 }
-odoo_run -d db_a -i kaitech_mcp_server >/dev/null 2>&1
+odoo_run -d db_a -i kaitech_mcp_server,web_planner >/dev/null 2>&1
 odoo_run -d db_b -i kaitech_mcp_server >/dev/null 2>&1
 odoo_run -d db_c -i base >/dev/null 2>&1
 

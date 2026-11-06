@@ -16,7 +16,7 @@ import odoo
 from odoo import api
 from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError, except_orm
 
-from . import grants, keys, protocol, tools
+from . import explore_tools, grants, keys, protocol, tools
 
 _logger = logging.getLogger(__name__)
 
@@ -165,6 +165,9 @@ class Exchange(object):
         self.tool = self.params.get('name') if self.method == 'tools/call' else None
         if not isinstance(self.tool, basestring):
             self.tool = None
+        arguments = self.params.get('arguments') if self.tool == 'call_method' else None
+        called = arguments.get('method') if isinstance(arguments, dict) else None
+        self.called = called[:128] if isinstance(called, basestring) else None
 
     def serve(self):
         key, refusal = self._authenticate()
@@ -202,7 +205,7 @@ class Exchange(object):
         with closing(self.registry.cursor()) as cr:
             cr.execute("""
                 SELECT k.id, k.name, k.key_hash, k.user_id, k.rate_per_minute, k.writes_per_minute,
-                       k.max_read, k.max_write, k.max_delete, k.allow_sql,
+                       k.max_read, k.max_write, k.max_delete, k.allow_sql, k.allow_explore, k.allow_methods,
                        EXISTS(SELECT 1 FROM res_groups_users_rel r JOIN ir_model_data d
                                   ON d.res_id = r.gid AND d.model = 'res.groups'
                                  AND d.module = 'base' AND d.name = 'group_system'
@@ -304,9 +307,9 @@ class Exchange(object):
                 UPDATE kaitech_mcp_call
                    SET result = %s, reason = %s, duration_ms = %s, model = coalesce(%s, model), record_ids = %s,
                        record_count = %s, fields_written = %s, deleted_names = %s, statement = %s, dry_run = %s,
-                       write_date = now() AT TIME ZONE 'UTC'
+                       method_name = %s, write_date = now() AT TIME ZONE 'UTC'
                  WHERE id = %s""", values + [model, ids, count, written, deleted,
-                                            statement and statement[:4000], dry_run, self.call_id])
+                                            statement and statement[:4000], dry_run, self.called, self.call_id])
             cr.commit()
 
     def _dispatch(self, key, version):
@@ -318,13 +321,13 @@ class Exchange(object):
                 raise protocol.Rejection(protocol.UNSUPPORTED_PROTOCOL_VERSION, "initialize is not part of %s" % version,
                                          data={'supported': list(protocol.MODERN_VERSIONS),
                                                'requested': protocol.requested_version(self.message) or ''})
-            result = {'protocolVersion': protocol.negotiate(self.message), 'capabilities': protocol.CAPABILITIES,
-                      'serverInfo': protocol.SERVER_INFO, 'instructions': protocol.INSTRUCTIONS}
+            result = {'protocolVersion': protocol.negotiate(self.message), 'capabilities': protocol.capabilities(key),
+                      'serverInfo': protocol.SERVER_INFO, 'instructions': protocol.instructions(key)}
             self._finish('ok')
             return _json(200, protocol.answer(self.ident, result))
         if method == 'server/discover':
-            result = {'supportedVersions': list(protocol.SUPPORTED_VERSIONS), 'capabilities': protocol.CAPABILITIES,
-                      'instructions': protocol.INSTRUCTIONS, 'ttlMs': 0, 'cacheScope': 'private'}
+            result = {'supportedVersions': list(protocol.SUPPORTED_VERSIONS), 'capabilities': protocol.capabilities(key),
+                      'instructions': protocol.instructions(key), 'ttlMs': 0, 'cacheScope': 'private'}
             self._finish('ok')
             return _json(200, protocol.answer(self.ident, protocol.finish(result, True)))
         if method == 'tools/list':
@@ -337,7 +340,28 @@ class Exchange(object):
             return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
         if method == 'tools/call':
             return self._call_tool(key)
+        if method.startswith('resources/') and key.get('allow_explore'):
+            return self._resources(key)
         raise protocol.Rejection(protocol.METHOD_NOT_FOUND, "Method %s is not offered here." % method)
+
+    def _resources(self, key):
+        if self.method == 'resources/list':
+            result = {'resources': [explore_tools.OVERVIEW]}
+        elif self.method == 'resources/templates/list':
+            result = {'resourceTemplates': []}
+        elif self.method == 'resources/read':
+            uri = self.params.get('uri')
+            if uri != explore_tools.OVERVIEW['uri']:
+                raise protocol.Rejection(protocol.RESOURCE_NOT_FOUND, "Resource not found.", data={'uri': uri})
+            with self._environment(key) as (env, _grant):
+                text = explore_tools.overview(env)
+            result = {'contents': [{'uri': uri, 'mimeType': explore_tools.OVERVIEW['mimeType'], 'text': text}]}
+        else:
+            raise protocol.Rejection(protocol.METHOD_NOT_FOUND, "Method %s is not offered here." % self.method)
+        self._finish('ok')
+        if self.modern:
+            result.update({'ttlMs': 0, 'cacheScope': 'private'})
+        return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
 
     def _environment(self, key):
         exchange = self
@@ -364,13 +388,14 @@ class Exchange(object):
 
     def _grant(self, cr, key):
         cr.execute("""
-            SELECT p.id, m.model, p.can_read, p.can_create, p.can_update, p.can_delete
+            SELECT p.id, m.model, p.can_read, p.can_create, p.can_update, p.can_delete, p.can_call
               FROM kaitech_mcp_permission p JOIN ir_model m ON m.id = p.model_id
              WHERE p.key_id = %s""", (key['id'],))
         rows = {}
         by_id = {}
-        for permission_id, model, can_read, can_create, can_update, can_delete in cr.fetchall():
-            entry = {'read': can_read, 'create': can_create, 'update': can_update, 'delete': can_delete, 'fields': None}
+        for permission_id, model, can_read, can_create, can_update, can_delete, can_call in cr.fetchall():
+            entry = {'read': can_read, 'create': can_create, 'update': can_update, 'delete': can_delete,
+                     'call': can_call, 'fields': None}
             rows[model] = entry
             by_id[permission_id] = entry
         if by_id:

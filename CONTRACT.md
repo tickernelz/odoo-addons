@@ -26,6 +26,38 @@ ORM path (runs as the key's Odoo user, ACL and record rules apply):
 | `update_records` | `model`, `ids`, `values` | `{updated}` |
 | `delete_records` | `model`, `ids` (at most 20) | `{deleted: [{id, display_name}]}` |
 
+Explore path (read-only; runs as the key's Odoo user; listed only when the key has "Explore code" (`allow_explore`); returns structure and source, never records):
+
+| Tool | Arguments | structuredContent |
+|---|---|---|
+| `list_models` with `scope: "all"` | `query?`, `limit?`, `offset?` (the default scope `key` is the table above) | `{models: [{model, name, module, kind?}], returned, has_more, next_offset}`: every model of the database, not only the ones the key may use |
+| `describe_model` | `model`, `fields?` | `{model, description, kind, module, extended_by, parents, delegates, inherited_by, rec_name, order, table?, fields: {name: {type, string, relation?, inverse?, required?, readonly?, related?, compute?, depends?, stored?, groups?, selection?, module?}}, methods, inherited_methods: {model: count}, can: {read, create, update, delete, call}, unknown_fields?}` |
+| `search_fields` | `query?` (2+ characters, part of the name or label), `exact?` (name equals query), `type?`, `relation?` (at least one of query, type, relation), `limit?` = 50, `offset?` | `{fields: [{model, field, type, string, relation?}], total, returned, has_more, next_offset}` |
+| `search_methods` | `query`, `model?`, `limit?` = 50, `offset?` | `{methods: [{model?, method, modules, from_model?}], returned, has_more, next_offset}`; `modules` is the override order, outermost first |
+| `describe_method` | `model`, `method` | `{model, method, signature, decorators, doc?, computes?, inverses?, searches?, overrides: [{module, file, line, lines, calls_super, model?}], framework?, callable_here}` |
+| `get_method_source` | `model`, `method`, `max_lines?` = 300 (at most 1000) | `{model, method, overrides: [{module, file, line, source, omitted_lines?}], truncated, framework?}`; framework code under `odoo/` is located, not included |
+| `search_code` | `query` (2+ characters, literal), `modules?`, `file_types?` = py, xml, `path?` (glob on module/relative/path), `case_sensitive?`, `limit?`, `offset?` | `{matches: [{file, line, text}], returned, has_more, next_offset, files_scanned}` |
+| `read_source` | `path` (module/relative/path), `start_line?`, `line_count?` = 200 (at most 500) | `{path, start_line, end_line, total_lines, text, next_start_line?}` |
+| `list_modules` | `query?`, `limit?` = 100 (at most 500), `offset?` | `{modules: [{name, title, author, application?}], returned, has_more, next_offset, installed}` |
+| `describe_module` | `module` | `{name, title, summary, version, author, category, application, depends, dependents, data_files, models_defined, wizards_defined, models_extended, records, views?, actions?, server_actions?, reports?, menus?}` |
+| `get_view` | `model`, `view_type?` = form, `xmlid?`, `start_line?`, `line_count?` = 300 | `{model, view_type, view_id, xmlid, inherited_by: [{xmlid, name, inherits}], start_line, end_line, total_lines, arch, next_start_line?}`: the arch after every inheriting view |
+| `list_actions` | `model?`, `query?`, `limit?` | `{window_actions: [{id, xmlid, name, model, view_mode, domain, context, menus}], server_actions, reports}` |
+| `lookup_xmlid` | `xmlid`, or `model` with `res_id`, or `query` | `{xmlids: [{xmlid, model, res_id, ...}]}` |
+
+Call path (listed only when the key has "Call methods" (`allow_methods`) and at least one model ticked Call; runs as the key's Odoo user, so ACL and record rules apply):
+
+| Tool | Arguments | structuredContent |
+|---|---|---|
+| `call_method` | `model`, `method`, `ids?`, `args?`, `kwargs?`, `dry_run?` = false | `{model, method, ids, result, changes?, dry_run}`; `changes` is `{id: {field: [before, after]}}` for the stored default-read fields of the first 20 records |
+
+Explore and call rules:
+
+- Source files: only `py`, `xml`, `js`, `csv`, `po` files below the directory of an installed module, resolved with `realpath`; a path that leaves the module, names an uninstalled module or another file type is refused. Nothing from `ir.config_parameter` or outside the addons folders is ever returned.
+- `call_method` refuses a method that starts with `_`, any method of the ORM base class (`write`, `create`, `unlink`, `read`, `search`, `sudo`, `copy` and the rest) and a model the key has not ticked Call. Forbidden models stay forbidden. Errors raised by the method come back as `isError` results.
+- `dry_run` runs the method in a savepoint, reports the result and the changes, then rolls back. A method that commits or rolls back the transaction itself is refused in a dry run. Effects outside the database (a mail sent at once, a file, an outside call) are not undone.
+- `initialize` and `server/discover` return the base instructions; with `allow_explore` they add the order to explore in (list_modules, describe_model, search_fields, search_methods or describe_method, get_method_source, search_code and read_source, get_view and list_actions), and with `allow_methods` the `call_method` text. With `allow_explore` the server also offers `resources/list` and `resources/read` for one resource, `odoo://overview` (markdown: version, applications, modules not written by Odoo, model counts); any other URI answers -32002.
+- Introspection is cached per registry and rebuilt after a module install or upgrade.
+
 SQL path (runs as the database role: bypasses ACL, record rules, Python constraints, computed fields, mail tracking; off by default at three levels):
 
 | Tool | Arguments | structuredContent |
@@ -50,8 +82,8 @@ Shared argument rules:
 
 ## Permissions and settings
 
-- Key (`kaitech.mcp.key`): `name`, `user_id` (never uid 1 / superuser, never portal), `key_index`, `key_hash`, `expires_at` (default 90 days), `revoked_at`, `revoked_by`, `rotated_from_id`, `rate_per_minute` 60, `writes_per_minute` 20, `max_read` 200, `max_write` 100, `max_delete` 20, `allow_sql` (default false), `permission_ids`, `sql_table_ids`.
-- ORM permission (`kaitech.mcp.permission`): `key_id`, `model_id`, `can_read`, `can_create`, `can_update`, `can_delete`, `field_ids`.
+- Key (`kaitech.mcp.key`): `name`, `user_id` (never uid 1 / superuser, never portal), `key_index`, `key_hash`, `expires_at` (default 90 days), `revoked_at`, `revoked_by`, `rotated_from_id`, `rate_per_minute` 60, `writes_per_minute` 20, `max_read` 200, `max_write` 100, `max_delete` 20, `allow_sql` (default false), `allow_explore` (default false), `allow_methods` (default false), `permission_ids`, `sql_table_ids`.
+- ORM permission (`kaitech.mcp.permission`): `key_id`, `model_id`, `can_read`, `can_create`, `can_update`, `can_delete`, `can_call`, `field_ids`.
 - SQL table permission (`kaitech.mcp.sql.table`): `key_id`, `table_name`, `can_select`, `can_insert`, `can_update`, `can_delete`.
 - Settings (`ir.config_parameter` prefix `kaitech_mcp_server.`): `delete_enabled` false, `sql_enabled` false, `sql_statement_timeout_ms` 5000, `audit_retention_days` 90, `default_expiry_days` 90, `default_rate_per_minute` 60, `default_writes_per_minute` 20, `default_max_read` 200, `default_max_write` 100, `default_max_delete` 20, `extra_forbidden_models`, `extra_forbidden_fields`, `extra_forbidden_tables`.
 - Deleting (ORM or SQL) needs `delete_enabled` plus delete ticked per model or per table. SQL needs `sql_enabled`, the key's `allow_sql`, and the table ticked.
@@ -62,7 +94,7 @@ Shared argument rules:
 
 ## Audit (`kaitech.mcp.call`), one row per audited request, committed even when the call rolls back
 
-`key_id`, `key_name`, `user_id`, `method`, `tool`, `is_write`, `model` (model or table), `record_ids` (ids or primary keys, first 50), `record_count`, `fields_written` (names only, never values), `deleted_names` (ORM delete), `statement` (SQL text with `%s` placeholders, values never stored), `dry_run`, `result` (`ok`, `refused`, `limited`, `error`, `invalid_arguments`), `reason`, `duration_ms`, `client_name`, `client_version`, `remote_addr`, `protocol_version`, `create_date`.
+`key_id`, `key_name`, `user_id`, `method`, `tool`, `method_name` (the method `call_method` ran), `is_write`, `model` (model or table), `record_ids` (ids or primary keys, first 50), `record_count`, `fields_written` (names only, never values), `deleted_names` (ORM delete), `statement` (SQL text with `%s` placeholders, values never stored), `dry_run`, `result` (`ok`, `refused`, `limited`, `error`, `invalid_arguments`), `reason`, `duration_ms`, `client_name`, `client_version`, `remote_addr`, `protocol_version`, `create_date`.
 
 ## Language
 

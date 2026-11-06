@@ -36,6 +36,8 @@
                             <field name="user_id"/>
                             <field name="method"/>
                             <field name="tool"/>
+                            <field name="method_name" attrs="{'invisible': [('method_name', '=', False)]}"/>
+                            <field name="dry_run" attrs="{'invisible': ['|', ('method_name', '=', False), ('dry_run', '=', False)]}"/>
                             <field name="result"/>
                             <field name="reason"/>
                         </group>

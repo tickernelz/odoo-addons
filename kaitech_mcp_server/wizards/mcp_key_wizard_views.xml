@@ -26,10 +26,24 @@
                             <field name="can_update"/>
                             <field name="delete_enabled" invisible="1"/>
                             <field name="can_delete" attrs="{'readonly': [('delete_enabled', '=', False)]}"/>
+                            <field name="methods_allowed" invisible="1"/>
+                            <field name="can_call" attrs="{'readonly': [('methods_allowed', '=', False)]}"/>
                             <field name="field_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="access_warning"/>
                         </tree>
                     </field>
+                    <group>
+                        <group>
+                            <field name="allow_explore"/>
+                            <p colspan="2" class="text-muted">Models, methods, views, menus and the source files
+                                of the installed modules. Never records, never files outside the addons folders.</p>
+                        </group>
+                        <group>
+                            <field name="allow_methods"/>
+                            <p colspan="2" class="text-muted">Public business methods on the models ticked Call
+                                methods, as the key's user. Private and ORM methods are always refused.</p>
+                        </group>
+                    </group>
                     <p class="text-muted" attrs="{'invisible': [('delete_enabled', '=', True)]}">
                         Delete cannot be ticked: deleting is switched off in MCP Settings.</p>
                 </div>

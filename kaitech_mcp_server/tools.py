@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-"""The eight MCP tools: definitions shown in tools/list and their implementations."""
+"""The MCP tools: definitions shown in tools/list, dispatch, and the record tools."""
 import decimal
 import json
 
 from odoo.tools import mute_logger
 
-from . import sql
-from .grants import DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids
+from . import explore_tools, methods, sql
+from .grants import ACTIONS, DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids, flag, integer
 
-WRITE_TOOLS = ('create_record', 'update_records', 'delete_records', 'sql_insert', 'sql_update', 'sql_delete')
+WRITE_TOOLS = ('create_record', 'update_records', 'delete_records', 'call_method', 'sql_insert', 'sql_update',
+               'sql_delete')
 
 _MODEL = {'type': 'string', 'description': 'Technical model name, for example res.partner.'}
 _FIELDS = {'type': 'array', 'items': {'type': 'string'},
@@ -28,7 +29,7 @@ _DRY_RUN = {'type': 'boolean', 'default': False,
 _SQL_NOTE = (' SQL bypasses Odoo access rights, record rules, constraints, computed fields and tracking; '
              'prefer the record tools when they can do the job.')
 
-DEFINITIONS = (
+_RECORD_TOOLS = (
     {
         'name': 'list_models',
         'title': 'List models',
@@ -130,6 +131,8 @@ DEFINITIONS = (
         }, 'required': ['model', 'ids'], 'additionalProperties': False},
         'annotations': {'readOnlyHint': False, 'destructiveHint': True, 'idempotentHint': True, 'openWorldHint': False},
     },
+)
+_SQL_TOOLS = (
     {
         'name': 'sql_list_tables',
         'title': 'List SQL tables',
@@ -208,22 +211,43 @@ DEFINITIONS = (
         'annotations': {'readOnlyHint': False, 'destructiveHint': True, 'idempotentHint': True, 'openWorldHint': False},
     },
 )
+DEFINITIONS = _RECORD_TOOLS + explore_tools.DEFINITIONS + (methods.DEFINITION,) + _SQL_TOOLS
 SQL_METHODS = {'sql_list_tables': 'list_tables', 'sql_select': 'select', 'sql_query': 'query',
                'sql_insert': 'insert', 'sql_update': 'update', 'sql_delete': 'delete'}
 
 BY_NAME = dict((tool['name'], tool) for tool in DEFINITIONS)
+LIST_ALL_MODELS = dict(BY_NAME['list_models'], description=(
+    "List models. scope key (default): the models this key may use and the actions allowed on each. "
+    "scope all: every model of the database with its defining module, for exploring code."),
+    inputSchema={'type': 'object', 'properties': {
+        'query': {'type': 'string', 'description': 'Filter on technical or display name.'},
+        'scope': {'type': 'string', 'enum': ['key', 'all'], 'default': 'key'},
+        'limit': {'type': 'integer', 'minimum': 1, 'maximum': 100, 'default': 50},
+        'offset': {'type': 'integer', 'minimum': 0, 'default': 0},
+    }, 'additionalProperties': False})
+
+
+def definition(grant, name):
+    if name == 'list_models' and grant.explore:
+        return LIST_ALL_MODELS
+    return BY_NAME.get(name)
+
+
+def usable(env, grant, tool):
+    action = tool['action']
+    if action.startswith('sql:'):
+        return grant.sql_any(env.cr, action[4:])
+    if action == 'explore':
+        return grant.explore
+    return grant.any_permitted(env, action)
 
 
 def visible(env, grant):
     """Tool definitions this key could use, in fixed order."""
     shown = []
     for tool in DEFINITIONS:
-        action = tool['action']
-        if action.startswith('sql:'):
-            usable = grant.sql_any(env.cr, action[4:])
-        else:
-            usable = grant.any_permitted(env, action)
-        if usable:
+        if usable(env, grant, tool):
+            tool = definition(grant, tool['name'])
             shown.append(dict((key, value) for key, value in tool.items() if key != 'action'))
     return shown
 
@@ -231,7 +255,8 @@ def visible(env, grant):
 class Outcome(object):
     """What a tool did, for the answer and the audit row."""
 
-    def __init__(self, payload, model=None, ids=None, count=0, written=None, statement=None, dry_run=False):
+    def __init__(self, payload, model=None, ids=None, count=0, written=None, statement=None, dry_run=False,
+                 method=None):
         self.payload = payload
         self.model = model
         self.ids = ids or []
@@ -239,10 +264,11 @@ class Outcome(object):
         self.written = sorted(written or [])
         self.statement = statement
         self.dry_run = dry_run
+        self.method = method
 
 
 def call(env, grant, name, arguments):
-    tool = BY_NAME.get(name)
+    tool = definition(grant, name)
     if tool is None:
         raise ToolArgumentError("There is no tool named %s." % (name,))
     if not isinstance(arguments, dict):
@@ -254,9 +280,15 @@ def call(env, grant, name, arguments):
     missing = [key for key in tool['inputSchema'].get('required', ()) if key not in arguments]
     if missing:
         raise ToolArgumentError("Missing arguments for %s: %s" % (name, ', '.join(missing)))
+    if tool['action'] not in ACTIONS and not usable(env, grant, tool):
+        raise ToolArgumentError("There is no tool named %s." % (name,))
+    if name in explore_tools.HANDLERS:
+        payload, details = explore_tools.HANDLERS[name](env, grant, arguments)
+        return Outcome(payload, **details)
+    if name == 'call_method':
+        payload, details = methods.call(env, grant, arguments)
+        return Outcome(payload, **details)
     if name in SQL_METHODS:
-        if not grant.sql_any(env.cr, tool['action'][4:]):
-            raise ToolArgumentError("There is no tool named %s." % (name,))
         run = sql.Run(env, grant)
         try:
             with mute_logger('odoo.sql_db'):
@@ -272,41 +304,43 @@ def call(env, grant, name, arguments):
     return globals()['_' + name](env, grant, arguments)
 
 
-def _integer(arguments, name, default, lowest, highest):
-    value = arguments.get(name, default)
-    if not isinstance(value, (int, long)) or isinstance(value, bool) or value < lowest:
-        raise ToolArgumentError("%s must be an integer of at least %s." % (name, lowest))
-    if highest is not None and value > highest:
-        raise ToolArgumentError("%s may be at most %s with this key." % (name, highest))
-    return value
-
-
-def _flag(arguments, name):
-    value = arguments.get(name, False)
-    if not isinstance(value, bool):
-        raise ToolArgumentError("%s must be true or false." % name)
-    return value
-
-
 def _list_models(env, grant, arguments):
     query = arguments.get('query') or ''
     if not isinstance(query, basestring):
         raise ToolArgumentError("query must be a string.")
-    limit = _integer(arguments, 'limit', 50, 1, 100)
-    access = env['ir.model.access']
+    limit = integer(arguments, 'limit', 50, 1, 100)
+    if arguments.get('scope', 'key') == 'all':
+        return _list_all_models(env, query.lower(), limit, integer(arguments, 'offset', 0, 0, None))
+    if arguments.get('scope', 'key') != 'key':
+        raise ToolArgumentError("scope must be key or all.")
     found = []
     labels = dict((rec.model, rec.name) for rec in env['ir.model'].sudo().search([('model', 'in', list(grant.rows))]))
     for name in grant.models(env):
         label = labels.get(name) or env[name]._description or name
         if query and query.lower() not in name.lower() and query.lower() not in label.lower():
             continue
-        can = {}
-        for action in ('read', 'create', 'update', 'delete'):
-            mode = {'read': 'read', 'create': 'create', 'update': 'write', 'delete': 'unlink'}[action]
-            can[action] = bool(grant.permitted(env, name, action) and access.check(name, mode, raise_exception=False))
-        found.append({'model': name, 'name': label, 'can': can})
+        found.append({'model': name, 'name': label, 'can': grant.rights(env, name)})
     return Outcome({'models': found[:limit], 'returned': len(found[:limit]), 'has_more': len(found) > limit},
                    count=len(found[:limit]))
+
+
+def _list_all_models(env, query, limit, offset):
+    found = []
+    for name in sorted(env.registry.models):
+        model = env[name]
+        label = model._description or name
+        if query and query not in name.lower() and query not in label.lower():
+            continue
+        entry = {'model': name, 'name': label, 'module': type(model)._original_module}
+        if model._transient:
+            entry['kind'] = 'wizard'
+        elif model._abstract:
+            entry['kind'] = 'abstract'
+        found.append(entry)
+    page = found[offset:offset + limit]
+    more = len(found) > offset + limit
+    return Outcome({'models': page, 'returned': len(page), 'has_more': more,
+                    'next_offset': offset + len(page) if more else None}, count=len(page))
 
 
 def _get_model_fields(env, grant, arguments):
@@ -329,12 +363,12 @@ def _get_model_fields(env, grant, arguments):
 
 def _search_records(env, grant, arguments):
     model = grant.require(env, arguments.get('model'), 'read')
-    include_archived = _flag(arguments, 'include_archived')
+    include_archived = flag(arguments, 'include_archived')
     model = model.with_context(active_test=not include_archived)
     domain = grant.check_domain(env, model, arguments.get('domain'))
     fields = grant.read_fields(model, arguments.get('fields'))
-    limit = _integer(arguments, 'limit', DEFAULT_LIMIT, 1, grant.max_read())
-    offset = _integer(arguments, 'offset', 0, 0, None)
+    limit = integer(arguments, 'limit', DEFAULT_LIMIT, 1, grant.max_read())
+    offset = integer(arguments, 'offset', 0, 0, None)
     order = grant.check_order(model, arguments.get('order'))
     found = model.search(domain, offset=offset, limit=limit + 1, order=order)
     has_more = len(found) > limit
@@ -347,7 +381,7 @@ def _search_records(env, grant, arguments):
 
 def _count_records(env, grant, arguments):
     model = grant.require(env, arguments.get('model'), 'read')
-    model = model.with_context(active_test=not _flag(arguments, 'include_archived'))
+    model = model.with_context(active_test=not flag(arguments, 'include_archived'))
     domain = grant.check_domain(env, model, arguments.get('domain'))
     count = model.search_count(domain)
     return Outcome({'count': count}, model=model._name, count=count)
