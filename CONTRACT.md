@@ -42,7 +42,7 @@ Shared argument rules:
 - `order`: `"name asc, id desc"`, only readable columns or stored fields.
 - SQL identifiers are checked against `information_schema` of the `public` schema and always quoted.
 - `sql_update`/`sql_delete` change at most 20 rows (`max_delete` for delete); the matches are counted first, and more matches change nothing and return `isError`. `dry_run` runs the statement in a savepoint, rolls back, and reports the count and keys.
-- `sql_query` runs in a read-only savepoint with `statement_timeout` (setting `sql_statement_timeout_ms`, default 5000). Before running, `EXPLAIN (VERBOSE, FORMAT JSON)` must show only tables the key may select, no forbidden column (so `SELECT *` works only on tables without one), no whole-row reference, and only functions from a fixed allow-list; anything else is refused.
+- `sql_query` runs in a read-only savepoint with `statement_timeout` (setting `sql_statement_timeout_ms`, default 5000). Before running, `EXPLAIN (VERBOSE, FORMAT JSON)` must show only tables the key may select, no whole-row reference, and only functions from a fixed allow-list; hidden columns are checked as described below; anything else is refused.
 - `sql_insert` fills `create_uid`, `write_uid` with the key's user and `create_date`, `write_date` with the current UTC time, and `sql_update` fills `write_uid` and `write_date`, when the table has those columns; callers may not set these four columns.
 - In `sql_query`, the columns a query reads come from Postgres itself: the query is compiled as a temporary view inside a savepoint and its column dependencies (`pg_depend`) are checked, then the view is rolled back. Any hidden column read anywhere, under any alias, refuses the query; `*` over a table with a hidden column is refused.
 
