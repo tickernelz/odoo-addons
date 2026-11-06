@@ -103,35 +103,35 @@ Queries per call (`harness/query_count.py`, `odoo:10.0`): `count_records` 13, `s
 
 ### Code and method tools
 
-Measured on the production copy (1.4 GB, 114 installed modules, 1,563 models), Python 2.7.18, PostgreSQL 15, one worker, `localhost`, on a shared box with load 6 to 17. Latency is the median of three passes of 30 warm calls each (15 for `search_code`); cold is the first call after a restart. Tokens are counted with tiktoken `o200k_base`, a proxy: other models tokenise differently.
+Measured on the production copy (1.4 GB, 114 installed modules, 1,563 models), Python 2.7.18, PostgreSQL 15, one worker, `localhost`, on a shared box with load 5 to 9. Latency is the median of three passes of 30 warm calls each (15 for `search_code`); cold is the first call after a restart. Result tokens are counted with tiktoken `o200k_base`, a proxy: other models tokenise differently. `search_code_regex` is a regex over one module with no match; `search_code_scan` reads every py, xml, js and csv file with no match; `search_code_scan_all_types` adds po files.
 
-| Tool | p50 s | p95 s | cold s | result tokens |
+| Tool call | p50 s | p95 s | cold s | result tokens |
 |---|---|---|---|---|
-| list_models | 0.013 | 0.015 | 0.039 | 200 |
-| get_model_fields | 0.014 | 0.019 | 0.050 | 2394 |
-| search_records | 0.138 | 0.210 | 0.148 | 35354 |
-| list_models_all | 0.022 | 0.031 | 0.053 | 2734 |
-| describe_model | 0.012 | 0.023 | 0.029 | 2412 |
-| search_fields_exact | 0.124 | 0.344 | 0.303 | 5180 |
-| search_fields_relation | 0.105 | 0.277 | 0.367 | 7602 |
-| search_methods_model | 0.017 | 0.040 | 0.051 | 46 |
-| search_methods_all | 0.021 | 0.027 | 0.121 | 1393 |
-| describe_method | 0.083 | 0.275 | 0.289 | 128 |
-| get_method_source | 0.061 | 0.294 | 0.336 | 260 |
-| search_code_module | 0.013 | 0.015 | 0.038 | 875 |
-| search_code_all | 0.035 | 0.047 | 0.157 | 2058 |
-| search_code_scan | 0.194 | 0.265 | 0.802 | 31 |
-| search_code_scan_all_types | 1.168 | 1.452 | 2.707 | 31 |
-| read_source | 0.010 | 0.012 | 0.022 | 3326 |
-| list_modules | 0.021 | 0.027 | 0.040 | 2775 |
-| describe_module | 0.017 | 0.020 | 0.036 | 1102 |
-| get_view | 0.035 | 0.046 | 0.137 | 4924 |
-| list_actions | 0.018 | 0.021 | 0.810 | 1032 |
-| lookup_xmlid | 0.113 | 0.257 | 0.144 | 42 |
-| call_method_dry_run | 0.187 | 0.294 | 0.277 | 131 |
+| list_models | 0.012 | 0.019 | 0.027 | 225 |
+| get_model_fields | 0.014 | 0.020 | 0.051 | 2394 |
+| search_records | 0.107 | 0.133 | 0.150 | 35354 |
+| list_models_all | 0.015 | 0.022 | 0.026 | 1940 |
+| list_models_all_field | 0.019 | 0.023 | 0.031 | 2900 |
+| describe_model | 0.011 | 0.014 | 0.027 | 2412 |
+| search_methods_model | 0.009 | 0.011 | 0.020 | 46 |
+| search_methods_all | 0.014 | 0.019 | 0.081 | 1393 |
+| describe_method | 0.010 | 0.012 | 0.033 | 128 |
+| get_method_source | 0.009 | 0.012 | 0.032 | 260 |
+| search_code_module | 0.011 | 0.014 | 0.031 | 875 |
+| search_code_regex | 0.010 | 0.012 | 0.029 | 30 |
+| search_code_all | 0.041 | 0.049 | 0.096 | 2058 |
+| search_code_scan | 0.391 | 0.438 | 0.893 | 31 |
+| search_code_scan_all_types | 1.447 | 1.613 | 2.074 | 31 |
+| read_source | 0.010 | 0.011 | 0.031 | 3326 |
+| list_modules | 0.018 | 0.021 | 0.029 | 2775 |
+| describe_module | 0.022 | 0.026 | 0.036 | 1102 |
+| get_view | 0.037 | 0.046 | 0.104 | 4924 |
+| list_actions | 0.020 | 0.027 | 0.994 | 1032 |
+| search_xmlids | 0.013 | 0.018 | 0.029 | 180 |
+| call_method_dry_run | 0.116 | 0.161 | 0.225 | 131 |
 
-No existing tool got slower: with the same data and the same key, interleaved calls of the old and the new module (200 rounds each) gave `list_models` p50 13.6 and 13.7 ms, `get_model_fields` 16.2 and 16.2 ms, `search_records` (20 records) 125.2 and 124.5 ms, `count_records` 10.8 and 10.9 ms, with identical response bytes.
+No existing tool got slower: with the same data and the same key, interleaved calls of the old and the new module (200 rounds each) gave, for a key without the new switches, `list_models` p50 11.6 and 11.9 ms, `get_model_fields` 12.9 and 12.9 ms, `search_records` (20 records) 142.6 and 143.0 ms, `count_records` 17.4 and 17.1 ms, with identical response bytes. For a key with the switches the numbers are as close (`list_models` 10.4 and 10.5 ms); its `list_models` answer grows from 1,549 to 1,705 bytes because each model also shows whether methods may be called.
 
-`tools/list` and the server instructions cost tokens only for keys that switch the new tools on: a key with Explore code and Call methods lists 18 tools in 3,573 tokens (13,455 bytes) against 1,004 (3,741 bytes) for the same key without the switches, and its instructions grow from 69 to 220 tokens. Keys without the switches see exactly what they saw before.
+`tools/list` and the server instructions cost tokens only for keys that switch the new tools on: a key with Explore code and Call methods lists 17 tools in 3,558 tokens (13,401 bytes) against 1,004 (3,741 bytes) for the same key without the switches, and its instructions grow from 69 to 219 tokens. Keys without the switches see exactly what they saw before.
 
-The first `list_actions` call of a process takes about 0.85 to 1.0 s (it computes the menus the key's user may see once); `search_code` over every file type takes about 1.2 s warm and 2.7 s cold; every other call is under 0.35 s warm.
+The first `list_actions` call of a process takes about 1.0 s (it computes the menus the key's user may see once). A `search_code` that matches nothing reads every py, xml, js and csv file of the 114 modules: 0.39 s warm and 0.9 s cold; with po files too, 1.4 s warm and 2.1 s cold. Every other call has a p95 under 0.17 s warm.
