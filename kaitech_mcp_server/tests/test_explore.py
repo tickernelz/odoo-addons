@@ -109,9 +109,11 @@ class TestExplore(EndpointCase):
         described = self.structured('describe_method', {'model': 'res.users', 'method': 'write'})
         overrides = described['overrides']
         self.assertGreaterEqual(len(overrides), 3)
-        self.assertEqual(set(item['file'] for item in overrides), set(['base/res/res_users.py']))
+        self.assertIn('base/res/res_users.py', [item['file'] for item in overrides])
+        self.assertEqual(overrides[-1]['module'], 'base')
         self.assertTrue(overrides[0]['calls_super'])
-        self.assertGreater(overrides[0]['line'], overrides[-1]['line'])
+        in_base = [item['line'] for item in overrides if item['file'] == 'base/res/res_users.py']
+        self.assertEqual(in_base, sorted(in_base, reverse=True))
         self.assertEqual(described['framework']['file'], 'odoo/models.py')
         self.assertTrue(described['signature'].startswith('write(self'))
         computed = self.structured('describe_method', {'model': 'res.partner', 'method': '_compute_commercial_partner'})

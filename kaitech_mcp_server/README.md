@@ -21,7 +21,7 @@ Rollback: uninstall the module in each database, remove it from `server_wide_mod
 ## Use
 
 1. Create a dedicated internal Odoo user for the client with only the groups it needs. The Administrator (uid 1) is refused: it bypasses every access right.
-2. MCP Server, **Create key**: name the client, pick the user, tick models and actions (Read, Create, Update, Delete). The key is shown once with ready-made client configurations; Odoo keeps only its sha256.
+2. MCP Server, **Create key**: name the client, pick the user, tick models and actions (Read, Create, Update, Delete, Call methods), and the switches Explore code and Call methods when the client should read the code or run methods. The key is shown once with ready-made client configurations; Odoo keeps only its sha256.
 3. Configure the client with the endpoint `https://<host>/mcp/<database>` and the header `Authorization: Bearer <key>`.
 
 Claude Desktop (through `mcp-remote`):
@@ -42,6 +42,10 @@ Keys can be tested (Test key), rotated (new secret, same permissions, old key re
 Record tools run as the key's user, so Odoo access rights, record rules and multi-company rules apply on top of the key's permissions: `list_models`, `get_model_fields`, `search_records`, `count_records`, `read_records`, `create_record`, `update_records`, `delete_records`.
 
 SQL tools run as the database role and bypass Odoo access rights, record rules, constraints, computed fields and tracking: `sql_list_tables`, `sql_select`, `sql_query` (one read-only SELECT, checked against the query plan), `sql_insert`, `sql_update`, `sql_delete`. They are off by default at three levels: MCP Settings, Allow SQL on the key, and the key's table list. Update and delete need a where condition, change at most 20 rows, and support `dry_run`. Keys bound to Settings administrators cannot use SQL.
+
+Code tools (key switch **Explore code**) are read-only and return structure and source, never records: `list_models` with `scope: all`, `search_fields`, `describe_model`, `search_methods`, `describe_method`, `get_method_source`, `search_code`, `read_source`, `list_modules`, `describe_module`, `get_view`, `list_actions`, `lookup_xmlid`. A client that has just connected learns the order from the server instructions (list_modules, describe_model, search_fields, search_methods or describe_method, get_method_source, search_code and read_source, get_view and list_actions) and can read the resource `odoo://overview`. Source reads stay inside the installed modules and the file types py, xml, js, csv and po; nothing outside the addons folders and nothing from `ir.config_parameter` is ever returned. Introspection is cached per registry and rebuilt after a module install or upgrade.
+
+`call_method` (key switch **Call methods** and a Call methods tick per model) runs a public business method such as `action_confirm` as the key's user, so access rights and record rules apply. Methods that start with `_` and the ORM methods (`write`, `unlink`, `create`, `sudo` and the rest) are refused. With `dry_run` the method runs in a savepoint and the database is rolled back; the answer lists the result and the stored fields that changed. A method that commits or rolls back itself is refused in a dry run, and effects outside the database (a mail sent at once, a file, an outside call) are not undone.
 
 Deleting (records or rows) is off by default: MCP Settings, Allow deleting, then Delete per model or table; at most 20 records per call; deleted ids and names are kept in the call log.
 

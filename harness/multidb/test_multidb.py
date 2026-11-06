@@ -65,7 +65,8 @@ def provision_explorer(db):
     call = admin_rpc(db)
     groups = [call("ir.model.data", "xmlid_to_res_id", name) for name in ("base.group_user", "base.group_partner_manager")]
     login = "mcp_explore_%s_%s_%s" % (SCENARIO, db, RUN)
-    user_id = call("res.users", "create", {"name": login, "login": login, "groups_id": [(6, 0, groups)]})
+    user_id = call("res.users", "create", {"name": login, "login": login, "email": "%s@example.test" % login,
+                                           "groups_id": [(6, 0, groups)]})
     partner_id = call("res.partner", "create", {"name": "Probe %s %s" % (db, RUN), "company_name": "Probe Co %s %s" % (db, RUN)})
     model_id = call("ir.model", "search", [("model", "=", "res.partner")])[0]
     wizard = call("kaitech.mcp.key.wizard", "create", {"name": "explorer %s" % db, "user_id": user_id,
@@ -151,15 +152,15 @@ def test_forty_parallel_calls_never_cross_databases(tokens):
 @pytest.mark.open
 def test_code_exploring_belongs_to_each_database(explorers):
     token_a, token_b = explorers["db_a"][0], explorers["db_b"][0]
-    in_a = call_tool("db_a", token_a, "describe_model", {"model": "web.planner"})
-    assert in_a["isError"] is False and in_a["structuredContent"]["module"] == "web_planner"
-    in_b = call_tool("db_b", token_b, "describe_model", {"model": "web.planner"})
+    in_a = call_tool("db_a", token_a, "describe_model", {"model": "note.note"})
+    assert in_a["isError"] is False and in_a["structuredContent"]["module"] == "note"
+    in_b = call_tool("db_b", token_b, "describe_model", {"model": "note.note"})
     assert in_b["isError"] is True and "Unknown model" in in_b["structuredContent"]["error"]
-    for db, token, expected in (("db_a", token_a, ["web_planner"]), ("db_b", token_b, [])):
-        listed = call_tool(db, token, "list_modules", {"query": "web_planner"})["structuredContent"]["modules"]
-        assert [row["name"] for row in listed] == expected, db
-        assert any(row["model"] == "web.planner" for row in call_tool(
-            db, token, "list_models", {"scope": "all", "query": "web.planner"})["structuredContent"]["models"]) == bool(expected)
+    for db, token, present in (("db_a", token_a, True), ("db_b", token_b, False)):
+        listed = call_tool(db, token, "list_modules", {"limit": 500})["structuredContent"]["modules"]
+        assert ("note" in [row["name"] for row in listed]) == present, db
+        models = call_tool(db, token, "list_models", {"scope": "all", "query": "note.note"})["structuredContent"]["models"]
+        assert any(row["model"] == "note.note" for row in models) == present, db
     assert modern("db_a", "tools/call", {"name": "describe_model", "arguments": {"model": "res.partner"}},
                   token=token_b).status_code == 401
 
@@ -171,11 +172,12 @@ def test_call_method_changes_only_its_own_database(explorers):
     companies = lambda db: admin_rpc(db)("res.partner", "search_count", [("name", "=", company)])
     dry = call_tool("db_a", token_a, "call_method", {"model": "res.partner", "method": "create_company",
                                                        "ids": [partner_a], "dry_run": True})
-    assert dry["isError"] is False and dry["structuredContent"]["dry_run"] is True
+    assert dry["isError"] is False, dry
+    assert dry["structuredContent"]["dry_run"] is True
     assert (companies("db_a"), companies("db_b")) == (0, 0)
     real = call_tool("db_a", token_a, "call_method", {"model": "res.partner", "method": "create_company",
                                                         "ids": [partner_a]})
-    assert real["isError"] is False
+    assert real["isError"] is False, real
     assert (companies("db_a"), companies("db_b")) == (1, 0)
     wrong_key = modern("db_b", "tools/call", {"name": "call_method", "arguments": {
         "model": "res.partner", "method": "create_company", "ids": [partner_a]}}, token=token_a)
