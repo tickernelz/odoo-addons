@@ -123,7 +123,11 @@ class McpOverview(models.TransientModel):
         result, detail = self._probe(self.endpoint_url)
         self.env['ir.config_parameter'].sudo().set_param(LAST_TEST, json.dumps(
             {'result': result, 'detail': detail, 'at': fields.Datetime.to_string(fields.Datetime.now())}))
-        return self.action_open()
+        return True
+
+    def _compute_display_name(self):
+        for overview in self:
+            overview.display_name = self.env._('MCP Overview')
 
     def action_new_key(self):
         return self.env['ir.actions.act_window']._for_xml_id('kaitech_mcp.action_mcp_key_wizard')

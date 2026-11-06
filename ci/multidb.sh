@@ -54,11 +54,11 @@ start_odoo() {
 status=0
 for scenario in $scenarios; do
     case "$scenario" in
-        open) start_odoo --load=base,web,kaitech_mcp ;;
-        perf) start_odoo --load=base,web,kaitech_mcp ;;
-        dbfilter) start_odoo --load=base,web,kaitech_mcp '--db-filter=^%d$' ;;
-        list_db_off) start_odoo --load=base,web,kaitech_mcp --no-database-list ;;
-        not_server_wide) start_odoo --load=base,web ;;
+        open) start_odoo --load=base,rpc,web,kaitech_mcp ;;
+        perf) start_odoo --load=base,rpc,web,kaitech_mcp ;;
+        dbfilter) start_odoo --load=base,rpc,web,kaitech_mcp '--db-filter=^%d$' ;;
+        list_db_off) start_odoo --load=base,rpc,web,kaitech_mcp --no-database-list ;;
+        not_server_wide) start_odoo --load=base,rpc,web ;;
         *) echo "unknown scenario $scenario"; exit 2 ;;
     esac
     echo "== scenario $scenario"

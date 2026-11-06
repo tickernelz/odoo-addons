@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 
 from .. import grants, keys
 
@@ -94,10 +95,7 @@ class McpKey(models.Model):
             wanted = [state for state, _label in STATES if state not in values]
         else:
             raise UserError(self.env._("Unsupported search on the key status."))
-        domain = []
-        for state in wanted:
-            domain = ['|'] + domain + domains[state] if domain else list(domains[state])
-        return domain or [('id', '=', 0)]
+        return Domain.OR(Domain(domains[state]) for state in wanted)
 
     def _compute_sql_enabled(self):
         enabled = grants.current_settings(self.env)['sql_enabled']

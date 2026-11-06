@@ -57,6 +57,18 @@ class TestKeys(common.TransactionCase):
         key.invalidate_recordset()
         self.assertFalse(key.can_delete)
 
+    def test_state_search_combines_several_states(self):
+        active, _token = new_key(self.env, self.user, {'res.partner': {'read'}})
+        expiring, _token = new_key(self.env, self.user, {'res.partner': {'read'}},
+                                   expires_at=datetime.utcnow() + timedelta(days=3))
+        revoked, _token = new_key(self.env, self.user, {'res.partner': {'read'}})
+        revoked.action_revoke()
+        keys = self.env['kaitech.mcp.key']
+        mine = active | expiring | revoked
+        self.assertEqual(keys.search([('id', 'in', mine.ids), ('state', 'in', ['active', 'expiring'])]), active | expiring)
+        self.assertEqual(keys.search([('id', 'in', mine.ids), ('state', 'not in', ['active'])]), expiring | revoked)
+        self.assertEqual(keys.search_count([('id', 'in', mine.ids), ('state', 'in', ['active', 'expiring', 'revoked'])]), 3)
+
     def test_state_follows_revocation_and_expiry(self):
         key, _token = new_key(self.env, self.user, {'res.partner': {'read'}})
         self.assertEqual(key.state, 'active')
