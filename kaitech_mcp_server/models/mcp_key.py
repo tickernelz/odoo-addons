@@ -66,6 +66,16 @@ class McpKey(models.Model):
              "computed fields and tracking. Only the tables listed below can be used, and only when SQL "
              "is also switched on in MCP Settings.")
     sql_table_ids = fields.One2many('kaitech.mcp.sql.table', 'key_id', 'SQL tables', copy=True)
+    allow_explore = fields.Boolean(
+        'Explore code', copy=True,
+        help="The client may read the structure and source code of the installed modules: models, fields, "
+             "methods, views, menus and actions, and the source files in the addons folders. It never reads "
+             "records this way, and nothing outside the addons folders.")
+    allow_methods = fields.Boolean(
+        'Call methods', copy=True,
+        help="The client may call public business methods (for example action_confirm) on the models ticked "
+             "Call methods on the Models tab, as the user of this key, so Odoo access rights and record rules still apply. "
+             "Private methods and ORM methods such as write or unlink are always refused.")
     sql_enabled = fields.Boolean('SQL allowed in settings', compute='_compute_sql_enabled')
     call_ids = fields.One2many('kaitech.mcp.call', 'key_id', 'Calls', readonly=True)
     state = fields.Selection(STATES, 'Status', compute='_compute_state', search='_search_state')
@@ -144,10 +154,12 @@ class McpKey(models.Model):
         self._check_sql()
 
     @api.depends('permission_ids.can_read', 'permission_ids.can_create', 'permission_ids.can_update',
-                 'permission_ids.can_delete', 'allow_sql', 'sql_table_ids.can_delete')
+                 'permission_ids.can_delete', 'permission_ids.can_call', 'allow_methods', 'allow_sql',
+                 'sql_table_ids.can_delete')
     def _compute_permission_summary(self):
         for key in self:
-            rows = key.permission_ids.filtered(lambda row: row.can_read or row.can_create or row.can_update or row.can_delete)
+            rows = key.permission_ids.filtered(lambda row: row.can_read or row.can_create or row.can_update
+                                               or row.can_delete or (row.can_call and key.allow_methods))
             tables = key.allow_sql and key.sql_table_ids or key.sql_table_ids.browse()
             key.model_count = len(rows) + len(tables)
             key.can_delete = any(row.can_delete for row in rows) or any(row.can_delete for row in tables)

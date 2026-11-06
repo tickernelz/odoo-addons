@@ -11,6 +11,8 @@
                 <field name="model_count"/>
                 <field name="can_delete"/>
                 <field name="allow_sql"/>
+                <field name="allow_explore"/>
+                <field name="allow_methods"/>
                 <field name="rate_per_minute"/>
                 <field name="expires_at"/>
                 <field name="last_used_at"/>
@@ -36,7 +38,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="active,expiring,expired,revoked"/>
                 </header>
                 <div class="alert alert-warning" role="alert"
-                     attrs="{'invisible': ['|', ('model_count', '!=', 0), ('state', 'in', ('revoked', 'expired'))]}">
+                     attrs="{'invisible': ['|', '|', ('model_count', '!=', 0), ('allow_explore', '=', True), ('state', 'in', ('revoked', 'expired'))]}">
                     This key cannot do anything yet: add at least one model on the Models tab or one table on the SQL tab.
                 </div>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('state', '!=', 'expiring')]}">
@@ -89,10 +91,45 @@
                                     <field name="can_update"/>
                                     <field name="delete_enabled" invisible="1"/>
                                     <field name="can_delete" attrs="{'readonly': [('delete_enabled', '=', False)]}"/>
+                                    <field name="methods_allowed" invisible="1"/>
+                                    <field name="can_call" attrs="{'readonly': [('methods_allowed', '=', False)]}"/>
                                     <field name="field_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field name="access_warning"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Code and methods" name="code">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><strong>Explore code</strong></div>
+                                        <div class="panel-body">
+                                            <group><field name="allow_explore"/></group>
+                                            <p class="text-muted">
+                                                The client can learn how this database works on its own: models, fields,
+                                                methods and their overrides per module, views, menus and actions, and the
+                                                source files of the installed modules. No records are read this way, and
+                                                no file outside the addons folders.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><strong>Call methods</strong></div>
+                                        <div class="panel-body">
+                                            <group><field name="allow_methods"/></group>
+                                            <p class="text-muted">
+                                                The client can run public business methods, such as confirming an order, on
+                                                the models ticked Call methods on the Models tab. They run as the user of
+                                                this key, so its access rights and record rules apply. Private methods and
+                                                write, unlink and the other ORM methods are always refused. A dry run
+                                                executes the method and undoes every database change.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </page>
                         <page string="SQL" name="sql">
                             <field name="sql_enabled" invisible="1"/>

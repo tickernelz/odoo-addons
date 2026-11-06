@@ -4,7 +4,7 @@ import fnmatch
 import json
 import re
 
-from .grants import FORBIDDEN_COLUMN_PATTERNS, ToolArgumentError, ToolRefused, split_list
+from .grants import FORBIDDEN_COLUMN_PATTERNS, ToolArgumentError, ToolRefused, flag, integer, split_list
 
 SCHEMA = 'public'
 HARD_MAX_ROWS = 20
@@ -308,22 +308,6 @@ def _changed(cr, table, statement, params, most, dry_run, what):
     return count, keys
 
 
-def _flag(arguments, name):
-    value = arguments.get(name, False)
-    if not isinstance(value, bool):
-        raise ToolArgumentError("%s must be true or false." % name)
-    return value
-
-
-def _integer(arguments, name, default, lowest, highest):
-    value = arguments.get(name, default)
-    if not isinstance(value, (int, long)) or isinstance(value, bool) or value < lowest:
-        raise ToolArgumentError("%s must be an integer of at least %s." % (name, lowest))
-    if highest is not None and value > highest:
-        raise ToolArgumentError("%s may be at most %s with this key." % (name, highest))
-    return value
-
-
 class Run(object):
     """One SQL tool call: the statement and keys it touched, for the answer and the audit."""
 
@@ -366,8 +350,8 @@ class Run(object):
             raise ToolArgumentError("columns must be a non-empty list of column names.")
         selected = ', '.join(table.column(name) for name in columns)
         condition, params = where_clause(table, arguments.get('where'))
-        limit = _integer(arguments, 'limit', 20, 1, self.grant.max_read())
-        offset = _integer(arguments, 'offset', 0, 0, None)
+        limit = integer(arguments, 'limit', 20, 1, self.grant.max_read())
+        offset = integer(arguments, 'offset', 0, 0, None)
         self.statement = 'SELECT %s FROM %s WHERE %s%s LIMIT %%s OFFSET %%s' % (
             selected, quote(table.name), condition, order_clause(table, arguments.get('order')))
         self.cr.execute(self.statement, params + [limit + 1, offset])
@@ -385,7 +369,7 @@ class Run(object):
         text = arguments.get('query')
         if not isinstance(text, basestring) or not text.strip():
             raise ToolArgumentError("query must be one SELECT statement.")
-        limit = _integer(arguments, 'limit', 20, 1, self.grant.max_read())
+        limit = integer(arguments, 'limit', 20, 1, self.grant.max_read())
         text, _bare = single_statement(text)
         self.statement = text
         cr = self.cr
@@ -485,7 +469,7 @@ class Run(object):
 
     def update(self, arguments):
         table = self.table(arguments.get('table'), 'update')
-        dry_run = _flag(arguments, 'dry_run')
+        dry_run = flag(arguments, 'dry_run')
         values = arguments.get('values')
         names = _values(table, values, self.written)
         for name in names:
@@ -510,7 +494,7 @@ class Run(object):
 
     def delete(self, arguments):
         table = self.table(arguments.get('table'), 'delete')
-        dry_run = _flag(arguments, 'dry_run')
+        dry_run = flag(arguments, 'dry_run')
         condition, params = where_clause(table, arguments.get('where'), required=True)
         returning, has_key = table.returning()
         self.statement = 'DELETE FROM %s WHERE %s%s' % (quote(table.name), condition, returning)

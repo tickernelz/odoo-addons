@@ -22,6 +22,7 @@ METHOD_NOT_FOUND = -32601
 INVALID_PARAMS = -32602
 INTERNAL_ERROR = -32603
 REFUSED_HERE = -32001
+RESOURCE_NOT_FOUND = -32002
 HEADER_MISMATCH = -32020
 UNSUPPORTED_PROTOCOL_VERSION = -32022
 OVER_THE_LIMIT = -32029
@@ -33,12 +34,39 @@ MODERN_ERROR_STATUS = {
 
 SERVER_INFO = {'name': 'kaitech-odoo10-mcp', 'title': 'Odoo 10 (Kaitech MCP Server)', 'version': '10.0.1.0.0'}
 CAPABILITIES = {'tools': {'listChanged': False}}
+EXPLORE_CAPABILITIES = {'tools': {'listChanged': False}, 'resources': {'listChanged': False}}
 INSTRUCTIONS = (
     "This server exposes one Odoo 10 database. Every call runs as the Odoo user bound to your key, "
     "limited to the models and actions the key allows. Start with list_models, then get_model_fields "
     "before searching or writing. Odoo business errors come back as tool results with isError true; "
     "read the message and adjust the arguments."
 )
+EXPLORE_INSTRUCTIONS = (
+    " To understand the code, in this order: list_modules (author tells custom modules from Odoo's); "
+    "describe_model (modules, fields with compute and depends, methods); list_models with all and field "
+    "(which models have a field); search_methods or describe_method "
+    "(override order across modules); get_method_source (code with file and line). search_code and read_source "
+    "reach any source file of an installed module; get_view and list_actions show the screens and menus users see. "
+    "When has_more is true, call again with next_offset. The resource odoo://overview summarises this database."
+)
+METHOD_INSTRUCTIONS = (
+    " call_method runs a public business method as your key's user; run it with dry_run true first "
+    "to see its result and the changed fields without saving anything."
+)
+
+
+def capabilities(key):
+    return EXPLORE_CAPABILITIES if key.get('allow_explore') else CAPABILITIES
+
+
+def instructions(key):
+    """The initialize text: the base rules, plus how to explore and call methods when the key may."""
+    text = INSTRUCTIONS
+    if key.get('allow_explore'):
+        text += EXPLORE_INSTRUCTIONS
+    if key.get('allow_methods'):
+        text += METHOD_INSTRUCTIONS
+    return text
 
 UNAUDITED_METHODS = ('ping',)
 

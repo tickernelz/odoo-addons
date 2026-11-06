@@ -124,6 +124,8 @@ class Grant(object):
         self.rows = rows
         self._fields_cache = {}
         self.sql_open = bool(settings['sql_enabled'] and key.get('allow_sql') and not key.get('is_system'))
+        self.explore = bool(key.get('allow_explore'))
+        self.methods = bool(key.get('allow_methods'))
         self.tables = tables or {}
         self._existing_tables = None
 
@@ -171,7 +173,9 @@ class Grant(object):
 
     def permitted(self, env, model_name, action):
         row = self.rows.get(model_name)
-        if not row or not row[action]:
+        if not row or not row.get(action):
+            return False
+        if action == 'call' and not self.methods:
             return False
         if action == 'delete' and not self.delete_enabled:
             return False
@@ -183,11 +187,25 @@ class Grant(object):
         return any(self.permitted(env, name, action) for name in self.rows)
 
     def models(self, env):
-        return sorted(name for name in self.rows if any(self.permitted(env, name, action) for action in ACTIONS))
+        return sorted(name for name in self.rows
+                      if any(self.permitted(env, name, action) for action in ACTIONS + ('call',)))
+
+    def rights(self, env, model_name, actions=ACTIONS):
+        """{action: bool}: the key permission and, for record actions, the Odoo access rights of its user."""
+        access = env['ir.model.access']
+        can = {}
+        for action in actions:
+            allowed = self.permitted(env, model_name, action)
+            if allowed and action in ODOO_MODE:
+                allowed = access.check(model_name, ODOO_MODE[action], raise_exception=False)
+            can[action] = bool(allowed)
+        return can
 
     def require(self, env, model_name, action):
         if not isinstance(model_name, basestring) or not self.permitted(env, model_name, action):
-            if self.rows.get(model_name) and self.permitted(env, model_name, 'read'):
+            if self.rows.get(model_name) and (action == 'call' or self.permitted(env, model_name, 'read')):
+                if action == 'call':
+                    raise ToolRefused("This key may not call methods of %s." % (model_name,))
                 raise ToolRefused("This key may not %s %s records." % (action, model_name))
             raise ToolArgumentError("Unknown model: %s" % (model_name,))
         return env[model_name]
@@ -349,6 +367,22 @@ class Grant(object):
 
 def _is_int(value):
     return isinstance(value, numbers.Integral) and not isinstance(value, bool)
+
+
+def flag(arguments, name):
+    value = arguments.get(name, False)
+    if not isinstance(value, bool):
+        raise ToolArgumentError("%s must be true or false." % name)
+    return value
+
+
+def integer(arguments, name, default, lowest, highest):
+    value = arguments.get(name, default)
+    if not isinstance(value, (int, long)) or isinstance(value, bool) or value < lowest:
+        raise ToolArgumentError("%s must be an integer of at least %s." % (name, lowest))
+    if highest is not None and value > highest:
+        raise ToolArgumentError("%s may be at most %s with this key." % (name, highest))
+    return value
 
 
 def check_ids(ids, most):

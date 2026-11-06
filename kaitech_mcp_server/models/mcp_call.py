@@ -35,6 +35,7 @@ class McpCall(models.Model):
     deleted_names = fields.Text('Deleted records', readonly=True)
     statement = fields.Text('SQL statement', readonly=True, help="Values are bound parameters and never stored.")
     dry_run = fields.Boolean('Dry run', readonly=True)
+    method_name = fields.Char('Method called', readonly=True)
     result = fields.Selection(RESULTS, 'Result', readonly=True, index=True)
     reason = fields.Char('Reason', readonly=True)
     duration_ms = fields.Integer('Duration (ms)', readonly=True, group_operator='avg')
