@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mcp_settings" model="ir.ui.view">
+        <field name="name">kaitech.mcp.settings.form</field>
+        <field name="model">kaitech.mcp.settings</field>
+        <field name="arch" type="xml">
+            <form string="MCP Settings">
+                <header>
+                    <button string="Save" type="object" name="action_save" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group string="Deleting">
+                        <field name="delete_enabled"/>
+                        <div colspan="2" class="text-muted">
+                            When off, no key can delete and the Delete column of every key is cleared.
+                            When on, each key still needs Delete ticked per model or table, and at most the records per delete below go in one call.
+                        </div>
+                    </group>
+                    <group string="SQL">
+                        <field name="sql_enabled"/>
+                        <field name="sql_statement_timeout_ms" invisible="not sql_enabled"/>
+                        <div colspan="2" class="text-muted">
+                            SQL bypasses Odoo access rights, record rules, Python constraints, computed fields and tracking.
+                            When on, each key still needs Allow SQL and its tables ticked. Switching it off clears Allow SQL on every key.
+                        </div>
+                    </group>
+                    <group string="Defaults for new keys">
+                        <group>
+                            <field name="default_expiry_days"/>
+                            <field name="default_rate_per_minute"/>
+                            <field name="default_writes_per_minute"/>
+                        </group>
+                        <group>
+                            <field name="default_max_read"/>
+                            <field name="default_max_write"/>
+                            <field name="default_max_delete"/>
+                        </group>
+                    </group>
+                    <group string="Call log">
+                        <field name="audit_retention_days"/>
+                    </group>
+                    <group string="Never exposed, in addition to the built-in list">
+                        <field name="extra_forbidden_models" placeholder="hr.payslip*"/>
+                        <field name="extra_forbidden_fields" placeholder="res.partner.vat"/>
+                        <field name="extra_forbidden_tables" placeholder="hr_payslip*"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mcp_settings" model="ir.actions.act_window">
+        <field name="name">MCP Settings</field>
+        <field name="res_model">kaitech.mcp.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

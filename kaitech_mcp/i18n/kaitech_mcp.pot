@@ -1,0 +1,1482 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* kaitech_mcp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-06 04:19+0000\n"
+"PO-Revision-Date: 2026-11-06 04:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid "%(url)s could not be reached: %(reason)s"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_permission.py:0
+msgid "%(user)s cannot: %(actions)s"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__default_expiry_days
+msgid "0 creates keys that never expire."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__audit_retention_days
+msgid "0 keeps the call log forever."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid ""
+"<strong>The MCP endpoint is switched off on this server.</strong>\n"
+"                    MCP clients do not send an Odoo session, so the module must be loaded server-wide.\n"
+"                    Add this line to the [options] section of odoo.conf, then restart Odoo:"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.actions.act_window,help:kaitech_mcp.action_mcp_key
+msgid ""
+"A key lets one MCP client (Claude Desktop, Cursor, n8n, ...) work in this database as one Odoo user,\n"
+"               limited to the models and actions you tick. Use Create key to make the first one."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "A key with SQL cannot act as a Settings administrator."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "A key's secret cannot be changed; rotate the key instead."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"A new key with the same permissions is created and this key stops working "
+"now. Continue?"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "A revoked key cannot be rotated; create a new key instead."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__user_id
+msgid "Acted as"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key__state__active
+msgid "Active"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__active_keys
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Active keys"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__user_id
+msgid "Acts as user"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__allow_sql
+msgid "Allow SQL"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__sql_enabled
+msgid "Allow SQL through MCP"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__delete_enabled
+msgid "Allow deleting through MCP"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_permission.py:0
+msgid "Allowed fields must belong to the model and cannot be binary."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_fields
+msgid "Also forbidden fields"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_models
+msgid "Also forbidden models"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_tables
+msgid "Also forbidden tables"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid ""
+"An MCP client picks its database by the address it calls: /mcp/ followed by\n"
+"                        the database name. Each database has its own keys and call log."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid ""
+"An MCP key cannot act as the Administrator: that user holds every access "
+"right. Create a dedicated user for this client with only the groups it "
+"needs."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "An MCP key must act as an internal user, not a portal or public user."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+#: code:addons/kaitech_mcp/models/mcp_settings.py:0
+msgid "At most %s records can be deleted per call."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "At most %s records can be read or updated per call."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:res.groups,name:kaitech_mcp.group_mcp_auditor
+msgid "Auditor"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Back"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_calls
+msgid "Call Log"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "Call log"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__call_ids
+msgid "Calls"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__calls_24h
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__calls_24h
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Calls (24 h)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Calls in 24 h"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__rate_per_minute
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_rate_per_minute
+msgid "Calls per minute"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Cancel"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__config_desktop
+msgid "Claude Desktop (mcp-remote)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__key_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__name
+msgid "Client"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_wizard__step__client
+msgid "Client and user"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__client_name
+msgid "Client software"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__client_version
+msgid "Client version"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__config_http
+msgid "Clients with HTTP headers (Cursor, n8n, Hermes)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_test_form
+msgid "Close"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_wizard__step__done
+msgid "Copy the key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid ""
+"Copy the key now. It is shown only this once; Odoo keeps only a fingerprint "
+"of it."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_create
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_create
+msgid "Create"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_key_new
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Create key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:res.groups,comment:kaitech_mcp.group_mcp_manager
+msgid ""
+"Creates, revokes and rotates MCP keys, sets their permissions and the MCP "
+"settings."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__name
+msgid "Database"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__databases_hidden
+msgid "Database list hidden"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_sql_table__table_name
+msgid "Database table in the public schema, for example res_partner."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__database_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Databases on this server"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Day"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_settings.py:0
+msgid "Days cannot be negative."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_settings.py:0
+msgid "Default limits must be greater than zero."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "Defaults for new keys"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__can_delete
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_delete
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_delete
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__can_delete
+msgid "Delete"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__delete_enabled
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__delete_enabled
+msgid "Delete Enabled"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__delete_enabled
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__delete_enabled
+msgid "Delete allowed in settings"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Delete cannot be ticked: deleting is switched off in MCP Settings."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__deleted_names
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_form
+msgid "Deleted records"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Deletes"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "Deleting"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_permission.py:0
+#: code:addons/kaitech_mcp/models/mcp_sql_table.py:0
+msgid "Deleting through MCP is switched off in MCP Settings."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__last_test_detail
+msgid "Details"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__dry_run
+msgid "Dry run"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__duration_ms
+msgid "Duration (ms)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.constraint,message:kaitech_mcp.constraint_kaitech_mcp_permission_key_model_unique
+msgid "Each model can be listed only once per key."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.constraint,message:kaitech_mcp.constraint_kaitech_mcp_sql_table_key_table_unique
+msgid "Each table can be listed only once per key."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__endpoint_url
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__endpoint_url
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__endpoint_url
+msgid "Endpoint"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__endpoint_url
+msgid "Endpoint for this database"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_call__result__error
+msgid "Error"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Errors"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__errors_24h
+msgid "Errors (24 h)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__user_id
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__user_id
+msgid ""
+"Every call runs as this Odoo user, with all of its access rights and record "
+"rules."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key__state__expired
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "Expired"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__expires_at
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__expires_at
+msgid "Expires on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key__state__expiring
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "Expiring soon"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__fields_written
+msgid "Fields written"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__model_id
+msgid "From model"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid "HTTP %(status)s from %(url)s"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid "HTTP %s"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid "HTTP 401 without a key: the endpoint answers for this database."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid "HTTP 401: the key is revoked, expired, or its user is archived."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid "HTTP 404: add the line shown above to odoo.conf and restart Odoo."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid "HTTP 404: run Test endpoint on MCP Overview for the fix."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid ""
+"HTTP 404: this address does not reach this database. Check dbfilter, db_name"
+" and the reverse proxy for /mcp/."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "I have copied the key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__id
+msgid "ID"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__remote_addr
+msgid "IP address"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__can_insert
+msgid "Insert"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.actions.act_window,help:kaitech_mcp.action_mcp_call
+msgid ""
+"Install a client with a key from MCP Keys; its first call shows up here and in the key's Last used.\n"
+"               If the client cannot connect, run Test endpoint on MCP Overview."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_call__result__invalid_arguments
+msgid "Invalid arguments"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__audit_retention_days
+msgid "Keep call log (days)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__key_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__key_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__key_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__token
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__key_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__key_id
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__key_hash
+msgid "Key Hash"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__key_index
+msgid "Key prefix"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Key starts with"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_keys
+msgid "Keys"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Last 24 hours"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__last_test_result
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Last endpoint test"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__last_used_at
+msgid "Last used"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__expires_at
+msgid "Leave empty for a key that never expires."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_permission__field_ids
+msgid "Leave empty to allow every field that is not forbidden."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Limits"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.constraint,message:kaitech_mcp.constraint_kaitech_mcp_key_positive_limits
+msgid "Limits must be greater than zero."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__config_line
+msgid "Line for odoo.conf"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__server_wide
+msgid "Loaded server-wide"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_call
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_form
+msgid "MCP Call"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.actions.act_window,name:kaitech_mcp.action_mcp_call
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_list
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "MCP Call Log"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_graph
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_pivot
+msgid "MCP Calls"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_key
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "MCP Key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_permission
+msgid "MCP Key Model Permission"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_sql_table
+msgid "MCP Key SQL Table"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.actions.act_window,name:kaitech_mcp.action_mcp_key
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_list
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "MCP Keys"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+#: model:ir.actions.server,name:kaitech_mcp.action_mcp_overview
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_overview
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "MCP Overview"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_overview_database
+msgid "MCP Overview Database"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_root
+#: model:res.groups.privilege,name:kaitech_mcp.res_groups_privilege_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "MCP Server"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.actions.act_window,name:kaitech_mcp.action_mcp_settings
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_settings
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "MCP Settings"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "MCP key rotated: copy the new key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__installed
+msgid "MCP module installed"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.actions.server,name:kaitech_mcp.ir_cron_mcp_purge_calls_ir_actions_server
+msgid "MCP: remove old call log entries"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:res.groups,name:kaitech_mcp.group_mcp_manager
+msgid "Manager"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__method
+msgid "Method"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__model_id
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__model_id
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Model"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_permission.py:0
+msgid "Model %s can never be used through MCP."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__model
+msgid "Model or table"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__permission_ids
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__line_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Models"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_wizard__step__models
+msgid "Models and actions"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__model_count
+msgid "Models and tables"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
+msgid "Name the client and choose the Odoo user the key acts as."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "Never exposed, in addition to the built-in list"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_key_wizard
+msgid "New MCP Key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_key_wizard_line
+msgid "New MCP Key Model"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
+#: model:ir.actions.act_window,name:kaitech_mcp.action_mcp_key_wizard
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "New MCP key"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
+msgid "New MCP key: copy the key"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
+msgid "New MCP key: models and actions"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_expiry_days
+msgid "New keys expire after (days)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Next"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.actions.act_window,help:kaitech_mcp.action_mcp_call
+msgid "No MCP calls yet."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.actions.act_window,help:kaitech_mcp.action_mcp_key
+msgid "No MCP keys in this database yet."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_overview__last_test_result__not_found
+msgid "Not found: the database is not served at this address"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_overview__last_test_result__not_server_wide
+msgid "Not found: the module is not loaded server-wide"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_call__result__ok
+msgid "OK"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__access_warning
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__access_warning
+msgid "Odoo access"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__sql_enabled
+msgid ""
+"Off by default. SQL bypasses Odoo access rights, record rules, Python "
+"constraints, computed fields and tracking. When off, no key sees the SQL "
+"tools, whatever its SQL tables say."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__delete_enabled
+msgid ""
+"Off by default. When off, no key can delete, whatever its permissions say."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_fields
+msgid ""
+"One per line or comma separated: a field name (every model) or model.field, "
+"for example res.partner.vat"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_models
+msgid ""
+"One per line or comma separated; wildcards allowed, for example hr.payslip* "
+"or account.*"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_settings__extra_forbidden_tables
+msgid ""
+"One per line or comma separated; wildcards allowed, for example hr_payslip*"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_overview.py:0
+msgid "Only MCP managers can open the MCP overview."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__field_ids
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__field_ids
+msgid "Only these fields"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__overview_id
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_overview
+msgid "Overview"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__token
+msgid "Paste the key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Per call"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Per minute"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_sql_table__model_id
+msgid "Pick a model to fill in its table, or type the table name directly."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__protocol_version
+msgid "Protocol"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_call__result__limited
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Rate limited"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_overview__last_test_result__ok
+msgid "Reachable: routing and database selection work"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_read
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_read
+msgid "Read"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:res.groups,comment:kaitech_mcp.group_mcp_auditor
+msgid "Reads MCP keys and the MCP call log."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__reason
+msgid "Reason"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__record_ids
+msgid "Record ids"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__record_count
+msgid "Records"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__max_delete
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_max_delete
+msgid "Records per delete"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__max_read
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_max_read
+msgid "Records per read"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__max_write
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_max_write
+msgid "Records per update"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_call__result__refused
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Refused"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Refused (24 h)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Refused or limited"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__refused_24h
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__refused_24h
+msgid "Refused or limited (24 h)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__rotated_from_id
+msgid "Replaces"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__result
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__result
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Result"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Revoke"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key__state__revoked
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "Revoked"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__revoked_by
+msgid "Revoked by"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__revoked_at
+msgid "Revoked on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "Rotate key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "SQL"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__sql_enabled
+msgid "SQL allowed in settings"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid ""
+"SQL bypasses Odoo access rights, record rules, Python constraints, computed fields and tracking.\n"
+"                            When on, each key still needs Allow SQL and its tables ticked. Switching it off clears Allow SQL on every key."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "SQL is switched off in MCP Settings, so Allow SQL cannot be ticked."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"SQL runs as the database itself: it bypasses Odoo access rights, record rules, Python constraints,\n"
+"                                computed fields and chatter tracking. Tick only the tables this client truly needs. Updates and\n"
+"                                deletes need a where condition and change at most 20 rows per call; every statement is in the call log."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__allow_sql
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__sql_table_ids
+msgid ""
+"SQL runs as the database itself: it bypasses Odoo access rights, record "
+"rules, Python constraints, computed fields and chatter tracking. Only the "
+"tables listed on the SQL tab can be used, only when SQL is also switched on "
+"in MCP Settings, and never when the key acts as an administrator."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__statement
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_form
+msgid "SQL statement"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__sql_table_ids
+msgid "SQL tables"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "SQL through MCP is switched off in MCP Settings."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__sql_statement_timeout_ms
+msgid "SQL time limit (ms)"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "Save"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__can_select
+msgid "Select"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_settings
+msgid "Settings"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_list
+msgid "Starts with"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__state
+msgid "Status"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__step
+msgid "Step"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid ""
+"Step 1 of 3. One key per client, acting as one dedicated Odoo user.\n"
+"                        The Administrator cannot be used: it holds every access right."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid ""
+"Step 2 of 3. Tick what the client may do per model. The Odoo access column\n"
+"                        warns when the user's own rights do not allow a ticked action; Odoo will refuse it either way."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__table_name
+msgid "Table"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_sql_table.py:0
+msgid "Table %s can never be used through MCP."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__model_name
+msgid "Technical name"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model,name:kaitech_mcp.model_kaitech_mcp_key_test
+msgid "Test MCP Key"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_test_form
+msgid "Test MCP key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid "Test endpoint"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_test_form
+msgid "Test key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__last_test_at
+msgid "Tested on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "The client using this key loses access immediately. Continue?"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__unreachable
+msgid "The endpoint could not be reached"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__refused
+msgid "The endpoint refused the key"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__not_found
+msgid "The endpoint was not found"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"The key can do something only when both this list and the Odoo access rights of its user allow it.\n"
+"                                Never available: technical models (ir.*, base.*, bus.*), users and groups, the MCP models\n"
+"                                themselves, password and token fields, and binary fields."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid "The key is accepted but has no model permissions yet."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_test__token
+msgid "The key is checked and then forgotten; it is never stored."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__ok
+msgid "The key works"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_test_form
+msgid "The key works through the public endpoint."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid ""
+"The pasted text does not match this key. Keys are shown only once; rotate "
+"the key if it was lost."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_sql_table.py:0
+msgid "There is no table %s in this database."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__current
+msgid "This database"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__wrong_key
+msgid "This is not the key of this record"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"This key cannot do anything yet: add at least one model on the Models tab or"
+" one table on the SQL tab."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "This key expires within 7 days. Rotate it or move its expiry date."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid "This key is revoked: every call with it is refused with HTTP 401."
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
+msgid "This key was already created."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid ""
+"This server hides its database list (list_db = False); only this database's "
+"endpoint is shown above."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__create_date
+msgid "Time"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__tool
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Tool"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/wizards/mcp_key_test.py:0
+msgid ""
+"Tools this key can use:\n"
+"%s"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_list
+msgid "Total"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key_test__result__unexpected
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_overview__last_test_result__unexpected
+msgid "Unexpected answer"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_overview__last_test_result__unreachable
+msgid "Unreachable"
+msgstr ""
+
+#. module: kaitech_mcp
+#. odoo-python
+#: code:addons/kaitech_mcp/models/mcp_key.py:0
+msgid "Unsupported search on the key status."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_update
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_update
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_sql_table__can_update
+msgid "Update"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "Usable"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
+msgid "User"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_test__detail
+msgid "What the key can do"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid ""
+"When off, no key can delete and the Delete column of every key is cleared.\n"
+"                            When on, each key still needs Delete ticked per model or table, and at most the records per delete below go in one call."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__name
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__name
+msgid "Who uses this key, for example 'Finance - Claude Desktop'."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__is_write
+msgid "Write"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
+msgid "Writes"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__writes_per_minute
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_settings__default_writes_per_minute
+msgid "Writes per minute"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "e.g. Finance - Claude Desktop"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "hr.payslip*"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "hr_payslip*"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
+msgid "res.partner.vat"
+msgstr ""
