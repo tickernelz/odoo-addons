@@ -41,10 +41,19 @@ odoo19-image:
     - sh ci/odoo-tests.sh
 
 odoo19-pinned-core:
-  extends: .odoo-image
   stage: test
+  image: python:3.12.3-bookworm
+  services:
+    - name: postgres:15
+      alias: postgres
+  artifacts:
+    when: always
+    paths:
+      - odoo-tests.log
+    expire_in: 2 weeks
   script:
     - mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$PINNED_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
+    - pip install -q -r /tmp/src/requirements.txt
     - ODOO_BIN="python3 /tmp/src/odoo-bin" ADDONS_PATH="$CI_PROJECT_DIR,/tmp/src/addons,/tmp/src/odoo/addons" sh ci/odoo-tests.sh
 
 i18n-template:
@@ -56,7 +65,7 @@ i18n-template:
       - fresh.pot
     expire_in: 1 week
   script:
-    - sh ci/export-pot.sh i18n --addons-path="$CI_PROJECT_DIR,/usr/lib/python3/dist-packages/odoo/addons" --db_host postgres --db_user odoo --db_password odoo > fresh.pot
+    - ADDONS_PATH="$CI_PROJECT_DIR,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n > fresh.pot
 
 i18n:
   stage: i18n

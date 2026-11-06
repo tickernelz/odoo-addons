@@ -27,7 +27,7 @@ text = open(sys.argv[1]).read()
 results = re.findall(r"tests\.result: (\d+) failed, (\d+) error\(s\) of (\d+) tests", text)
 broken = re.findall(r"ERROR \S+ odoo\.modules\.(?:module|loading|registry): .*", text)
 failed = re.findall(r"(?:FAIL|ERROR): (Test\S+)", text)
-print("tests.result: %s" % (results[-1] if results else None))
+print("tests.result: %r" % (results[-1] if results else None,))
 for name in failed:
     print("  " + name)
 for line in broken[:20]:
