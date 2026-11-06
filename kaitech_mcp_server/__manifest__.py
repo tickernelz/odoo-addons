@@ -23,5 +23,5 @@
     'qweb': ['static/src/xml/mcp_copy.xml'],
     'post_load': 'post_load',
     'installable': True,
-    'application': False,
+    'application': True,
 }

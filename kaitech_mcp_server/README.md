@@ -14,14 +14,14 @@ The wire contract (endpoint, tools, arguments, errors, audit) is shared with the
    Restart Odoo.
 3. Make sure the reverse proxy passes `/mcp/` and the `Authorization` header to Odoo (a plain `location /` that proxies everything is enough).
 4. In each database that should answer MCP: Apps, Update Apps List, then install **MCP Server**. A database without the module answers 404.
-5. Settings, MCP Server, Overview, **Test endpoint**. "HTTP 401 without a key" means routing and database selection work.
+5. MCP Server (its own app in the main menu), Overview, **Test endpoint**. "HTTP 401 without a key" means routing and database selection work.
 
 Rollback: uninstall the module in each database, remove it from `server_wide_modules`, restart.
 
 ## Use
 
 1. Create a dedicated internal Odoo user for the client with only the groups it needs. The Administrator (uid 1) is refused: it bypasses every access right.
-2. Settings, MCP Server, **Create key**: name the client, pick the user, tick models and actions (Read, Create, Update, Delete). The key is shown once with ready-made client configurations; Odoo keeps only its sha256.
+2. MCP Server, **Create key**: name the client, pick the user, tick models and actions (Read, Create, Update, Delete). The key is shown once with ready-made client configurations; Odoo keeps only its sha256.
 3. Configure the client with the endpoint `https://<host>/mcp/<database>` and the header `Authorization: Bearer <key>`.
 
 Claude Desktop (through `mcp-remote`):
