@@ -18,9 +18,9 @@ class TestSql(EndpointCase):
             self.key_id = key.id
             plain, self.plain_token = new_key(env, self.user, {'res.partner': {'read'}})
             self.plain_id = plain.id
-            self.partners = env['res.partner'].create({'name': 'SQL One', 'city': 'Bandung'})
+            self.partners = env['res.partner'].create({'name': 'SQL One', 'city': 'Mcp Bandung'})
             for index in range(25):
-                self.partners |= env['res.partner'].create({'name': 'SQL Bulk %02d' % index, 'city': 'Medan'})
+                self.partners |= env['res.partner'].create({'name': 'SQL Bulk %02d' % index, 'city': 'Mcp Medan'})
 
     def tool_names(self, token):
         return [tool['name'] for tool in self.legacy('tools/list', token=token)[1]['result']['tools']]
@@ -65,10 +65,10 @@ class TestSql(EndpointCase):
             env.cr.execute("ALTER TABLE res_partner ADD COLUMN ocn_token varchar")
             env.cr.execute("UPDATE res_partner SET ocn_token = 'leak-' || id")
         allowed = (
-            "SELECT count(*) AS n FROM res_partner WHERE city = 'Medan'",
+            "SELECT count(*) AS n FROM res_partner WHERE city = 'Mcp Medan'",
             "SELECT p.name, c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id ORDER BY p.name",
             "SELECT city, count(*) AS n FROM res_partner GROUP BY city ORDER BY city",
-            "SELECT name FROM res_partner WHERE id IN (SELECT id FROM res_partner WHERE city = 'Medan') LIMIT 3",
+            "SELECT name FROM res_partner WHERE id IN (SELECT id FROM res_partner WHERE city = 'Mcp Medan') LIMIT 3",
         )
         for query in allowed:
             result = self.call(self.token, 'sql_query', {'query': query})
@@ -110,7 +110,7 @@ class TestSql(EndpointCase):
     def test_select_with_structured_where_and_paging(self):
         result = self.call(self.token, 'sql_select', {
             'table': 'res_partner', 'columns': ['id', 'name'], 'order': 'name asc',
-            'where': ['|', ['city', '=', 'Bandung'], ['name', 'ilike', 'bulk 0']], 'limit': 5})
+            'where': ['|', ['city', '=', 'Mcp Bandung'], ['name', 'ilike', 'bulk 0']], 'limit': 5})
         rows = result['structuredContent']['rows']
         self.assertEqual([row['name'] for row in rows], ['SQL Bulk 00', 'SQL Bulk 01', 'SQL Bulk 02', 'SQL Bulk 03', 'SQL Bulk 04'])
         self.assertTrue(result['structuredContent']['has_more'])
@@ -128,18 +128,18 @@ class TestSql(EndpointCase):
             arguments = {'table': 'res_partner', 'values': {'city': 'X'}, 'where': where}
             result = self.call(self.token, 'sql_update', arguments)
             self.assertTrue(result['isError'], where)
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
-                                                      'where': [['city', '=', 'Medan']]})
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Padang'},
+                                                      'where': [['city', '=', 'Mcp Medan']]})
         self.assertIn('matches 25 rows', result['structuredContent']['error'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Mcp Padang'")
             self.assertEqual(env.cr.fetchone()[0], 0)
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Padang'},
                                                       'where': [['name', 'in', ['SQL Bulk 01', 'SQL Bulk 02']]]})
         self.assertEqual(result['structuredContent']['updated'], 2)
         self.assertIn('UPDATE "res_partner" SET "city" = %s', self.statement()['statement'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Mcp Padang'")
             self.assertEqual(set(row[0] for row in env.cr.fetchall()), set([self.user.id]))
 
     def statement(self):
@@ -149,16 +149,16 @@ class TestSql(EndpointCase):
             return env.cr.dictfetchone()
 
     def test_dry_run_reports_and_undoes(self):
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Ambon'},
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Ambon'},
                                                       'where': [['id', '=', self.partners[0].id]], 'dry_run': True})
         self.assertEqual(result['structuredContent'], {'updated': 1, 'keys': [self.partners[0].id], 'dry_run': True})
         with self.shared_env() as env:
             env.cr.execute("SELECT city FROM res_partner WHERE id = %s", (self.partners[0].id,))
-            self.assertEqual(env.cr.fetchone()[0], 'Bandung')
+            self.assertEqual(env.cr.fetchone()[0], 'Mcp Bandung')
         audit = self.statement()
         self.assertTrue(audit['dry_run'])
         self.assertEqual(audit['record_ids'], str(self.partners[0].id))
-        self.assertNotIn('Ambon', audit['statement'])
+        self.assertNotIn('Mcp Ambon', audit['statement'])
 
     def test_delete_needs_the_delete_switch_and_is_bounded(self):
         self.assertNotIn('sql_delete', self.tool_names(self.token))
@@ -168,7 +168,7 @@ class TestSql(EndpointCase):
                 lambda row: row.table_name == 'res_partner').write({'can_delete': True})
             victim = env['res.partner'].create({'name': 'SQL Victim'})
         self.assertIn('sql_delete', self.tool_names(self.token))
-        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Medan']]})
+        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Mcp Medan']]})
         self.assertIn('matches 25 rows', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['id', '=', victim.id]]})
         self.assertEqual(result['structuredContent']['keys'], [victim.id])
@@ -208,7 +208,7 @@ class TestSql(EndpointCase):
             "WHERE p.name LIKE 'SQL %' GROUP BY c.code ORDER BY c.code")})
         self.assertFalse(result['isError'], result)
         self.assertEqual(result['structuredContent']['columns'], ['code', 'partners'])
-        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = 'Medan'",
+        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = 'Mcp Medan'",
                                                      'limit': 3})
         self.assertEqual(result['structuredContent']['returned'], 3)
         self.assertTrue(result['structuredContent']['has_more'])

@@ -13,7 +13,8 @@ class TestEndpoint(EndpointCase):
         super(TestEndpoint, self).setUp()
         with self.shared_env() as env:
             self.user = new_user(env, 'mcp_endpoint_user')
-            key, self.token = new_key(env, self.user, {'res.partner': {'read', 'create'}, 'res.country': {'read'}})
+            key, self.token = new_key(env, self.user, {'res.partner': {'read', 'create'}, 'res.country': {'read'},
+                                                       'res.partner.category': {'read', 'create'}})
             self.key_id = key.id
 
     def test_unknown_database_and_malformed_names_share_one_404(self):
@@ -143,8 +144,9 @@ class TestEndpoint(EndpointCase):
     def test_write_rate_is_separate(self):
         with self.shared_env() as env:
             env['kaitech.mcp.key'].browse(self.key_id).write({'writes_per_minute': 1})
-        self.assertFalse(self.call(self.token, 'create_record', {'model': 'res.partner', 'values': {'name': 'One'}})['isError'])
+        self.assertFalse(self.call(self.token, 'create_record', {'model': 'res.partner.category',
+                                                                  'values': {'name': 'MCP One'}})['isError'])
         status, _body, _headers = self.modern('tools/call', {'name': 'create_record', 'arguments': {
-            'model': 'res.partner', 'values': {'name': 'Two'}}}, token=self.token)
+            'model': 'res.partner.category', 'values': {'name': 'MCP Two'}}}, token=self.token)
         self.assertEqual(status, 429)
         self.assertFalse(self.call(self.token, 'count_records', {'model': 'res.partner'})['isError'])

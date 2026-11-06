@@ -197,18 +197,16 @@ class Grant(object):
         name = model._name
         if name in self._fields_cache:
             return self._fields_cache[name]
-        visible = model.fields_get(attributes=['type'])
         row = self.rows.get(name)
         listed = row and row['fields']
         forbidden = self.fields_everywhere | self.fields_per_model.get(name, set())
         allowed = {}
-        for fname, meta in visible.items():
-            if fname in forbidden or meta.get('type') == 'binary':
+        for fname, field in model._fields.items():
+            if fname in forbidden or field.type == 'binary':
                 continue
             if listed and fname not in listed and fname != 'id':
                 continue
-            field = model._fields.get(fname)
-            if field is None:
+            if field.groups and not model.user_has_groups(field.groups):
                 continue
             allowed[fname] = field
         self._fields_cache[name] = allowed

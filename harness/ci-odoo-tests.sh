@@ -21,6 +21,10 @@ if [ -n "$extra" ]; then
     $odoo_bin $paths $connection -d "$db" -i "$extra" --without-demo=all --stop-after-init --log-level=warn > install.log 2>&1 \
         || { tail -50 install.log; exit 1; }
 fi
+if [ -n "${UPDATE_APPS_LIST:-}" ]; then
+    echo "env['ir.module.module'].update_list(); env.cr.commit()" | $odoo_bin shell $paths $connection -d "$db" --no-xmlrpc \
+        > update-list.log 2>&1 || { tail -30 update-list.log; exit 1; }
+fi
 installed=$(date +%s)
 $odoo_bin $paths $connection -d "$db" -i kaitech_mcp_server --test-enable --without-demo=all --stop-after-init \
     --load=base,web,kaitech_mcp_server --log-level=test > "$log" 2>&1 || true

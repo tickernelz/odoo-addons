@@ -314,9 +314,9 @@ def _get_model_fields(env, grant, arguments):
     if asked is not None:
         names = grant.read_fields(model, asked)
     attributes = ['type', 'string', 'required', 'readonly', 'relation', 'selection', 'help']
-    described = model.fields_get(allfields=names, attributes=attributes)
+    described = model.fields_get(names)
     fields = {}
-    for name in sorted(described):
+    for name in sorted(set(described) & set(names)):
         meta = described[name]
         entry = dict((key, meta[key]) for key in attributes if meta.get(key) not in (None, False, '') or key in ('required', 'readonly'))
         if entry.get('relation') and not grant.permitted(env, entry['relation'], 'read'):
