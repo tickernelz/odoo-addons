@@ -47,6 +47,17 @@ class TestEndpoint(EndpointCase):
             self.assertEqual(status, 400, body)
             self.assertIn(answer['error']['code'], (protocol.PARSE_ERROR, protocol.INVALID_REQUEST))
 
+    def test_origin_behind_a_reverse_proxy(self):
+        proxy_mode = config['proxy_mode']
+        config['proxy_mode'] = True
+        self.addCleanup(config.__setitem__, 'proxy_mode', proxy_mode)
+        forwarded = {'X-Forwarded-Host': 'erp.example.com', 'X-Forwarded-Proto': 'https'}
+        ping = {'jsonrpc': '2.0', 'id': 1, 'method': 'ping'}
+        status, _body, _headers = self.post(ping, token=self.token, headers=dict(forwarded, Origin='https://erp.example.com'))
+        self.assertEqual(status, 200)
+        status, _body, _headers = self.post(ping, token=self.token, headers=dict(forwarded, Origin='https://evil.example'))
+        self.assertEqual(status, 403)
+
     def test_keys_that_do_not_open_the_door(self):
         with self.shared_env() as env:
             revoked, revoked_token = new_key(env, self.user, {'res.partner': {'read'}})

@@ -8,7 +8,6 @@ def post_load():
     """Route /mcp/<db> requests to the MCP endpoint before Odoo's session and database selection."""
     from odoo import http
     from odoo.tools import config
-    from werkzeug.middleware.proxy_fix import ProxyFix
 
     from . import endpoint
 
@@ -24,7 +23,7 @@ def post_load():
             if hasattr(current, name):
                 delattr(current, name)
         if config['proxy_mode'] and environ.get('HTTP_X_FORWARDED_HOST'):
-            ProxyFix(lambda environ, start_response: [])(environ, lambda status, headers: None)
+            http.ProxyFix(lambda environ, start_response: [])(environ, lambda status, headers: None)
         return endpoint.application(environ, start_response)
 
     http.Application._kaitech_mcp_original_call = original_call
