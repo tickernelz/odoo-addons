@@ -51,6 +51,14 @@
                         <field name="config_desktop" widget="CopyClipboardText"/>
                         <field name="config_http" widget="CopyClipboardText"/>
                     </group>
+                    <group string="Claude (Add custom connector)">
+                        <p colspan="2" class="text-muted">In Claude: Settings, Connectors, Add custom connector. Paste the
+                            endpoint above as the URL, add a request header named x-api-key with the value below, and tick
+                            Required. The Authentication choice does not matter: the key travels in that header. Keep the
+                            value plain, without a Bearer prefix.</p>
+                        <field name="claude_header" widget="CopyClipboardChar"/>
+                        <field name="claude_value" widget="CopyClipboardChar"/>
+                    </group>
                 </div>
                 <footer>
                     <button name="action_next" type="object" string="Next" class="oe_highlight" invisible="step != 'client'"/>

@@ -1,4 +1,5 @@
 import json
+import logging
 
 import odoo
 from odoo.tools import config
@@ -168,3 +169,107 @@ class TestEndpoint(EndpointCase):
             'model': 'res.partner', 'values': {'name': 'Two'}}}, token=self.token)
         self.assertEqual(status, 429)
         self.assertFalse(self.call(self.token, 'count_records', {'model': 'res.partner'})['isError'])
+
+
+class TestKeyHeaders(EndpointCase):
+    """One key read from three headers: first one carrying a key decides, nothing else is tried."""
+
+    def setUp(self):
+        super().setUp()
+        with self.shared_env() as env:
+            self.user = new_user(env, 'mcp_header_user')
+            key, self.token = new_key(env, self.user, {'res.country': {'read'}})
+            self.key_id = key.id
+
+    def headers_for(self, name, value):
+        return {name: 'Bearer %s' % value if name == 'Authorization' else value}
+
+    def ping(self, headers=None):
+        return self.post({'jsonrpc': '2.0', 'id': 1, 'method': 'ping'}, headers=headers)
+
+    def test_the_key_may_arrive_in_any_of_the_three_headers(self):
+        answers = set()
+        for name in endpoint.KEY_HEADERS:
+            status, body, _headers = self.legacy('tools/list', headers=self.headers_for(name, self.token))
+            self.assertEqual(status, 200, name)
+            answers.add(json.dumps(body, sort_keys=True))
+        self.assertEqual(len(answers), 1)
+
+    def test_custom_headers_take_a_bare_key_or_a_bearer_prefix(self):
+        for name in ('X-API-Key', 'x-api-key', 'X-Auth-Token'):
+            for value in (self.token, 'Bearer %s' % self.token, 'bearer %s' % self.token):
+                status, body, _headers = self.ping({name: value})
+                self.assertEqual(status, 200, (name, value))
+
+    def test_a_key_never_comes_from_the_query_string_or_the_body(self):
+        for query in ('api_key', 'token', 'key', 'x-api-key'):
+            status, body, _headers = self.post(
+                {'jsonrpc': '2.0', 'id': 1, 'method': 'ping'},
+                path='/mcp/%s?%s=%s' % (self.db, query, self.token))
+            self.assertEqual(status, 401, query)
+            self.assertEqual(body['error']['code'], protocol.REFUSED_HERE)
+        for body in ({'jsonrpc': '2.0', 'id': 1, 'method': 'ping', 'params': {'api_key': self.token}},
+                     {'jsonrpc': '2.0', 'id': 1, 'method': 'ping', 'api_key': self.token}):
+            status, _body, _headers = self.post(body)
+            self.assertEqual(status, 401)
+
+    def test_the_first_header_carrying_a_key_decides(self):
+        wrong = self.token[:-2] + 'xx'
+        status, _body, _headers = self.ping({'Authorization': 'Bearer %s' % wrong, 'X-API-Key': self.token})
+        self.assertEqual(status, 401)
+        status, _body, _headers = self.ping({'Authorization': 'Bearer %s' % self.token, 'X-API-Key': wrong})
+        self.assertEqual(status, 200)
+        status, _body, _headers = self.ping({'X-API-Key': wrong, 'X-Auth-Token': self.token})
+        self.assertEqual(status, 401)
+
+    def test_a_blank_header_carries_no_key(self):
+        for name in ('X-API-Key', 'X-Auth-Token'):
+            for value in ('', '   '):
+                status, body, _headers = self.ping({name: value})
+                self.assertEqual(status, 401, (name, value))
+                self.assertEqual(body['error']['code'], protocol.REFUSED_HERE)
+        status, _body, _headers = self.ping({'X-API-Key': '  ', 'X-Auth-Token': self.token})
+        self.assertEqual(status, 200)
+
+    def test_every_refusal_answers_the_same_way(self):
+        refused = set()
+        for name in endpoint.KEY_HEADERS:
+            for value in (None, self.token[:-2] + 'xx'):
+                status, body, headers = self.ping({} if value is None else self.headers_for(name, value))
+                self.assertEqual(status, 401, (name, value))
+                refused.add((status, json.dumps(body, sort_keys=True), headers['WWW-Authenticate']))
+        self.assertEqual(len(refused), 1)
+
+    def test_every_refused_key_stays_refused_whichever_header_carries_it(self):
+        with self.shared_env() as env:
+            revoked, revoked_token = new_key(env, self.user, {'res.country': {'read'}})
+            revoked.action_revoke()
+            _expired, expired_token = new_key(env, self.user, {'res.country': {'read'}},
+                                              expires_at='2001-01-01 00:00:00')
+            root, root_token = new_key(env, self.user, {'res.country': {'read'}})
+            env.cr.execute("UPDATE kaitech_mcp_key SET user_id = %s WHERE id = %s", (odoo.SUPERUSER_ID, root.id))
+            idle = new_user(env, 'mcp_header_idle')
+            _idle_key, idle_token = new_key(env, idle, {'res.country': {'read'}})
+            env.cr.execute("UPDATE res_users SET active = false WHERE id = %s", (idle.id,))
+        elsewhere = 'o19mcp_%s' % ('a' * 43)
+        for name in endpoint.KEY_HEADERS:
+            for token in (revoked_token, expired_token, root_token, idle_token, elsewhere):
+                status, body, _headers = self.legacy('tools/list', headers=self.headers_for(name, token))
+                self.assertEqual(status, 401, (name, token))
+                self.assertEqual(body['error']['code'], protocol.REFUSED_HERE)
+
+    def test_a_refused_key_is_never_written_to_the_log(self):
+        written = []
+        collector = logging.Handler()
+        collector.emit = lambda record: written.append(record.getMessage())
+        endpoint._logger.addHandler(collector)
+        self.addCleanup(endpoint._logger.removeHandler, collector)
+        wrong = self.token[:-2] + 'xx'
+        for name in endpoint.KEY_HEADERS:
+            for value in (wrong, 'o19mcp_unknown_key_value_zz', 'Basic dXNlcjpwYXNz'):
+                status, _body, _headers = self.ping({name: value})
+                self.assertEqual(status, 401, (name, value))
+        trail = '\n'.join(written)
+        self.assertIn('refused', trail, trail)
+        for secret in (self.token, wrong, 'unknown_key_value_zz', 'dXNlcjpwYXNz', 'Basic'):
+            self.assertNotIn(secret, trail)

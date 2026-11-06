@@ -111,8 +111,9 @@ class EndpointCase(common.HttpCase):
             decoded = response.data
         return response.status_code, decoded, response.headers
 
-    def legacy(self, method, params=None, token=None, ident=1):
-        return self.post({'jsonrpc': '2.0', 'id': ident, 'method': method, 'params': params or {}}, token=token)
+    def legacy(self, method, params=None, token=None, ident=1, headers=None):
+        return self.post({'jsonrpc': '2.0', 'id': ident, 'method': method, 'params': params or {}},
+                         token=token, headers=headers)
 
     def modern(self, method, params=None, token=None, version=MODERN, headers=None):
         params = dict(params or {})

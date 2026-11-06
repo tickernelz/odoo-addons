@@ -10,7 +10,8 @@ keys start with `o19mcp_`.
 2. Load it server-wide (MCP clients send no Odoo session), in `odoo.conf`:
    `server_wide_modules = base,web,kaitech_mcp` (keep the modules already listed), then restart Odoo.
 3. Install the module in each database that should answer MCP calls.
-4. The reverse proxy must forward `/mcp/` and the `Authorization` header.
+4. The reverse proxy must forward `/mcp/` and the header that carries the key: `Authorization`, `X-API-Key` or
+   `X-Auth-Token`.
 5. In the database: MCP Server, Overview, Test endpoint must report HTTP 401 without a key.
 
 Every database not served (absent, filtered by dbfilter, module not installed, module not server-wide) answers the
@@ -49,7 +50,21 @@ unbalanced parentheses are refused), `sql_insert`, `sql_update`, `sql_delete`
 
 Deleting needs the global switch in MCP Settings plus Delete ticked per model or table; at most 20 records per call.
 
+## Key headers
+
+The key may arrive in `Authorization: Bearer o19mcp_...`, `X-API-Key: o19mcp_...` or `X-Auth-Token: o19mcp_...`;
+the last two also accept a `Bearer` prefix. The first header carrying a key decides, so a refused key is never
+retried from another header, a blank header carries nothing, and a non-Bearer `Authorization` is not a key. The key
+is never read from the query string or the body. Every refusal is the same 401 with
+`WWW-Authenticate: Bearer realm="mcp"`, so the answer never says which header was read.
+
 ## Client configuration
+
+Claude, Add custom connector (that dialog cannot set `Authorization` while OAuth is chosen):
+
+- URL: the endpoint, `https://<host>/mcp/<db>`
+- Request header: `x-api-key` = `o19mcp_...`, ticked Required
+- Authentication: any value; the key travels in the header above, never in this one
 
 Claude Desktop (through `mcp-remote`):
 
@@ -58,14 +73,14 @@ Claude Desktop (through `mcp-remote`):
   "--header", "Authorization:${MCP_AUTH}"], "env": {"MCP_AUTH": "Bearer o19mcp_..."}}}}
 ```
 
-Clients with HTTP headers (Cursor, n8n, Hermes):
+Clients with HTTP headers (Cursor, n8n, Hermes; the key may also go in `X-API-Key` or `X-Auth-Token`):
 
 ```json
 {"mcpServers": {"odoo-<db>": {"type": "http", "url": "https://<host>/mcp/<db>",
   "headers": {"Authorization": "Bearer o19mcp_..."}}}}
 ```
 
-The key wizard shows both, filled in, once.
+The key wizard shows every block, filled in, once.
 
 ## CI
 
