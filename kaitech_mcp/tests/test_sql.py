@@ -59,6 +59,22 @@ class TestSql(EndpointCase):
         self.assertFalse(set(['api_token', 'client_secret']) & set(names))
         result = self.call(self.token, 'sql_query', {'query': 'SELECT api_token FROM res_country'})
         self.assertIn('never readable', result['structuredContent']['error'])
+        leaks = (
+            "SELECT x FROM (SELECT api_token AS x FROM res_country) s",
+            "SELECT code FROM res_country WHERE api_token IS NOT NULL",
+            "SELECT code FROM res_country ORDER BY client_secret",
+            "SELECT count(*) FROM res_country GROUP BY api_token",
+            "SELECT p.name FROM res_partner p JOIN res_country c ON c.api_token = p.name",
+            "SELECT max(length(api_token)) FROM res_country",
+        )
+        for query in leaks:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertTrue(result['isError'], query)
+            self.assertIn('never readable', result['structuredContent']['error'], query)
+        for query in ("SELECT count(*) AS n FROM res_country WHERE code = 'ID'",
+                      "SELECT p.name, c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id"):
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertFalse(result['isError'], (query, result['structuredContent']))
 
     def test_allow_sql_needs_the_setting(self):
         set_setting(self.env, 'sql_enabled', 'False')

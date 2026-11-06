@@ -36,6 +36,8 @@ LITERAL = re.compile(r"'(?:[^']|'')*'")
 EXPRESSION_KEYS = ('Output', 'Filter', 'Join Filter', 'Hash Cond', 'Merge Cond', 'Index Cond', 'Recheck Cond',
                    'One-Time Filter', 'Sort Key', 'Group Key', 'Function Call', 'TID Cond', 'Order By',
                    'Presorted Key', 'Cache Key', 'Grouping Sets', 'Hash Key', 'Tid Cond', 'Run Condition')
+PASS_THROUGH = ('Hash', 'Materialize', 'Memoize', 'Sort', 'Incremental Sort', 'Limit', 'Gather', 'Gather Merge',
+                'Unique')
 REFUSED_NODES = ('ModifyTable', 'LockRows', 'Foreign Scan', 'Custom Scan', 'Sample Scan')
 FUNCTION_SCANS = ('generate_series', 'unnest')
 
@@ -320,17 +322,13 @@ class Run(object):
         """Refuse a plan that reads a table, column or function this key may not use."""
         tables = set()
         expressions = []
-        nodes = list(plan)
+        nodes = [(item['Plan'], True) for item in plan if isinstance(item, dict) and 'Plan' in item]
         while nodes:
-            node = nodes.pop()
-            if isinstance(node, list):
-                nodes.extend(node)
-                continue
-            if not isinstance(node, dict):
-                continue
-            if 'Plan' in node:
-                nodes.append(node['Plan'])
-            nodes.extend(node.get('Plans') or [])
+            node, top = nodes.pop()
+            children = [child for child in node.get('Plans') or [] if isinstance(child, dict)]
+            nodes.extend((child, False) for child in children)
+            if not top and _carries_columns_only(self.cr, self.grant, node, children):
+                node = dict(node, Output=None)
             kind = node.get('Node Type')
             if kind in REFUSED_NODES:
                 raise ToolRefused("This query is not allowed (%s)." % kind)
@@ -423,6 +421,29 @@ class Run(object):
         if not dry_run:
             self.env.registry.clear_all_caches()
         return {'deleted': count, 'keys': keys, 'dry_run': dry_run}, table.name, keys if has_key else [], count
+
+
+def _bare(names):
+    return {name.rpartition('.')[2].strip('"') for name in names or ()}
+
+
+def _carries_columns_only(cr, grant, node, children):
+    """True when a non-top node's Output only carries columns upward without computing on them.
+
+    PostgreSQL scans may emit every column of the table (physical target list) and pass-through nodes
+    repeat their child's Output; a column only reaches the client or changes the result through an
+    expression of a node above, which stays checked.
+    """
+    output = node.get('Output')
+    if not output:
+        return False
+    if node.get('Relation Name') and node.get('Node Type', '').endswith('Scan'):
+        table = Table(cr, node['Relation Name'], grant)
+        plain = all('(' not in item and ' ' not in item for item in output)
+        return plain and _bare(output) == set(table.columns) | table.hidden
+    if node.get('Node Type') in PASS_THROUGH and len(children) == 1:
+        return output == children[0].get('Output')
+    return False
 
 
 class _Now(object):
