@@ -340,7 +340,7 @@ def describe_model(env, grant, model_name, only_fields=None, query=None):
         if model_name in owners:
             (orm_overrides if name in orm else public).append(name)
         elif owners[-1] not in ('base', None):
-            inherited[owners[-1]] = inherited.get(owners[-1], 0) + 1
+            inherited.setdefault(owners[-1], []).append(name)
     private = [name for name in chains if name.startswith('_')
                and any(item.owner == model_name for item in chains[name])]
     user_access = dict((mode, model.has_access(mode)) for mode in ('read', 'create', 'write', 'unlink'))
@@ -361,7 +361,8 @@ def describe_model(env, grant, model_name, only_fields=None, query=None):
         'fields_from_parents': inherited_fields,
         'methods': public,
         'orm_overrides': orm_overrides,
-        'inherited_public_methods': inherited,
+        'inherited_public_methods': dict((parent, {'count': len(names), 'methods': names[:200]})
+                                         for parent, names in sorted(inherited.items())),
         'private_methods_defined_here': len(private),
         'next': ['describe_method(model, method)', 'get_method_source(model, method)',
                  'search_methods(query, model) for private ones such as compute methods'],

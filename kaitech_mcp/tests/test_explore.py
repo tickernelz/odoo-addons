@@ -47,8 +47,21 @@ class TestExplore(EndpointCase):
         line = described['fields']['base']['commercial_partner_id']
         self.assertTrue(line.startswith('many2one(res.partner)'), line)
         self.assertIn('compute=_compute_commercial_partner(', line)
-        self.assertIn('address_get', described['methods'])
-        self.assertNotIn('write', described['methods'])
+        with self.shared_env() as env:
+            chains = explore.index(env).chains(type(env['res.partner']))
+        listed = set(described['methods'])
+        counted = set()
+        for group in described['inherited_public_methods'].values():
+            self.assertEqual(group['count'], len(group['methods']))
+            counted |= set(group['methods'])
+        self.assertEqual(listed - set(chains), set(), 'describe_model invented a method')
+        self.assertEqual(counted - set(chains), set(), 'describe_model invented an inherited method')
+        self.assertTrue(listed, 'describe_model lists no method of res.partner')
+        from_parents = [name for name in chains if not name.startswith('_')
+                        and 'res.partner' not in [item.owner for item in chains[name]]
+                        and [item.owner for item in chains[name]][-1] not in ('base', None)]
+        self.assertEqual(len(counted), len(from_parents), 'a method inherited from a mixin is not named')
+        self.assertNotIn('write', listed)
         self.assertIn('write', described['orm_overrides'])
         self.assertEqual(described['access']['key'], {'read': True, 'create': False, 'update': False, 'delete': False})
         self.assertTrue(described['access']['user']['read'])
