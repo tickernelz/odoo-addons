@@ -1,0 +1,7 @@
+probe:
+  image: odoo:19.0
+  script:
+    - odoo --version
+    - python3 --version
+    - python3 -c "import odoo, os; print(os.path.dirname(odoo.__file__))"
+    - cat /etc/odoo/odoo.conf
