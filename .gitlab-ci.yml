@@ -1,7 +1,92 @@
-probe:
-  image: odoo:19.0
+stages:
+  - lint
+  - test
+  - i18n
+  - harness
+
+variables:
+  POSTGRES_USER: odoo
+  POSTGRES_PASSWORD: odoo
+  POSTGRES_DB: postgres
+  DB_HOST: postgres
+  PINNED_ODOO_COMMIT: e07db5eaff8355aad4e19b1ccea441d4a0a7f6d7
+
+.odoo-image:
+  image:
+    name: odoo:19.0
+    entrypoint: [""]
+  services:
+    - name: postgres:16
+      alias: postgres
+  artifacts:
+    when: always
+    paths:
+      - odoo-tests.log
+    expire_in: 2 weeks
+
+lint:
+  stage: lint
+  image: python:3.12-slim
   script:
-    - odoo --version
-    - python3 --version
-    - python3 -c "import odoo, os; print(os.path.dirname(odoo.__file__))"
-    - cat /etc/odoo/odoo.conf
+    - pip install -q ruff==0.15.0
+    - ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp ci
+    - python -m compileall -q kaitech_mcp
+
+odoo19-image:
+  extends: .odoo-image
+  stage: test
+  variables:
+    ADDONS_PATH: "$CI_PROJECT_DIR,/usr/lib/python3/dist-packages/odoo/addons"
+  script:
+    - sh ci/odoo-tests.sh
+
+odoo19-pinned-core:
+  stage: test
+  image: python:3.12.3-bookworm
+  services:
+    - name: postgres:15
+      alias: postgres
+  artifacts:
+    when: always
+    paths:
+      - odoo-tests.log
+    expire_in: 2 weeks
+  script:
+    - mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$PINNED_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
+    - apt-get update -qq && apt-get install -y -qq libldap2-dev libsasl2-dev >/dev/null
+    - pip install -q -r /tmp/src/requirements.txt
+    - ODOO_BIN="python3 /tmp/src/odoo-bin" ADDONS_PATH="$CI_PROJECT_DIR,/tmp/src/addons,/tmp/src/odoo/addons" sh ci/odoo-tests.sh
+
+i18n-template:
+  extends: .odoo-image
+  stage: i18n
+  needs: []
+  artifacts:
+    paths:
+      - fresh.pot
+    expire_in: 1 week
+  script:
+    - ADDONS_PATH="$CI_PROJECT_DIR,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n > fresh.pot
+
+i18n:
+  stage: i18n
+  image: python:3.12-slim
+  needs: [i18n-template]
+  script:
+    - apt-get update -qq && apt-get install -y -qq gettext >/dev/null
+    - pip install -q polib==1.2.0
+    - python ci/i18n.py compare fresh.pot
+    - python ci/i18n.py check
+    - msgfmt --check --statistics -o /dev/null kaitech_mcp/i18n/id.po
+
+multi-db:
+  stage: harness
+  image: docker:27
+  services:
+    - name: docker:27-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - sh ci/multidb.sh open dbfilter list_db_off not_server_wide perf
