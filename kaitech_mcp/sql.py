@@ -58,27 +58,30 @@ def database_tables(cr):
 
 
 def load_tables(cr, names, grant):
-    """Table of each name that exists, read with one catalog query whatever the number of names."""
+    """Table of each name that exists, read with two catalog queries whatever the number of names."""
     names = tuple(sorted(set(names)))
     if not names:
         return {}
     cr.execute("""
-        SELECT c.table_name, c.column_name, c.data_type, c.is_nullable = 'YES', c.column_default IS NOT NULL,
-               t.table_type, k.attname IS NOT NULL
+        SELECT c.table_name, c.column_name, c.data_type, c.is_nullable = 'YES', c.column_default IS NOT NULL, t.table_type
           FROM information_schema.columns c
           JOIN information_schema.tables t ON t.table_schema = c.table_schema AND t.table_name = c.table_name
-          LEFT JOIN (
-                SELECT r.relname, a.attname FROM pg_index i
-                  JOIN pg_class r ON r.oid = i.indrelid JOIN pg_namespace n ON n.oid = r.relnamespace
-                  JOIN pg_attribute a ON a.attrelid = r.oid AND a.attnum = ANY(i.indkey)
-                 WHERE i.indisprimary AND n.nspname = %s AND r.relname IN %s
-               ) k ON k.relname = c.table_name AND k.attname = c.column_name
-         WHERE c.table_schema = %s AND c.table_name IN %s ORDER BY c.table_name, c.ordinal_position""",
-               (SCHEMA, names, SCHEMA, names))
+         WHERE c.table_schema = %s AND c.table_name IN %s ORDER BY c.table_name, c.ordinal_position""", (SCHEMA, names))
     rows = {}
     for row in cr.fetchall():
         rows.setdefault(row[0], []).append(row[1:])
-    return dict((name, Table(name, found, grant)) for name, found in rows.items())
+    if not rows:
+        return {}
+    cr.execute("""
+        SELECT c.relname, a.attname FROM pg_index i
+          JOIN pg_class c ON c.oid = i.indrelid JOIN pg_namespace n ON n.oid = c.relnamespace
+          JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum = ANY(i.indkey)
+         WHERE i.indisprimary AND n.nspname = %s AND c.relname IN %s ORDER BY c.relname, a.attnum""",
+               (SCHEMA, tuple(sorted(rows))))
+    keys = {}
+    for name, column in cr.fetchall():
+        keys.setdefault(name, []).append(column)
+    return dict((name, Table(name, found, keys.get(name, []), grant)) for name, found in rows.items())
 
 
 def load_table(cr, name, grant):
@@ -91,14 +94,14 @@ def load_table(cr, name, grant):
 class Table(object):
     """Columns, types and primary key of one public table, with the columns this key may use."""
 
-    def __init__(self, name, rows, grant):
+    def __init__(self, name, rows, primary_key, grant):
         self.name = name
         self.is_view = rows[0][4] != 'BASE TABLE'
         forbidden = grant.columns_forbidden_on(name)
         self.columns = []
         self.types = {}
         self.defaults = set()
-        for column, kind, nullable, has_default, _kind, _in_key in rows:
+        for column, kind, nullable, has_default, _kind in rows:
             if column in forbidden or kind == 'bytea' or any(fnmatch.fnmatchcase(column, pattern) for pattern in FORBIDDEN_COLUMNS):
                 continue
             self.columns.append(column)
@@ -106,7 +109,7 @@ class Table(object):
             if has_default:
                 self.defaults.add(column)
         self.hidden = set(row[0] for row in rows) - set(self.columns)
-        self.primary_key = [row[0] for row in rows if row[5]]
+        self.primary_key = primary_key
 
     def column(self, name):
         if not isinstance(name, str) or name not in self.types:

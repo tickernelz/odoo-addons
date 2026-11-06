@@ -1,7 +1,7 @@
 from odoo.tests import common
 
 from .. import grants
-from .common import grant_for, new_key, new_user, set_setting
+from .common import default_settings, grant_for, new_key, new_user, set_setting
 
 
 @common.tagged('post_install', '-at_install')
@@ -9,6 +9,7 @@ class TestGrants(common.TransactionCase):
 
     def setUp(self):
         super().setUp()
+        default_settings(self.env)
         self.user = new_user(self.env, 'mcp_grant_user')
         self.key, _token = new_key(self.env, self.user, {
             'res.partner': {'read', 'create', 'update'}, 'res.country': {'read'}})

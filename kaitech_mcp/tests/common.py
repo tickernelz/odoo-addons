@@ -1,4 +1,5 @@
 import json
+import uuid
 from contextlib import contextmanager
 
 import werkzeug.test
@@ -49,6 +50,17 @@ def set_setting(env, name, value):
     env['ir.config_parameter'].sudo().set_param(grants.PARAM_PREFIX + name, value)
 
 
+def default_settings(env):
+    """Put every MCP setting at its default, whatever the database under test already chose."""
+    for name, default in grants.DEFAULTS.items():
+        set_setting(env, name, False if isinstance(default, str) else '%s' % default)
+
+
+def marker():
+    """A value no database already holds, for names and cities that tests search on."""
+    return 'mcp%s' % uuid.uuid4().hex[:10]
+
+
 def grant_for(env, key):
     """The Grant the endpoint would build for key."""
     exchange = endpoint.Exchange.__new__(endpoint.Exchange)
@@ -72,6 +84,8 @@ class EndpointCase(common.HttpCase):
         if endpoint.MODULE not in self._server_wide:
             config['server_wide_modules'] = self._server_wide + [endpoint.MODULE]
         self.client = werkzeug.test.Client(odoo.http.root, werkzeug.wrappers.Response)
+        with self.shared_env() as env:
+            default_settings(env)
 
     def tearDown(self):
         config['server_wide_modules'] = self._server_wide

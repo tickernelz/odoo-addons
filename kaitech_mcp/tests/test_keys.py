@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
 
 from .. import keys
-from .common import new_key, new_user, set_setting
+from .common import default_settings, new_key, new_user, set_setting
 
 
 @common.tagged('post_install', '-at_install')
@@ -13,6 +13,7 @@ class TestKeys(common.TransactionCase):
 
     def setUp(self):
         super().setUp()
+        default_settings(self.env)
         self.user = new_user(self.env, 'mcp_key_user')
         self.manager = new_user(self.env, 'mcp_key_manager',
                                 groups=('base.group_user', 'base.group_partner_manager', 'kaitech_mcp.group_mcp_manager'))
@@ -128,6 +129,12 @@ class TestKeys(common.TransactionCase):
             'name': 'Stronger', 'user_id': stronger.id})
         with self.assertRaisesRegex(ValidationError, 'access groups you hold'):
             wizard.action_next()
+        set_setting(self.env, 'sql_enabled', 'True')
+        stronger_key = self.env['kaitech.mcp.key'].create({'name': 'Stronger SQL', 'user_id': stronger.id, 'allow_sql': True})
+        as_manager.browse(stronger_key.id).write({'allow_sql': False})
+        self.assertFalse(stronger_key.allow_sql)
+        with self.assertRaisesRegex(ValidationError, 'access groups you hold'):
+            as_manager.browse(stronger_key.id).write({'allow_sql': True})
         settings_admin = new_user(self.env, 'mcp_key_settings_admin',
                                   groups=('base.group_system', 'kaitech_mcp.group_mcp_manager'))
         self.env['kaitech.mcp.key'].with_user(settings_admin.id).create({'name': 'Any', 'user_id': stronger.id})

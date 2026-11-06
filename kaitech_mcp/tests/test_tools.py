@@ -1,10 +1,11 @@
-from .common import EndpointCase, new_key, new_user, set_setting
+from .common import EndpointCase, marker, new_key, new_user, set_setting
 
 
 class TestTools(EndpointCase):
 
     def setUp(self):
         super().setUp()
+        self.mark = marker()
         with self.shared_env() as env:
             self.sales = new_user(env, 'mcp_tools_sales')
             self.reader = new_user(env, 'mcp_tools_reader', groups=('base.group_user',))
@@ -15,7 +16,7 @@ class TestTools(EndpointCase):
             reader_key, self.reader_token = new_key(env, self.reader, {'res.partner': {'read', 'create', 'update'}})
             self.reader_key_id = reader_key.id
             self.category = env['res.partner.category'].create({'name': 'MCP VIP'})
-            self.partner = env['res.partner'].create({'name': 'PT Contoh Jakarta', 'city': 'Jakarta', 'phone': '021-1'})
+            self.partner = env['res.partner'].create({'name': 'PT Contoh %s' % self.mark, 'city': self.mark, 'phone': '021-1'})
 
     def test_list_models_combines_key_and_odoo_rights(self):
         result = self.call(self.reader_token, 'list_models', {})
@@ -34,20 +35,20 @@ class TestTools(EndpointCase):
 
     def test_search_read_count_and_audit(self):
         result = self.call(self.token, 'search_records', {
-            'model': 'res.partner', 'domain': [['city', 'ilike', 'jakarta']], 'fields': ['name', 'phone'], 'limit': 5})
+            'model': 'res.partner', 'domain': [['city', 'ilike', self.mark.upper()]], 'fields': ['name', 'phone'], 'limit': 5})
         self.assertFalse(result['isError'])
         records = result['structuredContent']['records']
-        self.assertEqual([(row['id'], row['name']) for row in records], [(self.partner.id, 'PT Contoh Jakarta')])
-        self.assertIn('PT Contoh Jakarta', result['content'][0]['text'])
+        self.assertEqual([(row['id'], row['name']) for row in records], [(self.partner.id, 'PT Contoh %s' % self.mark)])
+        self.assertIn('PT Contoh %s' % self.mark, result['content'][0]['text'])
         call = self.last_call(self.key_id)
         self.assertEqual((call['result'], call['tool'], call['model'], call['record_count']),
                          ('ok', 'search_records', 'res.partner', 1))
-        result = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': [['city', '=', 'Jakarta']]})
+        result = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': [['city', '=', self.mark]]})
         self.assertEqual(result['structuredContent'], {'count': 1})
         result = self.call(self.token, 'read_records', {'model': 'res.partner', 'ids': [self.partner.id, 99999999],
                                                         'fields': ['city']})
         self.assertEqual(result['structuredContent']['missing_ids'], [99999999])
-        self.assertEqual(result['structuredContent']['records'][0]['city'], 'Jakarta')
+        self.assertEqual(result['structuredContent']['records'][0]['city'], self.mark)
 
     def test_paging_reports_has_more(self):
         first = self.call(self.token, 'search_records', {'model': 'res.country', 'limit': 2, 'fields': ['code']})
@@ -72,7 +73,7 @@ class TestTools(EndpointCase):
 
     def test_create_with_lines_and_update_many2many(self):
         result = self.call(self.token, 'create_record', {'model': 'res.partner', 'values': {
-            'name': 'PT Baru', 'is_company': True, 'child_ids': [{'name': 'Budi'}, {'name': 'Sari'}]}})
+            'name': 'PT Baru %s' % self.mark, 'is_company': True, 'child_ids': [{'name': 'Budi'}, {'name': 'Sari'}]}})
         self.assertFalse(result['isError'], result)
         new_id = result['structuredContent']['id']
         with self.shared_env() as env:
@@ -88,18 +89,18 @@ class TestTools(EndpointCase):
             self.assertEqual(env['res.partner'].browse(new_id).category_id.ids, [self.category.id])
 
     def test_odoo_access_rights_still_apply_and_nothing_is_written(self):
-        result = self.call(self.reader_token, 'create_record', {'model': 'res.partner', 'values': {'name': 'Nope'}})
+        result = self.call(self.reader_token, 'create_record', {'model': 'res.partner', 'values': {'name': 'Nope %s' % self.mark}})
         self.assertTrue(result['isError'])
         self.assertEqual(self.last_call(self.reader_key_id)['result'], 'refused')
         with self.shared_env() as env:
-            self.assertFalse(env['res.partner'].search([('name', '=', 'Nope')]))
+            self.assertFalse(env['res.partner'].search([('name', '=', 'Nope %s' % self.mark)]))
 
     def test_failed_write_rolls_back_but_stays_in_the_audit(self):
         result = self.call(self.token, 'create_record', {'model': 'res.partner', 'values': {
-            'name': 'Broken', 'child_ids': [{'name': 'Line'}], 'parent_id': 99999999}})
+            'name': 'Broken %s' % self.mark, 'child_ids': [{'name': 'Line %s' % self.mark}], 'parent_id': 99999999}})
         self.assertTrue(result['isError'])
         with self.shared_env() as env:
-            self.assertFalse(env['res.partner'].search([('name', 'in', ['Broken', 'Line'])]))
+            self.assertFalse(env['res.partner'].search([('name', 'in', ['Broken %s' % self.mark, 'Line %s' % self.mark])]))
         self.assertEqual(self.last_call(self.key_id)['result'], 'error')
 
     def test_raw_context_and_unknown_arguments_are_refused(self):
@@ -111,8 +112,8 @@ class TestTools(EndpointCase):
 
     def test_archived_records_only_on_request(self):
         with self.shared_env() as env:
-            env['res.partner'].create({'name': 'Archived MCP', 'active': False})
-        domain = [['name', '=', 'Archived MCP']]
+            env['res.partner'].create({'name': 'Archived %s' % self.mark, 'active': False})
+        domain = [['name', '=', 'Archived %s' % self.mark]]
         hidden = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': domain})
         shown = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': domain, 'include_archived': True})
         self.assertEqual((hidden['structuredContent']['count'], shown['structuredContent']['count']), (0, 1))
@@ -124,15 +125,15 @@ class TestTools(EndpointCase):
             set_setting(env, 'delete_enabled', 'True')
             env['kaitech.mcp.key'].browse(self.key_id).permission_ids.filtered(
                 lambda row: row.model_name == 'res.partner').write({'can_delete': True})
-            victims = env['res.partner'].create({'name': 'Delete me'}) | env['res.partner'].create({'name': 'Delete me too'})
+            victims = env['res.partner'].create({'name': 'Delete me %s' % self.mark}) | env['res.partner'].create({'name': 'Delete me too %s' % self.mark})
         status, body, _headers = self.legacy('tools/list', token=self.token)
         self.assertIn('delete_records', [tool['name'] for tool in body['result']['tools']])
         too_many = self.call(self.token, 'delete_records', {'model': 'res.partner', 'ids': list(range(1, 22))})
         self.assertTrue(too_many['isError'])
         result = self.call(self.token, 'delete_records', {'model': 'res.partner', 'ids': victims.ids})
         self.assertEqual(sorted(row['display_name'] for row in result['structuredContent']['deleted']),
-                         ['Delete me', 'Delete me too'])
+                         ['Delete me %s' % self.mark, 'Delete me too %s' % self.mark])
         call = self.last_call(self.key_id)
-        self.assertIn('%s Delete me' % victims[0].id, call['deleted_names'])
+        self.assertIn('%s Delete me %s' % (victims[0].id, self.mark), call['deleted_names'])
         result = self.call(self.token, 'delete_records', {'model': 'res.country', 'ids': [1]})
         self.assertTrue(result['isError'])

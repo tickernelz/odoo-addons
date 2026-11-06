@@ -135,8 +135,6 @@ class McpKey(models.Model):
     @api.constrains('user_id', 'allow_sql')
     def _check_user(self):
         admin = self.env.ref('base.user_admin', raise_if_not_found=False)
-        creator = self.env.user
-        bounded = self.env.uid != SUPERUSER_ID and not creator._is_system()
         for key in self:
             if key.user_id.id == SUPERUSER_ID or (admin and key.user_id == admin):
                 raise ValidationError(self.env._(
@@ -144,12 +142,19 @@ class McpKey(models.Model):
                     "Create a dedicated user for this client with only the groups it needs."))
             if key.user_id.share:
                 raise ValidationError(self.env._("An MCP key must act as an internal user, not a portal or public user."))
-            if bounded and key.user_id.sudo().all_group_ids - creator.sudo().all_group_ids:
-                raise ValidationError(self.env._(
-                    "An MCP key can only act as a user whose access groups you hold yourself."))
             if key.allow_sql and self.env.ref('base.group_system') in key.user_id.sudo().all_group_ids:
                 raise ValidationError(self.env._(
                     "A key with SQL cannot act as a Settings administrator."))
+
+    def _check_within_your_groups(self):
+        """Refuse a key acting as a user with access groups the current user lacks, unless that is an administrator."""
+        creator = self.env.user
+        if self.env.uid == SUPERUSER_ID or creator._is_system():
+            return
+        for key in self:
+            if key.user_id.sudo().all_group_ids - creator.sudo().all_group_ids:
+                raise ValidationError(self.env._(
+                    "An MCP key can only act as a user whose access groups you hold yourself."))
 
     @api.constrains('allow_sql')
     def _check_sql(self):
@@ -168,12 +173,17 @@ class McpKey(models.Model):
     def create(self, vals_list):
         vals_list = [{name: value for name, value in vals.items() if name not in ('key_hash', 'key_index')}
                      for vals in vals_list]
-        return super().create(vals_list)
+        keys = super().create(vals_list)
+        keys._check_within_your_groups()
+        return keys
 
     def write(self, vals):
         if 'key_hash' in vals or 'key_index' in vals:
             raise UserError(self.env._("A key's secret cannot be changed; rotate the key instead."))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'user_id' in vals or vals.get('allow_sql'):
+            self._check_within_your_groups()
+        return result
 
     def _issue_token(self):
         """Give this key a new secret and return it; only its digest is stored."""

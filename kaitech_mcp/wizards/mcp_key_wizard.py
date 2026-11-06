@@ -62,7 +62,9 @@ class McpKeyWizard(models.TransientModel):
         self.ensure_one()
         if not self.name or not self.user_id:
             raise UserError(self.env._("Name the client and choose the Odoo user the key acts as."))
-        self.env['kaitech.mcp.key'].new({'name': self.name, 'user_id': self.user_id.id})._check_user()
+        draft = self.env['kaitech.mcp.key'].new({'name': self.name, 'user_id': self.user_id.id})
+        draft._check_user()
+        draft._check_within_your_groups()
         self.step = 'models'
         return self._reopen(self.env._('New MCP key: models and actions'))
 
