@@ -32,8 +32,8 @@ lint:
   stage: lint
   image: python:2.7.18-slim
   script:
-    - pip install -q pyflakes==2.1.1
-    - python -m pyflakes kaitech_mcp_server
+    - pip install -q flake8==3.9.2
+    - python -m flake8 kaitech_mcp_server
     - python -m compileall -q kaitech_mcp_server
 
 odoo10-image-empty-db:
@@ -63,6 +63,9 @@ odoo10-pinned-core-py2718-pg15:
   services:
     - name: postgres:15
       alias: postgres
+      command: ["postgres", "-c", "password_encryption=md5"]
+  variables:
+    POSTGRES_INITDB_ARGS: "--auth-host=md5"
   artifacts:
     when: always
     paths:

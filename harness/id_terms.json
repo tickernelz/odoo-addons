@@ -249,5 +249,6 @@
  "e.g. Alice - Claude Desktop": "mis. Alice - Claude Desktop",
  "hr.payslip*": "hr.payslip*",
  "hr_payslip*": "hr_payslip*",
- "res.partner.vat": "res.partner.vat"
+ "res.partner.vat": "res.partner.vat",
+ "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group.": "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan."
 }

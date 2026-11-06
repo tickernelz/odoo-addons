@@ -40,6 +40,11 @@ for name in failed:
 for line in broken[:20]:
     print("  " + line)
 if ran == 0 or failed or broken:
+    start = text.find("Traceback (most recent call last)")
+    if start >= 0:
+        print(text[max(0, text.rfind("\n", 0, start - 300)):start + 3000])
+    else:
+        print(text[-3000:])
     sys.exit(1)
 EOF
 echo "extra install: $((installed - started)) s, module install + tests: $((finished - installed)) s"

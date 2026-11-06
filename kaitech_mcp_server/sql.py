@@ -132,7 +132,7 @@ def where_clause(table, where, required=False):
     if not stack:
         return 'TRUE', []
     stack.reverse()
-    return ' AND '.join(text for text, _params in stack), [param for _text, params in stack for param in params]
+    return ' AND '.join(text for text, _bound in stack), [value for _text, bound in stack for value in bound]
 
 
 def _condition(table, term):

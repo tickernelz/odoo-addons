@@ -85,7 +85,13 @@ msgstr ""
 "               terbatas pada model dan aksi yang Anda centang. Pakai MCP Server, Buat kunci untuk membuat yang pertama."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:174
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:117
+#, python-format
+msgid "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group."
+msgstr "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:183
 #, python-format
 msgid "A key's secret cannot be changed; rotate the key instead."
 msgstr "Rahasia kunci tidak bisa diubah; putar kuncinya."
@@ -96,7 +102,7 @@ msgid "A new key with the same permissions is created and this key stops working
 msgstr "Kunci baru dengan izin yang sama dibuat dan kunci ini berhenti bekerja sekarang. Lanjutkan?"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:197
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:206
 #, python-format
 msgid "A revoked key cannot be rotated; create a new key instead."
 msgstr "Kunci yang sudah dicabut tidak bisa diputar; buat kunci baru."
@@ -167,13 +173,13 @@ msgstr ""
 "                        nama database. Setiap database punya kunci dan log panggilan sendiri."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:150 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:66
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:159 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:66
 #, python-format
 msgid "An MCP key cannot act as the Administrator (uid 1): that user bypasses every access right and record rule. Create a dedicated user for this client with only the groups it needs."
 msgstr "Kunci MCP tidak boleh bertindak sebagai Administrator (uid 1): user itu melewati semua hak akses dan record rule. Buat user khusus untuk klien ini dengan grup yang benar-benar diperlukan saja."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:154
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:163
 #, python-format
 msgid "An MCP key must act as an internal user, not a portal or public user."
 msgstr "Kunci MCP harus bertindak sebagai user internal, bukan user portal atau publik."
@@ -184,13 +190,13 @@ msgid "Apply"
 msgstr "Terapkan"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:160 code:addons/kaitech_mcp_server/models/mcp_settings.py:58
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:169 code:addons/kaitech_mcp_server/models/mcp_settings.py:58
 #, python-format
 msgid "At most %s records can be deleted per call."
 msgstr "Paling banyak %s record bisa dihapus per panggilan."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:162
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:171
 #, python-format
 msgid "At most %s records can be read or updated per call."
 msgstr "Paling banyak %s record bisa dibaca atau diubah per panggilan."
@@ -700,7 +706,7 @@ msgid "MCP Settings"
 msgstr "Pengaturan MCP"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:205
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:214
 #, python-format
 msgid "MCP key rotated: copy the new key"
 msgstr "Kunci MCP diputar: salin kunci baru"
@@ -1114,7 +1120,7 @@ msgid "Test MCP Key"
 msgstr "Uji Kunci MCP"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:213 code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:57 model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:222 code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:57 model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
 #, python-format
 msgid "Test MCP key"
 msgstr "Uji kunci MCP"
@@ -1275,7 +1281,7 @@ msgid "Unreachable"
 msgstr "Tidak terjangkau"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:100
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:101
 #, python-format
 msgid "Unsupported search on the key status."
 msgstr "Pencarian status kunci ini tidak didukung."
