@@ -562,15 +562,15 @@ def _get_view(env, grant, arguments):
         raise ToolArgumentError("view_type must be one of: %s." % ', '.join(VIEW_TYPES))
     if view_type == 'list':
         view_type = 'tree'
-    view = arguments.get('view')
+    requested = arguments.get('view')
     view_id = None
-    if isinstance(view, basestring) and view.strip():
-        view_id = _view_id(env, view.strip())
-    elif isinstance(view, (int, long)) and not isinstance(view, bool):
-        if not env['ir.ui.view'].sudo().browse(view).exists():
-            raise ToolArgumentError("No view with id %s." % view)
-        view_id = view
-    elif view is not None:
+    if isinstance(requested, basestring) and requested.strip():
+        view_id = _view_id(env, requested.strip())
+    elif isinstance(requested, (int, long)) and not isinstance(requested, bool):
+        if not env['ir.ui.view'].sudo().browse(requested).exists():
+            raise ToolArgumentError("No view with id %s." % requested)
+        view_id = requested
+    elif requested is not None:
         raise ToolArgumentError("view must be a view xmlid or id.")
     start = integer(arguments, 'start_line', 1, 1, None)
     count = integer(arguments, 'lines', 300, 1, MAX_READ_LINES)
@@ -585,12 +585,12 @@ def _get_view(env, grant, arguments):
         children = views.search([('inherit_id', 'in', frontier)], order='priority, id')
         chain.extend(children)
         frontier = children.ids
-    names = _record_xmlids(env, 'ir.ui.view', [root] + [view.id for view in chain] if root else [])
+    names = _record_xmlids(env, 'ir.ui.view', [root] + [item.id for item in chain] if root else [])
     end = start + len(chosen) - 1
     payload = {
         'model': model._name, 'view_type': view_type, 'view_id': root, 'xmlid': names.get(root),
-        'inherited_by': [{'xmlid': names.get(view.id), 'name': view.name, 'inherits': names.get(view.inherit_id.id)}
-                         for view in chain],
+        'inherited_by': [{'xmlid': names.get(item.id), 'name': item.name, 'inherits': names.get(item.inherit_id.id)}
+                         for item in chain],
         'start_line': start, 'end_line': end, 'total_lines': len(lines), 'arch': '\n'.join(chosen),
     }
     if end < len(lines):
