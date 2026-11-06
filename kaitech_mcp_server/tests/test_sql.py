@@ -94,10 +94,15 @@ class TestSql(EndpointCase):
             env.cr.execute("CREATE TABLE mcp_hidden_probe (id serial PRIMARY KEY, name varchar, api_token varchar)")
             env.cr.execute("INSERT INTO mcp_hidden_probe (name, api_token) SELECT 'row ' || n, 'LEAKED-' || n "
                            "FROM generate_series(1, 5) n")
-            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [(0, 0, {
-                'table_name': 'mcp_hidden_probe', 'can_select': True})]})
+            env.cr.execute("CREATE TABLE mcp_hidden_twin (api_token varchar, label varchar)")
+            env.cr.execute("INSERT INTO mcp_hidden_twin VALUES ('LEAKED-1', 'one')")
+            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [
+                (0, 0, {'table_name': 'mcp_hidden_probe', 'can_select': True}),
+                (0, 0, {'table_name': 'mcp_hidden_twin', 'can_select': True})]})
         for query in ("SELECT name FROM mcp_hidden_probe ORDER BY id",
-                      "SELECT count(*) AS n FROM mcp_hidden_probe WHERE name LIKE 'row %'"):
+                      "SELECT count(*) AS n FROM mcp_hidden_probe WHERE name LIKE 'row %'",
+                      "SELECT x.b FROM mcp_hidden_probe AS x(a, b)",
+                      "SELECT p.name, t.label FROM mcp_hidden_probe p, mcp_hidden_twin t WHERE p.id = 1"):
             result = self.call(self.token, 'sql_query', {'query': query})
             self.assertFalse(result['isError'], (query, result))
         leaks = (
@@ -110,6 +115,12 @@ class TestSql(EndpointCase):
             "SELECT u.c FROM (SELECT * FROM mcp_hidden_probe UNION ALL SELECT * FROM mcp_hidden_probe) u(a, b, c)",
             "SELECT name FROM mcp_hidden_probe WHERE EXISTS (SELECT 1 FROM (SELECT * FROM mcp_hidden_probe) s(a, b, c) "
             "WHERE s.c = 'LEAKED-1' AND s.a = mcp_hidden_probe.id)",
+            "SELECT x.c FROM mcp_hidden_probe AS x(a, b, c)",
+            "SELECT x.name FROM mcp_hidden_probe AS x(id, other, name)",
+            "SELECT * FROM mcp_hidden_probe UNION ALL SELECT * FROM mcp_hidden_probe",
+            "SELECT name FROM mcp_hidden_probe JOIN mcp_hidden_twin USING (api_token)",
+            "SELECT api_token AS n FROM mcp_hidden_probe JOIN mcp_hidden_twin USING (api_token)",
+            "SELECT name FROM mcp_hidden_probe NATURAL JOIN mcp_hidden_twin",
         )
         for query in leaks:
             result = self.call(self.token, 'sql_query', {'query': query})
