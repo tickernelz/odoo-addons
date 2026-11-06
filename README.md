@@ -35,7 +35,9 @@ The resource `odoo://overview` gives a first map (Odoo version, modules not made
 
 Call methods, off by default per key (Call methods) and per model (Call column): `call_method` runs one public
 business method as the key user (`@api.model` methods without ids). Private `_methods`, `@api.private` methods and
-every method the ORM or the `base` model defines (write, unlink, sudo, web_save, ...) are refused. The result lists
+every method the ORM or the `base` model defines (write, unlink, sudo, web_save, ...) are refused. A method that calls
+`sudo()` inside is not stopped by `call_method`; the mail gateway methods (`message_process`, `message_route`,
+`message_route_verify`, `message_route_process`) are refused by name. The result lists
 the stored fields that changed on the records; `dry_run` runs the call and rolls the transaction back (a method that
 commits by itself is refused; email or HTTP calls it makes are not undone). Every call is in the call log with its
 arguments and the written fields.

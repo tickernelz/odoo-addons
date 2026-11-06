@@ -27,6 +27,8 @@ ORM path (runs as the key's Odoo user, ACL and record rules apply):
 | `update_records` | `model`, `ids`, `values` | `{updated}` |
 | `delete_records` | `model`, `ids` (at most 20) | `{deleted: [{id, display_name}]}` |
 
+`call_method` (listed only with "Call methods"): a method that calls `sudo()` inside is not stopped by `call_method`; the mail gateway methods `message_process`, `message_route`, `message_route_verify`, `message_route_process` are refused by name.
+
 SQL path (runs as the database role: bypasses ACL, record rules, Python constraints, computed fields, mail tracking; off by default at three levels):
 
 | Tool | Arguments | structuredContent |

@@ -107,6 +107,42 @@ class TestCallMethod(EndpointCase):
         self.assertEqual(self.last_call(self.key_id)['result'], 'refused')
         self.assertEqual(self.partner_state(), (False, 0))
 
+    def call_with_gateway_body(self, method):
+        def gateway(records, *args, **kwargs):
+            records.env['res.partner'].sudo().create({'name': 'Gateway %s' % self.mark})
+            return True
+        with self.shared_env() as env:
+            klass = type(env['res.partner'])
+        with patch.object(klass, method, gateway, create=True):
+            result = self.call_method({'method': method, 'ids': [self.partner.id]})
+        with self.shared_env() as env:
+            made = env['res.partner'].search_count([('name', '=', 'Gateway %s' % self.mark)])
+        return result, made
+
+    def assert_mail_gateway_refused(self, method):
+        result, made = self.call_with_gateway_body(method)
+        self.assertTrue(result['isError'], result['structuredContent'])
+        self.assertIn('mail gateway method', result['structuredContent']['error'])
+        self.assertEqual(made, 0)
+        self.assertEqual(self.last_call(self.key_id)['result'], 'refused')
+
+    def test_message_process_is_refused(self):
+        self.assert_mail_gateway_refused('message_process')
+
+    def test_message_route_is_refused(self):
+        self.assert_mail_gateway_refused('message_route')
+
+    def test_message_route_verify_is_refused(self):
+        self.assert_mail_gateway_refused('message_route_verify')
+
+    def test_message_route_process_is_refused(self):
+        self.assert_mail_gateway_refused('message_route_process')
+
+    def test_a_business_method_with_the_same_body_still_runs(self):
+        result, made = self.call_with_gateway_body('create_company')
+        self.assertFalse(result['isError'], result['structuredContent'])
+        self.assertEqual(made, 1)
+
     def test_keys_without_the_switch_or_the_model_row_are_refused(self):
         hidden = self.call_method({'method': 'create_company', 'ids': [self.partner.id]}, token=self.switched_off)
         self.assertEqual(hidden['structuredContent']['error'], 'There is no tool named call_method.')
