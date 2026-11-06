@@ -74,19 +74,19 @@ Screens, messages and labels are English in the sources; Indonesian comes from `
 
 ## Compatibility
 
-Module tests (66) and harnesses, per target. "CI" jobs run on every pipeline of the repository; the production copy run is local because the data stays off CI.
+Module tests (94) and harnesses, per target. "CI" jobs run on every pipeline of the repository; the production copy run is local because the data stays off CI.
 
 | Target | Odoo build | Python | PostgreSQL | Database | Result | Where |
 |---|---|---|---|---|---|---|
-| Official image `odoo:10.0` | 10.0-20190816 (Community) | 2.7.9 | 9.6 | new, empty, no demo data | 66 passed | CI `odoo10-image-empty-db` |
-| Same image with business apps | 10.0-20190816 | 2.7.9 | 9.6 | new, with sale, account, stock, purchase | 66 passed | CI `odoo10-image-sale-account-stock` |
-| Old 10.0 branch | commit `cb01cfe` (29 Jun 2017) | 2.7.18 | 9.6 | new, empty | 66 passed | CI `odoo10-2017-build-py2718` |
-| Pinned production build | commit `28c3f51` (18 May 2021), the production pinned requirements | 2.7.18 | 15 | new, empty | 66 passed | CI `odoo10-pinned-core-py2718-pg15` |
-| Copy of production data | commit `28c3f51`, the production `pip freeze` and custom addons | 2.7.18 | 15 | copy of the production database (1.4 GB, every module installed there) | 66 passed | local, 6 Nov 2026 |
+| Official image `odoo:10.0` | 10.0-20190816 (Community) | 2.7.9 | 9.6 | new, empty, no demo data | 94 passed | CI `odoo10-image-empty-db` |
+| Same image with business apps | 10.0-20190816 | 2.7.9 | 9.6 | new, with sale, account, stock, purchase | 94 passed | CI `odoo10-image-sale-account-stock` |
+| Old 10.0 branch | commit `cb01cfe` (29 Jun 2017) | 2.7.18 | 9.6 | new, empty | 94 passed | CI `odoo10-2017-build-py2718` |
+| Pinned production build | commit `28c3f51` (18 May 2021), the production pinned requirements | 2.7.18 | 15 | new, empty | 94 passed | CI `odoo10-pinned-core-py2718-pg15` |
+| Copy of production data | commit `28c3f51`, the production `pip freeze` and custom addons | 2.7.18 | 15 | copy of the production database (1.4 GB, every module installed there) | 94 passed | local, 6 Nov 2026 |
 | Three databases, one process | `odoo:10.0`, 2 prefork workers | 2.7.9 | 9.6 | `db_a`, `db_b` with the module, `db_c` without | open, dbfilter `^%d$`, `list_db = False`, negative control without server-wide, official MCP SDK 2.3.0 client in both protocol eras: passed | CI `multi-db` |
 | Odoo 10 Enterprise | - | - | - | - | not tested: no Enterprise 10 build available | - |
 | Python 2.7 older than 2.7.7 (no `hmac.compare_digest`) | - | - | - | - | not run on such an interpreter; the constant-time fallback has its own unit test | - |
-| Production server | - | - | - | - | not yet deployed | - |
+| Production server | commit `28c3f51`, Python 2.7.18 | 2.7.18 | 15 | production | 10.0.1.0.0 (records, SQL, audit) live since 6 Nov 2026; the code and method tools go live after merge | - |
 
 Found only on the production copy and fixed: seven custom models override `fields_get(self, fields=None)`, so the module never passes `attributes=` to `fields_get`.
 
@@ -100,3 +100,38 @@ Overhead of the MCP layer against the same `search_read` over XML-RPC, 60 calls 
 | 200 | 17.4 / 21.7 ms | 9.9 / 11.6 ms | 10.1 ms (CI runner: 19.1 ms) |
 
 Queries per call (`harness/query_count.py`, `odoo:10.0`): `count_records` 13, `search_records` 14 for 20 or 200 records, `create_record` of a partner 97 (Odoo's own create of `res.partner` included). The fixed part (registry signal check, key lookup, rate-limit lock and audit insert, permission and settings read, audit update) is about 11 queries per call and does not grow with the number of records.
+
+### Code and method tools
+
+Measured on the production copy (1.4 GB, 114 installed modules, 1,563 models), Python 2.7.18, PostgreSQL 15, one worker, `localhost`, on a shared box with load 6 to 17. Latency is the median of three passes of 30 warm calls each (15 for `search_code`); cold is the first call after a restart. Tokens are counted with tiktoken `o200k_base`, a proxy: other models tokenise differently.
+
+| Tool | p50 s | p95 s | cold s | result tokens |
+|---|---|---|---|---|
+| list_models | 0.013 | 0.015 | 0.039 | 200 |
+| get_model_fields | 0.014 | 0.019 | 0.050 | 2394 |
+| search_records | 0.138 | 0.210 | 0.148 | 35354 |
+| list_models_all | 0.022 | 0.031 | 0.053 | 2734 |
+| describe_model | 0.012 | 0.023 | 0.029 | 2412 |
+| search_fields_exact | 0.124 | 0.344 | 0.303 | 5180 |
+| search_fields_relation | 0.105 | 0.277 | 0.367 | 7602 |
+| search_methods_model | 0.017 | 0.040 | 0.051 | 46 |
+| search_methods_all | 0.021 | 0.027 | 0.121 | 1393 |
+| describe_method | 0.083 | 0.275 | 0.289 | 128 |
+| get_method_source | 0.061 | 0.294 | 0.336 | 260 |
+| search_code_module | 0.013 | 0.015 | 0.038 | 875 |
+| search_code_all | 0.035 | 0.047 | 0.157 | 2058 |
+| search_code_scan | 0.194 | 0.265 | 0.802 | 31 |
+| search_code_scan_all_types | 1.168 | 1.452 | 2.707 | 31 |
+| read_source | 0.010 | 0.012 | 0.022 | 3326 |
+| list_modules | 0.021 | 0.027 | 0.040 | 2775 |
+| describe_module | 0.017 | 0.020 | 0.036 | 1102 |
+| get_view | 0.035 | 0.046 | 0.137 | 4924 |
+| list_actions | 0.018 | 0.021 | 0.810 | 1032 |
+| lookup_xmlid | 0.113 | 0.257 | 0.144 | 42 |
+| call_method_dry_run | 0.187 | 0.294 | 0.277 | 131 |
+
+No existing tool got slower: with the same data and the same key, interleaved calls of the old and the new module (200 rounds each) gave `list_models` p50 13.6 and 13.7 ms, `get_model_fields` 16.2 and 16.2 ms, `search_records` (20 records) 125.2 and 124.5 ms, `count_records` 10.8 and 10.9 ms, with identical response bytes.
+
+`tools/list` and the server instructions cost tokens only for keys that switch the new tools on: a key with Explore code and Call methods lists 18 tools in 3,573 tokens (13,455 bytes) against 1,004 (3,741 bytes) for the same key without the switches, and its instructions grow from 69 to 220 tokens. Keys without the switches see exactly what they saw before.
+
+The first `list_actions` call of a process takes about 0.85 to 1.0 s (it computes the menus the key's user may see once); `search_code` over every file type takes about 1.2 s warm and 2.7 s cold; every other call is under 0.35 s warm.
