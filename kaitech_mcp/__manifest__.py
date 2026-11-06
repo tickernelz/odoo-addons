@@ -1,7 +1,7 @@
 {
     'name': 'MCP Server',
     'summary': 'Model Context Protocol endpoint per database: keys, per-model permissions, SQL path, audit',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Extra Tools',
     'author': 'tickernelz',
     'license': 'LGPL-3',

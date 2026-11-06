@@ -247,6 +247,43 @@ class TestSql(EndpointCase):
         self.assertIn('database refused', result['structuredContent']['error'])
         self.assertEqual(self.last_call(self.key_id)['result'], 'error')
 
+    def test_column_aliases_cannot_rename_a_hidden_column(self):
+        self.maxDiff = None
+        with self.shared_env() as env:
+            env.cr.execute("ALTER TABLE res_country ADD COLUMN api_token varchar")
+            env.cr.execute("UPDATE res_country SET api_token = 'LEAKED-' || code")
+            env.cr.execute("CREATE VIEW mcp_country_tags AS SELECT code, api_token AS tag FROM res_country")
+            env.cr.execute("SELECT attname FROM pg_attribute WHERE attrelid = 'res_country'::regclass "
+                           "AND attnum > 0 AND NOT attisdropped ORDER BY attnum")
+            columns = [row[0] for row in env.cr.fetchall()]
+        renamed = ', '.join('a%d' % index for index in range(1, len(columns) + 1))
+        last = 'a%d' % len(columns)
+        swapped = ', '.join('name' if column == 'api_token' else 'shown' if column == 'name' else column for column in columns)
+        refused = (
+            "SELECT x.%s FROM res_country AS x(%s)" % (last, renamed),
+            "SELECT x.name FROM res_country AS x(%s)" % swapped,
+            "SELECT x.name FROM res_country x(%s) JOIN res_partner p ON p.country_id = x.id" % swapped,
+            "WITH x(%s) AS MATERIALIZED (SELECT * FROM res_country) SELECT x.%s FROM x" % (renamed, last),
+            "WITH x(%s) AS MATERIALIZED (SELECT * FROM res_country) SELECT count(*) AS n FROM x WHERE x.%s LIKE 'LEAKED-I%%'" % (renamed, last),
+            "SELECT s.%s FROM (SELECT * FROM res_country OFFSET 0) s(%s)" % (last, renamed),
+            "SELECT * FROM res_country UNION ALL SELECT * FROM res_country",
+            "SELECT count(*) AS n FROM res_country a JOIN res_country b USING (api_token)",
+            "SELECT a.code FROM res_country a NATURAL JOIN res_country b",
+            "SELECT tag FROM mcp_country_tags",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in refused}
+        self.assertEqual({query: answer.get('error') or answer['rows'][:1] for query, answer in answers.items()
+                          if 'api_token is never readable' not in answer.get('error', '')}, {})
+        allowed = (
+            "SELECT x.n FROM res_country AS x(i, n) WHERE x.i = 1",
+            "WITH x AS MATERIALIZED (SELECT code FROM res_country) SELECT x.code FROM x",
+            "SELECT s.c FROM (SELECT code FROM res_country OFFSET 0) s(c)",
+            "SELECT code FROM res_country UNION ALL SELECT code FROM res_country",
+            "SELECT c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in allowed}
+        self.assertEqual({query: answer for query, answer in answers.items() if 'error' in answer or 'LEAKED-' in str(answer)}, {})
+
     def test_query_reads_allowed_tables_only(self):
         result = self.call(self.token, 'sql_query', {'query': (
             "SELECT c.code, count(p.id) AS partners FROM res_partner p JOIN res_country c ON c.id = p.country_id "

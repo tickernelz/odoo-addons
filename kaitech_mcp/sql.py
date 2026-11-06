@@ -36,10 +36,25 @@ LITERAL = re.compile(r"'(?:[^']|'')*'")
 EXPRESSION_KEYS = ('Output', 'Filter', 'Join Filter', 'Hash Cond', 'Merge Cond', 'Index Cond', 'Recheck Cond',
                    'One-Time Filter', 'Sort Key', 'Group Key', 'Function Call', 'TID Cond', 'Order By',
                    'Presorted Key', 'Cache Key', 'Grouping Sets', 'Hash Key', 'Tid Cond', 'Run Condition')
-PASS_THROUGH = ('Hash', 'Materialize', 'Memoize', 'Sort', 'Incremental Sort', 'Limit', 'Gather', 'Gather Merge',
-                'Unique')
 REFUSED_NODES = ('ModifyTable', 'LockRows', 'Foreign Scan', 'Custom Scan', 'Sample Scan')
 FUNCTION_SCANS = ('generate_series', 'unnest')
+READ_COLUMNS = """
+    WITH RECURSIVE rules(oid) AS (
+        SELECT oid FROM pg_rewrite WHERE ev_class = 'pg_temp.kaitech_mcp_probe'::regclass
+        UNION
+        SELECT r.oid FROM rules
+        JOIN pg_depend d ON d.classid = 'pg_rewrite'::regclass AND d.objid = rules.oid
+            AND d.refclassid = 'pg_class'::regclass
+        JOIN pg_rewrite r ON r.ev_class = d.refobjid AND r.ev_type = '1'
+    )
+    SELECT DISTINCT c.relname, a.attname, format_type(coalesce(nullif(t.typbasetype, 0), a.atttypid), NULL) FROM rules
+    JOIN pg_depend d ON d.classid = 'pg_rewrite'::regclass AND d.objid = rules.oid
+        AND d.refclassid = 'pg_class'::regclass AND d.refobjsubid > 0
+    JOIN pg_class c ON c.oid = d.refobjid
+    JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = %s
+    JOIN pg_attribute a ON a.attrelid = d.refobjid AND a.attnum = d.refobjsubid
+    JOIN pg_type t ON t.oid = a.atttypid
+"""
 
 
 def quote(name):
@@ -91,6 +106,10 @@ def load_table(cr, name, grant):
     return table
 
 
+def column_is_hidden(column, kind, forbidden):
+    return column in forbidden or kind == 'bytea' or any(fnmatch.fnmatchcase(column, pattern) for pattern in FORBIDDEN_COLUMNS)
+
+
 class Table(object):
     """Columns, types and primary key of one public table, with the columns this key may use."""
 
@@ -102,7 +121,7 @@ class Table(object):
         self.types = {}
         self.defaults = set()
         for column, kind, nullable, has_default, _kind in rows:
-            if column in forbidden or kind == 'bytea' or any(fnmatch.fnmatchcase(column, pattern) for pattern in FORBIDDEN_COLUMNS):
+            if column_is_hidden(column, kind, forbidden):
                 continue
             self.columns.append(column)
             self.types[column] = (kind, nullable)
@@ -333,6 +352,8 @@ class Run(object):
         cr = self.cr
         cr.execute('SAVEPOINT kaitech_mcp_query')
         try:
+            self.check_columns(text)
+            cr.execute('ROLLBACK TO SAVEPOINT kaitech_mcp_query')
             cr.execute('SET LOCAL transaction_read_only = on')
             cr.execute('EXPLAIN (VERBOSE, FORMAT JSON) ' + text)
             plan = cr.fetchone()[0]
@@ -351,17 +372,23 @@ class Run(object):
         payload = {'columns': columns, 'rows': rows, 'returned': len(rows), 'has_more': len(fetched) > limit}
         return payload, ','.join(sorted(tables)), [], len(rows)
 
+    def check_columns(self, text):
+        """Refuse a query that reads a hidden column anywhere in it, whatever name the query gives the column."""
+        self.cr.execute('CREATE TEMP VIEW kaitech_mcp_probe AS SELECT 1 FROM (%s) AS kaitech_mcp_probe' % text)
+        self.cr.execute(READ_COLUMNS, (SCHEMA,))
+        for table, column, kind in sorted(self.cr.fetchall()):
+            if column_is_hidden(column, kind, self.grant.columns_forbidden_on(table)):
+                raise ToolRefused("Column %s is never readable through MCP." % column)
+
     def check_plan(self, plan):
-        """Refuse a plan that reads a table, column or function this key may not use."""
+        """Refuse a plan that reads a table, a whole row or a function this key may not use."""
         tables = set()
         expressions = []
-        nodes = [(item['Plan'], True) for item in plan if isinstance(item, dict) and 'Plan' in item]
+        nodes = [item['Plan'] for item in plan if isinstance(item, dict) and 'Plan' in item]
         while nodes:
-            node, top = nodes.pop()
+            node = nodes.pop()
             children = [child for child in node.get('Plans') or [] if isinstance(child, dict)]
-            nodes.extend((child, False) for child in children)
-            if not top and _carries_columns_only(self.cr, self.grant, node, children):
-                node = dict(node, Output=None)
+            nodes.extend(children)
             kind = node.get('Node Type')
             if kind in REFUSED_NODES:
                 raise ToolRefused("This query is not allowed (%s)." % kind)
@@ -378,9 +405,6 @@ class Run(object):
                     expressions.append(value)
                 elif isinstance(value, list):
                     expressions.extend(item for item in value if isinstance(item, str))
-        hidden = set()
-        for table in load_tables(self.cr, tables, self.grant).values():
-            hidden |= table.hidden
         for expression in expressions:
             plain = LITERAL.sub("''", expression)
             if '.*' in plain:
@@ -388,9 +412,6 @@ class Run(object):
             for schema, function in FUNCTION_CALL.findall(plain):
                 if (schema and schema != 'pg_catalog') or function.lower() not in ALLOWED_FUNCTIONS:
                     raise ToolRefused("Function %s is not allowed in queries." % function)
-            for column in hidden:
-                if re.search(r'(?<![A-Za-z0-9_])"?%s"?(?![A-Za-z0-9_])' % re.escape(column), plain):
-                    raise ToolRefused("Column %s is never readable through MCP." % column)
         return tables
 
     def insert(self, arguments):
@@ -456,29 +477,6 @@ class Run(object):
         if not dry_run:
             self.env.registry.clear_all_caches()
         return {'deleted': count, 'keys': keys, 'dry_run': dry_run}, table.name, keys if has_key else [], count
-
-
-def _bare(names):
-    return {name.rpartition('.')[2].strip('"') for name in names or ()}
-
-
-def _carries_columns_only(cr, grant, node, children):
-    """True when a non-top node's Output only carries columns upward without computing on them.
-
-    PostgreSQL scans may emit every column of the table (physical target list) and pass-through nodes
-    repeat their child's Output; a column only reaches the client or changes the result through an
-    expression of a node above, which stays checked.
-    """
-    output = node.get('Output')
-    if not output:
-        return False
-    if node.get('Relation Name') and node.get('Node Type', '').endswith('Scan'):
-        table = load_table(cr, node['Relation Name'], grant)
-        plain = all('(' not in item and ' ' not in item for item in output)
-        return plain and _bare(output) == set(table.columns) | table.hidden
-    if node.get('Node Type') in PASS_THROUGH and len(children) == 1:
-        return output == children[0].get('Output')
-    return False
 
 
 class _Now(object):
