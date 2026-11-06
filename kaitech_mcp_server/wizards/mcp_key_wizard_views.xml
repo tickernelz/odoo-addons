@@ -57,6 +57,15 @@
                         <field name="config_desktop" widget="mcp_copy"/>
                         <field name="config_http" widget="mcp_copy"/>
                     </group>
+                    <div class="alert alert-info" role="alert">
+                        <h4>Claude (Add custom connector)</h4>
+                        <ol>
+                            <li>In Claude open Settings, Connectors, Add custom connector, and paste the Endpoint above as the URL.</li>
+                            <li>Under Request headers choose x-api-key and paste the Key above as its value. Claude sends it exactly as typed, so no Bearer prefix is needed.</li>
+                            <li>Leave the sign-in choice as Claude offers it: the key in the header is what signs in. Claude does not allow an Authorization header together with OAuth, which is why the key goes in x-api-key.</li>
+                            <li>The name x-auth-token works the same way.</li>
+                        </ol>
+                    </div>
                 </div>
                 <footer>
                     <button name="action_next" type="object" string="Next" class="oe_highlight"

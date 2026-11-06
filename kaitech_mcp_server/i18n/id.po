@@ -257,6 +257,11 @@ msgid "Cancel"
 msgstr "Batal"
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Claude (Add custom connector)"
+msgstr "Claude (Add custom connector)"
+
+#. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_config_desktop
 msgid "Claude Desktop (mcp-remote)"
 msgstr "Claude Desktop (mcp-remote)"
@@ -571,6 +576,11 @@ msgid "IP address"
 msgstr "Alamat IP"
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "In Claude open Settings, Connectors, Add custom connector, and paste the Endpoint above as the URL."
+msgstr "Di Claude buka Settings, Connectors, Add custom connector, lalu tempel Endpoint di atas sebagai URL."
+
+#. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_insert
 msgid "Insert"
 msgstr "Sisipkan"
@@ -653,6 +663,11 @@ msgstr "Kosongkan untuk kunci yang tidak pernah kedaluwarsa."
 #: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_permission_field_ids
 msgid "Leave empty to allow every field that is not forbidden."
 msgstr "Kosongkan untuk mengizinkan semua field yang tidak terlarang."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Leave the sign-in choice as Claude offers it: the key in the header is what signs in. Claude does not allow an Authorization header together with OAuth, which is why the key goes in x-api-key."
+msgstr "Biarkan pilihan masuk seperti yang ditawarkan Claude: kunci di header itulah yang membuat Anda masuk. Claude tidak mengizinkan header Authorization bersama OAuth, itu sebabnya kunci dimasukkan ke x-api-key."
 
 #. module: kaitech_mcp_server
 #: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
@@ -1299,6 +1314,11 @@ msgid "The key works through the public endpoint."
 msgstr "Kunci berfungsi lewat endpoint publik."
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "The name x-auth-token works the same way."
+msgstr "Nama x-auth-token bekerja dengan cara yang sama."
+
+#. module: kaitech_mcp_server
 #: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:37
 #, python-format
 msgid "The pasted text does not match this key. Keys are shown only once; rotate the key if it was lost."
@@ -1369,6 +1389,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_tree
 msgid "Total"
 msgstr "Total"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Under Request headers choose x-api-key and paste the Key above as its value. Claude sends it exactly as typed, so no Bearer prefix is needed."
+msgstr "Di Request headers pilih x-api-key dan tempel Key di atas sebagai nilainya. Claude mengirimnya persis seperti yang diketik, jadi awalan Bearer tidak diperlukan."
 
 #. module: kaitech_mcp_server
 #: selection:kaitech.mcp.key.test,result:0 selection:kaitech.mcp.overview,last_test_result:0

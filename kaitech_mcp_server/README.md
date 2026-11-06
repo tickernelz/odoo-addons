@@ -12,7 +12,7 @@ The wire contract (endpoint, tools, arguments, errors, audit) is shared with the
        server_wide_modules = base,web,kaitech_mcp_server
 
    Restart Odoo.
-3. Make sure the reverse proxy passes `/mcp/` and the `Authorization` header to Odoo (a plain `location /` that proxies everything is enough).
+3. Make sure the reverse proxy passes `/mcp/` and the `Authorization`, `X-API-Key` and `X-Auth-Token` headers to Odoo (a plain `location /` that proxies everything is enough).
 4. In each database that should answer MCP: Apps, Update Apps List, then install **MCP Server**. A database without the module answers 404.
 5. MCP Server (its own app in the main menu), Overview, **Test endpoint**. "HTTP 401 without a key" means routing and database selection work.
 
@@ -22,7 +22,7 @@ Rollback: uninstall the module in each database, remove it from `server_wide_mod
 
 1. Create a dedicated internal Odoo user for the client with only the groups it needs. The Administrator (uid 1) is refused: it bypasses every access right.
 2. MCP Server, **Create key**: name the client, pick the user, tick models and actions (Read, Create, Update, Delete, Call methods), and the switches Explore code and Call methods when the client should read the code or run methods. The key is shown once with ready-made client configurations; Odoo keeps only its sha256.
-3. Configure the client with the endpoint `https://<host>/mcp/<database>` and the header `Authorization: Bearer <key>`.
+3. Configure the client with the endpoint `https://<host>/mcp/<database>` and the key in one of three headers: `Authorization: Bearer <key>`, `X-API-Key: <key>` or `X-Auth-Token: <key>`. The first of them that holds a value is used, in that order; a refused key is not replaced by the next header, and a key in the query string or the body is never read. In `X-API-Key` and `X-Auth-Token` the value may be the bare key or `Bearer <key>`.
 
 Claude Desktop (through `mcp-remote`):
 
@@ -34,6 +34,8 @@ Clients that take HTTP headers (Cursor, n8n, Hermes):
 
     {"mcpServers": {"odoo-<database>": {"type": "http", "url": "https://<host>/mcp/<database>",
       "headers": {"Authorization": "Bearer <key>"}}}}
+
+Claude (Add custom connector, claude.ai or Claude Desktop): URL `https://<host>/mcp/<database>`; under Request headers choose `x-api-key` and paste the key as the value. Claude sends the value exactly as typed and does not allow an `Authorization` header together with OAuth, so `x-api-key` is the header to use there.
 
 Keys can be tested (Test key), rotated (new secret, same permissions, old key revoked) and revoked (effective on the next request). Default expiry is 90 days.
 
@@ -67,7 +69,7 @@ Screens, messages and labels are English in the sources; Indonesian comes from `
 
 - Q2: the production server stays in use long enough to need MCP; the module is generic Odoo 10 either way.
 - Q3: the production server serves one database, `dbfilter` empty, 5 prefork workers (checked read-only on 6 Nov 2026); the module works the same with many databases.
-- Q4: clients send `Authorization: Bearer` (Claude Desktop through mcp-remote, Cursor, n8n, Hermes); OAuth for the claude.ai web connector is not included.
+- Q4: clients send `Authorization: Bearer` (Claude Desktop through mcp-remote, Cursor, n8n, Hermes) or the key in `X-API-Key` / `X-Auth-Token` (Claude custom connector request headers); OAuth for the claude.ai web connector is not included.
 - Q5: deployment through backup, copy of addons, `server_wide_modules`, restart, install, Test endpoint.
 - Q6: the production server runs Python 2.7.18 with `hmac.compare_digest`; older 2.7 builds without it use a constant-time fallback.
 - Q7: `id_ID` is active on the production server.
