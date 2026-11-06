@@ -171,12 +171,24 @@ msgid "Back"
 msgstr "Kembali"
 
 #. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_call
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_call
+msgid "Call"
+msgstr "Panggil"
+
+#. module: kaitech_mcp
 msgid "Call Log"
 msgstr "Log Panggilan"
 
 #. module: kaitech_mcp
 msgid "Call log"
 msgstr "Log panggilan"
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__allow_call
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_call
+msgid "Call methods"
+msgstr "Panggil metode"
 
 #. module: kaitech_mcp
 msgid "Calls"
@@ -388,6 +400,12 @@ msgstr "Kedaluwarsa pada"
 #. module: kaitech_mcp
 msgid "Expiring soon"
 msgstr "Segera kedaluwarsa"
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__allow_explore
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_explore
+msgid "Explore code"
+msgstr "Jelajahi kode"
 
 #. module: kaitech_mcp
 msgid "Fields written"
@@ -641,6 +659,15 @@ msgid "Models and tables"
 msgstr "Model dan tabel"
 
 #. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"Models, fields, methods, source code, views and\n"
+"                                        menus of the installed modules. Never records or files outside the module folders."
+msgstr ""
+"Model, field, metode, kode sumber, view, dan menu dari modul yang terpasang."
+" Tidak pernah record atau berkas di luar folder modul."
+
+#. module: kaitech_mcp
 #. odoo-python
 #: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py
 msgid "Name the client and choose the Odoo user the key acts as."
@@ -761,6 +788,25 @@ msgstr "Pilih model untuk mengisi tabelnya, atau ketik nama tabel langsung."
 #. module: kaitech_mcp
 msgid "Protocol"
 msgstr "Protokol"
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"Public business methods of the models ticked in the\n"
+"                                        Call column, as the key's user. dry_run lets the client try a call and undo it."
+msgstr ""
+"Metode bisnis publik dari model yang dicentang di kolom Panggil, sebagai "
+"user milik key ini. dry_run membuat klien bisa mencoba panggilan lalu "
+"membatalkannya."
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_permission__can_call
+msgid ""
+"Public business methods of this model may be called when the key allows "
+"method calls."
+msgstr ""
+"Metode bisnis publik model ini boleh dipanggil bila key mengizinkan "
+"panggilan metode."
 
 #. module: kaitech_mcp
 msgid "Rate limited"
@@ -978,6 +1024,36 @@ msgstr "Uji kunci"
 #. module: kaitech_mcp
 msgid "Tested on"
 msgstr "Diuji pada"
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__allow_call
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_call
+msgid ""
+"The client may call public business methods, for example Confirm on a sales "
+"order, of the models ticked in the Call column. They run as the key's user "
+"with its access rights and record rules, and change whatever the same button"
+" changes in Odoo. Private methods and ORM methods such as write or unlink "
+"are always refused."
+msgstr ""
+"Klien boleh memanggil metode bisnis publik, misalnya Confirm pada sales "
+"order, dari model yang dicentang di kolom Panggil. Metode berjalan sebagai "
+"user milik key ini dengan hak akses dan record rule-nya, dan mengubah apa "
+"pun yang diubah tombol yang sama di Odoo. Metode privat dan metode ORM "
+"seperti write atau unlink selalu ditolak."
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__allow_explore
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_explore
+msgid ""
+"The client may read how the installed modules are built: models, fields, "
+"methods and their source code, views, actions, menus and other code files "
+"inside the module folders. These tools never return records, settings values"
+" or files outside the module folders."
+msgstr ""
+"Klien boleh membaca cara modul terpasang dibangun: model, field, metode "
+"beserta kode sumbernya, view, action, menu, dan berkas kode lain di dalam "
+"folder modul. Alat ini tidak pernah mengembalikan record, nilai pengaturan, "
+"atau berkas di luar folder modul."
 
 #. module: kaitech_mcp
 msgid "The client using this key loses access immediately. Continue?"

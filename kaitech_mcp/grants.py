@@ -127,6 +127,8 @@ class Grant(object):
         self.rows = rows
         self._fields_cache = {}
         self.sql_open = bool(settings['sql_enabled'] and key.get('allow_sql'))
+        self.explore = bool(key.get('allow_explore'))
+        self.call_open = bool(key.get('allow_call'))
         self.tables = tables or {}
         self._existing_tables = None
 
@@ -174,7 +176,9 @@ class Grant(object):
 
     def permitted(self, env, model_name, action):
         row = self.rows.get(model_name)
-        if not row or not row[action]:
+        if not row or not row.get(action):
+            return False
+        if action == 'call' and not self.call_open:
             return False
         if action == 'delete' and not self.delete_enabled:
             return False
@@ -186,11 +190,18 @@ class Grant(object):
         return any(self.permitted(env, name, action) for name in self.rows)
 
     def models(self, env):
-        return sorted(name for name in self.rows if any(self.permitted(env, name, action) for action in ACTIONS))
+        return sorted(name for name in self.rows if any(self.permitted(env, name, action) for action in ACTIONS + ('call',)))
+
+    def model_access(self, env, model_name):
+        """What this key allows on model_name, whatever the Odoo user may do."""
+        actions = ACTIONS + (('call',) if self.call_open else ())
+        return dict((action, self.permitted(env, model_name, action)) for action in actions)
 
     def require(self, env, model_name, action):
         if not isinstance(model_name, str) or not self.permitted(env, model_name, action):
-            if self.rows.get(model_name) and self.permitted(env, model_name, 'read'):
+            if self.rows.get(model_name) and any(self.permitted(env, model_name, other) for other in ACTIONS + ('call',)):
+                if action == 'call':
+                    raise ToolRefused("This key may not call methods of %s." % (model_name,))
                 raise ToolRefused("This key may not %s %s records." % (action, model_name))
             raise ToolArgumentError("Unknown model: %s" % (model_name,))
         return env[model_name]

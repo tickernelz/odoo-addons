@@ -187,6 +187,12 @@ msgid "Back"
 msgstr ""
 
 #. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard_line__can_call
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_permission__can_call
+msgid "Call"
+msgstr ""
+
+#. module: kaitech_mcp
 #: model:ir.ui.menu,name:kaitech_mcp.menu_mcp_calls
 msgid "Call Log"
 msgstr ""
@@ -194,6 +200,12 @@ msgstr ""
 #. module: kaitech_mcp
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_settings
 msgid "Call log"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__allow_call
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_call
+msgid "Call methods"
 msgstr ""
 
 #. module: kaitech_mcp
@@ -508,6 +520,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:kaitech_mcp.selection__kaitech_mcp_key__state__expiring
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_search
 msgid "Expiring soon"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__allow_explore
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_explore
+msgid "Explore code"
 msgstr ""
 
 #. module: kaitech_mcp
@@ -859,6 +877,13 @@ msgid "Models and tables"
 msgstr ""
 
 #. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"Models, fields, methods, source code, views and\n"
+"                                        menus of the installed modules. Never records or files outside the module folders."
+msgstr ""
+
+#. module: kaitech_mcp
 #. odoo-python
 #: code:addons/kaitech_mcp/wizards/mcp_key_wizard.py:0
 msgid "Name the client and choose the Odoo user the key acts as."
@@ -1015,6 +1040,20 @@ msgstr ""
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__protocol_version
 msgid "Protocol"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_form
+msgid ""
+"Public business methods of the models ticked in the\n"
+"                                        Call column, as the key's user. dry_run lets the client try a call and undo it."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_permission__can_call
+msgid ""
+"Public business methods of this model may be called when the key allows "
+"method calls."
 msgstr ""
 
 #. module: kaitech_mcp
@@ -1287,6 +1326,27 @@ msgstr ""
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__last_test_at
 msgid "Tested on"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__allow_call
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_call
+msgid ""
+"The client may call public business methods, for example Confirm on a sales "
+"order, of the models ticked in the Call column. They run as the key's user "
+"with its access rights and record rules, and change whatever the same button"
+" changes in Odoo. Private methods and ORM methods such as write or unlink "
+"are always refused."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key__allow_explore
+#: model:ir.model.fields,help:kaitech_mcp.field_kaitech_mcp_key_wizard__allow_explore
+msgid ""
+"The client may read how the installed modules are built: models, fields, "
+"methods and their source code, views, actions, menus and other code files "
+"inside the module folders. These tools never return records, settings values"
+" or files outside the module folders."
 msgstr ""
 
 #. module: kaitech_mcp

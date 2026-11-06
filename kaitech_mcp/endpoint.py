@@ -17,7 +17,7 @@ from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, 
 from odoo.modules.registry import Registry
 from odoo.tools import config
 
-from . import grants, keys, protocol, tools
+from . import explore, grants, keys, protocol, tools
 
 _logger = logging.getLogger(__name__)
 
@@ -223,7 +223,7 @@ class Exchange(object):
         with closing(self.registry.cursor()) as cr:
             cr.execute("""
                 SELECT k.id, k.name, k.key_hash, k.user_id, k.rate_per_minute, k.writes_per_minute,
-                       k.max_read, k.max_write, k.max_delete, k.allow_sql,
+                       k.max_read, k.max_write, k.max_delete, k.allow_sql, k.allow_explore, k.allow_call,
                        k.revoked_at IS NOT NULL AS revoked,
                        (k.expires_at IS NOT NULL AND k.expires_at <= (now() AT TIME ZONE 'UTC')) AS expired,
                        u.active AS user_active
@@ -354,12 +354,29 @@ class Exchange(object):
             return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
         if method == 'tools/call':
             return self._call_tool(key)
+        if method == 'resources/list':
+            with self._environment(key) as (env, grant):
+                listed = [protocol.OVERVIEW_RESOURCE] if grant.explore else []
+            self._finish('ok')
+            result = {'resources': listed}
+            return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
+        if method == 'resources/read':
+            uri = self.params.get('uri')
+            with self._environment(key) as (env, grant):
+                if uri != protocol.OVERVIEW_RESOURCE['uri'] or not grant.explore:
+                    raise protocol.Rejection(protocol.RESOURCE_NOT_FOUND, "Resource not found", data={'uri': uri})
+                text = tools.dumps(explore.overview(env, grant))
+            self._finish('ok')
+            result = {'contents': [{'uri': uri, 'mimeType': 'application/json', 'text': text}]}
+            return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
         raise protocol.Rejection(protocol.METHOD_NOT_FOUND, "Method %s is not offered here." % method)
 
     def _environment(self, key):
         exchange = self
 
         class Scope(object):
+            undo = False
+
             def __enter__(self):
                 self.cr = exchange.registry.cursor()
                 threading.current_thread().uid = key['user_id']
@@ -375,7 +392,7 @@ class Exchange(object):
 
             def __exit__(self, kind, value, trace):
                 try:
-                    if kind is None:
+                    if kind is None and not self.undo:
                         self.cr.commit()
                     else:
                         self.cr.rollback()
@@ -387,13 +404,14 @@ class Exchange(object):
 
     def _grant(self, cr, key):
         cr.execute("""
-            SELECT p.id, m.model, p.can_read, p.can_create, p.can_update, p.can_delete
+            SELECT p.id, m.model, p.can_read, p.can_create, p.can_update, p.can_delete, p.can_call
               FROM kaitech_mcp_permission p JOIN ir_model m ON m.id = p.model_id
              WHERE p.key_id = %s""", (key['id'],))
         rows = {}
         by_id = {}
-        for permission_id, model, can_read, can_create, can_update, can_delete in cr.fetchall():
-            entry = {'read': can_read, 'create': can_create, 'update': can_update, 'delete': can_delete, 'fields': None}
+        for permission_id, model, can_read, can_create, can_update, can_delete, can_call in cr.fetchall():
+            entry = {'read': can_read, 'create': can_create, 'update': can_update, 'delete': can_delete,
+                     'call': can_call, 'fields': None}
             rows[model] = entry
             by_id[permission_id] = entry
         if by_id:
@@ -416,9 +434,11 @@ class Exchange(object):
             arguments = {}
         for attempt in range(TRIES):
             try:
-                with self._environment(key) as (env, grant):
+                scope = self._environment(key)
+                with scope as (env, grant):
                     outcome = tools.call(env, grant, self.tool, arguments)
                     payload = tools.dumps(outcome.payload)
+                    scope.undo = outcome.undo
                 self._finish('ok', outcome=outcome)
                 return self._tool_result(outcome.payload, payload, False)
             except TransactionRollbackError:

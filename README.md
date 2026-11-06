@@ -21,6 +21,24 @@ same HTTP 404.
 ORM path, as the key's Odoo user (access rights and record rules apply): `list_models`, `get_model_fields`,
 `search_records`, `count_records`, `read_records`, `create_record`, `update_records`, `delete_records`.
 
+Explore code, off by default per key (Explore code): `describe_model` (one line per field with type, label, compute
+method and depends, related, selection keys, defining modules; parent models, extending modules, public methods, ORM
+overrides, key and user access), `search_methods`, `describe_method` (signature, decorators, docstring, computed
+fields, every override in MRO order with `module/path:line`), `get_method_source`, `search_code` (grep over the
+installed modules' folders), `read_source` (`module/path`, py/xml/js/csv/po/pot, real path must stay inside the
+module folder), `list_modules`, `describe_module`, `get_view` (the arch the key user sees after inheritance),
+`list_actions` (window, server and report actions with their menus), `search_xmlids`, and `list_models` with
+`all: true`. They read code and metadata only, never records, settings values or files outside module folders. The
+introspection index lives per registry and is rebuilt when Odoo replaces the registry (module install or upgrade).
+The resource `odoo://overview` gives a first map (Odoo version, modules not made by Odoo, the key's models).
+
+Call methods, off by default per key (Call methods) and per model (Call column): `call_method` runs one public
+business method as the key user (`@api.model` methods without ids). Private `_methods`, `@api.private` methods and
+every method the ORM or the `base` model defines (write, unlink, sudo, web_save, ...) are refused. The result lists
+the stored fields that changed on the records; `dry_run` runs the call and rolls the transaction back (a method that
+commits by itself is refused; email or HTTP calls it makes are not undone). Every call is in the call log with its
+arguments and the written fields.
+
 SQL path, off by default at three levels (MCP Settings, Allow SQL per key, tables per key); it bypasses Odoo access
 rights, record rules, Python constraints, computed fields and tracking: `sql_list_tables`, `sql_select`,
 `sql_query` (one read-only SELECT; EXPLAIN checks its tables and functions, PostgreSQL's own column dependencies

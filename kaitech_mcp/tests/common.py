@@ -39,7 +39,7 @@ def new_key(env, user, permissions, tables=None, **values):
         rows.append((0, 0, {
             'model_id': env['ir.model'].search([('model', '=', model)]).id,
             'can_read': 'read' in actions, 'can_create': 'create' in actions,
-            'can_update': 'update' in actions, 'can_delete': 'delete' in actions,
+            'can_update': 'update' in actions, 'can_delete': 'delete' in actions, 'can_call': 'call' in actions,
         }))
     values.setdefault('name', '%s client' % user.name)
     key = env['kaitech.mcp.key'].create(dict(values, user_id=user.id, permission_ids=rows))
@@ -65,7 +65,8 @@ def grant_for(env, key):
     """The Grant the endpoint would build for key."""
     exchange = endpoint.Exchange.__new__(endpoint.Exchange)
     row = dict((name, key[name]) for name in ('id', 'name', 'rate_per_minute', 'writes_per_minute',
-                                               'max_read', 'max_write', 'max_delete', 'allow_sql'))
+                                               'max_read', 'max_write', 'max_delete', 'allow_sql',
+                                               'allow_explore', 'allow_call'))
     row['user_id'] = key.user_id.id
     return exchange._grant(env.cr, row)
 

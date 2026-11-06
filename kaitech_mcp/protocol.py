@@ -24,20 +24,28 @@ REFUSED_HERE = -32001
 HEADER_MISMATCH = -32020
 UNSUPPORTED_PROTOCOL_VERSION = -32022
 OVER_THE_LIMIT = -32029
+RESOURCE_NOT_FOUND = -32002
 
 MODERN_ERROR_STATUS = {
     PARSE_ERROR: 400, INVALID_REQUEST: 400, INVALID_PARAMS: 400, HEADER_MISMATCH: 400,
     UNSUPPORTED_PROTOCOL_VERSION: 400, METHOD_NOT_FOUND: 404,
 }
 
-SERVER_INFO = {'name': 'kaitech-odoo19-mcp', 'title': 'Odoo 19 (Kaitech MCP Server)', 'version': '19.0.1.0.0'}
-CAPABILITIES = {'tools': {'listChanged': False}}
+SERVER_INFO = {'name': 'kaitech-odoo19-mcp', 'title': 'Odoo 19 (Kaitech MCP Server)', 'version': '19.0.1.1.0'}
+CAPABILITIES = {'tools': {'listChanged': False}, 'resources': {'listChanged': False}}
 INSTRUCTIONS = (
-    "This server exposes one Odoo 19 database. Every call runs as the Odoo user bound to your key, "
-    "limited to the models and actions the key allows. Start with list_models, then get_model_fields "
-    "before searching or writing. Odoo business errors come back as tool results with isError true; "
-    "read the message and adjust the arguments."
+    "One Odoo 19 database; every call runs as the Odoo user bound to your key, limited to what the key allows "
+    "(tools missing from tools/list are not allowed). To understand code, go from cheap to deep: "
+    "describe_model (fields with their compute methods, modules, public methods), then describe_method or "
+    "search_methods, then get_method_source; search_code and read_source for anything else; "
+    "list_models with all and field finds every model having a field; describe_module, list_actions and "
+    "get_view show what users see. Data: search_records, read_records. Changes: create_record, "
+    "update_records, or call_method with dry_run first. "
+    "Odoo errors come back as results with isError true; read them and adjust."
 )
+OVERVIEW_RESOURCE = {'uri': 'odoo://overview', 'name': 'overview', 'title': 'Database map',
+                     'description': 'Odoo version, installed modules not made by Odoo, and the models of this key.',
+                     'mimeType': 'application/json'}
 
 UNAUDITED_METHODS = ('ping',)
 
