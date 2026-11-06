@@ -76,6 +76,28 @@ class TestCallMethod(EndpointCase):
         self.assertEqual(found['structuredContent']['result'], {'contact': self.partner.id})
         self.assertEqual(found['structuredContent']['changes'], {})
 
+    def test_records_the_key_may_not_read_come_back_without_names(self):
+        def currencies(records):
+            return records.env['res.currency'].sudo().search([], limit=2)
+
+        def partners(records):
+            return records.env['res.partner'].sudo().search([('id', '=', records.ids[0])])
+
+        with self.shared_env() as env:
+            klass = type(env['res.partner'])
+        with patch.object(klass, 'address_get', currencies, create=False):
+            result = self.call_method({'method': 'address_get', 'ids': [self.partner.id]})
+        self.assertFalse(result['isError'], result['structuredContent'])
+        shown = result['structuredContent']['result']
+        self.assertEqual(shown['model'], 'res.currency')
+        self.assertTrue(shown['ids'])
+        self.assertNotIn('names', shown, shown)
+        with patch.object(klass, 'address_get', partners, create=False):
+            own = self.call_method({'method': 'address_get', 'ids': [self.partner.id]})
+        names = own['structuredContent']['result']['names']
+        self.assertEqual(len(names), 1)
+        self.assertIn(self.mark, names[0])
+
     def test_private_orm_and_unknown_methods_are_refused(self):
         for method, reason in (('_compute_commercial_partner', 'private method'), ('write', 'ORM method'),
                                ('unlink', 'ORM method'), ('sudo', '@api.private'), ('nothing_here', 'not a method')):

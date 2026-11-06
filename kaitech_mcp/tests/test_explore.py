@@ -89,6 +89,15 @@ class TestExplore(EndpointCase):
                      'no_such_module/__init__.py', 'base/__init__.py\x00.py'):
             self.refused('read_source', {'path': path})
 
+    def test_a_module_on_disk_but_not_installed_is_refused(self):
+        with self.shared_env() as env:
+            state = env['ir.module.module'].search([('name', '=', 'sale')], limit=1).state
+            if state != 'uninstalled':
+                self.skipTest('sale is installed in this database')
+        self.assertIn('Unknown module: sale', self.refused('read_source', {'path': 'sale/models/sale_order.py'}))
+        self.assertIn('Unknown module: sale', self.refused('search_code', {'query': 'class SaleOrder', 'module': 'sale'}))
+        self.assertIn('base/__init__.py', self.explore('read_source', {'path': 'base/__init__.py'})['path'])
+
     def test_a_symlink_out_of_a_module_folder_is_refused(self):
         with tempfile.TemporaryDirectory() as folder:
             module = os.path.join(folder, 'mcp_probe_module')
@@ -100,7 +109,9 @@ class TestExplore(EndpointCase):
                 handle.write('SECRET = 1\n')
             os.symlink(outside, os.path.join(module, 'link.py'))
             with self.shared_env() as env:
-                explore.index(env)._roots['mcp_probe_module'] = os.path.realpath(module)
+                idx = explore.index(env)
+                idx._installed = frozenset(explore.installed_modules(env)) | {'mcp_probe_module'}
+                idx._roots['mcp_probe_module'] = os.path.realpath(module)
             self.assertIn('INSIDE', self.explore('read_source', {'path': 'mcp_probe_module/inside.py'})['text'])
             self.assertIn('No such file', self.refused('read_source', {'path': 'mcp_probe_module/link.py'}))
             found = self.explore('search_code', {'query': 'SECRET', 'module': 'mcp_probe_module'})

@@ -766,7 +766,7 @@ def _call_method(env, grant, arguments):
         if diff:
             changes[record_id] = diff
             written.update('%s.%s' % (model._name, name) for name in diff)
-    payload = {'result': _jsonable(result), 'changes': changes, 'dry_run': dry_run}
+    payload = {'result': _jsonable(result, grant, env), 'changes': changes, 'dry_run': dry_run}
     statement = dumps({'method': method, 'ids': ids, 'args': args, 'kwargs': kwargs, 'context': context})
     return Outcome(payload, model=model._name, ids=ids or [], count=len(ids or []), written=written,
                    statement='%s.%s %s' % (model._name, method, statement), dry_run=dry_run, undo=dry_run)
@@ -778,18 +778,19 @@ def _snapshot(records, fields):
     return dict((row['id'], row) for row in records.read(fields))
 
 
-def _jsonable(value, depth=0):
+def _jsonable(value, grant, env, depth=0):
     if depth > 6:
         return '%s' % (value,)
     if isinstance(value, BaseModel):
+        value = value.sudo(False)
         shown = {'model': value._name, 'ids': value.ids[:100]}
-        if len(value) <= 20:
+        if len(value) <= 20 and grant.permitted(env, value._name, 'read') and value.has_access('read'):
             shown['names'] = [record.display_name for record in value]
         return shown
     if isinstance(value, dict):
-        return dict(('%s' % (key,), _jsonable(item, depth + 1)) for key, item in value.items())
+        return dict(('%s' % (key,), _jsonable(item, grant, env, depth + 1)) for key, item in value.items())
     if isinstance(value, (list, tuple, set, frozenset)):
-        return [_jsonable(item, depth + 1) for item in value]
+        return [_jsonable(item, grant, env, depth + 1) for item in value]
     if isinstance(value, (datetime.date, datetime.datetime)):
         return value.isoformat()
     if value is None or isinstance(value, (bool, int, float, str)):

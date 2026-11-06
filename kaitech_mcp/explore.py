@@ -92,7 +92,15 @@ class Index(object):
         self._own = None
         self._roots = {}
         self._paths = {}
+        self._installed = None
         self._orm = None
+
+    def installed(self, env):
+        """Names of the installed modules; the registry is replaced when one is installed or upgraded."""
+        with self._lock:
+            if self._installed is None:
+                self._installed = frozenset(installed_modules(env))
+            return self._installed
 
     def module_root(self, module):
         root = self._roots.get(module)
@@ -506,7 +514,10 @@ def resolve_source(env, path):
         raise ToolArgumentError("path must look like module/relative/file.py.")
     if rest.rsplit('.', 1)[-1] not in SOURCE_TYPES or '.' not in rest:
         raise ToolArgumentError("Only %s files can be read." % ', '.join(SOURCE_TYPES))
-    root = index(env).module_root(module)
+    idx = index(env)
+    if module not in idx.installed(env):
+        raise ToolArgumentError("Unknown module: %s" % module)
+    root = idx.module_root(module)
     if not root:
         raise ToolArgumentError("Unknown module: %s" % module)
     target = os.path.realpath(os.path.join(root, rest))
@@ -538,11 +549,11 @@ def search_code(env, query, module=None, file_types=None, regex=False, ignore_ca
         raise ToolArgumentError("file_types may only hold %s." % ', '.join(SOURCE_TYPES))
     idx = index(env)
     if module is not None:
-        if not isinstance(module, str) or not MODULE_NAME.match(module) or not idx.module_root(module):
+        if not isinstance(module, str) or not MODULE_NAME.match(module) or module not in idx.installed(env):
             raise ToolArgumentError("Unknown module: %s" % (module,))
         modules = [module]
     else:
-        modules = installed_modules(env)
+        modules = sorted(idx.installed(env))
     roots = {}
     for name in modules:
         root = idx.module_root(name)
