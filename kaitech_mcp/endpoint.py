@@ -355,14 +355,16 @@ class Exchange(object):
         if method == 'tools/call':
             return self._call_tool(key)
         if method == 'resources/list':
+            with self._environment(key) as (env, grant):
+                listed = [protocol.OVERVIEW_RESOURCE] if grant.explore else []
             self._finish('ok')
-            result = {'resources': [protocol.OVERVIEW_RESOURCE]}
+            result = {'resources': listed}
             return _json(200, protocol.answer(self.ident, protocol.finish(result, self.modern)))
         if method == 'resources/read':
             uri = self.params.get('uri')
-            if uri != protocol.OVERVIEW_RESOURCE['uri']:
-                raise protocol.Rejection(protocol.RESOURCE_NOT_FOUND, "Resource not found", data={'uri': uri})
             with self._environment(key) as (env, grant):
+                if uri != protocol.OVERVIEW_RESOURCE['uri'] or not grant.explore:
+                    raise protocol.Rejection(protocol.RESOURCE_NOT_FOUND, "Resource not found", data={'uri': uri})
                 text = tools.dumps(explore.overview(env, grant))
             self._finish('ok')
             result = {'contents': [{'uri': uri, 'mimeType': 'application/json', 'text': text}]}

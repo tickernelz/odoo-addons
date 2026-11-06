@@ -366,8 +366,8 @@ EXPLORE_DEFINITIONS = (
         'action': 'call',
         'description': 'Call a public business method (for example action_confirm) as the key user; private and '
                        'ORM methods (write, unlink, ...) are refused. Returns the result and the fields that changed '
-                       'on the records. dry_run runs it and rolls the database back; email or HTTP calls the method '
-                       'makes are not undone.',
+                       'on the records. dry_run runs it and rolls the database back; email, HTTP calls or other '
+                       'database connections the method uses are not undone.',
         'inputSchema': {'type': 'object', 'properties': {
             'model': _MODEL, 'method': _METHOD,
             'ids': {'type': 'array', 'items': {'type': 'integer', 'minimum': 1},

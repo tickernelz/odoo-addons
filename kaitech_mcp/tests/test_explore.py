@@ -148,6 +148,10 @@ class TestExplore(EndpointCase):
         with mute_logger('odoo.addons.kaitech_mcp.endpoint'):
             missing = self.legacy('resources/read', {'uri': 'odoo://secret'}, token=self.token)[1]
         self.assertEqual(missing['error']['code'], -32002)
+        self.assertEqual(self.legacy('resources/list', token=self.closed_token)[1]['result']['resources'], [])
+        with mute_logger('odoo.addons.kaitech_mcp.endpoint'):
+            closed = self.legacy('resources/read', {'uri': 'odoo://overview'}, token=self.closed_token)[1]
+        self.assertEqual(closed['error']['code'], -32002)
         self.assertIn('describe_model', self.legacy('initialize', {'protocolVersion': '2025-11-25'},
                                                     token=self.token)[1]['result']['instructions'])
 
