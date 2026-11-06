@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0+e\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 04:24+0000\n"
-"PO-Revision-Date: 2026-11-06 04:24+0000\n"
+"POT-Creation-Date: 2026-11-06 09:54+0000\n"
+"PO-Revision-Date: 2026-11-06 09:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -146,15 +146,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/kaitech_mcp/models/mcp_key.py:0
 msgid ""
-"An MCP key cannot act as the Administrator: that user holds every access "
-"right. Create a dedicated user for this client with only the groups it "
-"needs."
+"An MCP key can only act as a user whose access groups you hold yourself."
 msgstr ""
 
 #. module: kaitech_mcp
 #. odoo-python
 #: code:addons/kaitech_mcp/models/mcp_key.py:0
-msgid "An MCP key can only act as a user whose access groups you hold yourself."
+msgid ""
+"An MCP key cannot act as the Administrator: that user holds every access "
+"right. Create a dedicated user for this client with only the groups it "
+"needs."
 msgstr ""
 
 #. module: kaitech_mcp
@@ -234,6 +235,11 @@ msgstr ""
 #. module: kaitech_mcp
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
 msgid "Cancel"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Claude (Add custom connector)"
 msgstr ""
 
 #. module: kaitech_mcp
@@ -583,6 +589,16 @@ msgid ""
 msgstr ""
 
 #. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__claude_header
+msgid "Header name for Claude"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__claude_value
+msgid "Header value for Claude"
+msgstr ""
+
+#. module: kaitech_mcp
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
 msgid "I have copied the key"
 msgstr ""
@@ -604,6 +620,15 @@ msgstr ""
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_call__remote_addr
 msgid "IP address"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid ""
+"In Claude: Settings, Connectors, Add custom connector. Paste the\n"
+"                            endpoint above as the URL, add a request header named x-api-key with the value below, and tick\n"
+"                            Required. The Authentication choice does not matter: the key travels in that header. Keep the\n"
+"                            value plain, without a Bearer prefix."
 msgstr ""
 
 #. module: kaitech_mcp

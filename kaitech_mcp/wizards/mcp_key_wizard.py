@@ -29,6 +29,8 @@ class McpKeyWizard(models.TransientModel):
     endpoint_url = fields.Char('Endpoint', compute='_compute_examples')
     config_desktop = fields.Text('Claude Desktop (mcp-remote)', compute='_compute_examples')
     config_http = fields.Text('Clients with HTTP headers (Cursor, n8n, Hermes)', compute='_compute_examples')
+    claude_header = fields.Char('Header name for Claude', compute='_compute_examples')
+    claude_value = fields.Char('Header value for Claude', compute='_compute_examples')
     delete_enabled = fields.Boolean(compute='_compute_delete_enabled')
 
     def _compute_delete_enabled(self):
@@ -44,6 +46,7 @@ class McpKeyWizard(models.TransientModel):
             wizard.endpoint_url = url
             if not wizard.token:
                 wizard.config_desktop = wizard.config_http = False
+                wizard.claude_header = wizard.claude_value = False
                 continue
             bearer = 'Bearer %s' % wizard.token
             wizard.config_desktop = json.dumps({'mcpServers': {server: {
@@ -52,6 +55,8 @@ class McpKeyWizard(models.TransientModel):
                 'env': {'MCP_AUTH': bearer}}}}, indent=2)
             wizard.config_http = json.dumps({'mcpServers': {server: {
                 'type': 'http', 'url': url, 'headers': {'Authorization': bearer}}}}, indent=2)
+            wizard.claude_header = 'x-api-key'
+            wizard.claude_value = wizard.token
 
     def _reopen(self, title=None):
         self.ensure_one()

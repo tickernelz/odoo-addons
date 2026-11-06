@@ -109,6 +109,10 @@ class TestKeys(common.TransactionCase):
         self.assertEqual(wizard.step, 'done')
         self.assertTrue(keys.matches(wizard.token, wizard.key_id.sudo().key_hash))
         self.assertTrue(wizard.key_id.permission_ids.can_update)
+        self.assertEqual(wizard.claude_header, 'x-api-key')
+        self.assertEqual(wizard.claude_value, wizard.token)
+        wizard.action_done()
+        self.assertFalse(wizard.claude_value)
 
     def test_wizard_warns_when_odoo_rights_are_missing(self):
         reader = new_user(self.env, 'mcp_reader_only', groups=('base.group_user',))
