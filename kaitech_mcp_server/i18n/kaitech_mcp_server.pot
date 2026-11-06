@@ -240,6 +240,11 @@ msgid "Cancel"
 msgstr ""
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Claude (Add custom connector)"
+msgstr ""
+
+#. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_config_desktop
 msgid "Claude Desktop (mcp-remote)"
 msgstr ""
@@ -599,6 +604,11 @@ msgid "IP address"
 msgstr ""
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "In Claude open Settings, Connectors, Add custom connector, and paste the Endpoint above as the URL."
+msgstr ""
+
+#. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_insert
 msgid "Insert"
 msgstr ""
@@ -711,6 +721,11 @@ msgstr ""
 #. module: kaitech_mcp_server
 #: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_permission_field_ids
 msgid "Leave empty to allow every field that is not forbidden."
+msgstr ""
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Leave the sign-in choice as Claude offers it: the key in the header is what signs in. Claude does not allow an Authorization header together with OAuth, which is why the key goes in x-api-key."
 msgstr ""
 
 #. module: kaitech_mcp_server
@@ -1316,6 +1331,11 @@ msgid "The key works through the public endpoint."
 msgstr ""
 
 #. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "The name x-auth-token works the same way."
+msgstr ""
+
+#. module: kaitech_mcp_server
 #: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:37
 #, python-format
 msgid "The pasted text does not match this key. Keys are shown only once; rotate the key if it was lost."
@@ -1383,6 +1403,11 @@ msgstr ""
 #. module: kaitech_mcp_server
 #: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_tree
 msgid "Total"
+msgstr ""
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Under Request headers choose x-api-key and paste the Key above as its value. Claude sends it exactly as typed, so no Bearer prefix is needed."
 msgstr ""
 
 #. module: kaitech_mcp_server
