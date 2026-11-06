@@ -32,7 +32,7 @@ ALLOWED_FUNCTIONS = frozenset("""
     int2 int4 int8 float4 float8 numeric text varchar bpchar date time timestamp timestamptz interval bool
 """.split())
 FUNCTION_CALL = re.compile(r'(?:([A-Za-z_][A-Za-z0-9_]*)\.)?"?([A-Za-z_][A-Za-z0-9_$]*)"?\(')
-LITERAL = re.compile(r"'(?:[^']|'')*'")
+QUOTED = re.compile(r"""'(?:[^']|'')*'|"(?:[^"]|"")*"|[^'"]+|.""", re.S)
 EXPRESSION_KEYS = ('Output', 'Filter', 'Join Filter', 'Hash Cond', 'Merge Cond', 'Index Cond', 'Recheck Cond',
                    'One-Time Filter', 'Sort Key', 'Group Key', 'Function Call', 'TID Cond', 'Order By',
                    'Presorted Key', 'Cache Key', 'Grouping Sets', 'Hash Key', 'Tid Cond', 'Run Condition')
@@ -55,6 +55,22 @@ READ_COLUMNS = """
     JOIN pg_attribute a ON a.attrelid = d.refobjid AND a.attnum = d.refobjsubid
     JOIN pg_type t ON t.oid = a.atttypid
 """
+
+
+def lex(text):
+    """Split SQL text into string literals, quoted identifiers and the code between them, left to right."""
+    parts = QUOTED.findall(text)
+    if any(part in ("'", '"') for part in parts):
+        raise ToolArgumentError("query has a quote that is never closed.")
+    return parts
+
+
+def code_only(parts):
+    return ''.join(part for part in parts if part[0] not in '\'"')
+
+
+def without_literals(parts):
+    return ''.join("''" if part[0] == "'" else part for part in parts)
 
 
 def quote(name):
@@ -343,10 +359,21 @@ class Run(object):
             raise ToolArgumentError("query must be one SELECT statement.")
         limit = _integer(arguments, 'limit', 20, 1, self.grant.max_read())
         text = text.strip().rstrip(';').strip()
-        bare = LITERAL.sub("''", text)
-        if ';' in bare or '--' in bare or '/*' in bare:
+        if '\\' in text:
+            raise ToolArgumentError("Backslashes are not allowed in queries; LIKE patterns can name another character with ESCAPE.")
+        code = code_only(lex(text))
+        if ';' in code or '--' in code or '/*' in code:
             raise ToolArgumentError("query must be one statement without comments.")
-        if not re.match(r'(?is)^\(*\s*(select|with)\b', bare):
+        if '$' in code:
+            raise ToolArgumentError("Dollar quoting and parameters are not allowed in queries.")
+        depth = 0
+        for character in code:
+            depth += {'(': 1, ')': -1}.get(character, 0)
+            if depth < 0:
+                break
+        if depth:
+            raise ToolArgumentError("query has unbalanced parentheses.")
+        if not re.match(r'(?is)^\(*\s*(select|with)\b', code):
             raise ToolArgumentError("Only SELECT queries are allowed here; use sql_insert, sql_update or sql_delete to change data.")
         self.statement = text
         cr = self.cr
@@ -355,6 +382,7 @@ class Run(object):
             self.check_columns(text)
             cr.execute('ROLLBACK TO SAVEPOINT kaitech_mcp_query')
             cr.execute('SET LOCAL transaction_read_only = on')
+            cr.execute('SET LOCAL standard_conforming_strings = on')
             cr.execute('EXPLAIN (VERBOSE, FORMAT JSON) ' + text)
             plan = cr.fetchone()[0]
             if isinstance(plan, str):
@@ -406,7 +434,7 @@ class Run(object):
                 elif isinstance(value, list):
                     expressions.extend(item for item in value if isinstance(item, str))
         for expression in expressions:
-            plain = LITERAL.sub("''", expression)
+            plain = without_literals(lex(expression))
             if '.*' in plain:
                 raise ToolRefused("Name the columns instead of selecting whole rows.")
             for schema, function in FUNCTION_CALL.findall(plain):

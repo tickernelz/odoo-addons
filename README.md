@@ -25,7 +25,8 @@ SQL path, off by default at three levels (MCP Settings, Allow SQL per key, table
 rights, record rules, Python constraints, computed fields and tracking: `sql_list_tables`, `sql_select`,
 `sql_query` (one read-only SELECT; EXPLAIN checks its tables and functions, PostgreSQL's own column dependencies
 check hidden columns whatever the query renames them to, so `*` in a CTE, subquery or UNION over a table with a hidden
-column is refused), `sql_insert`, `sql_update`, `sql_delete`
+column is refused; quotes are read left to right, and backslashes, dollar quotes, comments, a second statement or
+unbalanced parentheses are refused), `sql_insert`, `sql_update`, `sql_delete`
 (where required, at most 20 rows, `dry_run`). A key acting as a Settings administrator never gets SQL.
 
 Deleting needs the global switch in MCP Settings plus Delete ticked per model or table; at most 20 records per call.

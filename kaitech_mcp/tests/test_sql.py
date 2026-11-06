@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
+from odoo.sql_db import db_connect
 
 from .. import sql, tools
 from .common import EndpointCase, marker, new_key, new_user, set_setting
@@ -283,6 +284,40 @@ class TestSql(EndpointCase):
         )
         answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in allowed}
         self.assertEqual({query: answer for query, answer in answers.items() if 'error' in answer or 'LEAKED-' in str(answer)}, {})
+
+    def test_quotes_cannot_hide_a_second_statement(self):
+        with self.shared_env() as env:
+            env.cr.execute("SELECT id, phone_code FROM res_country WHERE code IN ('ID', 'MY', 'SG') ORDER BY code")
+            countries = env.cr.fetchall()
+            database = env.cr.dbname
+        smuggled = [
+            "SELECT 1 AS \"'\"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = %d; SELECT 1 AS \"'\"" % countries[0][0],
+            "SELECT 1 AS \"'\") AS q; COMMIT; UPDATE res_country SET phone_code = 4242 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT 1 AS \"'\"" % countries[1][0],
+            "SELECT E'\\'' AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4343 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT 'x'" % countries[2][0],
+            "SELECT $q$'$q$ AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4646 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT $q$'$q$ AS b" % countries[0][0],
+            "SELECT E'\\'' AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4747 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT E'\\'' AS b" % countries[1][0],
+            "SELECT 'open AS a",
+            "SELECT code FROM res_country) AS q, (SELECT 1",
+        ]
+        answers = {query: self.call(self.token, 'sql_query', {'query': query}) for query in smuggled}
+        self.assertEqual({query: answer['structuredContent'] for query, answer in answers.items() if not answer['isError']}, {})
+        with db_connect(database).cursor() as cr:
+            cr.execute("SELECT id, phone_code FROM res_country WHERE id IN %s ORDER BY code", (tuple(row[0] for row in countries),))
+            self.assertEqual(cr.fetchall(), countries)
+        hidden_call = "SELECT \"'\".code FROM res_country \"'\" WHERE \"'\".code = 'x' || pg_backend_pid() || 'y'"
+        result = self.call(self.token, 'sql_query', {'query': hidden_call})
+        self.assertIn('pg_backend_pid is not allowed', result['structuredContent'].get('error', ''), result['structuredContent'])
+        allowed = (
+            "SELECT code AS \"semi;colon\", 'it''s; -- fine' AS s FROM res_country WHERE code = 'ID'",
+            "SELECT \"'\".code FROM res_country \"'\" WHERE \"'\".code = 'ID'",
+            "SELECT 1 AS \"a\"\"b\" FROM res_country WHERE code LIKE 'I%' LIMIT 1",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in allowed}
+        self.assertEqual({query: answer for query, answer in answers.items() if 'error' in answer}, {})
 
     def test_query_reads_allowed_tables_only(self):
         result = self.call(self.token, 'sql_query', {'query': (
