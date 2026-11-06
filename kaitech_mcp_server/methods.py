@@ -9,6 +9,9 @@ from . import explore
 from .grants import RESPONSE_BYTES, ToolArgumentError, ToolRefused, check_ids, flag
 
 SAVEPOINT = 'kaitech_mcp_call_method'
+RUNS_AS_SUPERUSER = ('message_process', 'message_route', 'message_route_verify', 'message_route_process',
+                     'message_get_default_recipients', 'message_get_reply_to', 'message_partner_info_from_emails')
+CONTEXT_KEYS_REFUSED = ('tracking_disable', 'mail_notrack', 'mail_create_nolog', 'force_company')
 CHANGES_RECORDS = 20
 MAX_RESULT_IDS = 200
 
@@ -17,9 +20,10 @@ DEFINITION = {
     'title': 'Call a method',
     'action': 'call',
     'description': "Call a public business method (no leading _, not an ORM method such as write or unlink) on "
-                   "records of a model this key may call, as the key's user. dry_run runs it and rolls the database "
-                   "back; anything outside the database (a mail sent at once, a file, an outside call) is not undone. "
-                   "changes lists the stored fields that changed on those records.",
+                   "records of a model this key may call, as the key's user (a method that itself calls sudo() runs that part "
+                   "with more rights). dry_run runs it and rolls the database back; anything outside the database "
+                   "(a mail sent at once, a file, an outside call) is not undone, and a standard ir.sequence number it "
+                   "drew stays used. changes lists the stored fields that changed on those records.",
     'inputSchema': {'type': 'object', 'properties': {
         'model': {'type': 'string', 'description': 'Technical model name, for example sale.order.'},
         'method': {'type': 'string', 'description': 'Method name, for example action_confirm.'},
@@ -41,6 +45,9 @@ def callable_method(env, model, method):
         raise ToolArgumentError("method must be a method name.")
     if method.startswith('_'):
         raise ToolRefused("Private methods (starting with _) cannot be called.")
+    if method in RUNS_AS_SUPERUSER:
+        raise ToolRefused("%s runs with more rights than the key's user (it takes the model or the user it runs as "
+                          "from its arguments), so it cannot be called here." % method)
     if explore.is_framework_method(method):
         raise ToolRefused("%s is an ORM method; use the record tools instead." % method)
     if not explore.index(env.registry).methods(model._name).get(method):
@@ -120,6 +127,10 @@ def call(env, grant, arguments):
         raise ToolArgumentError("kwargs must be an object.")
     if not isinstance(context, dict):
         raise ToolArgumentError("context must be an object.")
+    refused = sorted(set(context) & set(CONTEXT_KEYS_REFUSED))
+    if refused:
+        raise ToolRefused("context key %s is refused: it would silence the record history or change the company."
+                          % ', '.join(refused))
     if context:
         merged = dict(model.env.context)
         merged.update(context)

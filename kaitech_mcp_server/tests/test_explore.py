@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
+import shutil
+import tempfile
+import time
+
 import odoo
 from odoo.modules import module as odoo_module
 
+from .. import explore, explore_tools
 from .common import EndpointCase, new_key, new_user
 
 EXPLORE_TOOLS = ('describe_model', 'search_methods', 'describe_method', 'get_method_source', 'search_code',
@@ -160,6 +166,76 @@ class TestExplore(EndpointCase):
         self.assertIn('regex must be true or false', self.refused('search_code', {'query': 'import', 'regex': 'yes'}))
         js = self.structured('search_code', {'query': 'odoo.define', 'module': 'web', 'file_types': ['js'], 'limit': 1})
         self.assertTrue(js['matches'][0]['file'].endswith('.js'))
+
+    def test_regex_search_is_linear_and_bounded(self):
+        started = time.time()
+        nested = self.structured('search_code', {'query': '(.+)+Z_NO_SUCH_END', 'module': 'base', 'file_types': ['py'],
+                                                 'regex': True})
+        self.assertEqual(nested['matches'], [])
+        self.assertLess(time.time() - started, 20)
+        self.assertIn('Backreferences', self.refused('search_code', {'query': '(a)\\1', 'regex': True}))
+        self.assertIn('one line', self.refused('search_code', {'query': 'a\nb', 'regex': True}))
+        found = self.structured('search_code', {'query': 'def create_compan[a-z]\\(self\\)', 'module': 'base',
+                                                'regex': True, 'path': 'base/res/*'})
+        self.assertEqual([row['file'] for row in found['matches']], ['base/res/res_partner.py'])
+
+    def test_a_regex_search_that_runs_too_long_is_stopped(self):
+        real_popen = explore_tools.subprocess.Popen
+        limit = explore_tools.SEARCH_SECONDS
+
+        def slow(command, **options):
+            if command[:2] == ['grep', '-rIn']:
+                return real_popen(['sleep', '30'], **options)
+            return real_popen(command, **options)
+
+        explore_tools.SEARCH_SECONDS = 0.3
+        explore_tools.subprocess.Popen = slow
+        try:
+            started = time.time()
+            result = self.structured('search_code', {'query': 'import', 'module': 'base', 'regex': True})
+        finally:
+            explore_tools.subprocess.Popen = real_popen
+            explore_tools.SEARCH_SECONDS = limit
+        self.assertTrue(result['timed_out'])
+        self.assertEqual(result['matches'], [])
+        self.assertLess(time.time() - started, 10)
+
+    def test_a_grep_hit_outside_the_shown_files_is_dropped(self):
+        folder = os.path.realpath(tempfile.mkdtemp())
+        try:
+            module = os.path.join(folder, 'mod')
+            for relative in ('a.py', '.hidden/b.py', 'lib/c.py', 'x.min.js', 'sub/d.py'):
+                path = os.path.join(module, relative)
+                if not os.path.isdir(os.path.dirname(path)):
+                    os.makedirs(os.path.dirname(path))
+                with open(path, 'w') as handle:
+                    handle.write('x = 1\n')
+            outside = os.path.join(folder, 'outside.py')
+            with open(outside, 'w') as handle:
+                handle.write('x = 1\n')
+            os.symlink(outside, os.path.join(module, 'link.py'))
+            roots = {module: 'mod'}
+            shown = dict((relative, explore_tools._shown(os.path.join(module, relative), roots, {}))
+                         for relative in ('a.py', '.hidden/b.py', 'lib/c.py', 'x.min.js', 'sub/d.py', 'link.py'))
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(shown, {'a.py': 'mod/a.py', 'sub/d.py': 'mod/sub/d.py', '.hidden/b.py': None, 'lib/c.py': None,
+                                 'x.min.js': None, 'link.py': None})
+
+    def test_a_source_file_is_read_without_following_a_symlink(self):
+        folder = tempfile.mkdtemp()
+        try:
+            target = os.path.join(folder, 'target.py')
+            with open(target, 'w') as handle:
+                handle.write('x = 1\n')
+            link = os.path.join(folder, 'link.py')
+            os.symlink(target, link)
+            plain = explore.read_text(target)
+            followed = explore.read_text(link)
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(plain, u'x = 1\n')
+        self.assertIsNone(followed)
 
     def test_read_source_stays_inside_installed_modules(self):
         refused = ['../../../etc/passwd', '/etc/passwd', 'base/../../release.py', 'base/../../../odoo/release.py',

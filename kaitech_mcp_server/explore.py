@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Read-only introspection of models, methods and addon source, cached per registry."""
 import inspect
-import io
 import os
 import threading
 
@@ -209,7 +208,12 @@ class Index(object):
 
 
 def read_text(real):
-    if os.path.getsize(real) > MAX_FILE_BYTES:
+    """The text of one source file read through a descriptor opened without following a symlink, or None."""
+    try:
+        descriptor = os.open(real, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
+    except OSError:
         return None
-    with io.open(real, 'r', encoding='utf-8', errors='replace') as handle:
-        return handle.read()
+    with os.fdopen(descriptor, 'rb') as handle:
+        if os.fstat(handle.fileno()).st_size > MAX_FILE_BYTES:
+            return None
+        return handle.read().decode('utf-8', 'replace')

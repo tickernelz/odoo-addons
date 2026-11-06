@@ -127,6 +127,34 @@ class TestCallMethod(EndpointCase):
         self.assertEqual(renamed['structuredContent']['changes'][str(self.tag_id)]['name'], ['Mcp Tag', 'Renamed'])
         self.assertEqual(self.tag_name(), 'Mcp Tag')
 
+    def test_methods_that_run_as_superuser_are_refused(self):
+        names = ('message_process', 'message_route', 'message_route_verify', 'message_route_process',
+                 'message_get_default_recipients', 'message_get_reply_to', 'message_partner_info_from_emails')
+        for name in names:
+            result = self.run_method(self.token, {'model': 'res.partner', 'method': name, 'ids': [self.partner_id]})
+            self.assertTrue(result['isError'], name)
+            self.assertIn('cannot be called here', result['structuredContent']['error'], name)
+        with self.probe('message_route_process', rename_tag):
+            result = self.run_method(self.token, {'model': 'res.partner.category', 'method': 'message_route_process',
+                                                  'ids': [self.tag_id], 'args': ['Renamed']})
+        self.assertTrue(result['isError'])
+        self.assertIn('cannot be called here', result['structuredContent']['error'])
+        self.assertEqual(self.tag_name(), 'Mcp Tag')
+        with self.probe('mcp_rename_probe', rename_tag):
+            allowed = self.rename(self.token)
+        self.assertFalse(allowed['isError'], allowed)
+        self.assertEqual(self.tag_name(), 'Renamed')
+
+    def test_context_keys_that_silence_the_history_are_refused(self):
+        with self.probe('mcp_rename_probe', rename_tag):
+            for key in ('tracking_disable', 'mail_notrack', 'mail_create_nolog', 'force_company'):
+                result = self.rename(self.token, dry_run=True, context={key: True})
+                self.assertTrue(result['isError'], key)
+                self.assertIn('is refused', result['structuredContent']['error'], key)
+            allowed = self.rename(self.token, dry_run=True, context={'lang': 'en_US', 'active_test': False})
+        self.assertFalse(allowed['isError'], allowed)
+        self.assertEqual(self.tag_name(), 'Mcp Tag')
+
     def test_refused_methods(self):
         for method, text in (('_compute_commercial_partner', 'Private methods'), ('write', 'ORM method'),
                              ('unlink', 'ORM method'), ('sudo', 'ORM method'), ('no_such_method', 'has no method')):

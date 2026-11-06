@@ -2,7 +2,10 @@
 """The read-only explore tools: models, methods, source, modules, views, actions and XML ids."""
 import fnmatch
 import inspect
+import os
 import re
+import subprocess
+import threading
 
 from lxml import etree
 
@@ -10,7 +13,7 @@ import odoo
 from odoo.modules import module as odoo_module
 
 from . import explore
-from .grants import ACTIONS, ToolArgumentError, flag, integer
+from .grants import ACTIONS, ToolArgumentError, ToolRefused, flag, integer
 
 _READ_ONLY = {'readOnlyHint': True, 'openWorldHint': False}
 _MODEL = {'type': 'string', 'description': 'Technical model name, for example sale.order.'}
@@ -22,7 +25,7 @@ VIEW_TYPES = ('form', 'tree', 'list', 'kanban', 'search', 'pivot', 'graph', 'cal
 DEFAULT_FILE_TYPES = ('py', 'xml', 'js', 'csv')
 MODULE_STATES = ('installed', 'uninstalled', 'to upgrade', 'to install', 'all')
 MAX_PATTERN = 200
-MAX_REGEX_LINE = 1000
+SEARCH_SECONDS = 15
 MAX_SOURCE_LINES = 1000
 MAX_READ_LINES = 500
 MAX_LINE_CHARS = 400
@@ -64,7 +67,7 @@ DEFINITIONS = (
           ('model', 'method')),
     _tool('search_code', 'Search source code',
           "Search the source files of the installed modules (or one module). Returns file, line and the line itself; "
-          "read more with read_source. A regex runs under the worker's time limits.",
+          "read more with read_source. regex is POSIX extended (grep -E, no backreferences) and stops after %d seconds." % SEARCH_SECONDS,
           {'query': {'type': 'string', 'description': 'Text to find, at least 2 characters; a regular expression '
                                                       'when regex is true.'},
            'module': {'type': 'string', 'description': 'Only this installed module.'},
@@ -378,6 +381,82 @@ def _installed(env, names, argument):
     return names
 
 
+class GrepRun(object):
+    """grep -E over module folders as a child process that is killed at a hard deadline; iterate it for (file, line, text)."""
+
+    def __init__(self, query, ignore_case, roots, types):
+        command = ['grep', '-rIn', '-Z', '--no-messages', '-E', '--exclude-dir=lib', '--exclude-dir=node_modules',
+                   '--exclude-dir=.git']
+        if ignore_case:
+            command.append('-i')
+        command += ['--include=*.%s' % kind for kind in types]
+        command += ['-e', query, '--'] + sorted(roots)
+        self.timed_out = False
+        with open(os.devnull, 'w') as devnull:
+            try:
+                self.process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=devnull, close_fds=True)
+            except OSError:
+                raise ToolRefused("A regex search needs the grep program on the server; search without regex instead.")
+        self.timer = threading.Timer(SEARCH_SECONDS, self._expire)
+        self.timer.start()
+
+    def _expire(self):
+        self.timed_out = True
+        try:
+            self.process.kill()
+        except OSError:
+            pass
+
+    def __iter__(self):
+        for raw in iter(self.process.stdout.readline, b''):
+            name, _nul, rest = raw.decode('utf-8', 'replace').rstrip(u'\n').partition(u'\0')
+            number, _colon, text = rest.partition(u':')
+            yield name, number, text
+
+    def close(self):
+        self.timer.cancel()
+        if self.process.poll() is None:
+            try:
+                self.process.kill()
+            except OSError:
+                pass
+        self.process.stdout.close()
+        self.process.wait()
+
+
+def _check_pattern(query, ignore_case):
+    """Refuse a regex grep cannot compile, with grep's own reason."""
+    command = ['grep', '-E', '-e', query, os.devnull]
+    if ignore_case:
+        command.insert(2, '-i')
+    try:
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+    except OSError:
+        raise ToolRefused("A regex search needs the grep program on the server; search without regex instead.")
+    _out, error = process.communicate()
+    if process.returncode == 2:
+        raise ToolArgumentError("Invalid regex: %s" % (error.decode('utf-8', 'replace').strip() or query)[:200])
+
+
+def _shown(name, roots, known):
+    """module/relative/path of a grep hit, or None when it is not a source file this tool may show."""
+    if name in known:
+        return known[name]
+    shown = None
+    for root in sorted(roots, key=len, reverse=True):
+        if name.startswith(root + os.sep):
+            parts = name[len(root) + 1:].split(os.sep)
+            blocked = any(part.startswith('.') or part in explore.SKIPPED_DIRECTORIES for part in parts[:-1])
+            real = os.path.realpath(name)
+            inside = real.startswith(root + os.sep)
+            if inside and not blocked and not parts[-1].endswith('.min.js') \
+                    and os.path.getsize(real) <= explore.MAX_FILE_BYTES:
+                shown = roots[root] + '/' + '/'.join(parts)
+            break
+    known[name] = shown
+    return shown
+
+
 def _search_code(env, grant, arguments):
     query = _text(arguments, 'query', 2)
     regex = flag(arguments, 'regex')
@@ -392,31 +471,24 @@ def _search_code(env, grant, arguments):
     pattern = _text(arguments, 'path', required=False)
     limit = integer(arguments, 'limit', 50, 1, 200)
     offset = integer(arguments, 'offset', 0, 0, None)
-    if regex:
-        if len(query) > MAX_PATTERN:
-            raise ToolArgumentError("A regex may be at most %s characters." % MAX_PATTERN)
-        try:
-            compiled = re.compile(query, re.IGNORECASE if ignore_case else 0)
-        except re.error as error:
-            raise ToolArgumentError("Invalid regex: %s" % error)
-        found_in = lambda line: compiled.search(line[:MAX_REGEX_LINE]) is not None
-    else:
-        needle = query.lower() if ignore_case else query
-        found_in = lambda line: needle in (line.lower() if ignore_case else line)
     skip = offset
     matches = []
-    scanned = 0
     more = False
-    for module in modules:
-        for relative, extension, real in index.files(module):
-            if extension not in types or (pattern and not fnmatch.fnmatchcase(relative, pattern)):
-                continue
-            text = explore.read_text(real)
-            if text is None:
-                continue
-            scanned += 1
-            for number, line in enumerate(text.splitlines(), 1):
-                if not found_in(line):
+    timed_out = False
+    scanned = None
+    if regex:
+        if len(query) > MAX_PATTERN or '\n' in query or '\x00' in query:
+            raise ToolArgumentError("A regex must be one line of at most %s characters." % MAX_PATTERN)
+        if re.search(r'\\[1-9]', query):
+            raise ToolArgumentError("Backreferences are not supported in a regex search.")
+        _check_pattern(query, ignore_case)
+        roots = dict((index.module_root(module), module) for module in modules if index.module_root(module))
+        known = {}
+        run = GrepRun(query, ignore_case, roots, types) if roots else None
+        try:
+            for name, number, text in run or ():
+                shown = _shown(name, roots, known)
+                if shown is None or (pattern and not fnmatch.fnmatchcase(shown, pattern)):
                     continue
                 if skip:
                     skip -= 1
@@ -424,13 +496,44 @@ def _search_code(env, grant, arguments):
                     more = True
                     break
                 else:
-                    matches.append({'file': relative, 'line': number, 'text': line.strip()[:MATCH_CHARS]})
+                    matches.append({'file': shown, 'line': int(number), 'text': text.strip()[:MATCH_CHARS]})
+        finally:
+            if run:
+                run.close()
+                timed_out = run.timed_out
+    else:
+        needle = query.lower() if ignore_case else query
+        found_in = lambda line: needle in (line.lower() if ignore_case else line)
+        scanned = 0
+        for module in modules:
+            for relative, extension, real in index.files(module):
+                if extension not in types or (pattern and not fnmatch.fnmatchcase(relative, pattern)):
+                    continue
+                text = explore.read_text(real)
+                if text is None:
+                    continue
+                scanned += 1
+                for number, line in enumerate(text.splitlines(), 1):
+                    if not found_in(line):
+                        continue
+                    if skip:
+                        skip -= 1
+                    elif len(matches) == limit:
+                        more = True
+                        break
+                    else:
+                        matches.append({'file': relative, 'line': number, 'text': line.strip()[:MATCH_CHARS]})
+                if more:
+                    break
             if more:
                 break
-        if more:
-            break
     payload = {'matches': matches, 'returned': len(matches), 'has_more': more,
-               'next_offset': offset + len(matches) if more else None, 'files_scanned': scanned}
+               'next_offset': offset + len(matches) if more else None}
+    if scanned is not None:
+        payload['files_scanned'] = scanned
+    if timed_out:
+        payload['timed_out'] = True
+        payload['next'] = 'the search stopped after %s seconds; narrow it with module, file_types or path' % SEARCH_SECONDS
     return _done(payload, model=pattern, count=len(matches))
 
 
@@ -442,7 +545,8 @@ def _read_source(env, grant, arguments):
                                 "sale/models/sale.py." % (', '.join(explore.SOURCE_TYPES), relative))
     text = explore.read_text(real)
     if text is None:
-        raise ToolArgumentError("%s is larger than %s MB." % (relative, explore.MAX_FILE_BYTES // (1024 * 1024)))
+        raise ToolArgumentError("%s cannot be read: it is larger than %s MB or not a plain file."
+                                % (relative, explore.MAX_FILE_BYTES // (1024 * 1024)))
     start = integer(arguments, 'start_line', 1, 1, None)
     count = integer(arguments, 'lines', 200, 1, MAX_READ_LINES)
     lines = text.splitlines()
