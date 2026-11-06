@@ -14,10 +14,25 @@ from .. import endpoint, grants, protocol
 MODERN = '2026-07-28'
 
 
-def new_user(env, login, groups=('base.group_user', 'base.group_partner_manager'), lang=None):
+WRITER = 'writer'
+
+
+def partner_writer(env):
+    """A group with full access to partners and partner tags, whatever the database's own groups grant."""
+    group = env['res.groups'].search([('name', '=', 'MCP test partner writer')], limit=1)
+    if group:
+        return group
+    models = env['ir.model'].search([('model', 'in', ('res.partner', 'res.partner.category'))])
+    return env['res.groups'].create({'name': 'MCP test partner writer', 'model_access': [(0, 0, {
+        'name': 'mcp test %s' % model.model, 'model_id': model.id, 'perm_read': True, 'perm_write': True,
+        'perm_create': True, 'perm_unlink': True}) for model in models]})
+
+
+def new_user(env, login, groups=('base.group_user', WRITER), lang=None):
+    ids = [partner_writer(env).id if group == WRITER else env.ref(group).id for group in groups]
     values = {
         'name': login.title(), 'login': login, 'email': '%s@example.com' % login,
-        'groups_id': [(6, 0, [env.ref(group).id for group in groups])],
+        'groups_id': [(6, 0, ids)],
     }
     if lang:
         values['lang'] = lang

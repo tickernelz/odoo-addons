@@ -16,7 +16,7 @@ class TestTools(EndpointCase):
             reader_key, self.reader_token = new_key(env, self.reader, {'res.partner': {'read', 'create', 'update'}})
             self.reader_key_id = reader_key.id
             self.category = env['res.partner.category'].create({'name': 'MCP VIP'})
-            self.partner = env['res.partner'].create({'name': 'PT Contoh Jakarta', 'city': 'Jakarta', 'phone': '021-1'})
+            self.partner = env['res.partner'].create({'name': 'PT Contoh Mcpville', 'city': 'Mcpville', 'phone': '021-1'})
 
     def test_list_models_combines_key_and_odoo_rights(self):
         result = self.call(self.reader_token, 'list_models', {})
@@ -35,20 +35,20 @@ class TestTools(EndpointCase):
 
     def test_search_read_count_and_audit(self):
         result = self.call(self.token, 'search_records', {
-            'model': 'res.partner', 'domain': [['city', 'ilike', 'jakarta']], 'fields': ['name', 'phone'], 'limit': 5})
+            'model': 'res.partner', 'domain': [['city', 'ilike', 'mcpville']], 'fields': ['name', 'phone'], 'limit': 5})
         self.assertFalse(result['isError'])
         records = result['structuredContent']['records']
-        self.assertEqual([(row['id'], row['name']) for row in records], [(self.partner.id, 'PT Contoh Jakarta')])
-        self.assertIn('PT Contoh Jakarta', result['content'][0]['text'])
+        self.assertEqual([(row['id'], row['name']) for row in records], [(self.partner.id, 'PT Contoh Mcpville')])
+        self.assertIn('PT Contoh Mcpville', result['content'][0]['text'])
         call = self.last_call(self.key_id)
         self.assertEqual((call['result'], call['tool'], call['model'], call['record_count']),
                          ('ok', 'search_records', 'res.partner', 1))
-        result = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': [['city', '=', 'Jakarta']]})
+        result = self.call(self.token, 'count_records', {'model': 'res.partner', 'domain': [['city', '=', 'Mcpville']]})
         self.assertEqual(result['structuredContent'], {'count': 1})
         result = self.call(self.token, 'read_records', {'model': 'res.partner', 'ids': [self.partner.id, 99999999],
                                                         'fields': ['city']})
         self.assertEqual(result['structuredContent']['missing_ids'], [99999999])
-        self.assertEqual(result['structuredContent']['records'][0]['city'], 'Jakarta')
+        self.assertEqual(result['structuredContent']['records'][0]['city'], 'Mcpville')
 
     def test_paging_reports_has_more(self):
         first = self.call(self.token, 'search_records', {'model': 'res.country', 'limit': 2, 'fields': ['code']})
@@ -72,24 +72,29 @@ class TestTools(EndpointCase):
         self.assertEqual(self.last_call(self.key_id)['result'], 'refused')
 
     def test_create_with_lines_and_update_many2many(self):
-        result = self.call(self.token, 'create_record', {'model': 'res.partner', 'values': {
-            'name': 'PT Baru', 'is_company': True, 'child_ids': [{'name': 'Budi'}, {'name': 'Sari'}]}})
+        with self.shared_env() as env:
+            env['kaitech.mcp.key'].browse(self.key_id).permission_ids.filtered(
+                lambda row: row.model_name == 'res.partner.category').write({'can_create': True, 'can_update': True})
+        result = self.call(self.token, 'create_record', {'model': 'res.partner.category', 'values': {
+            'name': 'MCP Parent Tag', 'color': 3, 'child_ids': [{'name': 'MCP Child A'}, {'name': 'MCP Child B'}]}})
         self.assertFalse(result['isError'], result)
         new_id = result['structuredContent']['id']
         with self.shared_env() as env:
-            partner = env['res.partner'].browse(new_id)
-            self.assertEqual(sorted(partner.child_ids.mapped('name')), ['Budi', 'Sari'])
-            self.assertEqual(partner.create_uid.id, self.sales.id)
+            tag = env['res.partner.category'].browse(new_id)
+            self.assertEqual(sorted(tag.child_ids.mapped('name')), ['MCP Child A', 'MCP Child B'])
+            self.assertEqual(tag.create_uid.id, self.sales.id)
         call = self.last_call(self.key_id)
-        self.assertEqual(call['fields_written'], 'res.partner.child_ids,res.partner.is_company,res.partner.name')
-        result = self.call(self.token, 'update_records', {'model': 'res.partner', 'ids': [new_id, self.partner.id],
-                                                          'values': {'category_id': [self.category.id]}})
+        self.assertEqual(call['fields_written'], ','.join([
+            'res.partner.category.child_ids', 'res.partner.category.color', 'res.partner.category.name']))
+        result = self.call(self.token, 'update_records', {'model': 'res.partner.category', 'ids': [new_id, self.category.id],
+                                                          'values': {'partner_ids': [self.partner.id]}})
         self.assertEqual(result['structuredContent'], {'updated': 2})
         with self.shared_env() as env:
-            self.assertEqual(env['res.partner'].browse(new_id).category_id.ids, [self.category.id])
+            self.assertEqual(sorted(env['res.partner'].browse(self.partner.id).category_id.ids), sorted([new_id, self.category.id]))
 
     def test_odoo_access_rights_still_apply_and_nothing_is_written(self):
-        result = self.call(self.reader_token, 'create_record', {'model': 'res.partner', 'values': {'name': 'Nope'}})
+        result = self.call(self.reader_token, 'update_records', {'model': 'res.partner', 'ids': [self.partner.id],
+                                                                 'values': {'name': 'Nope'}})
         self.assertTrue(result['isError'])
         self.assertEqual(self.last_call(self.reader_key_id)['result'], 'refused')
         with self.shared_env() as env:

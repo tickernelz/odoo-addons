@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import odoo
 from odoo.exceptions import ValidationError
 
+from .. import sql
+from ..grants import ToolArgumentError
 from .common import EndpointCase, new_key, new_user, set_setting
 
 SQL_TOOLS = ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update', 'sql_delete']
@@ -18,9 +21,9 @@ class TestSql(EndpointCase):
             self.key_id = key.id
             plain, self.plain_token = new_key(env, self.user, {'res.partner': {'read'}})
             self.plain_id = plain.id
-            self.partners = env['res.partner'].create({'name': 'SQL One', 'city': 'Bandung'})
+            self.partners = env['res.partner'].create({'name': 'SQL One', 'city': 'Mcp Bandung'})
             for index in range(25):
-                self.partners |= env['res.partner'].create({'name': 'SQL Bulk %02d' % index, 'city': 'Medan'})
+                self.partners |= env['res.partner'].create({'name': 'SQL Bulk %02d' % index, 'city': 'Mcp Medan'})
 
     def tool_names(self, token):
         return [tool['name'] for tool in self.legacy('tools/list', token=token)[1]['result']['tools']]
@@ -30,7 +33,7 @@ class TestSql(EndpointCase):
                          ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update'])
         self.assertFalse([name for name in self.tool_names(self.plain_token) if name.startswith('sql_')])
         result = self.call(self.plain_token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('no tool named sql_select', result['structuredContent']['error'])
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
@@ -48,7 +51,7 @@ class TestSql(EndpointCase):
                            (env.ref('base.group_system').id, self.user.id))
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
         result = self.call(self.token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('no tool named sql_select', result['structuredContent']['error'])
 
     def test_secret_looking_columns_are_hidden(self):
         with self.shared_env() as env:
@@ -59,6 +62,152 @@ class TestSql(EndpointCase):
         self.assertFalse(set(['api_token', 'client_secret']) & set(names))
         result = self.call(self.token, 'sql_query', {'query': 'SELECT api_token FROM res_country'})
         self.assertIn('never readable', result['structuredContent']['error'])
+
+    def test_tables_with_a_hidden_column_stay_queryable_without_leaking_it(self):
+        with self.shared_env() as env:
+            env.cr.execute("ALTER TABLE res_partner ADD COLUMN ocn_token varchar")
+            env.cr.execute("UPDATE res_partner SET ocn_token = 'leak-' || id")
+        allowed = (
+            "SELECT count(*) AS n FROM res_partner WHERE city = 'Mcp Medan'",
+            "SELECT p.name, c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id ORDER BY p.name",
+            "SELECT city, count(*) AS n FROM res_partner GROUP BY city ORDER BY city",
+            "SELECT name FROM res_partner WHERE id IN (SELECT id FROM res_partner WHERE city = 'Mcp Medan') LIMIT 3",
+        )
+        for query in allowed:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertFalse(result['isError'], (query, result))
+        leaks = (
+            "SELECT ocn_token FROM res_partner",
+            "SELECT x FROM (SELECT ocn_token AS x FROM res_partner) s",
+            "WITH c AS (SELECT * FROM res_partner) SELECT name FROM c WHERE ocn_token LIKE 'leak-1%'",
+            "SELECT name FROM res_partner WHERE ocn_token = 'leak-1'",
+            "SELECT name FROM res_partner ORDER BY ocn_token",
+            "SELECT count(*) AS n FROM res_partner GROUP BY ocn_token",
+            "SELECT p.name FROM res_partner p JOIN res_country c ON c.code = p.ocn_token",
+            "SELECT length(ocn_token) AS n FROM res_partner",
+            "SELECT * FROM res_partner",
+        )
+        for query in leaks:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertTrue(result['isError'], query)
+            self.assertNotIn('leak-', result['content'][0]['text'])
+
+    def test_renamed_columns_never_carry_a_hidden_column(self):
+        with self.shared_env() as env:
+            env.cr.execute("CREATE TABLE mcp_hidden_probe (id serial PRIMARY KEY, name varchar, api_token varchar)")
+            env.cr.execute("INSERT INTO mcp_hidden_probe (name, api_token) SELECT 'row ' || n, 'LEAKED-' || n "
+                           "FROM generate_series(1, 5) n")
+            env.cr.execute("CREATE TABLE mcp_hidden_twin (api_token varchar, label varchar)")
+            env.cr.execute("INSERT INTO mcp_hidden_twin VALUES ('LEAKED-1', 'one')")
+            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [
+                (0, 0, {'table_name': 'mcp_hidden_probe', 'can_select': True}),
+                (0, 0, {'table_name': 'mcp_hidden_twin', 'can_select': True})]})
+        for query in ("SELECT name FROM mcp_hidden_probe ORDER BY id",
+                      "SELECT count(*) AS n FROM mcp_hidden_probe WHERE name LIKE 'row %'",
+                      "SELECT x.b FROM mcp_hidden_probe AS x(a, b)",
+                      "SELECT p.name, t.label FROM mcp_hidden_probe p, mcp_hidden_twin t WHERE p.id = 1"):
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertFalse(result['isError'], (query, result))
+        leaks = (
+            "WITH x(a, b, c) AS (SELECT * FROM mcp_hidden_probe) SELECT x.c FROM x",
+            "WITH x(a, b, c) AS (SELECT * FROM mcp_hidden_probe) SELECT count(*) AS n FROM x WHERE x.c LIKE 'LEAKED-1%'",
+            "WITH x(a, b, c) AS MATERIALIZED (SELECT * FROM mcp_hidden_probe) SELECT x.c FROM x",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe) s(a, b, c)",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe LIMIT 100) s(a, b, c)",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe OFFSET 0) s(a, b, c) WHERE s.c LIKE 'LEAKED%'",
+            "SELECT u.c FROM (SELECT * FROM mcp_hidden_probe UNION ALL SELECT * FROM mcp_hidden_probe) u(a, b, c)",
+            "SELECT name FROM mcp_hidden_probe WHERE EXISTS (SELECT 1 FROM (SELECT * FROM mcp_hidden_probe) s(a, b, c) "
+            "WHERE s.c = 'LEAKED-1' AND s.a = mcp_hidden_probe.id)",
+            "SELECT x.c FROM mcp_hidden_probe AS x(a, b, c)",
+            "SELECT x.name FROM mcp_hidden_probe AS x(id, other, name)",
+            "SELECT * FROM mcp_hidden_probe UNION ALL SELECT * FROM mcp_hidden_probe",
+            "SELECT name FROM mcp_hidden_probe JOIN mcp_hidden_twin USING (api_token)",
+            "SELECT api_token AS n FROM mcp_hidden_probe JOIN mcp_hidden_twin USING (api_token)",
+            "SELECT name FROM mcp_hidden_probe NATURAL JOIN mcp_hidden_twin",
+        )
+        for query in leaks:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertTrue(result['isError'], query)
+            self.assertNotIn('LEAKED', result['content'][0]['text'], query)
+            self.assertNotIn('"n": 1', result['content'][0]['text'], query)
+
+    def test_one_statement_guard_reads_quotes_the_way_postgres_does(self):
+        quote = "'"
+        refused = (
+            'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (quote, quote),
+            "SELECT E'\\'' AS x; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1",
+            "SELECT $q$%s$q$; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1" % quote,
+            "SELECT 1 /* comment */ FROM res_country",
+            "SELECT 1 -- comment",
+            "SELECT 'unterminated FROM res_country",
+            'SELECT "unterminated FROM res_country',
+            "SELECT count(* FROM res_country",
+            "SELECT * FROM res_country $$; COMMIT; $$",
+            "SELECT 1; COMMIT",
+        )
+        for query in refused:
+            with self.assertRaises(ToolArgumentError, msg=query):
+                sql.single_statement(query)
+        for query in ("SELECT name FROM res_country WHERE code = 'AD'",
+                      "SELECT %s%s AS x" % (quote, quote),
+                      "SELECT name FROM res_country WHERE name LIKE 'a%%' LIMIT 1;",
+                      "SELECT 1 FROM res_country WHERE name LIKE 'a" + chr(92) + "'",
+                      "WITH c AS (SELECT lower(code) AS code FROM res_country) SELECT code FROM c"):
+            self.assertEqual(sql.single_statement(query)[0], query.rstrip().rstrip(';').rstrip())
+
+    def test_a_hidden_write_through_a_quoted_alias_never_reaches_the_database(self):
+        with self.shared_env() as env:
+            env.cr.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            before = env.cr.fetchone()[0]
+        quote = "'"
+        payload = 'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (
+            quote, quote)
+        result = self.call(self.token, 'sql_query', {'query': payload})
+        self.assertTrue(result['isError'])
+        self.assertIn('string', result['structuredContent']['error'])
+        probe = odoo.sql_db.db_connect(self.env.cr.dbname).cursor()
+        try:
+            probe.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            self.assertEqual(probe.fetchone()[0], before)
+        finally:
+            probe.close()
+
+    def test_no_sql_reaches_postgres_unless_every_switch_allows_it(self):
+        quote = "'"
+        smuggles = (
+            "SELECT $$%s$$ AS a; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT %s$$" % (quote, quote),
+            'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (quote, quote),
+            "SELECT E'\\'' AS x; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1",
+        )
+        with self.shared_env() as env:
+            env.cr.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            before = env.cr.fetchone()[0]
+        for switch_off in ('setting', 'key'):
+            with self.shared_env() as env:
+                if switch_off == 'setting':
+                    set_setting(env, 'sql_enabled', 'False')
+                else:
+                    set_setting(env, 'sql_enabled', 'True')
+            for token in (self.plain_token, self.token if switch_off == 'setting' else self.plain_token):
+                for payload in smuggles + ("SELECT code FROM res_country",):
+                    result = self.call(token, 'sql_query', {'query': payload})
+                    self.assertTrue(result['isError'], (switch_off, payload))
+                    self.assertIn('no tool named sql_query', result['structuredContent']['error'])
+                for tool, arguments in (('sql_select', {'table': 'res_country'}),
+                                        ('sql_list_tables', {})):
+                    result = self.call(token, tool, arguments)
+                    self.assertIn('no tool named', result['structuredContent']['error'])
+        with self.shared_env() as env:
+            set_setting(env, 'sql_enabled', 'True')
+        for payload in smuggles:
+            result = self.call(self.token, 'sql_query', {'query': payload})
+            self.assertTrue(result['isError'], payload)
+        probe = odoo.sql_db.db_connect(self.env.cr.dbname).cursor()
+        try:
+            probe.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            self.assertEqual(probe.fetchone()[0], before)
+        finally:
+            probe.close()
 
     def test_allow_sql_needs_the_setting(self):
         with self.shared_env() as env:
@@ -81,7 +230,7 @@ class TestSql(EndpointCase):
     def test_select_with_structured_where_and_paging(self):
         result = self.call(self.token, 'sql_select', {
             'table': 'res_partner', 'columns': ['id', 'name'], 'order': 'name asc',
-            'where': ['|', ['city', '=', 'Bandung'], ['name', 'ilike', 'bulk 0']], 'limit': 5})
+            'where': ['|', ['city', '=', 'Mcp Bandung'], ['name', 'ilike', 'bulk 0']], 'limit': 5})
         rows = result['structuredContent']['rows']
         self.assertEqual([row['name'] for row in rows], ['SQL Bulk 00', 'SQL Bulk 01', 'SQL Bulk 02', 'SQL Bulk 03', 'SQL Bulk 04'])
         self.assertTrue(result['structuredContent']['has_more'])
@@ -99,18 +248,18 @@ class TestSql(EndpointCase):
             arguments = {'table': 'res_partner', 'values': {'city': 'X'}, 'where': where}
             result = self.call(self.token, 'sql_update', arguments)
             self.assertTrue(result['isError'], where)
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
-                                                      'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Padang'},
+                                                      'where': [['city', '=', 'Mcp Medan']]})
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Mcp Padang'")
             self.assertEqual(env.cr.fetchone()[0], 0)
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Padang'},
                                                       'where': [['name', 'in', ['SQL Bulk 01', 'SQL Bulk 02']]]})
         self.assertEqual(result['structuredContent']['updated'], 2)
         self.assertIn('UPDATE "res_partner" SET "city" = %s', self.statement()['statement'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Mcp Padang'")
             self.assertEqual(set(row[0] for row in env.cr.fetchall()), set([self.user.id]))
 
     def statement(self):
@@ -120,16 +269,16 @@ class TestSql(EndpointCase):
             return env.cr.dictfetchone()
 
     def test_dry_run_reports_and_undoes(self):
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Ambon'},
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Ambon'},
                                                       'where': [['id', '=', self.partners[0].id]], 'dry_run': True})
         self.assertEqual(result['structuredContent'], {'updated': 1, 'keys': [self.partners[0].id], 'dry_run': True})
         with self.shared_env() as env:
             env.cr.execute("SELECT city FROM res_partner WHERE id = %s", (self.partners[0].id,))
-            self.assertEqual(env.cr.fetchone()[0], 'Bandung')
+            self.assertEqual(env.cr.fetchone()[0], 'Mcp Bandung')
         audit = self.statement()
         self.assertTrue(audit['dry_run'])
         self.assertEqual(audit['record_ids'], str(self.partners[0].id))
-        self.assertNotIn('Ambon', audit['statement'])
+        self.assertNotIn('Mcp Ambon', audit['statement'])
 
     def test_delete_needs_the_delete_switch_and_is_bounded(self):
         self.assertNotIn('sql_delete', self.tool_names(self.token))
@@ -139,22 +288,36 @@ class TestSql(EndpointCase):
                 lambda row: row.table_name == 'res_partner').write({'can_delete': True})
             victim = env['res.partner'].create({'name': 'SQL Victim'})
         self.assertIn('sql_delete', self.tool_names(self.token))
-        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Mcp Medan']]})
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['id', '=', victim.id]]})
         self.assertEqual(result['structuredContent']['keys'], [victim.id])
         self.assertEqual(self.statement()['statement'], 'DELETE FROM "res_partner" WHERE "id" = %s RETURNING "id"')
 
     def test_insert_fills_audit_columns(self):
-        result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [
-            {'name': 'SQL Inserted', 'active': True, 'display_name': 'SQL Inserted'}]})
-        self.assertFalse(result['isError'], result)
-        new_id = result['structuredContent']['keys'][0]
         with self.shared_env() as env:
-            env.cr.execute("SELECT create_uid, write_uid, create_date IS NOT NULL FROM res_partner WHERE id = %s", (new_id,))
-            self.assertEqual(env.cr.fetchone(), (self.user.id, self.user.id, True))
-        result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [{'id': 1, 'name': 'x'}]})
+            env.cr.execute("CREATE TABLE mcp_sql_probe (id serial PRIMARY KEY, name varchar NOT NULL, "
+                           "create_uid integer, write_uid integer, create_date timestamp, write_date timestamp)")
+            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [(0, 0, {
+                'table_name': 'mcp_sql_probe', 'can_select': True, 'can_insert': True})]})
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'One'}, {'name': 'Two'}]})
+        self.assertFalse(result['isError'], result)
+        self.assertEqual(result['structuredContent']['inserted'], 2)
+        with self.shared_env() as env:
+            env.cr.execute("SELECT name, create_uid, write_uid, create_date IS NOT NULL FROM mcp_sql_probe "
+                           "WHERE id IN %s ORDER BY id", (tuple(result['structuredContent']['keys']),))
+            self.assertEqual(env.cr.fetchall(), [('One', self.user.id, self.user.id, True),
+                                                 ('Two', self.user.id, self.user.id, True)])
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'id': 1, 'name': 'x'}]})
         self.assertTrue(result['isError'])
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'x'}] * 21})
+        self.assertTrue(result['isError'])
+        for column, value in (('create_uid', 1), ('write_uid', 1), ('create_date', '2001-01-01'), ('write_date', '2001-01-01')):
+            result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'x', column: value}]})
+            self.assertIn('filled by the server', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'write_uid': 1},
+                                                      'where': [['id', '=', self.partners[0].id]]})
+        self.assertIn('filled by the server', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_insert', {'table': 'res_country', 'rows': [{'name': 'x'}]})
         self.assertIn('may not insert', result['structuredContent']['error'])
 
@@ -171,7 +334,7 @@ class TestSql(EndpointCase):
             "WHERE p.name LIKE 'SQL %' GROUP BY c.code ORDER BY c.code")})
         self.assertFalse(result['isError'], result)
         self.assertEqual(result['structuredContent']['columns'], ['code', 'partners'])
-        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = 'Medan'",
+        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = 'Mcp Medan'",
                                                      'limit': 3})
         self.assertEqual(result['structuredContent']['returned'], 3)
         self.assertTrue(result['structuredContent']['has_more'])

@@ -3,6 +3,8 @@
 import decimal
 import json
 
+from odoo.tools import mute_logger
+
 from . import sql
 from .grants import DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids
 
@@ -253,9 +255,12 @@ def call(env, grant, name, arguments):
     if missing:
         raise ToolArgumentError("Missing arguments for %s: %s" % (name, ', '.join(missing)))
     if name in SQL_METHODS:
+        if not grant.sql_any(env.cr, tool['action'][4:]):
+            raise ToolArgumentError("There is no tool named %s." % (name,))
         run = sql.Run(env, grant)
         try:
-            payload, table, keys, count = getattr(run, SQL_METHODS[name])(arguments)
+            with mute_logger('odoo.sql_db'):
+                payload, table, keys, count = getattr(run, SQL_METHODS[name])(arguments)
         except Exception as failure:
             try:
                 failure.statement = run.statement
@@ -311,9 +316,9 @@ def _get_model_fields(env, grant, arguments):
     if asked is not None:
         names = grant.read_fields(model, asked)
     attributes = ['type', 'string', 'required', 'readonly', 'relation', 'selection', 'help']
-    described = model.fields_get(allfields=names, attributes=attributes)
+    described = model.fields_get(names)
     fields = {}
-    for name in sorted(described):
+    for name in sorted(set(described) & set(names)):
         meta = described[name]
         entry = dict((key, meta[key]) for key in attributes if meta.get(key) not in (None, False, '') or key in ('required', 'readonly'))
         if entry.get('relation') and not grant.permitted(env, entry['relation'], 'read'):

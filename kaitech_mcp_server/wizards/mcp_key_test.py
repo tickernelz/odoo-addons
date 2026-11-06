@@ -2,6 +2,7 @@
 from odoo import _, api, fields, models
 
 from .. import keys
+from ..models.mcp_key import check_manager
 
 RESULTS = [
     ('ok', 'The key works'),
@@ -21,6 +22,11 @@ class McpKeyTest(models.TransientModel):
     token = fields.Char('Paste the key', help="The key is checked and then forgotten; it is never stored.")
     result = fields.Selection(RESULTS, 'Result', readonly=True)
     detail = fields.Text('What the key can do', readonly=True)
+
+    @api.model
+    def create(self, values):
+        check_manager(self.env)
+        return super(McpKeyTest, self).create(values)
 
     @api.multi
     def action_run(self):

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_mcp_root" name="MCP Server" parent="base.menu_administration" sequence="90"
-              groups="group_mcp_auditor"/>
+    <menuitem id="menu_mcp_root" name="MCP Server" sequence="90"
+              web_icon="kaitech_mcp_server,static/description/icon.png" groups="group_mcp_auditor"/>
     <menuitem id="menu_mcp_overview" name="Overview" parent="menu_mcp_root" action="action_mcp_overview"
               sequence="1" groups="group_mcp_manager"/>
     <menuitem id="menu_mcp_keys" name="Keys" parent="menu_mcp_root" action="action_mcp_key"

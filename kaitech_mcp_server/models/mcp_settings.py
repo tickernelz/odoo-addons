@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 from .. import grants
 
@@ -41,8 +41,13 @@ class McpSettings(models.TransientModel):
         'Also forbidden fields',
         help="One per line or comma separated: a field name (every model) or model.field, for example res.partner.vat")
 
+    def _check_settings_access(self):
+        if not (self.env.user._is_superuser() or self.env.user.has_group('base.group_system')):
+            raise AccessError(_("Only administrators can read or change the MCP settings."))
+
     @api.model
     def get_default_mcp_values(self, fields_list):
+        self._check_settings_access()
         settings = grants.read_settings(self.env.cr)
         return dict((name, settings[name] or (False if isinstance(settings[name], basestring) else settings[name]))
                     for name in PARAMS)
@@ -50,6 +55,7 @@ class McpSettings(models.TransientModel):
     @api.multi
     def set_mcp_values(self):
         self.ensure_one()
+        self._check_settings_access()
         for name in ('default_rate_per_minute', 'default_writes_per_minute', 'default_max_read',
                      'default_max_write', 'default_max_delete'):
             if self[name] <= 0:
@@ -62,10 +68,15 @@ class McpSettings(models.TransientModel):
             raise ValidationError(_("Days cannot be negative."))
         parameters = self.env['ir.config_parameter'].sudo()
         for name in PARAMS:
+            kind = self._fields[name].type
             value = self[name]
-            if isinstance(value, bool):
-                value = value and 'True' or 'False'
-            parameters.set_param(grants.PARAM_PREFIX + name, value and '%s' % value or ('0' if value == 0 else ''))
+            if kind == 'boolean':
+                stored = 'True' if value else 'False'
+            elif kind == 'integer':
+                stored = '%d' % value
+            else:
+                stored = value or ''
+            parameters.set_param(grants.PARAM_PREFIX + name, stored)
         if not self.delete_enabled:
             self.env['kaitech.mcp.permission'].sudo().search([('can_delete', '=', True)]).write({'can_delete': False})
             self.env['kaitech.mcp.sql.table'].sudo().search([('can_delete', '=', True)]).write({'can_delete': False})
