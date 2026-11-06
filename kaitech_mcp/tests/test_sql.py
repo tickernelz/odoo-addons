@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 from odoo.exceptions import ValidationError
 
-from .common import EndpointCase, new_key, new_user, set_setting
+from .. import sql, tools
+from .common import EndpointCase, marker, new_key, new_user, set_setting
 
 SQL_TOOLS = ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update', 'sql_delete']
 
@@ -9,6 +12,8 @@ class TestSql(EndpointCase):
 
     def setUp(self):
         super().setUp()
+        self.mark = marker()
+        self.bandung, self.medan, self.padang, self.ambon = ('%s %s' % (self.mark, city) for city in ('Bandung', 'Medan', 'Padang', 'Ambon'))
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'True')
             self.user = new_user(env, 'mcp_sql_user')
@@ -17,9 +22,9 @@ class TestSql(EndpointCase):
             self.key_id = key.id
             plain, self.plain_token = new_key(env, self.user, {'res.partner': {'read'}})
             self.plain_id = plain.id
-            self.partners = env['res.partner'].create({'name': 'SQL One', 'city': 'Bandung'})
+            self.partners = env['res.partner'].create({'name': '%s One' % self.mark, 'city': self.bandung})
             for index in range(25):
-                self.partners |= env['res.partner'].create({'name': 'SQL Bulk %02d' % index, 'city': 'Medan'})
+                self.partners |= env['res.partner'].create({'name': '%s Bulk %02d' % (self.mark, index), 'city': self.medan})
 
     def tool_names(self, token):
         return [tool['name'] for tool in self.legacy('tools/list', token=token)[1]['result']['tools']]
@@ -96,9 +101,9 @@ class TestSql(EndpointCase):
     def test_select_with_structured_where_and_paging(self):
         result = self.call(self.token, 'sql_select', {
             'table': 'res_partner', 'columns': ['id', 'name'], 'order': 'name asc',
-            'where': ['|', ['city', '=', 'Bandung'], ['name', 'ilike', 'bulk 0']], 'limit': 5})
+            'where': ['|', ['city', '=', self.bandung], ['name', 'ilike', '%s bulk 0' % self.mark]], 'limit': 5})
         rows = result['structuredContent']['rows']
-        self.assertEqual([row['name'] for row in rows], ['SQL Bulk 00', 'SQL Bulk 01', 'SQL Bulk 02', 'SQL Bulk 03', 'SQL Bulk 04'])
+        self.assertEqual([row['name'] for row in rows], ['%s Bulk %02d' % (self.mark, index) for index in range(5)])
         self.assertTrue(result['structuredContent']['has_more'])
         call = self.last_call(self.key_id)
         self.assertEqual((call['tool'], call['model'], call['record_count']), ('sql_select', 'res_partner', 5))
@@ -115,19 +120,76 @@ class TestSql(EndpointCase):
             result = self.call(self.token, 'sql_update', arguments)
             self.assertTrue(result['isError'], where)
             self.assertIn('where is required', result['structuredContent']['error'])
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
-                                                      'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': self.padang},
+                                                      'where': [['city', '=', self.medan]]})
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE city = %s", (self.padang,))
             self.assertEqual(env.cr.fetchone()[0], 0)
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
-                                                      'where': [['name', 'in', ['SQL Bulk 01', 'SQL Bulk 02']]]})
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': self.padang},
+                                                      'where': [['name', 'in', ['%s Bulk 01' % self.mark, '%s Bulk 02' % self.mark]]]})
         self.assertEqual(result['structuredContent']['updated'], 2)
         self.assertIn('UPDATE "res_partner" SET "city" = %s', self.statement()['statement'])
         with self.shared_env() as env:
-            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = 'Padang'")
+            env.cr.execute("SELECT write_uid FROM res_partner WHERE city = %s", (self.padang,))
             self.assertEqual(set(row[0] for row in env.cr.fetchall()), set([self.user.id]))
+
+    def test_over_limit_writes_are_refused_before_touching_a_row(self):
+        with self.shared_env() as env:
+            set_setting(env, 'delete_enabled', 'True')
+            env['kaitech.mcp.key'].browse(self.key_id).sql_table_ids.filtered(
+                lambda row: row.table_name == 'res_partner').write({'can_delete': True})
+            env.cr.execute("""
+                CREATE SEQUENCE mcp_test_touched;
+                CREATE FUNCTION mcp_test_touch() RETURNS trigger LANGUAGE plpgsql AS
+                    $$ BEGIN PERFORM nextval('mcp_test_touched'); RETURN COALESCE(NEW, OLD); END $$;
+                CREATE TRIGGER mcp_test_touch BEFORE UPDATE OR DELETE ON res_partner
+                    FOR EACH ROW EXECUTE FUNCTION mcp_test_touch();""")
+        for tool, arguments in (('sql_update', {'values': {'city': self.padang}}), ('sql_update', {'values': {'city': self.padang}, 'dry_run': True}),
+                                ('sql_delete', {}), ('sql_delete', {'dry_run': True})):
+            result = self.call(self.token, tool, dict(arguments, table='res_partner', where=[['city', '=', self.medan]]))
+            self.assertIn('Nothing was changed', result['structuredContent']['error'], (tool, arguments))
+        with self.shared_env() as env:
+            env.cr.execute("SELECT is_called FROM mcp_test_touched")
+            self.assertFalse(env.cr.fetchone()[0])
+
+    def test_audit_columns_are_never_written_by_the_caller(self):
+        forged = (('create_uid', 1), ('write_uid', 1), ('create_date', '2001-01-01 00:00:00'),
+                  ('write_date', '2001-01-01 00:00:00'))
+        for column, value in forged:
+            result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [{'name': self.mark, column: value}]})
+            self.assertIn('filled in by MCP', result['structuredContent']['error'], column)
+            result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': self.ambon, column: value},
+                                                          'where': [['id', '=', self.partners[0].id]]})
+            self.assertIn('filled in by MCP', result['structuredContent']['error'], column)
+        with self.shared_env() as env:
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE name = %s OR city = %s OR (id IN %s AND "
+                           "(create_date < '2002-01-01' OR write_date < '2002-01-01'))",
+                           (self.mark, self.ambon, tuple(self.partners.ids)))
+            self.assertEqual(env.cr.fetchone()[0], 0)
+
+    def test_time_limit_applies_to_sql_tools_only(self):
+        with self.shared_env() as env:
+            set_setting(env, 'sql_statement_timeout_ms', '100')
+            _key, token = new_key(env, self.user, {'res.partner': {'read'}}, tables={'res_partner': {'select'}})
+        count_records = tools._count_records
+
+        def slow_count(env, grant, arguments):
+            env.cr.execute("SELECT pg_sleep(0.3)")
+            return count_records(env, grant, arguments)
+
+        select = sql.Run.select
+
+        def slow_select(run, arguments):
+            run.cr.execute("SELECT pg_sleep(0.3)")
+            return select(run, arguments)
+
+        with patch.object(tools, '_count_records', slow_count):
+            result = self.call(token, 'count_records', {'model': 'res.partner'})
+        self.assertFalse(result['isError'], result)
+        with patch.object(sql.Run, 'select', slow_select):
+            result = self.call(token, 'sql_select', {'table': 'res_partner', 'columns': ['id'], 'limit': 1})
+        self.assertIn('timeout', result['structuredContent']['error'])
 
     def statement(self):
         with self.shared_env() as env:
@@ -136,16 +198,16 @@ class TestSql(EndpointCase):
             return env.cr.dictfetchone()
 
     def test_dry_run_reports_and_undoes(self):
-        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Ambon'},
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': self.ambon},
                                                       'where': [['id', '=', self.partners[0].id]], 'dry_run': True})
         self.assertEqual(result['structuredContent'], {'updated': 1, 'keys': [self.partners[0].id], 'dry_run': True})
         with self.shared_env() as env:
             env.cr.execute("SELECT city FROM res_partner WHERE id = %s", (self.partners[0].id,))
-            self.assertEqual(env.cr.fetchone()[0], 'Bandung')
+            self.assertEqual(env.cr.fetchone()[0], self.bandung)
         audit = self.statement()
         self.assertTrue(audit['dry_run'])
         self.assertEqual(audit['record_ids'], str(self.partners[0].id))
-        self.assertNotIn('Ambon', audit['statement'])
+        self.assertNotIn(self.ambon, audit['statement'])
 
     def test_delete_needs_the_delete_switch_and_is_bounded(self):
         self.assertNotIn('sql_delete', self.tool_names(self.token))
@@ -153,22 +215,26 @@ class TestSql(EndpointCase):
             set_setting(env, 'delete_enabled', 'True')
             env['kaitech.mcp.key'].browse(self.key_id).sql_table_ids.filtered(
                 lambda row: row.table_name == 'res_partner').write({'can_delete': True})
-            victim = env['res.partner'].create({'name': 'SQL Victim'})
+            victim = env['res.partner'].create({'name': '%s Victim' % self.mark})
         self.assertIn('sql_delete', self.tool_names(self.token))
-        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', self.medan]]})
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['id', '=', victim.id]]})
         self.assertEqual(result['structuredContent']['keys'], [victim.id])
         self.assertEqual(self.statement()['statement'], 'DELETE FROM "res_partner" WHERE "id" = %s RETURNING "id"')
 
     def test_insert_fills_audit_columns(self):
-        result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [
-            {'name': 'SQL Inserted', 'active': True, 'complete_name': 'SQL Inserted'}]})
+        with self.shared_env() as env:
+            env.cr.execute("CREATE TABLE mcp_test_note (id serial PRIMARY KEY, name varchar NOT NULL, create_uid integer, "
+                           "create_date timestamp, write_uid integer, write_date timestamp)")
+            _key, token = new_key(env, self.user, {}, tables={'mcp_test_note': {'insert'}})
+        result = self.call(token, 'sql_insert', {'table': 'mcp_test_note', 'rows': [{'name': self.mark}]})
         self.assertFalse(result['isError'], result)
         new_id = result['structuredContent']['keys'][0]
         with self.shared_env() as env:
-            env.cr.execute("SELECT create_uid, write_uid, create_date IS NOT NULL FROM res_partner WHERE id = %s", (new_id,))
-            self.assertEqual(env.cr.fetchone(), (self.user.id, self.user.id, True))
+            env.cr.execute("SELECT create_uid, write_uid, create_date IS NOT NULL, write_date IS NOT NULL "
+                           "FROM mcp_test_note WHERE id = %s", (new_id,))
+            self.assertEqual(env.cr.fetchone(), (self.user.id, self.user.id, True, True))
         result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [{'id': 1, 'name': 'x'}]})
         self.assertTrue(result['isError'])
         result = self.call(self.token, 'sql_insert', {'table': 'res_country', 'rows': [{'name': 'x'}]})
@@ -184,10 +250,10 @@ class TestSql(EndpointCase):
     def test_query_reads_allowed_tables_only(self):
         result = self.call(self.token, 'sql_query', {'query': (
             "SELECT c.code, count(p.id) AS partners FROM res_partner p JOIN res_country c ON c.id = p.country_id "
-            "WHERE p.name LIKE 'SQL %' GROUP BY c.code ORDER BY c.code")})
+            "WHERE p.name LIKE '%s %%' GROUP BY c.code ORDER BY c.code" % self.mark)})
         self.assertFalse(result['isError'], result)
         self.assertEqual(result['structuredContent']['columns'], ['code', 'partners'])
-        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = 'Medan'",
+        result = self.call(self.token, 'sql_query', {'query': "SELECT lower(name) AS n FROM res_partner WHERE city = '%s'" % self.medan,
                                                      'limit': 3})
         self.assertEqual(result['structuredContent']['returned'], 3)
         self.assertTrue(result['structuredContent']['has_more'])
@@ -213,7 +279,7 @@ class TestSql(EndpointCase):
             result = self.call(self.token, 'sql_query', {'query': query})
             self.assertTrue(result['isError'], query)
         with self.shared_env() as env:
-            env.cr.execute("SELECT count(*) FROM res_partner WHERE name LIKE 'SQL Bulk%'")
+            env.cr.execute("SELECT count(*) FROM res_partner WHERE name LIKE %s", ('%s Bulk%%' % self.mark,))
             self.assertEqual(env.cr.fetchone()[0], 25)
 
     def test_settings_add_forbidden_columns(self):

@@ -146,6 +146,16 @@ class McpKey(models.Model):
                 raise ValidationError(self.env._(
                     "A key with SQL cannot act as a Settings administrator."))
 
+    def _check_within_your_groups(self):
+        """Refuse a key acting as a user with access groups the current user lacks, unless that is an administrator."""
+        creator = self.env.user
+        if self.env.uid == SUPERUSER_ID or creator._is_system():
+            return
+        for key in self:
+            if key.user_id.sudo().all_group_ids - creator.sudo().all_group_ids:
+                raise ValidationError(self.env._(
+                    "An MCP key can only act as a user whose access groups you hold yourself."))
+
     @api.constrains('allow_sql')
     def _check_sql(self):
         if any(key.allow_sql for key in self) and not grants.current_settings(self.env)['sql_enabled']:
@@ -163,12 +173,17 @@ class McpKey(models.Model):
     def create(self, vals_list):
         vals_list = [{name: value for name, value in vals.items() if name not in ('key_hash', 'key_index')}
                      for vals in vals_list]
-        return super().create(vals_list)
+        keys = super().create(vals_list)
+        keys._check_within_your_groups()
+        return keys
 
     def write(self, vals):
         if 'key_hash' in vals or 'key_index' in vals:
             raise UserError(self.env._("A key's secret cannot be changed; rotate the key instead."))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'user_id' in vals or vals.get('allow_sql'):
+            self._check_within_your_groups()
+        return result
 
     def _issue_token(self):
         """Give this key a new secret and return it; only its digest is stored."""
