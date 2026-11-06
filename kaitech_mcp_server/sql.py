@@ -29,7 +29,10 @@ ALLOWED_FUNCTIONS = frozenset("""
     int2 int4 int8 float4 float8 numeric text varchar bpchar date time timestamp timestamptz interval bool
 """.split())
 FUNCTION_CALL = re.compile(r'(?:([A-Za-z_][A-Za-z0-9_]*)\.)?"?([A-Za-z_][A-Za-z0-9_$]*)"?\(')
-LITERAL = re.compile(r"'(?:[^']|'')*'")
+QUOTED = re.compile(r"'(?:[^']|'')*'|\"(?:[^\"]|\"\")*\"", re.S)
+STRING_PREFIXES = 'EeBbXx'
+IDENTIFIER_CHARS = re.compile(r'[A-Za-z0-9_$]')
+UNSAFE_IN_TEXT = (';', '--', '/*', '$', '\\')
 EXPRESSION_KEYS = ('Output', 'Filter', 'Join Filter', 'Hash Cond', 'Merge Cond', 'Index Cond', 'Recheck Cond',
                    'One-Time Filter', 'Sort Key', 'Group Key', 'Function Call', 'TID Cond', 'Order By',
                    'Presorted Key', 'Cache Key', 'Grouping Sets', 'Hash Key', 'Tid Cond', 'Run Condition')
@@ -52,6 +55,54 @@ READ_COLUMNS = """
     JOIN pg_attribute a ON a.attrelid = d.refobjid AND a.attnum = d.refobjsubid
     JOIN pg_type t ON t.oid = a.atttypid
 """
+
+
+def strip_quoted(text):
+    """Text of one SQL fragment with literals and quoted names removed; never raises, so checks stay conservative."""
+    parts = []
+    position = 0
+    for found in QUOTED.finditer(text):
+        parts.append(text[position:found.start()])
+        position = found.end()
+    parts.append(text[position:])
+    return ' '.join(parts)
+
+
+def lex(text):
+    """Split one SQL text into (whole text, bare text) and refuse anything whose literals cannot be placed."""
+    parts = []
+    position = 0
+    for found in QUOTED.finditer(text):
+        parts.append(text[position:found.start()])
+        position = found.end()
+    parts.append(text[position:])
+    bare = []
+    for index, part in enumerate(parts):
+        if '"' in part or "'" in part:
+            raise ToolArgumentError("The query has an unterminated quote.")
+        if index < len(parts) - 1 and part:
+            last = part[-1]
+            before = part[-2:-1]
+            if last in STRING_PREFIXES and not IDENTIFIER_CHARS.match(before):
+                raise ToolArgumentError("Strings with a %s prefix are not allowed here." % last)
+        for marker in UNSAFE_IN_TEXT:
+            if marker in part:
+                raise ToolArgumentError("The query may not contain %s outside a string." % marker)
+        bare.append(part)
+    return text, ' '.join(bare)
+
+
+def single_statement(text):
+    """Return (text, bare) for one statement, where bare is the text without literals or quoted names."""
+    text = text.strip()
+    if text.endswith(';'):
+        text = text[:-1].rstrip()
+    statements, bare = lex(text)
+    if bare.count('(') != bare.count(')'):
+        raise ToolArgumentError("The query has unbalanced parentheses.")
+    if not re.match(r'(?is)^\(*\s*(select|with)\b', bare.strip()):
+        raise ToolArgumentError("Only SELECT queries are allowed here; use sql_insert, sql_update or sql_delete to change data.")
+    return statements, bare
 
 
 def quote(name):
@@ -333,18 +384,16 @@ class Run(object):
         if not isinstance(text, basestring) or not text.strip():
             raise ToolArgumentError("query must be one SELECT statement.")
         limit = _integer(arguments, 'limit', 20, 1, self.grant.max_read())
-        text = text.strip().rstrip(';').strip()
-        bare = LITERAL.sub("''", text)
-        if ';' in bare or '--' in bare or '/*' in bare:
-            raise ToolArgumentError("query must be one statement without comments.")
-        if not re.match(r'(?is)^\(*\s*(select|with)\b', bare):
-            raise ToolArgumentError("Only SELECT queries are allowed here; use sql_insert, sql_update or sql_delete to change data.")
+        text, _bare = single_statement(text)
         self.statement = text
         cr = self.cr
         cr.execute('SAVEPOINT kaitech_mcp_query')
         try:
+            cr.execute('SET LOCAL standard_conforming_strings = on')
+            cr.execute('SAVEPOINT kaitech_mcp_check')
             self.check_columns(text)
-            cr.execute('ROLLBACK TO SAVEPOINT kaitech_mcp_query')
+            cr.execute('ROLLBACK TO SAVEPOINT kaitech_mcp_check')
+            cr.execute('RELEASE SAVEPOINT kaitech_mcp_check')
             cr.execute('SET LOCAL transaction_read_only = on')
             cr.execute('SET LOCAL statement_timeout = %s' % int(self.grant.settings['sql_statement_timeout_ms']))
             cr.execute('EXPLAIN (VERBOSE, FORMAT JSON) ' + text)
@@ -397,7 +446,7 @@ class Run(object):
                 elif isinstance(value, list):
                     expressions.extend(item for item in value if isinstance(item, basestring))
         for expression in expressions:
-            plain = LITERAL.sub("''", expression)
+            plain = strip_quoted(expression)
             if '.*' in plain:
                 raise ToolRefused("Name the columns instead of selecting whole rows.")
             for schema, function in FUNCTION_CALL.findall(plain):

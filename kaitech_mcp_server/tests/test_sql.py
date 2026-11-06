@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import odoo
 from odoo.exceptions import ValidationError
 
+from .. import sql
+from ..grants import ToolArgumentError
 from .common import EndpointCase, new_key, new_user, set_setting
 
 SQL_TOOLS = ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update', 'sql_delete']
@@ -127,6 +130,47 @@ class TestSql(EndpointCase):
             self.assertTrue(result['isError'], query)
             self.assertNotIn('LEAKED', result['content'][0]['text'], query)
             self.assertNotIn('"n": 1', result['content'][0]['text'], query)
+
+    def test_one_statement_guard_reads_quotes_the_way_postgres_does(self):
+        quote = "'"
+        refused = (
+            'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (quote, quote),
+            "SELECT E'\\'' AS x; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1",
+            "SELECT $q$%s$q$; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1" % quote,
+            "SELECT 1 /* comment */ FROM res_country",
+            "SELECT 1 -- comment",
+            "SELECT 'unterminated FROM res_country",
+            'SELECT "unterminated FROM res_country',
+            "SELECT count(* FROM res_country",
+            "SELECT * FROM res_country $$; COMMIT; $$",
+            "SELECT 1; COMMIT",
+        )
+        for query in refused:
+            with self.assertRaises(ToolArgumentError, msg=query):
+                sql.single_statement(query)
+        for query in ("SELECT name FROM res_country WHERE code = 'AD'",
+                      "SELECT %s%s AS x" % (quote, quote),
+                      "SELECT name FROM res_country WHERE name LIKE 'a%%' LIMIT 1;",
+                      "SELECT 1 FROM res_country WHERE name LIKE 'a" + chr(92) + "'",
+                      "WITH c AS (SELECT lower(code) AS code FROM res_country) SELECT code FROM c"):
+            self.assertEqual(sql.single_statement(query)[0], query.rstrip().rstrip(';').rstrip())
+
+    def test_a_hidden_write_through_a_quoted_alias_never_reaches_the_database(self):
+        with self.shared_env() as env:
+            env.cr.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            before = env.cr.fetchone()[0]
+        quote = "'"
+        payload = 'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (
+            quote, quote)
+        result = self.call(self.token, 'sql_query', {'query': payload})
+        self.assertTrue(result['isError'])
+        self.assertIn('string', result['structuredContent']['error'])
+        probe = odoo.sql_db.db_connect(self.env.cr.dbname).cursor()
+        try:
+            probe.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            self.assertEqual(probe.fetchone()[0], before)
+        finally:
+            probe.close()
 
     def test_allow_sql_needs_the_setting(self):
         with self.shared_env() as env:
