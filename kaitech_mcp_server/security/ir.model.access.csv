@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_key_manager,mcp key manager,model_kaitech_mcp_key,group_mcp_manager,1,1,1,1
+access_mcp_key_auditor,mcp key auditor,model_kaitech_mcp_key,group_mcp_auditor,1,0,0,0
+access_mcp_permission_manager,mcp permission manager,model_kaitech_mcp_permission,group_mcp_manager,1,1,1,1
+access_mcp_permission_auditor,mcp permission auditor,model_kaitech_mcp_permission,group_mcp_auditor,1,0,0,0
+access_mcp_call_auditor,mcp call auditor,model_kaitech_mcp_call,group_mcp_auditor,1,0,0,0
+access_mcp_sql_table_manager,mcp sql table manager,model_kaitech_mcp_sql_table,group_mcp_manager,1,1,1,1
+access_mcp_sql_table_auditor,mcp sql table auditor,model_kaitech_mcp_sql_table,group_mcp_auditor,1,0,0,0

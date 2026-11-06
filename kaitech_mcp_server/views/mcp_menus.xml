@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_mcp_root" name="MCP Server" parent="base.menu_administration" sequence="90"
+              groups="group_mcp_auditor"/>
+    <menuitem id="menu_mcp_overview" name="Overview" parent="menu_mcp_root" action="action_mcp_overview"
+              sequence="1" groups="group_mcp_manager"/>
+    <menuitem id="menu_mcp_keys" name="Keys" parent="menu_mcp_root" action="action_mcp_key"
+              sequence="2" groups="group_mcp_manager"/>
+    <menuitem id="menu_mcp_key_new" name="Create key" parent="menu_mcp_root" action="action_mcp_key_wizard"
+              sequence="3" groups="group_mcp_manager"/>
+    <menuitem id="menu_mcp_calls" name="Call Log" parent="menu_mcp_root" action="action_mcp_call"
+              sequence="4" groups="group_mcp_auditor"/>
+    <menuitem id="menu_mcp_settings" name="Settings" parent="menu_mcp_root" action="action_mcp_settings"
+              sequence="5" groups="base.group_system"/>
+</odoo>

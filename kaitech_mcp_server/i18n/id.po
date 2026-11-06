@@ -1,0 +1,1360 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kaitech_mcp_server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-11-06 00:00+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_permission.py:54 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:139
+#, python-format
+msgid "%s cannot: %s"
+msgstr "%s tidak dapat: %s"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:140
+#, python-format
+msgid "%s could not be reached: %s"
+msgstr "%s tidak dapat dihubungi: %s"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_default_expiry_days
+msgid "0 creates keys that never expire."
+msgstr "0 membuat kunci yang tidak pernah kedaluwarsa."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_audit_retention_days
+msgid "0 keeps the call log forever."
+msgstr "0 menyimpan log panggilan selamanya."
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,help:kaitech_mcp_server.action_mcp_call
+msgid "<b>No MCP calls yet.</b>"
+msgstr "<b>Belum ada panggilan MCP.</b>"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,help:kaitech_mcp_server.action_mcp_key
+msgid "<b>No MCP keys in this database yet.</b>"
+msgstr "<b>Belum ada kunci MCP di database ini.</b>"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "<span>Active keys</span>"
+msgstr "<span>Kunci aktif</span>"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "<span>Calls in 24 h</span>"
+msgstr "<span>Panggilan 24 jam</span>"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "<span>Errors</span>"
+msgstr "<span>Galat</span>"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "<span>Refused or limited</span>"
+msgstr "<span>Ditolak atau dibatasi</span>"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid ""
+"<strong>The MCP endpoint is switched off on this server.</strong>\n"
+"                    MCP clients do not send an Odoo session, so the module must be loaded server-wide.\n"
+"                    Add this line to the [options] section of odoo.conf, then restart Odoo:"
+msgstr ""
+"<strong>Endpoint MCP belum aktif di server ini.</strong>\n"
+"                    Klien MCP tidak mengirim sesi Odoo, jadi modul ini harus dimuat server-wide.\n"
+"                    Tambahkan baris ini ke bagian [options] di odoo.conf, lalu mulai ulang Odoo:"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,help:kaitech_mcp_server.action_mcp_key
+msgid ""
+"A key lets one MCP client (Claude Desktop, Cursor, n8n, ...) work in this database as one Odoo user,\n"
+"               limited to the models and actions you tick. Use MCP Server, Create key to make the first one."
+msgstr ""
+"Satu kunci membuat satu klien MCP (Claude Desktop, Cursor, n8n, ...) bekerja di database ini sebagai satu user Odoo,\n"
+"               terbatas pada model dan aksi yang Anda centang. Pakai MCP Server, Buat kunci untuk membuat yang pertama."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:174
+#, python-format
+msgid "A key's secret cannot be changed; rotate the key instead."
+msgstr "Rahasia kunci tidak bisa diubah; putar kuncinya."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "A new key with the same permissions is created and this key stops working now. Continue?"
+msgstr "Kunci baru dengan izin yang sama dibuat dan kunci ini berhenti bekerja sekarang. Lanjutkan?"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:197
+#, python-format
+msgid "A revoked key cannot be rotated; create a new key instead."
+msgstr "Kunci yang sudah dicabut tidak bisa diputar; buat kunci baru."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_user_id
+msgid "Acted as"
+msgstr "Bertindak sebagai"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key,state:0
+msgid "Active"
+msgstr "Aktif"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_active_keys
+msgid "Active keys"
+msgstr "Kunci aktif"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_user_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_user_id
+msgid "Acts as user"
+msgstr "Bertindak sebagai user"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_allow_sql
+msgid "Allow SQL"
+msgstr "Izinkan SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_sql_enabled
+msgid "Allow SQL through MCP"
+msgstr "Izinkan SQL lewat MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_delete_enabled
+msgid "Allow deleting through MCP"
+msgstr "Izinkan hapus lewat MCP"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_permission.py:74
+#, python-format
+msgid "Allowed fields must belong to the model and cannot be binary."
+msgstr "Field yang diizinkan harus milik model itu dan tidak boleh biner."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_fields
+msgid "Also forbidden fields"
+msgstr "Field terlarang tambahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_models
+msgid "Also forbidden models"
+msgstr "Model terlarang tambahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_tables
+msgid "Also forbidden tables"
+msgstr "Tabel terlarang tambahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid ""
+"An MCP client picks its database by the address it calls: /mcp/ followed by\n"
+"                        the database name. Each database has its own keys and call log."
+msgstr ""
+"Klien MCP memilih database lewat alamat yang dipanggilnya: /mcp/ diikuti\n"
+"                        nama database. Setiap database punya kunci dan log panggilan sendiri."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:150 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:66
+#, python-format
+msgid "An MCP key cannot act as the Administrator (uid 1): that user bypasses every access right and record rule. Create a dedicated user for this client with only the groups it needs."
+msgstr "Kunci MCP tidak boleh bertindak sebagai Administrator (uid 1): user itu melewati semua hak akses dan record rule. Buat user khusus untuk klien ini dengan grup yang benar-benar diperlukan saja."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:154
+#, python-format
+msgid "An MCP key must act as an internal user, not a portal or public user."
+msgstr "Kunci MCP harus bertindak sebagai user internal, bukan user portal atau publik."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:160 code:addons/kaitech_mcp_server/models/mcp_settings.py:58
+#, python-format
+msgid "At most %s records can be deleted per call."
+msgstr "Paling banyak %s record bisa dihapus per panggilan."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:162
+#, python-format
+msgid "At most %s records can be read or updated per call."
+msgstr "Paling banyak %s record bisa dibaca atau diubah per panggilan."
+
+#. module: kaitech_mcp_server
+#: model:res.groups,name:kaitech_mcp_server.group_mcp_auditor
+msgid "Auditor"
+msgstr "Auditor"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Back"
+msgstr "Kembali"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_calls
+msgid "Call Log"
+msgstr "Log Panggilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Call log"
+msgstr "Log panggilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_call_ids
+msgid "Calls"
+msgstr "Panggilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_calls_24h model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_calls_24h model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Calls (24 h)"
+msgstr "Panggilan (24 jam)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_rate_per_minute model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_rate_per_minute
+msgid "Calls per minute"
+msgstr "Panggilan per menit"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_config_desktop
+msgid "Claude Desktop (mcp-remote)"
+msgstr "Claude Desktop (mcp-remote)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_key_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_name
+msgid "Client"
+msgstr "Klien"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.wizard,step:0
+msgid "Client and user"
+msgstr "Klien dan user"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_client_name
+msgid "Client software"
+msgstr "Perangkat lunak klien"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_client_version
+msgid "Client version"
+msgstr "Versi klien"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_config_http
+msgid "Clients with HTTP headers (Cursor, n8n, Hermes)"
+msgstr "Klien dengan header HTTP (Cursor, n8n, Hermes)"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+msgid "Close"
+msgstr "Tutup"
+
+#. module: kaitech_mcp_server
+#. openerp-web
+#: code:addons/kaitech_mcp_server/static/src/js/mcp_copy.js:31
+#, python-format
+msgid "Copied"
+msgstr "Tersalin"
+
+#. module: kaitech_mcp_server
+#. openerp-web
+#: code:addons/kaitech_mcp_server/static/src/xml/mcp_copy.xml:6
+#, python-format
+msgid "Copy"
+msgstr "Salin"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.wizard,step:0
+msgid "Copy the key"
+msgstr "Salin kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Copy the key now. It is shown only this once; Odoo keeps only a fingerprint of it."
+msgstr "Salin kunci sekarang. Kunci hanya tampil sekali ini; Odoo hanya menyimpan sidik jarinya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_can_create model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_can_create
+msgid "Create"
+msgstr "Buat"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_key_new model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "Create key"
+msgstr "Buat kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_create_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_create_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: kaitech_mcp_server
+#: model:res.groups,comment:kaitech_mcp_server.group_mcp_manager
+msgid "Creates, rotates and revokes MCP keys and reads the call log."
+msgstr "Membuat, memutar, dan mencabut kunci MCP serta membaca log panggilan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_name
+msgid "Database"
+msgstr "Database"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_databases_hidden
+msgid "Database list hidden"
+msgstr "Daftar database disembunyikan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_ids model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "Databases on this server"
+msgstr "Database di server ini"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Day"
+msgstr "Hari"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:62
+#, python-format
+msgid "Days cannot be negative."
+msgstr "Jumlah hari tidak boleh negatif."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:56
+#, python-format
+msgid "Default limits must be greater than zero."
+msgstr "Batas bawaan harus lebih dari nol."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Defaults for new keys"
+msgstr "Bawaan untuk kunci baru"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_can_delete model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_can_delete model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_can_delete model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_delete
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_delete_enabled model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_delete_enabled
+msgid "Delete allowed in settings"
+msgstr "Hapus diizinkan di pengaturan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Delete cannot be ticked: deleting is switched off in MCP Settings."
+msgstr "Hapus tidak bisa dicentang: menghapus dimatikan di Pengaturan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_delete_enabled model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_delete_enabled
+msgid "Delete enabled"
+msgstr "Hapus diizinkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_deleted_names model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_form
+msgid "Deleted records"
+msgstr "Record yang dihapus"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Deletes"
+msgstr "Penghapusan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Deleting"
+msgstr "Menghapus"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_permission.py:68 code:addons/kaitech_mcp_server/models/mcp_sql_table.py:46
+#, python-format
+msgid "Deleting through MCP is switched off in MCP Settings."
+msgstr "Menghapus lewat MCP dimatikan di Pengaturan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_last_test_detail
+msgid "Details"
+msgstr "Rincian"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_display_name model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_dry_run
+msgid "Dry run"
+msgstr "Uji coba"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_duration_ms
+msgid "Duration (ms)"
+msgstr "Durasi (ms)"
+
+#. module: kaitech_mcp_server
+#: sql_constraint:kaitech.mcp.permission:0
+msgid "Each model can be listed only once per key."
+msgstr "Setiap model hanya boleh tercantum sekali per kunci."
+
+#. module: kaitech_mcp_server
+#: sql_constraint:kaitech.mcp.sql.table:0
+msgid "Each table can be listed only once per key."
+msgstr "Setiap tabel hanya boleh tercantum sekali per kunci."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_endpoint_url model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_endpoint_url model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_endpoint_url
+msgid "Endpoint"
+msgstr "Endpoint"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_endpoint_url
+msgid "Endpoint for this database"
+msgstr "Endpoint untuk database ini"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.call,result:0
+msgid "Error"
+msgstr "Galat"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Errors"
+msgstr "Galat"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_errors_24h
+msgid "Errors (24 h)"
+msgstr "Galat (24 jam)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_user_id model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_wizard_user_id
+msgid "Every call runs as this Odoo user, with all of its access rights and record rules."
+msgstr "Setiap panggilan berjalan sebagai user Odoo ini, dengan semua hak akses dan record rule-nya."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search selection:kaitech.mcp.key,state:0
+msgid "Expired"
+msgstr "Kedaluwarsa"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_expires_at model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_expires_at
+msgid "Expires on"
+msgstr "Kedaluwarsa pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search selection:kaitech.mcp.key,state:0
+msgid "Expiring soon"
+msgstr "Segera kedaluwarsa"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_fields_written
+msgid "Fields written"
+msgstr "Field yang ditulis"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search
+msgid "Group By"
+msgstr "Kelompokkan Menurut"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:49
+#, python-format
+msgid "HTTP %s"
+msgstr "HTTP %s"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:159
+#, python-format
+msgid "HTTP %s from %s"
+msgstr "HTTP %s dari %s"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:153
+#, python-format
+msgid "HTTP 401 without a key: the endpoint answers for this database."
+msgstr "HTTP 401 tanpa kunci: endpoint menjawab untuk database ini."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:45
+#, python-format
+msgid "HTTP 401: the key is revoked, expired, or its user is archived."
+msgstr "HTTP 401: kunci dicabut, kedaluwarsa, atau user-nya diarsipkan."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:156
+#, python-format
+msgid "HTTP 404: add the line shown above to odoo.conf and restart Odoo."
+msgstr "HTTP 404: tambahkan baris di atas ke odoo.conf dan mulai ulang Odoo."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:47
+#, python-format
+msgid "HTTP 404: run Test endpoint on MCP Overview for the fix."
+msgstr "HTTP 404: jalankan Uji endpoint di Ringkasan MCP untuk cara memperbaikinya."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:157
+#, python-format
+msgid "HTTP 404: this address does not reach this database. Check dbfilter, db_name and the reverse proxy for /mcp/."
+msgstr "HTTP 404: alamat ini tidak sampai ke database ini. Periksa dbfilter, db_name, dan reverse proxy untuk /mcp/."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "I have copied the key"
+msgstr "Kunci sudah saya salin"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_id
+msgid "ID"
+msgstr "ID"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_remote_addr
+msgid "IP address"
+msgstr "Alamat IP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_insert
+msgid "Insert"
+msgstr "Sisipkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,help:kaitech_mcp_server.action_mcp_call
+msgid ""
+"Install a client with a key from MCP Keys; its first call shows up here and in the key's Last used.\n"
+"               If the client cannot connect, run Test endpoint on MCP Overview."
+msgstr ""
+"Pasang klien dengan kunci dari Kunci MCP; panggilan pertamanya tampil di sini dan di Terakhir dipakai pada kunci itu.\n"
+"               Bila klien tidak bisa tersambung, jalankan Uji endpoint di Ringkasan MCP."
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.call,result:0
+msgid "Invalid arguments"
+msgstr "Argumen tidak valid"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_audit_retention_days
+msgid "Keep call log (days)"
+msgstr "Simpan log panggilan (hari)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_key_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_key_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_key_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_token model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_key_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_key_id model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Key"
+msgstr "Kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_key_hash
+msgid "Key hash"
+msgstr "Hash kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_key_index
+msgid "Key prefix"
+msgstr "Awalan kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Key starts with"
+msgstr "Kunci diawali"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_keys
+msgid "Keys"
+msgstr "Kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings___last_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table___last_update
+msgid "Last Modified on"
+msgstr "Terakhir Diubah pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_write_uid model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_write_date model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_last_test_result model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "Last endpoint test"
+msgstr "Uji endpoint terakhir"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_last_used_at
+msgid "Last used"
+msgstr "Terakhir dipakai"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_expires_at
+msgid "Leave empty for a key that never expires."
+msgstr "Kosongkan untuk kunci yang tidak pernah kedaluwarsa."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_permission_field_ids
+msgid "Leave empty to allow every field that is not forbidden."
+msgstr "Kosongkan untuk mengizinkan semua field yang tidak terlarang."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Limits"
+msgstr "Batas"
+
+#. module: kaitech_mcp_server
+#: sql_constraint:kaitech.mcp.key:0
+msgid "Limits must be greater than zero."
+msgstr "Batas harus lebih dari nol."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_config_line
+msgid "Line for odoo.conf"
+msgstr "Baris untuk odoo.conf"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_server_wide
+msgid "Loaded server-wide"
+msgstr "Dimuat server-wide"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_call model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_form
+msgid "MCP Call"
+msgstr "Panggilan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_call model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_tree
+msgid "MCP Call Log"
+msgstr "Log Panggilan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_graph model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_pivot
+msgid "MCP Calls"
+msgstr "Panggilan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_key model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "MCP Key"
+msgstr "Kunci MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_permission
+msgid "MCP Key Model Permission"
+msgstr "Izin Model Kunci MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_sql_table
+msgid "MCP Key SQL Table"
+msgstr "Tabel SQL Kunci MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_key model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_tree
+msgid "MCP Keys"
+msgstr "Kunci MCP"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:108 model:ir.actions.server,name:kaitech_mcp_server.action_mcp_overview model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_overview model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+#, python-format
+msgid "MCP Overview"
+msgstr "Ringkasan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_overview_database
+msgid "MCP Overview Database"
+msgstr "Database Ringkasan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.module.category,name:kaitech_mcp_server.module_category_mcp model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_root
+msgid "MCP Server"
+msgstr "MCP Server"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_settings model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_settings model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "MCP Settings"
+msgstr "Pengaturan MCP"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:205
+#, python-format
+msgid "MCP key rotated: copy the new key"
+msgstr "Kunci MCP diputar: salin kunci baru"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_installed
+msgid "MCP module installed"
+msgstr "Modul MCP terpasang"
+
+#. module: kaitech_mcp_server
+#: model:res.groups,name:kaitech_mcp_server.group_mcp_manager
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_method
+msgid "Method"
+msgstr "Metode"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_model model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_model_id model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_model_id model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Model"
+msgstr "Model"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_permission.py:63
+#, python-format
+msgid "Model %s can never be used through MCP."
+msgstr "Model %s tidak pernah bisa dipakai lewat MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_permission_ids model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_ids model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Models"
+msgstr "Model"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.wizard,step:0
+msgid "Models and actions"
+msgstr "Model dan aksi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_model_count
+msgid "Models and tables"
+msgstr "Model dan tabel"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:64
+#, python-format
+msgid "Name the client and choose the Odoo user the key acts as."
+msgstr "Beri nama klien dan pilih user Odoo yang diwakili kunci ini."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "Never exposed, in addition to the built-in list"
+msgstr "Tidak pernah dibuka, sebagai tambahan daftar bawaan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_key_wizard
+msgid "New MCP Key"
+msgstr "Kunci MCP Baru"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_key_wizard_line
+msgid "New MCP Key Model"
+msgstr "Model Kunci MCP Baru"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:57 model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_key_wizard model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+#, python-format
+msgid "New MCP key"
+msgstr "Kunci MCP baru"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:94
+#, python-format
+msgid "New MCP key: copy the key"
+msgstr "Kunci MCP baru: salin kunci"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:70
+#, python-format
+msgid "New MCP key: models and actions"
+msgstr "Kunci MCP baru: model dan aksi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_expiry_days
+msgid "New keys expire after (days)"
+msgstr "Kunci baru kedaluwarsa setelah (hari)"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "Next"
+msgstr "Berikutnya"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.overview,last_test_result:0
+msgid "Not found: the database is not served at this address"
+msgstr "Tidak ditemukan: database tidak dilayani di alamat ini"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.overview,last_test_result:0
+msgid "Not found: the module is not loaded server-wide"
+msgstr "Tidak ditemukan: modul belum dimuat server-wide"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.call,result:0
+msgid "OK"
+msgstr "OK"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_access_warning model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_access_warning
+msgid "Odoo access"
+msgstr "Akses Odoo"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_sql_enabled
+msgid "Off by default. SQL bypasses Odoo access rights, record rules, constraints, computed fields and tracking. When off, no key can use the sql_ tools, whatever its own settings say."
+msgstr "Mati secara bawaan. SQL melewati hak akses Odoo, record rule, constraint, field terhitung, dan tracking. Saat mati, tidak ada kunci yang bisa memakai tool sql_, apa pun pengaturan kuncinya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_delete_enabled
+msgid "Off by default. When off, no key can delete, whatever its permissions say."
+msgstr "Mati secara bawaan. Saat mati, tidak ada kunci yang bisa menghapus, apa pun izinnya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_fields
+msgid "One per line or comma separated: a field name (every model) or model.field, for example res.partner.vat"
+msgstr "Satu per baris atau dipisah koma: nama field (semua model) atau model.field, misalnya res.partner.vat"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_models
+msgid "One per line or comma separated; wildcards allowed, for example hr.payslip* or account.*"
+msgstr "Satu per baris atau dipisah koma; boleh wildcard, misalnya hr.payslip* atau account.*"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_settings_extra_forbidden_tables
+msgid "One per line or comma separated; wildcards allowed, for example hr_payslip* or account_*"
+msgstr "Satu per baris atau dipisah koma; boleh wildcard, misalnya hr_payslip* atau account_*"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_overview.py:96
+#, python-format
+msgid "Only MCP managers can open the MCP overview."
+msgstr "Hanya manajer MCP yang bisa membuka ringkasan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_field_ids model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_field_ids
+msgid "Only these fields"
+msgstr "Hanya field ini"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_overview
+msgid "Overview"
+msgstr "Ringkasan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_overview_id
+msgid "Overview id"
+msgstr "ID ringkasan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_token
+msgid "Paste the key"
+msgstr "Tempel kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Per call"
+msgstr "Per panggilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Per minute"
+msgstr "Per menit"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_protocol_version
+msgid "Protocol"
+msgstr "Protokol"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search selection:kaitech.mcp.call,result:0
+msgid "Rate limited"
+msgstr "Dibatasi"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.overview,last_test_result:0
+msgid "Reachable: routing and database selection work"
+msgstr "Terjangkau: routing dan pemilihan database berjalan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_can_read model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_can_read
+msgid "Read"
+msgstr "Baca"
+
+#. module: kaitech_mcp_server
+#: model:res.groups,comment:kaitech_mcp_server.group_mcp_auditor
+msgid "Reads the MCP call log."
+msgstr "Membaca log panggilan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_reason
+msgid "Reason"
+msgstr "Alasan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_record_ids
+msgid "Record ids"
+msgstr "ID record"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_record_count
+msgid "Records"
+msgstr "Record"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_max_delete model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_max_delete
+msgid "Records per delete"
+msgstr "Record per hapus"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_max_read model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_max_read
+msgid "Records per read"
+msgstr "Record per baca"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_max_write model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_max_write
+msgid "Records per update"
+msgstr "Record per ubah"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search selection:kaitech.mcp.call,result:0
+msgid "Refused"
+msgstr "Ditolak"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Refused (24 h)"
+msgstr "Ditolak (24 jam)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_refused_24h model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_refused_24h
+msgid "Refused or limited (24 h)"
+msgstr "Ditolak atau dibatasi (24 jam)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_rotated_from_id
+msgid "Replaces"
+msgstr "Menggantikan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_result model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_result model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Result"
+msgstr "Hasil"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Revoke"
+msgstr "Cabut"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search selection:kaitech.mcp.key,state:0
+msgid "Revoked"
+msgstr "Dicabut"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_revoked_by
+msgid "Revoked by"
+msgstr "Dicabut oleh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_revoked_at
+msgid "Revoked on"
+msgstr "Dicabut pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "Rotate key"
+msgstr "Putar kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_sql_statement_timeout_ms
+msgid "SELECT query time limit (ms)"
+msgstr "Batas waktu query SELECT (ms)"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "SQL"
+msgstr "SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_sql_enabled
+msgid "SQL allowed in settings"
+msgstr "SQL diizinkan di pengaturan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid ""
+"SQL bypasses Odoo access rights, record rules, constraints, computed fields and tracking.\n"
+"                        When on, each key still needs Allow SQL and its tables ticked. Switching it off clears Allow SQL on every key."
+msgstr ""
+"SQL melewati hak akses Odoo, record rule, constraint, field terhitung, dan tracking.\n"
+"                        Saat hidup, setiap kunci tetap perlu Izinkan SQL dan tabelnya dicentang. Mematikannya menghapus centang Izinkan SQL di semua kunci."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "SQL is switched off in MCP Settings, so Allow SQL cannot be ticked."
+msgstr "SQL dimatikan di Pengaturan MCP, jadi Izinkan SQL tidak bisa dicentang."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid ""
+"SQL runs as the database itself: it bypasses Odoo access rights, record rules, constraints,\n"
+"                                computed fields and tracking. Tick only the tables this client truly needs. Updates and deletes\n"
+"                                need a where condition and change at most 20 rows per call; every statement is in the call log."
+msgstr ""
+"SQL berjalan sebagai database itu sendiri: ia melewati hak akses Odoo, record rule, constraint,\n"
+"                                field terhitung, dan tracking. Centang hanya tabel yang benar-benar dibutuhkan klien ini. Ubah dan hapus\n"
+"                                wajib memakai kondisi where dan mengubah paling banyak 20 baris per panggilan; setiap statement tercatat di log panggilan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_allow_sql
+msgid "SQL runs as the database itself: it bypasses Odoo access rights, record rules, constraints, computed fields and tracking. Only the tables listed below can be used, and only when SQL is also switched on in MCP Settings."
+msgstr "SQL berjalan sebagai database itu sendiri: ia melewati hak akses Odoo, record rule, constraint, field terhitung, dan tracking. Hanya tabel di daftar bawah yang bisa dipakai, dan hanya bila SQL juga dihidupkan di Pengaturan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_statement model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_form
+msgid "SQL statement"
+msgstr "Statement SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_sql_table_ids
+msgid "SQL tables"
+msgstr "Tabel SQL"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:114
+#, python-format
+msgid "SQL through MCP is switched off in MCP Settings."
+msgstr "SQL lewat MCP dimatikan di Pengaturan MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_select
+msgid "Select"
+msgstr "Pilih"
+
+#. module: kaitech_mcp_server
+#. openerp-web
+#: code:addons/kaitech_mcp_server/static/src/js/mcp_copy.js:31
+#, python-format
+msgid "Select the text and copy it with Ctrl+C"
+msgstr "Pilih teksnya lalu salin dengan Ctrl+C"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.menu_mcp_settings
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_tree
+msgid "Starts with"
+msgstr "Diawali"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_state
+msgid "Status"
+msgstr "Status"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_step
+msgid "Step"
+msgstr "Langkah"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid ""
+"Step 1 of 3. One key per client, acting as one dedicated Odoo user.\n"
+"                        The Administrator cannot be used: it bypasses every access right."
+msgstr ""
+"Langkah 1 dari 3. Satu kunci per klien, bertindak sebagai satu user Odoo khusus.\n"
+"                        Administrator tidak bisa dipakai: user itu melewati semua hak akses."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid ""
+"Step 2 of 3. Tick what the client may do per model. The Odoo access column\n"
+"                        warns when the user's own rights do not allow a ticked action; Odoo will refuse it either way."
+msgstr ""
+"Langkah 2 dari 3. Centang apa yang boleh dilakukan klien per model. Kolom Akses Odoo\n"
+"                        memperingatkan bila hak user itu sendiri tidak mengizinkan aksi yang dicentang; Odoo tetap akan menolaknya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_table_name
+msgid "Table"
+msgstr "Tabel"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_sql_table.py:41
+#, python-format
+msgid "Table %s can never be used through MCP."
+msgstr "Tabel %s tidak pernah bisa dipakai lewat MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_model_name
+msgid "Technical name"
+msgstr "Nama teknis"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_kaitech_mcp_key_test
+msgid "Test MCP Key"
+msgstr "Uji Kunci MCP"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:213 code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:57 model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+#, python-format
+msgid "Test MCP key"
+msgstr "Uji kunci MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "Test endpoint"
+msgstr "Uji endpoint"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+msgid "Test key"
+msgstr "Uji kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_last_test_at
+msgid "Tested on"
+msgstr "Diuji pada"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:60
+#, python-format
+msgid "The SELECT query time limit must be between 100 and 60000 ms."
+msgstr "Batas waktu query SELECT harus antara 100 dan 60000 ms."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "The client using this key loses access immediately. Continue?"
+msgstr "Klien yang memakai kunci ini langsung kehilangan akses. Lanjutkan?"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0
+msgid "The endpoint could not be reached"
+msgstr "Endpoint tidak dapat dihubungi"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0
+msgid "The endpoint refused the key"
+msgstr "Endpoint menolak kunci"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0
+msgid "The endpoint was not found"
+msgstr "Endpoint tidak ditemukan"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid ""
+"The key can do something only when both this list and the Odoo access rights of its user allow it.\n"
+"                                Never available: technical models (ir.*, base.*, bus.*), users and groups, the MCP models\n"
+"                                themselves, password and token fields, and binary fields."
+msgstr ""
+"Kunci hanya bisa melakukan sesuatu bila daftar ini dan hak akses Odoo user-nya sama-sama mengizinkan.\n"
+"                                Tidak pernah tersedia: model teknis (ir.*, base.*, bus.*), user dan grup, model MCP\n"
+"                                itu sendiri, field kata sandi dan token, serta field biner."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:43
+#, python-format
+msgid "The key is accepted but has no model permissions yet."
+msgstr "Kunci diterima tetapi belum punya izin model."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_test_token
+msgid "The key is checked and then forgotten; it is never stored."
+msgstr "Kunci diperiksa lalu dilupakan; tidak pernah disimpan."
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0
+msgid "The key works"
+msgstr "Kunci berfungsi"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+msgid "The key works through the public endpoint."
+msgstr "Kunci berfungsi lewat endpoint publik."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:31
+#, python-format
+msgid "The pasted text does not match this key. Keys are shown only once; rotate the key if it was lost."
+msgstr "Teks yang ditempel tidak cocok dengan kunci ini. Kunci hanya tampil sekali; putar kunci bila hilang."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_overview_database_current
+msgid "This database"
+msgstr "Database ini"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0
+msgid "This is not the key of this record"
+msgstr "Ini bukan kunci milik record ini"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "This key cannot do anything yet: add at least one model on the Models tab or one table on the SQL tab."
+msgstr "Kunci ini belum bisa melakukan apa pun: tambahkan setidaknya satu model di tab Model atau satu tabel di tab SQL."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "This key expires within 7 days. Rotate it or move its expiry date."
+msgstr "Kunci ini kedaluwarsa dalam 7 hari. Putar kuncinya atau mundurkan tanggal kedaluwarsanya."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form
+msgid "This key is revoked: every call with it is refused with HTTP 401."
+msgstr "Kunci ini sudah dicabut: setiap panggilan dengannya ditolak dengan HTTP 401."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:82
+#, python-format
+msgid "This key was already created."
+msgstr "Kunci ini sudah dibuat."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_overview_form
+msgid "This server hides its database list (list_db = False); only this database's endpoint is shown above."
+msgstr "Server ini menyembunyikan daftar databasenya (list_db = False); hanya endpoint database ini yang tampil di atas."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_create_date
+msgid "Time"
+msgstr "Waktu"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Today"
+msgstr "Hari ini"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_tool model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Tool"
+msgstr "Tool"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:42
+#, python-format
+msgid ""
+"Tools this key can use:\n"
+"%s"
+msgstr ""
+"Tool yang bisa dipakai kunci ini:\n"
+"%s"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_tree
+msgid "Total"
+msgstr "Total"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.key.test,result:0 selection:kaitech.mcp.overview,last_test_result:0
+msgid "Unexpected answer"
+msgstr "Jawaban tak terduga"
+
+#. module: kaitech_mcp_server
+#: selection:kaitech.mcp.overview,last_test_result:0
+msgid "Unreachable"
+msgstr "Tidak terjangkau"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:100
+#, python-format
+msgid "Unsupported search on the key status."
+msgstr "Pencarian status kunci ini tidak didukung."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_can_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_can_update model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_sql_table_can_update
+msgid "Update"
+msgstr "Ubah"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search
+msgid "Usable"
+msgstr "Bisa dipakai"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_search
+msgid "User"
+msgstr "User"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_call_statement
+msgid "Values are bound parameters and never stored."
+msgstr "Nilai dikirim sebagai parameter terikat dan tidak pernah disimpan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_test_detail
+msgid "What the key can do"
+msgstr "Yang bisa dilakukan kunci"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid ""
+"When off, no key can delete and the Delete column of every key is cleared.\n"
+"                        When on, each key still needs Delete ticked per model, and at most the records per delete below go in one call."
+msgstr ""
+"Saat mati, tidak ada kunci yang bisa menghapus dan kolom Hapus di semua kunci dikosongkan.\n"
+"                        Saat hidup, setiap kunci tetap perlu Hapus dicentang per model, dan paling banyak jumlah record per hapus di bawah dalam satu panggilan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_name model:ir.model.fields,help:kaitech_mcp_server.field_kaitech_mcp_key_wizard_name
+msgid "Who uses this key, for example 'Alice - Claude Desktop'."
+msgstr "Siapa yang memakai kunci ini, misalnya 'Alice - Claude Desktop'."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_wizard_id
+msgid "Wizard id"
+msgstr "ID wizard"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_call_is_write
+msgid "Write"
+msgstr "Tulis"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_call_search
+msgid "Writes"
+msgstr "Penulisan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_writes_per_minute model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_writes_per_minute
+msgid "Writes per minute"
+msgstr "Penulisan per menit"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+msgid "e.g. Alice - Claude Desktop"
+msgstr "mis. Alice - Claude Desktop"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "hr.payslip*"
+msgstr "hr.payslip*"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "hr_payslip*"
+msgstr "hr_payslip*"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_settings
+msgid "res.partner.vat"
+msgstr "res.partner.vat"

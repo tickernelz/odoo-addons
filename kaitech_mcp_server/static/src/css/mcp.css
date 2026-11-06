@@ -1,0 +1,26 @@
+.o_mcp_copy_field {
+    display: flex;
+    align-items: flex-start;
+}
+.o_mcp_copy_field .o_mcp_copy_value {
+    flex: 1 1 auto;
+    margin: 0 8px 0 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 12px;
+}
+.o_mcp_tiles .o_mcp_tile {
+    display: inline-block;
+    min-width: 150px;
+    margin: 0 12px 12px 0;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fff;
+    text-align: left;
+}
+.o_mcp_tiles .o_mcp_tile .o_mcp_tile_value {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+}

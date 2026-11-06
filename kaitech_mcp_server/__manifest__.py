@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'MCP Server',
+    'summary': 'Model Context Protocol endpoint per database: keys, per-model permissions, audit',
+    'version': '10.0.1.0.0',
+    'category': 'Extra Tools',
+    'author': 'tickernelz',
+    'license': 'LGPL-3',
+    'depends': ['base', 'web'],
+    'data': [
+        'security/mcp_security.xml',
+        'security/ir.model.access.csv',
+        'data/mcp_data.xml',
+        'views/assets.xml',
+        'views/mcp_key_views.xml',
+        'views/mcp_call_views.xml',
+        'views/mcp_settings_views.xml',
+        'wizards/mcp_key_wizard_views.xml',
+        'wizards/mcp_key_test_views.xml',
+        'views/mcp_overview_views.xml',
+        'views/mcp_menus.xml',
+    ],
+    'qweb': ['static/src/xml/mcp_copy.xml'],
+    'post_load': 'post_load',
+    'installable': True,
+    'application': False,
+}

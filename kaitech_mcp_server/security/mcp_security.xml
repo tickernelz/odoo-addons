@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_mcp" model="ir.module.category">
+        <field name="name">MCP Server</field>
+        <field name="sequence">90</field>
+    </record>
+    <record id="group_mcp_auditor" model="res.groups">
+        <field name="name">Auditor</field>
+        <field name="category_id" ref="module_category_mcp"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Reads the MCP call log.</field>
+    </record>
+    <record id="group_mcp_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_mcp"/>
+        <field name="implied_ids" eval="[(4, ref('group_mcp_auditor'))]"/>
+        <field name="comment">Creates, rotates and revokes MCP keys and reads the call log.</field>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_mcp_manager'))]"/>
+    </record>
+</odoo>

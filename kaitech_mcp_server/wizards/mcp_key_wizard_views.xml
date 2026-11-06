@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mcp_key_wizard_form" model="ir.ui.view">
+        <field name="name">kaitech.mcp.key.wizard.form</field>
+        <field name="model">kaitech.mcp.key.wizard</field>
+        <field name="arch" type="xml">
+            <form string="New MCP key">
+                <field name="step" invisible="1"/>
+                <field name="delete_enabled" invisible="1"/>
+                <group attrs="{'invisible': [('step', '!=', 'client')]}">
+                    <p colspan="2" class="text-muted">Step 1 of 3. One key per client, acting as one dedicated Odoo user.
+                        The Administrator cannot be used: it bypasses every access right.</p>
+                    <field name="name" placeholder="e.g. Alice - Claude Desktop"
+                           attrs="{'required': [('step', '=', 'client')]}"/>
+                    <field name="user_id" options="{'no_create': True}" attrs="{'required': [('step', '=', 'client')]}"/>
+                    <field name="expires_at"/>
+                </group>
+                <div attrs="{'invisible': [('step', '!=', 'models')]}">
+                    <p class="text-muted">Step 2 of 3. Tick what the client may do per model. The Odoo access column
+                        warns when the user's own rights do not allow a ticked action; Odoo will refuse it either way.</p>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="can_read"/>
+                            <field name="can_create"/>
+                            <field name="can_update"/>
+                            <field name="delete_enabled" invisible="1"/>
+                            <field name="can_delete" attrs="{'readonly': [('delete_enabled', '=', False)]}"/>
+                            <field name="field_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="access_warning"/>
+                        </tree>
+                    </field>
+                    <p class="text-muted" attrs="{'invisible': [('delete_enabled', '=', True)]}">
+                        Delete cannot be ticked: deleting is switched off in MCP Settings.</p>
+                </div>
+                <div attrs="{'invisible': [('step', '!=', 'done')]}">
+                    <div class="alert alert-warning" role="alert">
+                        Copy the key now. It is shown only this once; Odoo keeps only a fingerprint of it.
+                    </div>
+                    <group>
+                        <field name="token" widget="mcp_copy"/>
+                        <field name="endpoint_url" widget="mcp_copy"/>
+                        <field name="config_desktop" widget="mcp_copy"/>
+                        <field name="config_http" widget="mcp_copy"/>
+                    </group>
+                </div>
+                <footer>
+                    <button name="action_next" type="object" string="Next" class="oe_highlight"
+                            attrs="{'invisible': [('step', '!=', 'client')]}"/>
+                    <button name="action_back" type="object" string="Back"
+                            attrs="{'invisible': [('step', '!=', 'models')]}"/>
+                    <button name="action_create" type="object" string="Create key" class="oe_highlight"
+                            attrs="{'invisible': [('step', '!=', 'models')]}"/>
+                    <button name="action_done" type="object" string="I have copied the key" class="oe_highlight"
+                            attrs="{'invisible': [('step', '!=', 'done')]}"/>
+                    <button special="cancel" string="Cancel" class="oe_link"
+                            attrs="{'invisible': [('step', '=', 'done')]}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mcp_key_wizard" model="ir.actions.act_window">
+        <field name="name">New MCP key</field>
+        <field name="res_model">kaitech.mcp.key.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

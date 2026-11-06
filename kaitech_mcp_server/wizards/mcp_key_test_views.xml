@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mcp_key_test_form" model="ir.ui.view">
+        <field name="name">kaitech.mcp.key.test.form</field>
+        <field name="model">kaitech.mcp.key.test</field>
+        <field name="arch" type="xml">
+            <form string="Test MCP key">
+                <group>
+                    <field name="key_id"/>
+                    <field name="token" password="True"/>
+                </group>
+                <div class="alert alert-success" role="alert" attrs="{'invisible': [('result', '!=', 'ok')]}">
+                    The key works through the public endpoint.
+                </div>
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('result', 'in', (False, 'ok'))]}">
+                    <field name="result" readonly="1"/>
+                </div>
+                <field name="detail" nolabel="1" attrs="{'invisible': [('detail', '=', False)]}"/>
+                <footer>
+                    <button name="action_run" type="object" string="Test key" class="oe_highlight"/>
+                    <button special="cancel" string="Close" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

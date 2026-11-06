@@ -1,0 +1,3 @@
+ARG ODOO_IMAGE=odoo:10.0
+FROM ${ODOO_IMAGE}
+COPY kaitech_mcp_server /mnt/extra-addons/kaitech_mcp_server

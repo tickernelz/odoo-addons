@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="kaitech_mcp_server.FieldCopy">
+        <div class="o_mcp_copy_field">
+            <pre class="o_mcp_copy_value"/>
+            <button type="button" class="btn btn-sm btn-default o_mcp_copy"><i class="fa fa-clipboard"/> Copy</button>
+        </div>
+    </t>
+</templates>
