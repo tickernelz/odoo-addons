@@ -255,6 +255,8 @@ def call(env, grant, name, arguments):
     if missing:
         raise ToolArgumentError("Missing arguments for %s: %s" % (name, ', '.join(missing)))
     if name in SQL_METHODS:
+        if not grant.sql_any(env.cr, tool['action'][4:]):
+            raise ToolArgumentError("There is no tool named %s." % (name,))
         run = sql.Run(env, grant)
         try:
             with mute_logger('odoo.sql_db'):

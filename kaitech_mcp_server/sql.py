@@ -380,6 +380,8 @@ class Run(object):
         return payload, table.name, keys, len(rows)
 
     def query(self, arguments):
+        if not self.grant.sql_any(self.cr, 'select'):
+            raise ToolRefused("This key may not run SQL queries.")
         text = arguments.get('query')
         if not isinstance(text, basestring) or not text.strip():
             raise ToolArgumentError("query must be one SELECT statement.")

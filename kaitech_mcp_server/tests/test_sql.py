@@ -33,7 +33,7 @@ class TestSql(EndpointCase):
                          ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update'])
         self.assertFalse([name for name in self.tool_names(self.plain_token) if name.startswith('sql_')])
         result = self.call(self.plain_token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('no tool named sql_select', result['structuredContent']['error'])
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
@@ -51,7 +51,7 @@ class TestSql(EndpointCase):
                            (env.ref('base.group_system').id, self.user.id))
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
         result = self.call(self.token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('no tool named sql_select', result['structuredContent']['error'])
 
     def test_secret_looking_columns_are_hidden(self):
         with self.shared_env() as env:
@@ -165,6 +165,43 @@ class TestSql(EndpointCase):
         result = self.call(self.token, 'sql_query', {'query': payload})
         self.assertTrue(result['isError'])
         self.assertIn('string', result['structuredContent']['error'])
+        probe = odoo.sql_db.db_connect(self.env.cr.dbname).cursor()
+        try:
+            probe.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            self.assertEqual(probe.fetchone()[0], before)
+        finally:
+            probe.close()
+
+    def test_no_sql_reaches_postgres_unless_every_switch_allows_it(self):
+        quote = "'"
+        smuggles = (
+            "SELECT $$%s$$ AS a; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT %s$$" % (quote, quote),
+            'SELECT 1 AS "%s"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1 AS "%s"' % (quote, quote),
+            "SELECT E'\\'' AS x; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = 3; SELECT 1",
+        )
+        with self.shared_env() as env:
+            env.cr.execute("SELECT phone_code FROM res_country WHERE id = 3")
+            before = env.cr.fetchone()[0]
+        for switch_off in ('setting', 'key'):
+            with self.shared_env() as env:
+                if switch_off == 'setting':
+                    set_setting(env, 'sql_enabled', 'False')
+                else:
+                    set_setting(env, 'sql_enabled', 'True')
+            for token in (self.plain_token, self.token if switch_off == 'setting' else self.plain_token):
+                for payload in smuggles + ("SELECT code FROM res_country",):
+                    result = self.call(token, 'sql_query', {'query': payload})
+                    self.assertTrue(result['isError'], (switch_off, payload))
+                    self.assertIn('no tool named sql_query', result['structuredContent']['error'])
+                for tool, arguments in (('sql_select', {'table': 'res_country'}),
+                                        ('sql_list_tables', {})):
+                    result = self.call(token, tool, arguments)
+                    self.assertIn('no tool named', result['structuredContent']['error'])
+        with self.shared_env() as env:
+            set_setting(env, 'sql_enabled', 'True')
+        for payload in smuggles:
+            result = self.call(self.token, 'sql_query', {'query': payload})
+            self.assertTrue(result['isError'], payload)
         probe = odoo.sql_db.db_connect(self.env.cr.dbname).cursor()
         try:
             probe.execute("SELECT phone_code FROM res_country WHERE id = 3")
