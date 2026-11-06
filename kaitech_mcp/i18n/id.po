@@ -211,6 +211,11 @@ msgid "Cancel"
 msgstr "Batal"
 
 #. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid "Claude (Add custom connector)"
+msgstr "Claude (Add custom connector)"
+
+#. module: kaitech_mcp
 msgid "Claude Desktop (mcp-remote)"
 msgstr "Claude Desktop (mcp-remote)"
 
@@ -460,6 +465,16 @@ msgid "HTTP 404: this address does not reach this database. Check dbfilter, db_n
 msgstr "HTTP 404: alamat ini tidak sampai ke database ini. Periksa dbfilter, db_name, dan reverse proxy untuk /mcp/."
 
 #. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__claude_header
+msgid "Header name for Claude"
+msgstr "Nama header untuk Claude"
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key_wizard__claude_value
+msgid "Header value for Claude"
+msgstr "Nilai header untuk Claude"
+
+#. module: kaitech_mcp
 msgid "I have copied the key"
 msgstr "Kunci sudah saya salin"
 
@@ -470,6 +485,19 @@ msgstr "ID"
 #. module: kaitech_mcp
 msgid "IP address"
 msgstr "Alamat IP"
+
+#. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
+msgid ""
+"In Claude: Settings, Connectors, Add custom connector. Paste the\n"
+"                            endpoint above as the URL, add a request header named x-api-key with the value below, and tick\n"
+"                            Required. The Authentication choice does not matter: the key travels in that header. Keep the\n"
+"                            value plain, without a Bearer prefix."
+msgstr ""
+"Di Claude: Settings, Connectors, Add custom connector. Tempelkan\n"
+"                            endpoint di atas sebagai URL, tambahkan request header bernama x-api-key dengan nilai di bawah, dan centang\n"
+"                            Required. Pilihan Authentication tidak berpengaruh: kunci berjalan lewat header itu. Simpan\n"
+"                            nilainya polos, tanpa awalan Bearer."
 
 #. module: kaitech_mcp
 msgid "Insert"
@@ -1238,4 +1266,3 @@ msgstr "hr_payslip*"
 #. module: kaitech_mcp
 msgid "res.partner.vat"
 msgstr "res.partner.vat"
-

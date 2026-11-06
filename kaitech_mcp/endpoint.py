@@ -35,6 +35,7 @@ FOREIGN_ORIGIN = "Requests from another site's pages are refused."
 TOO_LARGE = "The body is larger than 1 MB."
 OVER_LIMIT = "Too many calls for this key; try again in %s seconds."
 TOOL_FAILED = "The tool failed; nothing was changed."
+KEY_HEADERS = ('Authorization', 'X-API-Key', 'X-Auth-Token')
 
 
 def claims(path):
@@ -129,9 +130,18 @@ def _body(request):
     return data
 
 
-def _bearer(request):
-    scheme, _space, token = (request.headers.get('Authorization') or '').partition(' ')
-    return token.strip() if scheme.lower() == 'bearer' else ''
+def _offered_key(request):
+    """The key one of KEY_HEADERS carries, or '' when none does; the first header carrying one wins."""
+    for name in KEY_HEADERS:
+        value = (request.headers.get(name) or '').strip()
+        scheme, _space, token = value.partition(' ')
+        if scheme.lower() == 'bearer':
+            value = token.strip()
+        elif name == 'Authorization':
+            value = ''
+        if value:
+            return value
+    return ''
 
 
 def _answer(request):
@@ -216,7 +226,7 @@ class Exchange(object):
         return self._error(protocol.REFUSED_HERE, NO_KEY, status=401, headers={'WWW-Authenticate': 'Bearer realm="mcp"'})
 
     def _authenticate(self):
-        token = _bearer(self.request)
+        token = _offered_key(self.request)
         index = keys.index_of(token)
         if not index:
             return None, 'missing'
