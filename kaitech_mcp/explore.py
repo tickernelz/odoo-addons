@@ -485,10 +485,15 @@ def method_source(env, model_name, method, module=None, max_lines=300):
     return result
 
 
+MAIL_GATEWAY_METHODS = frozenset(('message_process', 'message_route', 'message_route_verify', 'message_route_process'))
+
+
 def callable_by_tool(env, model_name, method):
     """(True, None) when call_method may run method on model_name, else (False, reason)."""
     if method.startswith('_'):
         return False, 'private method'
+    if method in MAIL_GATEWAY_METHODS:
+        return False, 'mail gateway method, it creates records on any model as the user the mail names (sudo)'
     klass = type(env[model_name])
     func = getattr(klass, method, None)
     if not callable(func):
