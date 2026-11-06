@@ -222,6 +222,13 @@ class TestKeyHeaders(EndpointCase):
         status, _body, _headers = self.ping({'X-API-Key': wrong, 'X-Auth-Token': self.token})
         self.assertEqual(status, 401)
 
+    def test_an_authorization_without_a_bearer_value_holds_no_key(self):
+        for authorization in ('Basic dXNlcjpwYXNz', 'Bearer', 'Bearer   ', self.token):
+            status, _body, _headers = self.ping({'Authorization': authorization, 'X-API-Key': self.token})
+            self.assertEqual(status, 200, authorization)
+            status, _body, _headers = self.ping({'Authorization': authorization})
+            self.assertEqual(status, 401, authorization)
+
     def test_a_blank_header_carries_no_key(self):
         for name in ('X-API-Key', 'X-Auth-Token'):
             for value in ('', '   '):
