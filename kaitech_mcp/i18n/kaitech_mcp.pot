@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 04:19+0000\n"
-"PO-Revision-Date: 2026-11-06 04:19+0000\n"
+"POT-Creation-Date: 2026-11-06 04:24+0000\n"
+"PO-Revision-Date: 2026-11-06 04:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -315,6 +315,7 @@ msgid ""
 msgstr ""
 
 #. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__database
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview_database__name
 msgid "Database"
 msgstr ""
@@ -380,6 +381,11 @@ msgstr ""
 #. module: kaitech_mcp
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_key_wizard_form
 msgid "Delete cannot be ticked: deleting is switched off in MCP Settings."
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__delete_enabled
+msgid "Delete through MCP"
 msgstr ""
 
 #. module: kaitech_mcp
@@ -630,6 +636,13 @@ msgid "Keys"
 msgstr ""
 
 #. module: kaitech_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
+msgid ""
+"Keys only work in this database. A key made in another database is always "
+"refused here (401)."
+msgstr ""
+
+#. module: kaitech_mcp
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_call_search
 msgid "Last 24 hours"
 msgstr ""
@@ -664,7 +677,6 @@ msgstr ""
 
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__last_test_result
-#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
 msgid "Last endpoint test"
 msgstr ""
 
@@ -700,7 +712,13 @@ msgstr ""
 
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__server_wide
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp.view_mcp_overview_form
 msgid "Loaded server-wide"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__audit_retention_days
+msgid "Log retention (days)"
 msgstr ""
 
 #. module: kaitech_mcp
@@ -1159,6 +1177,11 @@ msgstr ""
 #. module: kaitech_mcp
 #: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_key__sql_table_ids
 msgid "SQL tables"
+msgstr ""
+
+#. module: kaitech_mcp
+#: model:ir.model.fields,field_description:kaitech_mcp.field_kaitech_mcp_overview__sql_enabled
+msgid "SQL through MCP"
 msgstr ""
 
 #. module: kaitech_mcp

@@ -9,7 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools import config
 
-from .. import endpoint
+from .. import endpoint, grants
 
 MAX_DATABASES = 50
 OUTCOMES = [
@@ -30,6 +30,10 @@ class McpOverview(models.TransientModel):
     endpoint_url = fields.Char('Endpoint for this database', compute='_compute_overview')
     server_wide = fields.Boolean('Loaded server-wide', compute='_compute_overview')
     config_line = fields.Char('Line for odoo.conf', compute='_compute_overview')
+    database = fields.Char('Database', compute='_compute_overview')
+    delete_enabled = fields.Boolean('Delete through MCP', compute='_compute_overview')
+    sql_enabled = fields.Boolean('SQL through MCP', compute='_compute_overview')
+    audit_retention_days = fields.Integer('Log retention (days)', compute='_compute_overview')
     active_keys = fields.Integer('Active keys', compute='_compute_overview')
     calls_24h = fields.Integer('Calls (24 h)', compute='_compute_overview')
     refused_24h = fields.Integer('Refused or limited (24 h)', compute='_compute_overview')
@@ -57,7 +61,12 @@ class McpOverview(models.TransientModel):
         active = self.env['kaitech.mcp.key'].search_count([('state', 'in', ['active', 'expiring'])])
         last = json.loads(self.env['ir.config_parameter'].sudo().get_param(LAST_TEST) or '{}')
         loaded = [name for name in config['server_wide_modules'] if name != endpoint.MODULE]
+        settings = grants.current_settings(self.env)
         for overview in self:
+            overview.database = cr.dbname
+            overview.delete_enabled = settings['delete_enabled']
+            overview.sql_enabled = settings['sql_enabled']
+            overview.audit_retention_days = settings['audit_retention_days']
             overview.endpoint_url = self.endpoint_url_for(cr.dbname)
             overview.server_wide = endpoint.server_wide()
             overview.config_line = 'server_wide_modules = %s' % ','.join(loaded + [endpoint.MODULE])

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 04:19+0000\n"
+"POT-Creation-Date: 2026-11-06 04:24+0000\n"
 "PO-Revision-Date: 2026-11-06 00:00+0000\n"
 "Last-Translator: <>\n"
 "Language: id\n"
@@ -12,7 +12,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 #. module: kaitech_mcp
 #. odoo-python
@@ -302,6 +301,10 @@ msgid "Delete cannot be ticked: deleting is switched off in MCP Settings."
 msgstr "Hapus tidak bisa dicentang: menghapus dimatikan di Pengaturan MCP."
 
 #. module: kaitech_mcp
+msgid "Delete through MCP"
+msgstr "Hapus lewat MCP"
+
+#. module: kaitech_mcp
 msgid "Deleted records"
 msgstr "Record yang dihapus"
 
@@ -485,6 +488,10 @@ msgid "Keys"
 msgstr "Kunci"
 
 #. module: kaitech_mcp
+msgid "Keys only work in this database. A key made in another database is always refused here (401)."
+msgstr "Kunci hanya berlaku di database ini. Kunci yang dibuat di database lain selalu ditolak di sini (401)."
+
+#. module: kaitech_mcp
 msgid "Last 24 hours"
 msgstr "24 jam terakhir"
 
@@ -527,6 +534,10 @@ msgstr "Baris untuk odoo.conf"
 #. module: kaitech_mcp
 msgid "Loaded server-wide"
 msgstr "Dimuat server-wide"
+
+#. module: kaitech_mcp
+msgid "Log retention (days)"
+msgstr "Simpan log (hari)"
 
 #. module: kaitech_mcp
 msgid "MCP Call"
@@ -870,6 +881,10 @@ msgstr "Statement SQL"
 #. module: kaitech_mcp
 msgid "SQL tables"
 msgstr "Tabel SQL"
+
+#. module: kaitech_mcp
+msgid "SQL through MCP"
+msgstr "SQL lewat MCP"
 
 #. module: kaitech_mcp
 #. odoo-python

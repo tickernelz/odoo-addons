@@ -16,12 +16,22 @@
                     <field name="config_line" widget="CopyClipboardChar"/>
                 </div>
                 <sheet>
-                    <field name="server_wide" invisible="1"/>
                     <div class="oe_title">
                         <h1>MCP Server</h1>
                     </div>
                     <group>
-                        <field name="endpoint_url" widget="CopyClipboardChar"/>
+                        <group>
+                            <field name="endpoint_url" widget="CopyClipboardChar"/>
+                            <field name="server_wide" string="Loaded server-wide" readonly="1"/>
+                            <field name="delete_enabled" readonly="1"/>
+                            <field name="sql_enabled" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="database"/>
+                            <field name="last_test_result" decoration-success="last_test_result == 'ok'" decoration-danger="last_test_result and last_test_result != 'ok'"/>
+                            <field name="last_test_at" invisible="not last_test_at"/>
+                            <field name="audit_retention_days"/>
+                        </group>
                     </group>
                     <div class="row g-2 my-3">
                         <div class="col-6 col-md-3">
@@ -52,11 +62,10 @@
                             </button>
                         </div>
                     </div>
-                    <group string="Last endpoint test">
-                        <field name="last_test_result"/>
-                        <field name="last_test_detail"/>
-                        <field name="last_test_at"/>
-                    </group>
+                    <div class="alert alert-info" role="status">
+                        Keys only work in this database. A key made in another database is always refused here (401).
+                        <span invisible="not last_test_detail"><br/><field name="last_test_detail" class="d-inline"/></span>
+                    </div>
                     <separator string="Databases on this server"/>
                     <p class="text-muted">An MCP client picks its database by the address it calls: /mcp/ followed by
                         the database name. Each database has its own keys and call log.</p>
