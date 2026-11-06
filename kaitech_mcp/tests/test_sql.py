@@ -98,6 +98,7 @@ class TestSql(EndpointCase):
             arguments = {'table': 'res_partner', 'values': {'city': 'X'}, 'where': where}
             result = self.call(self.token, 'sql_update', arguments)
             self.assertTrue(result['isError'], where)
+            self.assertIn('where is required', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Padang'},
                                                       'where': [['city', '=', 'Medan']]})
         self.assertIn('matches 25 rows', result['structuredContent']['error'])
