@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
+from odoo.sql_db import db_connect
 
 from .. import sql, tools
 from .common import EndpointCase, marker, new_key, new_user, set_setting
@@ -34,7 +35,7 @@ class TestSql(EndpointCase):
                          ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update'])
         self.assertFalse([name for name in self.tool_names(self.plain_token) if name.startswith('sql_')])
         result = self.call(self.plain_token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('There is no tool named sql_select', result['structuredContent']['error'])
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
@@ -42,6 +43,24 @@ class TestSql(EndpointCase):
             set_setting(env, 'sql_enabled', 'True')
             env['kaitech.mcp.key'].browse(self.key_id).write({'allow_sql': False})
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
+
+    def test_closed_sql_tools_run_no_statement(self):
+        arguments = {
+            'sql_list_tables': {}, 'sql_select': {'table': 'res_country', 'columns': ['code']},
+            'sql_query': {'query': 'SELECT 1 AS n'}, 'sql_insert': {'table': 'res_country', 'rows': [{'code': 'QQ'}]},
+            'sql_update': {'table': 'res_country', 'values': {'code': 'QQ'}, 'where': [['id', '=', 1]]},
+            'sql_delete': {'table': 'res_country', 'where': [['id', '=', 1]]},
+        }
+        refused = {}
+        for token in (self.plain_token, self.token):
+            if token == self.token:
+                with self.shared_env() as env:
+                    set_setting(env, 'sql_enabled', 'False')
+            for tool, values in arguments.items():
+                with patch.object(sql.Run, '__init__', side_effect=AssertionError('sql.Run was built')):
+                    result = self.call(token, tool, values)
+                refused[(token == self.token, tool)] = result['structuredContent'].get('error', '')
+        self.assertEqual({call: error for call, error in refused.items() if 'There is no tool named' not in error}, {})
 
     def test_settings_administrators_never_get_sql(self):
         env = self.env
@@ -53,7 +72,7 @@ class TestSql(EndpointCase):
                            (env.ref('base.group_system').id, self.user.id))
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
         result = self.call(self.token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('There is no tool named sql_select', result['structuredContent']['error'])
 
     def test_secret_looking_columns_are_hidden(self):
         with self.shared_env() as env:
@@ -246,6 +265,77 @@ class TestSql(EndpointCase):
         self.assertTrue(result['isError'])
         self.assertIn('database refused', result['structuredContent']['error'])
         self.assertEqual(self.last_call(self.key_id)['result'], 'error')
+
+    def test_column_aliases_cannot_rename_a_hidden_column(self):
+        self.maxDiff = None
+        with self.shared_env() as env:
+            env.cr.execute("ALTER TABLE res_country ADD COLUMN api_token varchar")
+            env.cr.execute("UPDATE res_country SET api_token = 'LEAKED-' || code")
+            env.cr.execute("CREATE VIEW mcp_country_tags AS SELECT code, api_token AS tag FROM res_country")
+            env.cr.execute("SELECT attname FROM pg_attribute WHERE attrelid = 'res_country'::regclass "
+                           "AND attnum > 0 AND NOT attisdropped ORDER BY attnum")
+            columns = [row[0] for row in env.cr.fetchall()]
+        renamed = ', '.join('a%d' % index for index in range(1, len(columns) + 1))
+        last = 'a%d' % len(columns)
+        swapped = ', '.join('name' if column == 'api_token' else 'shown' if column == 'name' else column for column in columns)
+        refused = (
+            "SELECT x.%s FROM res_country AS x(%s)" % (last, renamed),
+            "SELECT x.name FROM res_country AS x(%s)" % swapped,
+            "SELECT x.name FROM res_country x(%s) JOIN res_partner p ON p.country_id = x.id" % swapped,
+            "WITH x(%s) AS MATERIALIZED (SELECT * FROM res_country) SELECT x.%s FROM x" % (renamed, last),
+            "WITH x(%s) AS MATERIALIZED (SELECT * FROM res_country) SELECT count(*) AS n FROM x WHERE x.%s LIKE 'LEAKED-I%%'" % (renamed, last),
+            "SELECT s.%s FROM (SELECT * FROM res_country OFFSET 0) s(%s)" % (last, renamed),
+            "SELECT * FROM res_country UNION ALL SELECT * FROM res_country",
+            "SELECT count(*) AS n FROM res_country a JOIN res_country b USING (api_token)",
+            "SELECT a.code FROM res_country a NATURAL JOIN res_country b",
+            "SELECT tag FROM mcp_country_tags",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in refused}
+        self.assertEqual({query: answer.get('error') or answer['rows'][:1] for query, answer in answers.items()
+                          if 'api_token is never readable' not in answer.get('error', '')}, {})
+        allowed = (
+            "SELECT x.n FROM res_country AS x(i, n) WHERE x.i = 1",
+            "WITH x AS MATERIALIZED (SELECT code FROM res_country) SELECT x.code FROM x",
+            "SELECT s.c FROM (SELECT code FROM res_country OFFSET 0) s(c)",
+            "SELECT code FROM res_country UNION ALL SELECT code FROM res_country",
+            "SELECT c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in allowed}
+        self.assertEqual({query: answer for query, answer in answers.items() if 'error' in answer or 'LEAKED-' in str(answer)}, {})
+
+    def test_quotes_cannot_hide_a_second_statement(self):
+        with self.shared_env() as env:
+            env.cr.execute("SELECT id, phone_code FROM res_country WHERE code IN ('ID', 'MY', 'SG') ORDER BY code")
+            countries = env.cr.fetchall()
+            database = env.cr.dbname
+        smuggled = [
+            "SELECT 1 AS \"'\"; COMMIT; UPDATE res_country SET phone_code = 4545 WHERE id = %d; SELECT 1 AS \"'\"" % countries[0][0],
+            "SELECT 1 AS \"'\") AS q; COMMIT; UPDATE res_country SET phone_code = 4242 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT 1 AS \"'\"" % countries[1][0],
+            "SELECT E'\\'' AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4343 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT 'x'" % countries[2][0],
+            "SELECT $q$'$q$ AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4646 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT $q$'$q$ AS b" % countries[0][0],
+            "SELECT E'\\'' AS a) AS q; COMMIT; UPDATE res_country SET phone_code = 4747 WHERE id = %d; "
+            "SELECT 1 FROM (SELECT E'\\'' AS b" % countries[1][0],
+            "SELECT 'open AS a",
+            "SELECT code FROM res_country) AS q, (SELECT 1",
+        ]
+        answers = {query: self.call(self.token, 'sql_query', {'query': query}) for query in smuggled}
+        self.assertEqual({query: answer['structuredContent'] for query, answer in answers.items() if not answer['isError']}, {})
+        with db_connect(database).cursor() as cr:
+            cr.execute("SELECT id, phone_code FROM res_country WHERE id IN %s ORDER BY code", (tuple(row[0] for row in countries),))
+            self.assertEqual(cr.fetchall(), countries)
+        hidden_call = "SELECT \"'\".code FROM res_country \"'\" WHERE \"'\".code = 'x' || pg_backend_pid() || 'y'"
+        result = self.call(self.token, 'sql_query', {'query': hidden_call})
+        self.assertIn('pg_backend_pid is not allowed', result['structuredContent'].get('error', ''), result['structuredContent'])
+        allowed = (
+            "SELECT code AS \"semi;colon\", 'it''s; -- fine' AS s FROM res_country WHERE code = 'ID'",
+            "SELECT \"'\".code FROM res_country \"'\" WHERE \"'\".code = 'ID'",
+            "SELECT 1 AS \"a\"\"b\" FROM res_country WHERE code LIKE 'I%' LIMIT 1",
+        )
+        answers = {query: self.call(self.token, 'sql_query', {'query': query})['structuredContent'] for query in allowed}
+        self.assertEqual({query: answer for query, answer in answers.items() if 'error' in answer}, {})
 
     def test_query_reads_allowed_tables_only(self):
         result = self.call(self.token, 'sql_query', {'query': (

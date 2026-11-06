@@ -251,6 +251,8 @@ def call(env, grant, name, arguments):
     missing = [key for key in tool['inputSchema'].get('required', ()) if key not in arguments]
     if missing:
         raise ToolArgumentError("Missing arguments for %s: %s" % (name, ', '.join(missing)))
+    if name in SQL_METHODS and not grant.sql_any(env.cr, tool['action'][4:]):
+        raise ToolArgumentError("There is no tool named %s." % (name,))
     if name in SQL_METHODS:
         run = sql.Run(env, grant)
         try:
