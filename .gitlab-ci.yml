@@ -53,6 +53,7 @@ odoo19-pinned-core:
     expire_in: 2 weeks
   script:
     - mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$PINNED_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
+    - apt-get update -qq && apt-get install -y -qq libldap2-dev libsasl2-dev >/dev/null
     - pip install -q -r /tmp/src/requirements.txt
     - ODOO_BIN="python3 /tmp/src/odoo-bin" ADDONS_PATH="$CI_PROJECT_DIR,/tmp/src/addons,/tmp/src/odoo/addons" sh ci/odoo-tests.sh
 
