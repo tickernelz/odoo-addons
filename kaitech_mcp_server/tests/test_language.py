@@ -54,9 +54,12 @@ class TestLanguage(EndpointCase):
 
     def test_record_data_follows_the_key_user_language(self):
         with self.shared_env() as env:
-            env.cr.execute("SELECT count(*) FROM ir_translation WHERE lang = %s AND name = 'res.country,name'", (INDONESIAN,))
-            if not env.cr.fetchone()[0]:
-                env['ir.translation'].load_module_terms(['base'], [INDONESIAN])
+            germany = env.ref('base.de')
+            env['ir.translation'].search([('name', '=', 'res.country,name'), ('res_id', '=', germany.id),
+                                          ('lang', '=', INDONESIAN)]).unlink()
+            env['ir.translation'].create({'name': 'res.country,name', 'type': 'model', 'res_id': germany.id,
+                                          'lang': INDONESIAN, 'src': 'Germany', 'value': 'Jerman', 'state': 'translated'})
+            germany.invalidate_cache()
         domain = [['code', '=', 'DE']]
         english = self.call(self.english_token, 'search_records', {'model': 'res.country', 'domain': domain})
         self.assertTrue(english['isError'])

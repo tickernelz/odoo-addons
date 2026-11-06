@@ -3,6 +3,8 @@
 import decimal
 import json
 
+from odoo.tools import mute_logger
+
 from . import sql
 from .grants import DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids
 
@@ -255,7 +257,8 @@ def call(env, grant, name, arguments):
     if name in SQL_METHODS:
         run = sql.Run(env, grant)
         try:
-            payload, table, keys, count = getattr(run, SQL_METHODS[name])(arguments)
+            with mute_logger('odoo.sql_db'):
+                payload, table, keys, count = getattr(run, SQL_METHODS[name])(arguments)
         except Exception as failure:
             try:
                 failure.statement = run.statement

@@ -50,11 +50,19 @@ odoo10-image-sale-account-stock:
   script:
     - sh harness/ci-odoo-tests.sh
 
-odoo10-2017-build:
-  extends: .odoo-image
+odoo10-2017-build-py2718:
   stage: test
+  image: python:2.7.18-buster
+  services:
+    - name: postgres:9.6
+      alias: postgres
+  artifacts:
+    when: always
+    paths:
+      - odoo-tests.log
+    expire_in: 2 weeks
   script:
-    - mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$OLD_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
+    - sh harness/ci-source-runtime.sh "$OLD_ODOO_COMMIT"
     - ODOO_BIN="python /tmp/src/odoo-bin" ADDONS_PATH="$CI_PROJECT_DIR,/tmp/src/addons,/tmp/src/odoo/addons" sh harness/ci-odoo-tests.sh
 
 odoo10-pinned-core-py2718-pg15:
@@ -72,7 +80,7 @@ odoo10-pinned-core-py2718-pg15:
       - odoo-tests.log
     expire_in: 2 weeks
   script:
-    - sh harness/ci-pinned-runtime.sh
+    - sh harness/ci-source-runtime.sh "$PINNED_ODOO_COMMIT"
     - ODOO_BIN="python /tmp/src/odoo-bin" ADDONS_PATH="$CI_PROJECT_DIR,/tmp/src/addons,/tmp/src/odoo/addons" sh harness/ci-odoo-tests.sh
 
 i18n-template:
