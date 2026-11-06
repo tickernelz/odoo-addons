@@ -4,9 +4,8 @@ from odoo.modules import module as odoo_module
 
 from .common import EndpointCase, new_key, new_user
 
-EXPLORE_TOOLS = ('describe_model', 'search_fields', 'search_methods', 'describe_method', 'get_method_source',
-                 'search_code', 'read_source', 'list_modules', 'describe_module', 'get_view', 'list_actions',
-                 'lookup_xmlid')
+EXPLORE_TOOLS = ('describe_model', 'search_methods', 'describe_method', 'get_method_source', 'search_code',
+                 'read_source', 'list_modules', 'describe_module', 'get_view', 'list_actions', 'search_xmlids')
 
 
 class TestExplore(EndpointCase):
@@ -35,11 +34,11 @@ class TestExplore(EndpointCase):
         self.assertFalse(set(EXPLORE_TOOLS) & set(listed))
         self.assertEqual(self.refused('describe_model', {'model': 'res.partner'}, token=self.plain_token),
                          'There is no tool named describe_model.')
-        self.assertIn('Unexpected arguments', self.refused('list_models', {'scope': 'all'}, token=self.plain_token))
+        self.assertIn('Unexpected arguments', self.refused('list_models', {'all': True}, token=self.plain_token))
         tools = self.legacy('tools/list', token=self.token)[1]['result']['tools']
         self.assertEqual([name for name in [tool['name'] for tool in tools] if name in EXPLORE_TOOLS], list(EXPLORE_TOOLS))
         listing = [tool for tool in tools if tool['name'] == 'list_models'][0]
-        self.assertIn('scope', listing['inputSchema']['properties'])
+        self.assertTrue(set(['all', 'field', 'offset']) <= set(listing['inputSchema']['properties']))
 
     def test_initialize_teaches_the_exploring_order_only_to_explore_keys(self):
         plain = self.legacy('initialize', {'protocolVersion': '2025-06-18'}, token=self.plain_token)[1]['result']
@@ -60,15 +59,29 @@ class TestExplore(EndpointCase):
                          -32002)
         self.assertEqual(self.legacy('resources/list', token=self.plain_token)[1]['error']['code'], -32601)
 
-    def test_list_models_scope_all_lists_every_model_with_its_module(self):
-        found = self.structured('list_models', {'scope': 'all', 'query': 'kaitech.mcp.key', 'limit': 100})
-        models = dict((row['model'], row) for row in found['models'])
-        self.assertEqual(models['kaitech.mcp.key']['module'], 'kaitech_mcp_server')
-        self.assertEqual(models['kaitech.mcp.key.wizard']['kind'], 'wizard')
-        first = self.structured('list_models', {'scope': 'all', 'limit': 3})
+    def test_list_models_all_lists_every_model_with_its_module(self):
+        found = self.structured('list_models', {'all': True, 'query': 'kaitech.mcp.key', 'limit': 100})
+        self.assertEqual(found['columns'], ['model', 'description', 'module', 'kind'])
+        rows = dict((row[0], row) for row in found['models'])
+        self.assertEqual((rows['kaitech.mcp.key'][2], rows['kaitech.mcp.key'][3]), ('kaitech_mcp_server', 'model'))
+        self.assertEqual(rows['kaitech.mcp.key.wizard'][3], 'wizard')
+        self.assertEqual(found['total'], len(found['models']))
+        first = self.structured('list_models', {'all': True, 'limit': 3})
         self.assertTrue(first['has_more'])
-        second = self.structured('list_models', {'scope': 'all', 'limit': 3, 'offset': first['next_offset']})
-        self.assertFalse(set(row['model'] for row in first['models']) & set(row['model'] for row in second['models']))
+        second = self.structured('list_models', {'all': True, 'limit': 3, 'offset': first['next_offset']})
+        self.assertFalse(set(row[0] for row in first['models']) & set(row[0] for row in second['models']))
+
+    def test_list_models_all_with_a_field_shows_its_type_and_target(self):
+        found = self.structured('list_models', {'all': True, 'field': 'partner_id', 'query': 'res.users'})
+        self.assertEqual(found['columns'][-1], 'field')
+        self.assertEqual([(row[0], row[-1]) for row in found['models']], [('res.users', 'many2one(res.partner)')])
+        none = self.structured('list_models', {'all': True, 'field': 'partner_id', 'query': 'kaitech.mcp.key'})
+        self.assertEqual((none['models'], none['total']), ([], 0))
+        plain_field = self.structured('list_models', {'all': True, 'field': 'is_company', 'query': 'res.partner'})
+        self.assertIn(['res.partner', 'boolean'], [[row[0], row[-1]] for row in plain_field['models']])
+        self.assertIn('field works only with all', self.refused('list_models', {'field': 'name'}))
+        self.assertIn('all must be true or false', self.refused('list_models', {'all': 'yes'}))
+        self.assertIn('field must be a field name', self.refused('list_models', {'all': True, 'field': 5}))
 
     def test_describe_model(self):
         described = self.structured('describe_model', {'model': 'res.partner'})
@@ -82,26 +95,11 @@ class TestExplore(EndpointCase):
         only = self.structured('describe_model', {'model': 'res.partner', 'fields': ['name', 'nope']})
         self.assertEqual((sorted(only['fields']), only['unknown_fields']), (['name'], ['nope']))
         self.assertIn('Unknown model', self.refused('describe_model', {'model': 'no.such.model'}))
-
-    def test_search_fields_finds_models_by_field_and_by_relation(self):
-        found = self.structured('search_fields', {'query': 'partner_id', 'exact': True, 'limit': 200})
-        rows = dict((row['model'], row) for row in found['fields'])
-        self.assertEqual(found['total'], len(found['fields']))
-        self.assertTrue(all(row['field'] == 'partner_id' for row in found['fields']))
-        self.assertEqual((rows['res.users']['type'], rows['res.users']['relation']), ('many2one', 'res.partner'))
-        pointing = self.structured('search_fields', {'relation': 'res.partner', 'type': 'many2one', 'query': 'parent'})
-        self.assertIn(('res.partner', 'parent_id'), [(row['model'], row['field']) for row in pointing['fields']])
-        self.assertTrue(all(row['relation'] == 'res.partner' and row['type'] == 'many2one'
-                            for row in pointing['fields']))
-        loose = self.structured('search_fields', {'query': 'partner_id', 'limit': 3})
-        self.assertGreater(loose['total'], found['total'])
-        self.assertEqual((loose['returned'], loose['has_more'], loose['next_offset']), (3, True, 3))
-        second = self.structured('search_fields', {'query': 'partner_id', 'limit': 3, 'offset': 3})
-        self.assertFalse(set((row['model'], row['field']) for row in loose['fields'])
-                         & set((row['model'], row['field']) for row in second['fields']))
-        self.assertIn('Give query', self.refused('search_fields', {}))
-        self.assertIn('type must be one of', self.refused('search_fields', {'type': 'nope'}))
-        self.assertIn('exact must be true or false', self.refused('search_fields', {'query': 'id', 'exact': 'yes'}))
+        named = self.structured('describe_model', {'model': 'res.partner', 'query': 'commercial'})
+        self.assertIn('commercial_partner_id', named['fields'])
+        self.assertTrue(all('commercial' in name for name in named['fields']))
+        self.assertIn('_commercial_fields', named['methods'])
+        self.assertTrue(all('commercial' in name for name in named['methods']))
 
     def test_method_override_order_and_source(self):
         found = self.structured('search_methods', {'query': 'create_compan'})
@@ -122,25 +120,46 @@ class TestExplore(EndpointCase):
         source = self.structured('get_method_source', {'model': 'res.users', 'method': 'write'})
         self.assertEqual(len(source['overrides']), len(overrides))
         self.assertTrue(all('def write(self' in item['source'] for item in source['overrides']))
+        only = self.structured('get_method_source', {'model': 'res.users', 'method': 'write', 'module': 'base'})
+        self.assertTrue(only['overrides'])
+        self.assertEqual(set(item['module'] for item in only['overrides']), set(['base']))
+        self.assertIn('no definition in module', self.refused('get_method_source', {
+            'model': 'res.users', 'method': 'write', 'module': 'kaitech_mcp_server'}))
         short = self.structured('get_method_source', {'model': 'res.users', 'method': 'write', 'max_lines': 3})
         self.assertTrue(short['truncated'])
         self.assertEqual(sum(item['source'].count('\n') for item in short['overrides'] if item.get('source')), 3)
         self.assertIn('has no method', self.refused('describe_method', {'model': 'res.partner', 'method': 'nope'}))
 
     def test_search_code_and_read_source(self):
-        found = self.structured('search_code', {'query': 'def create_company', 'modules': ['base']})
+        found = self.structured('search_code', {'query': 'def create_company', 'module': 'base'})
         hit = [row for row in found['matches'] if row['file'] == 'base/res/res_partner.py'][0]
         self.assertEqual(hit['text'], 'def create_company(self):')
-        read = self.structured('read_source', {'path': hit['file'], 'start_line': hit['line'], 'line_count': 2})
+        read = self.structured('read_source', {'path': hit['file'], 'start_line': hit['line'], 'lines': 2})
         self.assertTrue(read['text'].startswith('%d: ' % hit['line']))
         self.assertIn('def create_company(self):', read['text'])
         self.assertEqual(read['next_start_line'], hit['line'] + 2)
         narrowed = self.structured('search_code', {'query': 'create_company', 'path': '*/tests/*'})
         self.assertTrue(all('/tests/' in row['file'] for row in narrowed['matches']))
-        paged = self.structured('search_code', {'query': 'import', 'modules': ['base'], 'limit': 2})
+        paged = self.structured('search_code', {'query': 'import', 'module': 'base', 'limit': 2})
         self.assertTrue(paged['has_more'])
-        after = self.structured('search_code', {'query': 'import', 'modules': ['base'], 'limit': 2, 'offset': 2})
+        after = self.structured('search_code', {'query': 'import', 'module': 'base', 'limit': 2, 'offset': 2})
         self.assertNotEqual(paged['matches'], after['matches'])
+
+    def test_search_code_regex_and_case(self):
+        pattern = r'def create_compan[a-z]\(self\)'
+        regexed = self.structured('search_code', {'query': pattern, 'module': 'base', 'regex': True})
+        self.assertEqual(regexed['matches'][0]['text'], 'def create_company(self):')
+        literal = self.structured('search_code', {'query': pattern, 'module': 'base'})
+        self.assertEqual(literal['matches'], [])
+        shouted = {'query': 'DEF CREATE_COMPANY', 'module': 'base'}
+        self.assertEqual(self.structured('search_code', shouted)['matches'], [])
+        folded = self.structured('search_code', dict(shouted, ignore_case=True))
+        self.assertIn('def create_company(self):', [row['text'] for row in folded['matches']])
+        self.assertIn('Invalid regex', self.refused('search_code', {'query': '(unclosed', 'regex': True}))
+        self.assertIn('at most 200', self.refused('search_code', {'query': 'a' * 201, 'regex': True}))
+        self.assertIn('regex must be true or false', self.refused('search_code', {'query': 'import', 'regex': 'yes'}))
+        js = self.structured('search_code', {'query': 'odoo.define', 'module': 'web', 'file_types': ['js'], 'limit': 1})
+        self.assertTrue(js['matches'][0]['file'].endswith('.js'))
 
     def test_read_source_stays_inside_installed_modules(self):
         refused = ['../../../etc/passwd', '/etc/passwd', 'base/../../release.py', 'base/../../../odoo/release.py',
@@ -152,11 +171,20 @@ class TestExplore(EndpointCase):
             refused.append('%s/__manifest__.py' % uninstalled[0])
         for path in refused:
             self.assertIn('Not a source file', self.refused('read_source', {'path': path}), path)
-        self.assertIn('Not installed here', self.refused('search_code', {'query': 'import', 'modules': ['no_such_module']}))
+        self.assertIn('Not installed here', self.refused('search_code', {'query': 'import', 'module': 'no_such_module'}))
 
     def test_modules(self):
         listed = self.structured('list_modules', {'query': 'kaitech'})
         self.assertEqual([row['name'] for row in listed['modules']], ['kaitech_mcp_server'])
+        self.assertNotIn('state', listed['modules'][0])
+        waiting = self.structured('list_modules', {'state': 'uninstalled', 'limit': 500})
+        self.assertTrue(waiting['modules'])
+        self.assertTrue(all(row['state'] == 'uninstalled' for row in waiting['modules']))
+        self.assertNotIn('kaitech_mcp_server', [row['name'] for row in waiting['modules']])
+        everything = self.structured('list_modules', {'state': 'all', 'query': 'kaitech_mcp', 'limit': 500})
+        self.assertEqual([(row['name'], row['state']) for row in everything['modules']],
+                         [('kaitech_mcp_server', 'installed')])
+        self.assertIn('state must be one of', self.refused('list_modules', {'state': 'nope'}))
         described = self.structured('describe_module', {'module': 'kaitech_mcp_server'})
         self.assertEqual(described['depends'], ['base', 'web'])
         self.assertIn('kaitech.mcp.key', described['models_defined'])
@@ -169,22 +197,34 @@ class TestExplore(EndpointCase):
         view = self.structured('get_view', {'model': 'res.partner', 'view_type': 'form'})
         self.assertEqual(view['xmlid'], 'base.view_partner_form')
         self.assertTrue(view['arch'].startswith('<form'))
-        by_id = self.structured('get_view', {'model': 'kaitech.mcp.key', 'xmlid': 'kaitech_mcp_server.view_mcp_key_form',
-                                             'line_count': 5})
+        by_id = self.structured('get_view', {'model': 'kaitech.mcp.key', 'view': 'kaitech_mcp_server.view_mcp_key_form',
+                                             'lines': 5})
         self.assertEqual((by_id['end_line'], by_id['next_start_line']), (5, 6))
+        by_number = self.structured('get_view', {'model': 'res.partner', 'view': view['view_id'], 'lines': 3})
+        self.assertEqual(by_number['xmlid'], 'base.view_partner_form')
+        listed = self.structured('get_view', {'model': 'res.partner', 'view_type': 'list', 'lines': 2})
+        self.assertEqual(listed['view_type'], 'tree')
+        self.assertTrue(listed['arch'].startswith('<tree'))
         self.assertIn('not the XML id of a view', self.refused('get_view', {'model': 'res.partner',
-                                                                             'xmlid': 'base.main_company'}))
+                                                                             'view': 'base.main_company'}))
+        self.assertIn('No view with id', self.refused('get_view', {'model': 'res.partner', 'view': 999999999}))
+        self.assertIn('view must be', self.refused('get_view', {'model': 'res.partner', 'view': True}))
         actions = self.structured('list_actions', {'model': 'kaitech.mcp.key'})
         self.assertIn('kaitech_mcp_server.action_mcp_key', [row['xmlid'] for row in actions['window_actions']])
-        company = self.structured('lookup_xmlid', {'xmlid': 'base.main_company'})['xmlids'][0]
+        company = self.structured('search_xmlids', {'query': 'base.main_company'})['xmlids'][0]
         self.assertEqual((company['model'], company['res_id']), ('res.company', self.company_id))
         self.assertNotIn('display_name', company)
-        partner = self.structured('lookup_xmlid', {'xmlid': 'base.main_partner'})['xmlids'][0]
+        partner = self.structured('search_xmlids', {'query': 'base.main_partner'})['xmlids'][0]
         self.assertIn('display_name', partner)
-        reverse = self.structured('lookup_xmlid', {'model': 'res.company', 'res_id': self.company_id})
+        reverse = self.structured('search_xmlids', {'model': 'res.company', 'res_id': self.company_id})
         self.assertIn('base.main_company', [row['xmlid'] for row in reverse['xmlids']])
-        searched = self.structured('lookup_xmlid', {'query': 'base.main_comp'})
+        searched = self.structured('search_xmlids', {'query': 'base.main_comp'})
         self.assertIn('base.main_company', [row['xmlid'] for row in searched['xmlids']])
+        narrowed = self.structured('search_xmlids', {'query': 'main_', 'model': 'res.company', 'limit': 200})
+        self.assertTrue(narrowed['xmlids'])
+        self.assertEqual(set(row['model'] for row in narrowed['xmlids']), set(['res.company']))
+        self.assertIn('Give query', self.refused('search_xmlids', {}))
+        self.assertIn('res_id needs model', self.refused('search_xmlids', {'res_id': 1}))
 
     def test_explore_calls_are_audited(self):
         self.structured('describe_model', {'model': 'res.partner'})

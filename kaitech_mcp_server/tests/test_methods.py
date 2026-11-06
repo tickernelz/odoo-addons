@@ -11,6 +11,10 @@ def rename_tag(self, name):
     return self.mapped('name')
 
 
+def read_context(self, key):
+    return self.env.context.get(key)
+
+
 def commit_inside(self, name):
     self.write({'name': name})
     self.env.cr.commit()
@@ -104,6 +108,23 @@ class TestCallMethod(EndpointCase):
             with self.probe('mcp_rename_probe', rename_tag):
                 again = self.rename(self.token, dry_run=True)
         self.assertFalse(again['isError'], again)
+        self.assertEqual(self.tag_name(), 'Mcp Tag')
+
+    def test_context_reaches_the_method_and_a_dry_run_still_rolls_back(self):
+        probe = {'model': 'res.partner.category', 'method': 'mcp_context_probe', 'ids': [self.tag_id],
+                 'args': ['mcp_flag'], 'dry_run': True}
+        with self.probe('mcp_context_probe', read_context):
+            seen = self.run_method(self.token, dict(probe, context={'mcp_flag': 'seen'}))
+            unset = self.run_method(self.token, probe)
+            wrong = self.run_method(self.token, dict(probe, context='mcp_flag'))
+            with self.probe('mcp_rename_probe', rename_tag):
+                renamed = self.rename(self.token, dry_run=True, context={'lang': 'en_US'})
+        self.assertFalse(seen['isError'], seen)
+        self.assertEqual(seen['structuredContent']['result'], 'seen')
+        self.assertIsNone(unset['structuredContent']['result'])
+        self.assertNotIn('changes', unset['structuredContent'])
+        self.assertIn('context must be an object', wrong['structuredContent']['error'])
+        self.assertEqual(renamed['structuredContent']['changes'][str(self.tag_id)]['name'], ['Mcp Tag', 'Renamed'])
         self.assertEqual(self.tag_name(), 'Mcp Tag')
 
     def test_refused_methods(self):

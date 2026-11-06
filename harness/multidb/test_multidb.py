@@ -159,8 +159,8 @@ def test_code_exploring_belongs_to_each_database(explorers):
     for db, token, present in (("db_a", token_a, True), ("db_b", token_b, False)):
         listed = call_tool(db, token, "list_modules", {"limit": 500})["structuredContent"]["modules"]
         assert ("note" in [row["name"] for row in listed]) == present, db
-        models = call_tool(db, token, "list_models", {"scope": "all", "query": "note.note"})["structuredContent"]["models"]
-        assert any(row["model"] == "note.note" for row in models) == present, db
+        models = call_tool(db, token, "list_models", {"all": True, "query": "note.note"})["structuredContent"]["models"]
+        assert any(row[0] == "note.note" for row in models) == present, db
     assert modern("db_a", "tools/call", {"name": "describe_model", "arguments": {"model": "res.partner"}},
                   token=token_b).status_code == 401
 

@@ -2,11 +2,11 @@
 """The read-only explore tools: models, methods, source, modules, views, actions and XML ids."""
 import fnmatch
 import inspect
+import re
 
 from lxml import etree
 
 import odoo
-from odoo.fields import Field
 from odoo.modules import module as odoo_module
 
 from . import explore
@@ -18,7 +18,11 @@ _METHOD = {'type': 'string', 'description': 'Method name, for example action_con
 _LIMIT = {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 50}
 _OFFSET = {'type': 'integer', 'minimum': 0, 'default': 0}
 _START = {'type': 'integer', 'minimum': 1, 'default': 1}
-VIEW_TYPES = ('form', 'tree', 'kanban', 'search', 'pivot', 'graph', 'calendar', 'gantt')
+VIEW_TYPES = ('form', 'tree', 'list', 'kanban', 'search', 'pivot', 'graph', 'calendar', 'gantt')
+DEFAULT_FILE_TYPES = ('py', 'xml', 'js', 'csv')
+MODULE_STATES = ('installed', 'uninstalled', 'to upgrade', 'to install', 'all')
+MAX_PATTERN = 200
+MAX_REGEX_LINE = 1000
 MAX_SOURCE_LINES = 1000
 MAX_READ_LINES = 500
 MAX_LINE_CHARS = 400
@@ -39,15 +43,9 @@ DEFINITIONS = (
           "Understand one model in one call: defining and extending modules, parent models, fields (type, relation, "
           "compute, depends, related, module), its own methods, methods inherited per parent, and what this key may do.",
           {'model': _MODEL, 'fields': {'type': 'array', 'items': {'type': 'string'},
-                                      'description': 'Only these fields. Default: every field.'}}, ('model',)),
-    _tool('search_fields', 'Search fields',
-          "Find fields across every model: which models have a field (query, exact for the name only), which fields "
-          "have a type, which fields point to a model (relation). total counts all matches; page with next_offset.",
-          {'query': {'type': 'string', 'description': 'Part of a field name or label, for example partner_id.'},
-           'exact': {'type': 'boolean', 'default': False, 'description': 'query must equal the field name.'},
-           'type': {'type': 'string', 'description': 'Field type, for example many2one.'},
-           'relation': dict(_MODEL, description='Only fields that point to this model.'),
-           'limit': _LIMIT, 'offset': _OFFSET}),
+                                      'description': 'Only these fields. Default: every field.'},
+           'query': {'type': 'string', 'description': 'Keep fields and methods whose name contains this.'}},
+          ('model',)),
     _tool('search_methods', 'Search methods',
           "Find methods whose name contains query, on one model (own and inherited) or across models (where a model "
           "defines or overrides it). modules lists the overriding modules, outermost first; the last one defines it.",
@@ -61,26 +59,31 @@ DEFINITIONS = (
           "Source of a method and of every override, outermost first, with file and first line. "
           "Framework code under odoo/ is located but not included.",
           {'model': _MODEL, 'method': _METHOD,
+           'module': {'type': 'string', 'description': 'Only the definition in this module.'},
            'max_lines': {'type': 'integer', 'minimum': 1, 'maximum': MAX_SOURCE_LINES, 'default': 300}},
           ('model', 'method')),
     _tool('search_code', 'Search source code',
-          "Find a literal text in the source files of installed modules. Returns file, line and the line itself; "
-          "read more with read_source.",
-          {'query': {'type': 'string', 'description': 'Literal text, at least 2 characters.'},
-           'modules': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Default: every installed module.'},
+          "Search the source files of the installed modules (or one module). Returns file, line and the line itself; "
+          "read more with read_source. A regex runs under the worker's time limits.",
+          {'query': {'type': 'string', 'description': 'Text to find, at least 2 characters; a regular expression '
+                                                      'when regex is true.'},
+           'module': {'type': 'string', 'description': 'Only this installed module.'},
            'file_types': {'type': 'array', 'items': {'type': 'string', 'enum': list(explore.SOURCE_TYPES)},
-                          'default': ['py', 'xml']},
+                          'default': list(DEFAULT_FILE_TYPES), 'description': 'Default: py, xml, js, csv.'},
            'path': {'type': 'string', 'description': "Glob on module/relative/path, for example '*/models/*.py'."},
-           'case_sensitive': {'type': 'boolean', 'default': False},
+           'regex': {'type': 'boolean', 'default': False},
+           'ignore_case': {'type': 'boolean', 'default': False},
            'limit': _LIMIT, 'offset': _OFFSET}, ('query',)),
     _tool('read_source', 'Read a source file',
           "Read numbered lines of one source file (py, xml, js, csv, po) of an installed module.",
           {'path': {'type': 'string', 'description': 'module/relative/path, for example sale/models/sale.py.'},
            'start_line': _START,
-           'line_count': {'type': 'integer', 'minimum': 1, 'maximum': MAX_READ_LINES, 'default': 200}}, ('path',)),
-    _tool('list_modules', 'List installed modules',
-          "Installed modules with title, author and whether each is an application.",
+           'lines': {'type': 'integer', 'minimum': 1, 'maximum': MAX_READ_LINES, 'default': 200}}, ('path',)),
+    _tool('list_modules', 'List modules',
+          "Modules of this database with title, author, version and state; installed ones by default, and whether "
+          "each is an application.",
           {'query': {'type': 'string', 'description': 'Filter on name, title or author.'},
+           'state': {'type': 'string', 'enum': list(MODULE_STATES), 'default': 'installed'},
            'limit': {'type': 'integer', 'minimum': 1, 'maximum': 500, 'default': 100}, 'offset': _OFFSET}),
     _tool('describe_module', 'Describe a module',
           "One installed module: manifest, dependencies, installed modules depending on it, models and wizards it "
@@ -89,21 +92,23 @@ DEFINITIONS = (
     _tool('get_view', 'Get a view',
           "The view as this key's user sees it: arch after every inheriting view is applied, plus the inheriting "
           "views with their modules.",
-          {'model': _MODEL, 'view_type': {'type': 'string', 'enum': list(VIEW_TYPES), 'default': 'form'},
-           'xmlid': {'type': 'string', 'description': 'A specific view, for example sale.view_order_form.'},
+          {'model': _MODEL, 'view_type': {'type': 'string', 'enum': list(VIEW_TYPES), 'default': 'form',
+                                          'description': 'list is the same as tree on Odoo 10.'},
+           'view': {'description': 'A view xmlid (sale.view_order_form) or id instead of the default view.'},
            'start_line': _START,
-           'line_count': {'type': 'integer', 'minimum': 1, 'maximum': MAX_READ_LINES, 'default': 300}}, ('model',)),
+           'lines': {'type': 'integer', 'minimum': 1, 'maximum': MAX_READ_LINES, 'default': 300}}, ('model',)),
     _tool('list_actions', 'List actions and menus',
           "Window actions, server actions and reports of a model (or whose name matches query), with the menus "
           "that open them as this key's user sees them.",
           {'model': _MODEL, 'query': {'type': 'string', 'description': 'Filter on the action name.'},
            'limit': _LIMIT}),
-    _tool('lookup_xmlid', 'Look up XML ids',
-          "Resolve an XML id to its model and id, list the XML ids of a record (model and res_id), or search XML "
-          "ids containing query.",
-          {'xmlid': {'type': 'string', 'description': 'module.name, for example sale.action_orders.'},
-           'model': _MODEL, 'res_id': {'type': 'integer', 'minimum': 1},
-           'query': {'type': 'string'}, 'limit': _LIMIT}),
+    _tool('search_xmlids', 'Search external ids',
+          "Find external ids (module.name) and the record each points to; the XML ids of one record with model "
+          "and res_id.",
+          {'query': {'type': 'string', 'description': 'Part of the id, or module.name_part.'},
+           'model': dict(_MODEL, description='Only ids of records of this model.'),
+           'res_id': {'type': 'integer', 'minimum': 1, 'description': 'With model: the ids of this one record.'},
+           'limit': _LIMIT}),
 )
 
 
@@ -187,6 +192,9 @@ def _describe_model(env, grant, arguments):
     if asked is not None and (not isinstance(asked, list) or not all(isinstance(item, basestring) for item in asked)):
         raise ToolArgumentError("fields must be a list of field names.")
     names = sorted(model._fields) if asked is None else [item for item in asked if item in model._fields]
+    needle = (_text(arguments, 'query', required=False) or '').lower()
+    if needle:
+        names = [item for item in names if needle in item.lower()]
     fields = dict((field, field_summary(model, model._fields[field], home)) for field in names)
     mine = []
     inherited = {}
@@ -196,12 +204,12 @@ def _describe_model(env, grant, arguments):
         else:
             origin = definitions[-1].model
             inherited[origin] = inherited.get(origin, 0) + 1
-    kind = 'wizard' if model._transient else ('abstract' if model._abstract else 'model')
     payload = {
-        'model': name, 'description': model._description, 'kind': kind, 'module': home,
+        'model': name, 'description': model._description, 'kind': explore.kind_of(model), 'module': home,
         'extended_by': [module for module in loaded if module != home], 'parents': parents,
         'delegates': dict(model._inherits), 'inherited_by': sorted(type(model)._inherit_children),
-        'rec_name': model._rec_name, 'order': model._order, 'fields': fields, 'methods': sorted(mine),
+        'rec_name': model._rec_name, 'order': model._order, 'fields': fields,
+        'methods': sorted(item for item in mine if needle in item.lower()),
         'inherited_methods': inherited, 'can': grant.rights(env, name, ACTIONS + ('call',)),
         'next': 'describe_method or get_method_source for a method; get_view and list_actions for its screens',
     }
@@ -210,39 +218,6 @@ def _describe_model(env, grant, arguments):
     if model._auto:
         payload['table'] = model._table
     return _done(payload, model=name, count=len(fields))
-
-
-def _search_fields(env, grant, arguments):
-    query = _text(arguments, 'query', 2, required=False)
-    kind = _text(arguments, 'type', required=False)
-    relation = _text(arguments, 'relation', required=False)
-    exact = flag(arguments, 'exact')
-    if not (query or kind or relation):
-        raise ToolArgumentError("Give query, type, relation, or a combination.")
-    if kind is not None and kind not in Field.by_type:
-        raise ToolArgumentError("type must be one of: %s." % ', '.join(sorted(Field.by_type)))
-    limit = integer(arguments, 'limit', 50, 1, 200)
-    offset = integer(arguments, 'offset', 0, 0, None)
-    needle = query.lower() if query else None
-    found = []
-    for model_name in sorted(env.registry.models):
-        for name, field in sorted(env.registry[model_name]._fields.items()):
-            if kind and field.type != kind or relation and field.comodel_name != relation:
-                continue
-            if needle and not (needle == name.lower() if exact
-                               else needle in name.lower() or needle in (field.string or '').lower()):
-                continue
-            found.append((model_name, name, field))
-    rows = []
-    for model_name, name, field in found[offset:offset + limit]:
-        row = {'model': model_name, 'field': name, 'type': field.type, 'string': field.string}
-        if field.comodel_name:
-            row['relation'] = field.comodel_name
-        rows.append(row)
-    more = len(found) > offset + limit
-    payload = {'fields': rows, 'total': len(found), 'returned': len(rows), 'has_more': more,
-               'next_offset': offset + len(rows) if more else None}
-    return _done(payload, count=len(rows))
 
 
 def _search_methods(env, grant, arguments):
@@ -357,6 +332,12 @@ def _callable(env, grant, model_name, method, definitions):
 def _get_method_source(env, grant, arguments):
     model = _model(env, arguments)
     method, definitions = _definitions(env, model, arguments)
+    only = _text(arguments, 'module', required=False)
+    if only:
+        definitions = [item for item in definitions if item.module == only]
+        if not definitions:
+            raise ToolArgumentError("%s.%s has no definition in module %s. describe_method lists the modules."
+                                    % (model._name, method, only))
     budget = integer(arguments, 'max_lines', 300, 1, MAX_SOURCE_LINES)
     index = explore.index(env.registry)
     overrides = []
@@ -399,18 +380,29 @@ def _installed(env, names, argument):
 
 def _search_code(env, grant, arguments):
     query = _text(arguments, 'query', 2)
-    sensitive = flag(arguments, 'case_sensitive')
-    needle = query if sensitive else query.lower()
+    regex = flag(arguments, 'regex')
+    ignore_case = flag(arguments, 'ignore_case')
     index = explore.index(env.registry)
     modules = index.modules()
-    if arguments.get('modules') is not None:
-        modules = _installed(env, arguments['modules'], 'modules')
-    types = arguments.get('file_types', ['py', 'xml'])
+    if arguments.get('module') is not None:
+        modules = _installed(env, [_text(arguments, 'module')], 'module')
+    types = arguments.get('file_types', list(DEFAULT_FILE_TYPES))
     if not isinstance(types, list) or not types or not set(types) <= set(explore.SOURCE_TYPES):
         raise ToolArgumentError("file_types must be a list of: %s." % ', '.join(explore.SOURCE_TYPES))
     pattern = _text(arguments, 'path', required=False)
     limit = integer(arguments, 'limit', 50, 1, 200)
     offset = integer(arguments, 'offset', 0, 0, None)
+    if regex:
+        if len(query) > MAX_PATTERN:
+            raise ToolArgumentError("A regex may be at most %s characters." % MAX_PATTERN)
+        try:
+            compiled = re.compile(query, re.IGNORECASE if ignore_case else 0)
+        except re.error as error:
+            raise ToolArgumentError("Invalid regex: %s" % error)
+        found_in = lambda line: compiled.search(line[:MAX_REGEX_LINE]) is not None
+    else:
+        needle = query.lower() if ignore_case else query
+        found_in = lambda line: needle in (line.lower() if ignore_case else line)
     skip = offset
     matches = []
     scanned = 0
@@ -423,24 +415,16 @@ def _search_code(env, grant, arguments):
             if text is None:
                 continue
             scanned += 1
-            hay = text if sensitive else text.lower()
-            position = hay.find(needle)
-            line = 1
-            counted = 0
-            while position >= 0:
-                line += hay.count('\n', counted, position)
-                start = hay.rfind('\n', 0, position) + 1
-                end = hay.find('\n', position)
-                end = len(hay) if end < 0 else end
-                counted = start
+            for number, line in enumerate(text.splitlines(), 1):
+                if not found_in(line):
+                    continue
                 if skip:
                     skip -= 1
                 elif len(matches) == limit:
                     more = True
                     break
                 else:
-                    matches.append({'file': relative, 'line': line, 'text': text[start:end].strip()[:MATCH_CHARS]})
-                position = hay.find(needle, end)
+                    matches.append({'file': relative, 'line': number, 'text': line.strip()[:MATCH_CHARS]})
             if more:
                 break
         if more:
@@ -460,7 +444,7 @@ def _read_source(env, grant, arguments):
     if text is None:
         raise ToolArgumentError("%s is larger than %s MB." % (relative, explore.MAX_FILE_BYTES // (1024 * 1024)))
     start = integer(arguments, 'start_line', 1, 1, None)
-    count = integer(arguments, 'line_count', 200, 1, MAX_READ_LINES)
+    count = integer(arguments, 'lines', 200, 1, MAX_READ_LINES)
     lines = text.splitlines()
     chosen = lines[start - 1:start - 1 + count]
     numbered = '\n'.join('%d: %s' % (start + offset, line[:MAX_LINE_CHARS]) for offset, line in enumerate(chosen))
@@ -471,20 +455,29 @@ def _read_source(env, grant, arguments):
     return _done(payload, model=relative, count=len(chosen))
 
 
-def _module_rows(env):
-    rows = env['ir.module.module'].sudo().search_read(
-        [('name', 'in', sorted(env.registry._init_modules))], ['name', 'shortdesc', 'author', 'application',
-                                                              'latest_version', 'summary'], order='name')
-    return rows
+def _module_rows(env, state='installed'):
+    if state == 'installed':
+        domain = [('name', 'in', sorted(env.registry._init_modules)), ('state', 'in', ('installed', 'to upgrade', 'to remove'))]
+    elif state == 'all':
+        domain = []
+    else:
+        domain = [('state', '=', state)]
+    return env['ir.module.module'].sudo().search_read(
+        domain, ['name', 'shortdesc', 'author', 'application', 'latest_version', 'summary', 'state'], order='name')
 
 
 def _list_modules(env, grant, arguments):
     query = (_text(arguments, 'query', required=False) or '').lower()
+    state = arguments.get('state', 'installed')
+    if state not in MODULE_STATES:
+        raise ToolArgumentError("state must be one of: %s." % ', '.join(MODULE_STATES))
     limit = integer(arguments, 'limit', 100, 1, 500)
     offset = integer(arguments, 'offset', 0, 0, None)
     found = []
-    for row in _module_rows(env):
+    for row in _module_rows(env, state):
         entry = {'name': row['name'], 'title': row['shortdesc'], 'author': row['author'] or ''}
+        if state != 'installed':
+            entry['state'] = row['state']
         if row['application']:
             entry['application'] = True
         if query and not any(query in (value or '').lower() for value in entry.values() if value is not True):
@@ -567,10 +560,20 @@ def _get_view(env, grant, arguments):
     view_type = arguments.get('view_type', 'form')
     if view_type not in VIEW_TYPES:
         raise ToolArgumentError("view_type must be one of: %s." % ', '.join(VIEW_TYPES))
-    xmlid = _text(arguments, 'xmlid', required=False)
-    view_id = _view_id(env, xmlid) if xmlid else None
+    if view_type == 'list':
+        view_type = 'tree'
+    view = arguments.get('view')
+    view_id = None
+    if isinstance(view, basestring) and view.strip():
+        view_id = _view_id(env, view.strip())
+    elif isinstance(view, (int, long)) and not isinstance(view, bool):
+        if not env['ir.ui.view'].sudo().browse(view).exists():
+            raise ToolArgumentError("No view with id %s." % view)
+        view_id = view
+    elif view is not None:
+        raise ToolArgumentError("view must be a view xmlid or id.")
     start = integer(arguments, 'start_line', 1, 1, None)
-    count = integer(arguments, 'line_count', 300, 1, MAX_READ_LINES)
+    count = integer(arguments, 'lines', 300, 1, MAX_READ_LINES)
     described = model.fields_view_get(view_id=view_id, view_type=view_type)
     lines = _pretty(described['arch']).splitlines()
     chosen = lines[start - 1:start - 1 + count]
@@ -636,42 +639,43 @@ def _list_actions(env, grant, arguments):
     return _done(payload, model=name, count=count)
 
 
-def _lookup_xmlid(env, grant, arguments):
+def _search_xmlids(env, grant, arguments):
     limit = integer(arguments, 'limit', 50, 1, 200)
     data = env['ir.model.data'].sudo()
-    xmlid = _text(arguments, 'xmlid', required=False)
-    if xmlid:
-        module, dot, short = xmlid.partition('.')
-        if not dot or not module or not short:
-            raise ToolArgumentError("xmlid must look like module.name.")
-        found = data.search([('module', '=', module), ('name', '=', short)], limit=1)
-        if not found:
-            raise ToolArgumentError("No XML id %s in this database." % xmlid)
-        entry = {'xmlid': xmlid, 'model': found.model, 'res_id': found.res_id, 'noupdate': found.noupdate}
-        if found.model in env.registry:
-            entry['exists'] = bool(env[found.model].sudo().browse(found.res_id).exists())
-            if entry['exists'] and grant.permitted(env, found.model, 'read'):
-                entry['display_name'] = env[found.model].browse(found.res_id).display_name
-        return _done({'xmlids': [entry]}, model=found.model, count=1, ids=[found.res_id])
-    if arguments.get('model') is not None:
-        model = _model(env, arguments)
-        res_id = integer(arguments, 'res_id', None, 1, None) if arguments.get('res_id') is not None else None
-        if res_id is None:
-            raise ToolArgumentError("res_id is required with model.")
-        found = data.search([('model', '=', model._name), ('res_id', '=', res_id)], limit=limit)
-        rows = [{'xmlid': '%s.%s' % (item.module, item.name), 'noupdate': item.noupdate} for item in found]
-        return _done({'model': model._name, 'res_id': res_id, 'xmlids': rows}, model=model._name, count=len(rows),
-                     ids=[res_id])
     query = _text(arguments, 'query', 2, required=False)
+    if arguments.get('res_id') is not None:
+        if arguments.get('model') is None:
+            raise ToolArgumentError("res_id needs model.")
+        model = _model(env, arguments)
+        res_id = integer(arguments, 'res_id', 1, 1, None)
+        found = data.search([('model', '=', model._name), ('res_id', '=', res_id)], limit=limit)
+        rows = [{'xmlid': '%s.%s' % (item.module, item.name), 'model': model._name, 'res_id': res_id,
+                 'noupdate': item.noupdate} for item in found]
+        return _done({'xmlids': rows, 'returned': len(rows), 'has_more': False}, model=model._name,
+                     count=len(rows), ids=[res_id])
     if not query:
-        raise ToolArgumentError("Give xmlid, model with res_id, or query.")
+        raise ToolArgumentError("Give query, or model with res_id.")
     module, dot, short = query.partition('.')
-    domain = [('module', '=', module), ('name', 'ilike', short)] if dot else ['|', ('name', 'ilike', query),
-                                                                              ('module', 'ilike', query)]
+    if dot:
+        domain = [('module', '=', module), ('name', 'ilike', short)]
+    else:
+        domain = ['|', ('name', 'ilike', query), ('module', 'ilike', query)]
+    only = None
+    if arguments.get('model') is not None:
+        only = _model(env, arguments)._name
+        domain.append(('model', '=', only))
     found = data.search(domain, limit=limit + 1, order='module, name')
-    rows = [{'xmlid': '%s.%s' % (item.module, item.name), 'model': item.model, 'res_id': item.res_id}
-            for item in found[:limit]]
-    return _done({'xmlids': rows, 'returned': len(rows), 'has_more': len(found) > limit}, count=len(rows))
+    rows = []
+    for item in found[:limit]:
+        row = {'xmlid': '%s.%s' % (item.module, item.name), 'model': item.model, 'res_id': item.res_id}
+        if len(found) <= 10 and item.model in env.registry:
+            record = env[item.model].sudo().browse(item.res_id).exists()
+            row['exists'] = bool(record)
+            if record and grant.permitted(env, item.model, 'read'):
+                row['display_name'] = env[item.model].browse(item.res_id).display_name
+        rows.append(row)
+    payload = {'xmlids': rows, 'returned': len(rows), 'has_more': len(found) > limit}
+    return _done(payload, model=only, count=len(rows))
 
 
 OVERVIEW = {'uri': 'odoo://overview', 'name': 'overview', 'title': 'Database overview', 'mimeType': 'text/markdown',

@@ -5,7 +5,7 @@ import json
 
 from odoo.tools import mute_logger
 
-from . import explore_tools, methods, sql
+from . import explore, explore_tools, methods, sql
 from .grants import ACTIONS, DEFAULT_LIMIT, RESPONSE_BYTES, ToolArgumentError, check_ids, flag, integer
 
 WRITE_TOOLS = ('create_record', 'update_records', 'delete_records', 'call_method', 'sql_insert', 'sql_update',
@@ -217,11 +217,14 @@ SQL_METHODS = {'sql_list_tables': 'list_tables', 'sql_select': 'select', 'sql_qu
 
 BY_NAME = dict((tool['name'], tool) for tool in DEFINITIONS)
 LIST_ALL_MODELS = dict(BY_NAME['list_models'], description=(
-    "List models. scope key (default): the models this key may use and the actions allowed on each. "
-    "scope all: every model of the database with its defining module, for exploring code."),
+    "List the models this key may use and the actions allowed on each. With all: every model of the database, "
+    "with its defining module and kind, for exploring code; field narrows that to the models that have this field "
+    "and shows its type."),
     inputSchema={'type': 'object', 'properties': {
         'query': {'type': 'string', 'description': 'Filter on technical or display name.'},
-        'scope': {'type': 'string', 'enum': ['key', 'all'], 'default': 'key'},
+        'all': {'type': 'boolean', 'default': False,
+                'description': "Every model of the database, not only this key's."},
+        'field': {'type': 'string', 'description': 'With all: only models that have this field, with its type.'},
         'limit': {'type': 'integer', 'minimum': 1, 'maximum': 100, 'default': 50},
         'offset': {'type': 'integer', 'minimum': 0, 'default': 0},
     }, 'additionalProperties': False})
@@ -309,38 +312,49 @@ def _list_models(env, grant, arguments):
     if not isinstance(query, basestring):
         raise ToolArgumentError("query must be a string.")
     limit = integer(arguments, 'limit', 50, 1, 100)
-    if arguments.get('scope', 'key') == 'all':
-        return _list_all_models(env, query.lower(), limit, integer(arguments, 'offset', 0, 0, None))
-    if arguments.get('scope', 'key') != 'key':
-        raise ToolArgumentError("scope must be key or all.")
+    offset = integer(arguments, 'offset', 0, 0, None)
+    field = arguments.get('field')
+    if field is not None and (not isinstance(field, basestring) or not field.strip()):
+        raise ToolArgumentError("field must be a field name.")
+    if flag(arguments, 'all'):
+        return _list_all_models(env, query.lower(), limit, offset, field and field.strip())
+    if field is not None:
+        raise ToolArgumentError("field works only with all: true.")
     found = []
     labels = dict((rec.model, rec.name) for rec in env['ir.model'].sudo().search([('model', 'in', list(grant.rows))]))
     for name in grant.models(env):
         label = labels.get(name) or env[name]._description or name
         if query and query.lower() not in name.lower() and query.lower() not in label.lower():
             continue
-        found.append({'model': name, 'name': label, 'can': grant.rights(env, name)})
-    return Outcome({'models': found[:limit], 'returned': len(found[:limit]), 'has_more': len(found) > limit},
-                   count=len(found[:limit]))
+        actions = ACTIONS + ('call',) if grant.methods else ACTIONS
+        found.append({'model': name, 'name': label, 'can': grant.rights(env, name, actions)})
+    page = found[offset:offset + limit]
+    more = len(found) > offset + limit
+    payload = {'models': page, 'returned': len(page), 'has_more': more}
+    if offset or more:
+        payload['next_offset'] = offset + len(page) if more else None
+    return Outcome(payload, count=len(page))
 
 
-def _list_all_models(env, query, limit, offset):
-    found = []
+def _list_all_models(env, query, limit, offset, field=None):
+    rows = []
     for name in sorted(env.registry.models):
         model = env[name]
         label = model._description or name
         if query and query not in name.lower() and query not in label.lower():
             continue
-        entry = {'model': name, 'name': label, 'module': type(model)._original_module}
-        if model._transient:
-            entry['kind'] = 'wizard'
-        elif model._abstract:
-            entry['kind'] = 'abstract'
-        found.append(entry)
-    page = found[offset:offset + limit]
-    more = len(found) > offset + limit
-    return Outcome({'models': page, 'returned': len(page), 'has_more': more,
-                    'next_offset': offset + len(page) if more else None}, count=len(page))
+        row = [name, label, type(model)._original_module, explore.kind_of(model)]
+        if field:
+            found = model._fields.get(field)
+            if found is None:
+                continue
+            row.append('%s(%s)' % (found.type, found.comodel_name) if found.comodel_name else found.type)
+        rows.append(row)
+    page = rows[offset:offset + limit]
+    more = len(rows) > offset + limit
+    columns = ['model', 'description', 'module', 'kind'] + (['field'] if field else [])
+    return Outcome({'columns': columns, 'models': page, 'returned': len(page), 'total': len(rows),
+                    'has_more': more, 'next_offset': offset + len(page) if more else None}, count=len(page))
 
 
 def _get_model_fields(env, grant, arguments):

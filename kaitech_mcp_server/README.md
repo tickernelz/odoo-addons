@@ -43,9 +43,9 @@ Record tools run as the key's user, so Odoo access rights, record rules and mult
 
 SQL tools run as the database role and bypass Odoo access rights, record rules, constraints, computed fields and tracking: `sql_list_tables`, `sql_select`, `sql_query` (one read-only SELECT, checked against the query plan), `sql_insert`, `sql_update`, `sql_delete`. They are off by default at three levels: MCP Settings, Allow SQL on the key, and the key's table list. Update and delete need a where condition, change at most 20 rows, and support `dry_run`. Keys bound to Settings administrators cannot use SQL.
 
-Code tools (key switch **Explore code**) are read-only and return structure and source, never records: `list_models` with `scope: all`, `search_fields`, `describe_model`, `search_methods`, `describe_method`, `get_method_source`, `search_code`, `read_source`, `list_modules`, `describe_module`, `get_view`, `list_actions`, `lookup_xmlid`. A client that has just connected learns the order from the server instructions (list_modules, describe_model, search_fields, search_methods or describe_method, get_method_source, search_code and read_source, get_view and list_actions) and can read the resource `odoo://overview`. Source reads stay inside the installed modules and the file types py, xml, js, csv and po; nothing outside the addons folders and nothing from `ir.config_parameter` is ever returned. Introspection is cached per registry and rebuilt after a module install or upgrade.
+Code tools (key switch **Explore code**) are read-only and return structure and source, never records: `list_models` with `all: true` (and `field` to find the models that have a field), `describe_model`, `search_methods`, `describe_method`, `get_method_source`, `search_code` (literal or regex), `read_source`, `list_modules`, `describe_module`, `get_view`, `list_actions`, `search_xmlids`. A client that has just connected learns the order from the server instructions (list_modules, describe_model, list_models with all and field, search_methods or describe_method, get_method_source, search_code and read_source, get_view and list_actions) and can read the resource `odoo://overview`. Source reads stay inside the installed modules and the file types py, xml, js, csv and po; nothing outside the addons folders and nothing from `ir.config_parameter` is ever returned. Introspection is cached per registry and rebuilt after a module install or upgrade.
 
-`call_method` (key switch **Call methods** and a Call methods tick per model) runs a public business method such as `action_confirm` as the key's user, so access rights and record rules apply. Methods that start with `_` and the ORM methods (`write`, `unlink`, `create`, `sudo` and the rest) are refused. With `dry_run` the method runs in a savepoint and the database is rolled back; the answer lists the result and the stored fields that changed. A method that commits or rolls back itself is refused in a dry run, and effects outside the database (a mail sent at once, a file, an outside call) are not undone.
+`call_method` (key switch **Call methods** and a Call methods tick per model) runs a public business method such as `action_confirm` as the key's user, so access rights and record rules apply; `context` adds context keys. Methods that start with `_` and the ORM methods (`write`, `unlink`, `create`, `sudo` and the rest) are refused. With `dry_run` the method runs in a savepoint and the database is rolled back; the answer lists the result and the stored fields that changed. A method that commits or rolls back itself is refused in a dry run, and effects outside the database (a mail sent at once, a file, an outside call) are not undone.
 
 Deleting (records or rows) is off by default: MCP Settings, Allow deleting, then Delete per model or table; at most 20 records per call; deleted ids and names are kept in the call log.
 
@@ -74,15 +74,15 @@ Screens, messages and labels are English in the sources; Indonesian comes from `
 
 ## Compatibility
 
-Module tests (94) and harnesses, per target. "CI" jobs run on every pipeline of the repository; the production copy run is local because the data stays off CI.
+Module tests (96) and harnesses, per target. "CI" jobs run on every pipeline of the repository; the production copy run is local because the data stays off CI.
 
 | Target | Odoo build | Python | PostgreSQL | Database | Result | Where |
 |---|---|---|---|---|---|---|
-| Official image `odoo:10.0` | 10.0-20190816 (Community) | 2.7.9 | 9.6 | new, empty, no demo data | 94 passed | CI `odoo10-image-empty-db` |
-| Same image with business apps | 10.0-20190816 | 2.7.9 | 9.6 | new, with sale, account, stock, purchase | 94 passed | CI `odoo10-image-sale-account-stock` |
-| Old 10.0 branch | commit `cb01cfe` (29 Jun 2017) | 2.7.18 | 9.6 | new, empty | 94 passed | CI `odoo10-2017-build-py2718` |
-| Pinned production build | commit `28c3f51` (18 May 2021), the production pinned requirements | 2.7.18 | 15 | new, empty | 94 passed | CI `odoo10-pinned-core-py2718-pg15` |
-| Copy of production data | commit `28c3f51`, the production `pip freeze` and custom addons | 2.7.18 | 15 | copy of the production database (1.4 GB, every module installed there) | 94 passed | local, 6 Nov 2026 |
+| Official image `odoo:10.0` | 10.0-20190816 (Community) | 2.7.9 | 9.6 | new, empty, no demo data | 96 passed | CI `odoo10-image-empty-db` |
+| Same image with business apps | 10.0-20190816 | 2.7.9 | 9.6 | new, with sale, account, stock, purchase | 96 passed | CI `odoo10-image-sale-account-stock` |
+| Old 10.0 branch | commit `cb01cfe` (29 Jun 2017) | 2.7.18 | 9.6 | new, empty | 96 passed | CI `odoo10-2017-build-py2718` |
+| Pinned production build | commit `28c3f51` (18 May 2021), the production pinned requirements | 2.7.18 | 15 | new, empty | 96 passed | CI `odoo10-pinned-core-py2718-pg15` |
+| Copy of production data | commit `28c3f51`, the production `pip freeze` and custom addons | 2.7.18 | 15 | copy of the production database (1.4 GB, every module installed there) | 96 passed | local, 6 Nov 2026 |
 | Three databases, one process | `odoo:10.0`, 2 prefork workers | 2.7.9 | 9.6 | `db_a`, `db_b` with the module, `db_c` without | open, dbfilter `^%d$`, `list_db = False`, negative control without server-wide, official MCP SDK 2.3.0 client in both protocol eras: passed | CI `multi-db` |
 | Odoo 10 Enterprise | - | - | - | - | not tested: no Enterprise 10 build available | - |
 | Python 2.7 older than 2.7.7 (no `hmac.compare_digest`) | - | - | - | - | not run on such an interpreter; the constant-time fallback has its own unit test | - |

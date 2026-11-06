@@ -43,8 +43,8 @@ INSTRUCTIONS = (
 )
 EXPLORE_INSTRUCTIONS = (
     " To understand the code, in this order: list_modules (author tells custom modules from Odoo's); "
-    "describe_model (modules, fields with compute and depends, methods); search_fields (which models have a "
-    "field or point to a model); search_methods or describe_method "
+    "describe_model (modules, fields with compute and depends, methods); list_models with all and field "
+    "(which models have a field); search_methods or describe_method "
     "(override order across modules); get_method_source (code with file and line). search_code and read_source "
     "reach any source file of an installed module; get_view and list_actions show the screens and menus users see. "
     "When has_more is true, call again with next_offset. The resource odoo://overview summarises this database."

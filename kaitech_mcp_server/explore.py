@@ -53,6 +53,10 @@ def unwrap(function):
     return function
 
 
+def kind_of(model):
+    return 'wizard' if model._transient else ('abstract' if model._abstract else 'model')
+
+
 def is_framework_method(name):
     return hasattr(models.BaseModel, name)
 

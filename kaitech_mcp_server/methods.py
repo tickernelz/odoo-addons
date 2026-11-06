@@ -27,6 +27,7 @@ DEFINITION = {
                 'description': 'Records to call it on. Omit for model-level methods.'},
         'args': {'type': 'array', 'description': 'Positional arguments after self.'},
         'kwargs': {'type': 'object', 'description': 'Keyword arguments.'},
+        'context': {'type': 'object', 'description': 'Extra context keys, for example {"lang": "id_ID"}.'},
         'dry_run': {'type': 'boolean', 'default': False,
                     'description': 'Run it, report the result and changes, then undo every database change.'},
     }, 'required': ['model', 'method'], 'additionalProperties': False},
@@ -112,10 +113,17 @@ def call(env, grant, arguments):
     method = callable_method(env, model, arguments.get('method'))
     args = arguments.get('args', [])
     kwargs = arguments.get('kwargs', {})
+    context = arguments.get('context', {})
     if not isinstance(args, list):
         raise ToolArgumentError("args must be a list.")
     if not isinstance(kwargs, dict):
         raise ToolArgumentError("kwargs must be an object.")
+    if not isinstance(context, dict):
+        raise ToolArgumentError("context must be an object.")
+    if context:
+        merged = dict(model.env.context)
+        merged.update(context)
+        model = model.with_context(merged)
     dry_run = flag(arguments, 'dry_run')
     records = model.browse()
     if arguments.get('ids') is not None:
@@ -133,13 +141,13 @@ def call(env, grant, arguments):
             result, after = _run(records, method, args, kwargs, watched, fields)
     else:
         result, after = _run(records, method, args, kwargs, watched, fields)
-    payload = {'model': model._name, 'method': method, 'ids': records.ids, 'result': result,
-               'changes': _changes(before, after), 'dry_run': dry_run}
+    changes = _changes(before, after)
+    payload = {'model': model._name, 'method': method, 'ids': records.ids, 'result': result, 'dry_run': dry_run}
     if len(json.dumps(result)) > RESPONSE_BYTES // 2:
         payload['result'] = {'truncated': True, 'type': type(result).__name__}
-    if not payload['changes']:
-        del payload['changes']
-    written = set('%s.%s' % (model._name, name) for change in payload['changes'].values()
+    if changes:
+        payload['changes'] = changes
+    written = set('%s.%s' % (model._name, name) for change in changes.values()
                   if isinstance(change, dict) for name in change)
     return payload, {'model': model._name, 'ids': records.ids, 'count': len(records), 'written': written,
                      'dry_run': dry_run, 'method': method}
