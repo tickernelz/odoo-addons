@@ -35,6 +35,10 @@ EXPRESSION_KEYS = ('Output', 'Filter', 'Join Filter', 'Hash Cond', 'Merge Cond',
                    'Presorted Key', 'Cache Key', 'Grouping Sets', 'Hash Key', 'Tid Cond', 'Run Condition')
 REFUSED_NODES = ('ModifyTable', 'LockRows', 'Foreign Scan', 'Custom Scan', 'Sample Scan')
 FUNCTION_SCANS = ('generate_series', 'unnest')
+PASS_THROUGH_NODES = ('Hash', 'Materialize', 'Memoize', 'Sort', 'Incremental Sort', 'Limit', 'Gather', 'Gather Merge',
+                      'Unique')
+PLAIN_COLUMN = re.compile(r'^(?:"?[A-Za-z_][A-Za-z0-9_$]*"?\.)?"?([A-Za-z_][A-Za-z0-9_$]*)"?$')
+DROPPED_COLUMN = re.compile(r'^NULL::')
 
 
 def quote(name):
@@ -309,18 +313,11 @@ class Run(object):
 
     def check_plan(self, plan):
         """Refuse a plan that reads a table, column or function this key may not use."""
-        tables = set()
-        expressions = []
-        nodes = list(plan)
+        tops = [item['Plan'] for item in plan if isinstance(item, dict) and 'Plan' in item]
+        tables = {}
+        nodes = list(tops)
         while nodes:
             node = nodes.pop()
-            if isinstance(node, list):
-                nodes.extend(node)
-                continue
-            if not isinstance(node, dict):
-                continue
-            if 'Plan' in node:
-                nodes.append(node['Plan'])
             nodes.extend(node.get('Plans') or [])
             kind = node.get('Node Type')
             if kind in REFUSED_NODES:
@@ -331,16 +328,14 @@ class Run(object):
                 name, schema = node['Relation Name'], node.get('Schema')
                 if schema != SCHEMA or not self.grant.table_permitted(self.cr, name, 'select'):
                     raise ToolRefused("This key may not read table %s." % (name if schema == SCHEMA else '%s.%s' % (schema, name)))
-                tables.add(name)
-            for key in EXPRESSION_KEYS:
-                value = node.get(key)
-                if isinstance(value, basestring):
-                    expressions.append(value)
-                elif isinstance(value, list):
-                    expressions.extend(item for item in value if isinstance(item, basestring))
+                if name not in tables:
+                    tables[name] = Table(self.cr, name, self.grant)
         hidden = set()
-        for name in tables:
-            hidden |= Table(self.cr, name, self.grant).hidden
+        for table in tables.values():
+            hidden |= table.hidden
+        expressions = []
+        for top in tops:
+            self._collect(top, True, tables, expressions)
         for expression in expressions:
             plain = LITERAL.sub("''", expression)
             if '.*' in plain:
@@ -351,7 +346,30 @@ class Run(object):
             for column in hidden:
                 if re.search(r'(?<![A-Za-z0-9_])"?%s"?(?![A-Za-z0-9_])' % re.escape(column), plain):
                     raise ToolRefused("Column %s is never readable through MCP." % column)
-        return tables
+        return set(tables)
+
+    def _collect(self, node, top, tables, expressions):
+        """Gather node expressions, skipping scan outputs that only repeat a table's physical row; return that skip."""
+        children = node.get('Plans') or []
+        carried = [self._collect(child, False, tables, expressions) for child in children]
+        output = node.get('Output')
+        skip = False
+        if not top and isinstance(output, list):
+            table = tables.get(node.get('Relation Name'))
+            if table is not None and _physical_row(output, table):
+                skip = True
+            elif (node.get('Node Type') in PASS_THROUGH_NODES and len(children) == 1 and carried[0]
+                  and output == children[0].get('Output')):
+                skip = True
+        for key in EXPRESSION_KEYS:
+            if key == 'Output' and skip:
+                continue
+            value = node.get(key)
+            if isinstance(value, basestring):
+                expressions.append(value)
+            elif isinstance(value, list):
+                expressions.extend(item for item in value if isinstance(item, basestring))
+        return skip
 
     def insert(self, arguments):
         table = self.table(arguments.get('table'), 'insert')
@@ -414,6 +432,19 @@ class Run(object):
         if not dry_run:
             self.env.registry.clear_caches()
         return {'deleted': count, 'keys': keys, 'dry_run': dry_run}, table.name, keys if has_key else [], count
+
+
+def _physical_row(output, table):
+    """True when output lists exactly every column of table, as a scan with a physical target list does."""
+    names = []
+    for entry in output:
+        if DROPPED_COLUMN.match(entry):
+            continue
+        found = PLAIN_COLUMN.match(entry)
+        if not found:
+            return False
+        names.append(found.group(1))
+    return len(names) == len(set(names)) and set(names) == set(table.columns) | table.hidden
 
 
 class _Now(object):

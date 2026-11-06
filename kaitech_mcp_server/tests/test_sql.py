@@ -60,6 +60,35 @@ class TestSql(EndpointCase):
         result = self.call(self.token, 'sql_query', {'query': 'SELECT api_token FROM res_country'})
         self.assertIn('never readable', result['structuredContent']['error'])
 
+    def test_tables_with_a_hidden_column_stay_queryable_without_leaking_it(self):
+        with self.shared_env() as env:
+            env.cr.execute("ALTER TABLE res_partner ADD COLUMN ocn_token varchar")
+            env.cr.execute("UPDATE res_partner SET ocn_token = 'leak-' || id")
+        allowed = (
+            "SELECT count(*) AS n FROM res_partner WHERE city = 'Medan'",
+            "SELECT p.name, c.code FROM res_partner p JOIN res_country c ON c.id = p.country_id ORDER BY p.name",
+            "SELECT city, count(*) AS n FROM res_partner GROUP BY city ORDER BY city",
+            "SELECT name FROM res_partner WHERE id IN (SELECT id FROM res_partner WHERE city = 'Medan') LIMIT 3",
+        )
+        for query in allowed:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertFalse(result['isError'], (query, result))
+        leaks = (
+            "SELECT ocn_token FROM res_partner",
+            "SELECT x FROM (SELECT ocn_token AS x FROM res_partner) s",
+            "WITH c AS (SELECT * FROM res_partner) SELECT name FROM c WHERE ocn_token LIKE 'leak-1%'",
+            "SELECT name FROM res_partner WHERE ocn_token = 'leak-1'",
+            "SELECT name FROM res_partner ORDER BY ocn_token",
+            "SELECT count(*) AS n FROM res_partner GROUP BY ocn_token",
+            "SELECT p.name FROM res_partner p JOIN res_country c ON c.code = p.ocn_token",
+            "SELECT length(ocn_token) AS n FROM res_partner",
+            "SELECT * FROM res_partner",
+        )
+        for query in leaks:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertTrue(result['isError'], query)
+            self.assertNotIn('leak-', result['content'][0]['text'])
+
     def test_allow_sql_needs_the_setting(self):
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
