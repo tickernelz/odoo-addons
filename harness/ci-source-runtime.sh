@@ -7,5 +7,5 @@ apt-get install -y -qq --no-install-recommends libldap2-dev libsasl2-dev libpq-d
     libjpeg-dev zlib1g-dev libfreetype6-dev >/dev/null
 mkdir -p /tmp/src
 curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$commit" | tar xz -C /tmp/src --strip-components=1
-pip install -q --no-cache-dir -r /tmp/src/requirements.txt
+pip install -q --no-cache-dir --no-binary psycopg2 -r /tmp/src/requirements.txt
 python --version

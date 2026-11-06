@@ -175,14 +175,22 @@ class TestSql(EndpointCase):
         self.assertEqual(self.statement()['statement'], 'DELETE FROM "res_partner" WHERE "id" = %s RETURNING "id"')
 
     def test_insert_fills_audit_columns(self):
-        result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [
-            {'name': 'SQL Inserted', 'active': True, 'display_name': 'SQL Inserted'}]})
-        self.assertFalse(result['isError'], result)
-        new_id = result['structuredContent']['keys'][0]
         with self.shared_env() as env:
-            env.cr.execute("SELECT create_uid, write_uid, create_date IS NOT NULL FROM res_partner WHERE id = %s", (new_id,))
-            self.assertEqual(env.cr.fetchone(), (self.user.id, self.user.id, True))
-        result = self.call(self.token, 'sql_insert', {'table': 'res_partner', 'rows': [{'id': 1, 'name': 'x'}]})
+            env.cr.execute("CREATE TABLE mcp_sql_probe (id serial PRIMARY KEY, name varchar NOT NULL, "
+                           "create_uid integer, write_uid integer, create_date timestamp, write_date timestamp)")
+            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [(0, 0, {
+                'table_name': 'mcp_sql_probe', 'can_select': True, 'can_insert': True})]})
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'One'}, {'name': 'Two'}]})
+        self.assertFalse(result['isError'], result)
+        self.assertEqual(result['structuredContent']['inserted'], 2)
+        with self.shared_env() as env:
+            env.cr.execute("SELECT name, create_uid, write_uid, create_date IS NOT NULL FROM mcp_sql_probe "
+                           "WHERE id IN %s ORDER BY id", (tuple(result['structuredContent']['keys']),))
+            self.assertEqual(env.cr.fetchall(), [('One', self.user.id, self.user.id, True),
+                                                 ('Two', self.user.id, self.user.id, True)])
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'id': 1, 'name': 'x'}]})
+        self.assertTrue(result['isError'])
+        result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'x'}] * 21})
         self.assertTrue(result['isError'])
         result = self.call(self.token, 'sql_insert', {'table': 'res_country', 'rows': [{'name': 'x'}]})
         self.assertIn('may not insert', result['structuredContent']['error'])
