@@ -39,6 +39,27 @@ class TestSql(EndpointCase):
             env['kaitech.mcp.key'].browse(self.key_id).write({'allow_sql': False})
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
 
+    def test_settings_administrators_never_get_sql(self):
+        with self.shared_env() as env:
+            admin_like = new_user(env, 'mcp_sql_sysadmin', groups=('base.group_user', 'base.group_system'))
+            with self.assertRaisesRegexp(ValidationError, 'Settings administrator'):
+                new_key(env, admin_like, {}, tables={'res_partner': {'select'}})
+            env.cr.execute("INSERT INTO res_groups_users_rel (gid, uid) VALUES (%s, %s)",
+                           (env.ref('base.group_system').id, self.user.id))
+        self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
+        result = self.call(self.token, 'sql_select', {'table': 'res_partner'})
+        self.assertIn('Unknown table', result['structuredContent']['error'])
+
+    def test_secret_looking_columns_are_hidden(self):
+        with self.shared_env() as env:
+            env.cr.execute("ALTER TABLE res_country ADD COLUMN api_token varchar, ADD COLUMN client_secret varchar")
+        result = self.call(self.token, 'sql_list_tables', {'query': 'res_country'})
+        names = [column['name'] for column in result['structuredContent']['tables'][0]['columns']]
+        self.assertIn('code', names)
+        self.assertFalse(set(['api_token', 'client_secret']) & set(names))
+        result = self.call(self.token, 'sql_query', {'query': 'SELECT api_token FROM res_country'})
+        self.assertIn('never readable', result['structuredContent']['error'])
+
     def test_allow_sql_needs_the_setting(self):
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')

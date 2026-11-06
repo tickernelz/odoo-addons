@@ -47,8 +47,11 @@ def provision(db):
     call("kaitech.mcp.key.wizard", "action_next", [wizard])
     call("kaitech.mcp.key.wizard", "write", [wizard], {"line_ids": [(0, 0, {"model_id": model_id, "can_read": True})]})
     call("kaitech.mcp.key.wizard", "action_create", [wizard])
-    token = call("kaitech.mcp.key.wizard", "read", [wizard], ["token"])[0]["token"]
+    found = call("kaitech.mcp.key.wizard", "read", [wizard], ["token", "key_id"])[0]
+    token = found["token"]
     assert token.startswith("o10mcp_")
+    if SCENARIO == "perf":
+        call("kaitech.mcp.key", "write", [found["key_id"][0]], {"rate_per_minute": 100000})
     return token
 
 

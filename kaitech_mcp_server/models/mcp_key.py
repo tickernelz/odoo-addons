@@ -112,6 +112,15 @@ class McpKey(models.Model):
     def _check_sql(self):
         if any(key.allow_sql for key in self) and not grants.read_settings(self.env.cr)['sql_enabled']:
             raise ValidationError(_("SQL through MCP is switched off in MCP Settings."))
+        for key in self.filtered('allow_sql'):
+            if key.user_id.has_group('base.group_system'):
+                raise ValidationError(_(
+                    "A key that acts as a Settings administrator cannot use SQL. "
+                    "Bind it to a user without the Administration / Settings group."))
+
+    @api.constrains('user_id')
+    def _check_sql_user(self):
+        self._check_sql()
 
     @api.depends('permission_ids.can_read', 'permission_ids.can_create', 'permission_ids.can_update',
                  'permission_ids.can_delete', 'allow_sql', 'sql_table_ids.can_delete')

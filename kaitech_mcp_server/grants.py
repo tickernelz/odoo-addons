@@ -28,11 +28,13 @@ DEFAULT_LIMIT = 20
 
 FORBIDDEN_MODELS = (
     'ir.*', 'res.users', 'res.users.*', 'res.groups', 'res.groups.*',
-    'base.*', 'bus.*', 'kaitech.mcp.*',
+    'base.*', 'bus.*', 'kaitech.mcp.*', 'res.device*', 'auth_totp.*',
 )
 FORBIDDEN_FIELDS = (
     'password', 'password_crypt', 'new_password', 'signup_token', 'oauth_access_token',
+    'access_token', 'totp_secret',
 )
+FORBIDDEN_COLUMN_PATTERNS = ('*password*', '*token*', '*secret*', 'totp*')
 MAGIC_FIELDS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date', '__last_update', 'display_name')
 RELATIONAL = ('many2one', 'one2many', 'many2many')
 DOMAIN_OPERATORS = (
@@ -121,7 +123,7 @@ class Grant(object):
         self.fields_everywhere, self.fields_per_model = forbidden_field_rules(settings)
         self.rows = rows
         self._fields_cache = {}
-        self.sql_open = bool(settings['sql_enabled'] and key.get('allow_sql'))
+        self.sql_open = bool(settings['sql_enabled'] and key.get('allow_sql') and not key.get('is_system'))
         self.tables = tables or {}
         self._existing_tables = None
 

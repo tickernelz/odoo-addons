@@ -4,11 +4,12 @@ import fnmatch
 import json
 import re
 
-from .grants import ToolArgumentError, ToolRefused, split_list
+from .grants import FORBIDDEN_COLUMN_PATTERNS, ToolArgumentError, ToolRefused, split_list
 
 SCHEMA = 'public'
 HARD_MAX_ROWS = 20
-FORBIDDEN_TABLES = ('ir_*', 'res_users*', 'res_groups*', 'base_*', 'bus_*', 'kaitech_mcp_*')
+FORBIDDEN_TABLES = ('ir_*', 'res_users*', 'res_groups*', 'base_*', 'bus_*', 'kaitech_mcp_*',
+                    'res_company_users_rel', 'rule_group_rel', 'res_device*', 'auth_totp*')
 OPERATORS = {
     '=': '=', '!=': '!=', '<': '<', '<=': '<=', '>': '>', '>=': '>=',
     'like': 'LIKE', 'ilike': 'ILIKE', 'not like': 'NOT LIKE', 'not ilike': 'NOT ILIKE',
@@ -70,7 +71,8 @@ class Table(object):
         self.types = {}
         self.defaults = set()
         for column, kind, nullable, has_default, _kind in rows:
-            if column in forbidden or kind == 'bytea':
+            if column in forbidden or kind == 'bytea' or any(
+                    fnmatch.fnmatchcase(column, pattern) for pattern in FORBIDDEN_COLUMN_PATTERNS):
                 continue
             self.columns.append(column)
             self.types[column] = (kind, nullable)

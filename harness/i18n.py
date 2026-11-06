@@ -1,7 +1,6 @@
 """Translation checks: id.po from the template and the term list, and a scan for Indonesian outside i18n/.
 
-Usage: python3 harness/i18n.py build    rewrite i18n/id.po from the .pot and harness/id_terms.json
-       python3 harness/i18n.py check    fail when id.po is stale, incomplete, or Indonesian leaks into sources
+Usage: python3 harness/i18n.py build | check | compare <fresh.pot>
 """
 import json
 import os
@@ -68,5 +67,15 @@ def check():
     print("i18n ok: %s entries translated, 0 untranslated, 0 fuzzy" % len(pot))
 
 
+def compare():
+    fresh = set(entry.msgid for entry in polib.pofile(sys.argv[2]))
+    stored = set(entry.msgid for entry in polib.pofile(POT))
+    problems = ["missing from the template: %r" % msgid for msgid in sorted(fresh - stored)]
+    problems += ["no longer in the module: %r" % msgid for msgid in sorted(stored - fresh)]
+    if problems:
+        sys.exit("\n".join(problems) + "\nRe-export with harness/export-pot.sh and run harness/i18n.py build.")
+    print("template ok: %s msgids match a fresh export" % len(fresh))
+
+
 if __name__ == "__main__":
-    {"build": build, "check": check}[sys.argv[1]]()
+    {"build": build, "check": check, "compare": compare}[sys.argv[1]]()

@@ -203,6 +203,10 @@ class Exchange(object):
             cr.execute("""
                 SELECT k.id, k.name, k.key_hash, k.user_id, k.rate_per_minute, k.writes_per_minute,
                        k.max_read, k.max_write, k.max_delete, k.allow_sql,
+                       EXISTS(SELECT 1 FROM res_groups_users_rel r JOIN ir_model_data d
+                                  ON d.res_id = r.gid AND d.model = 'res.groups'
+                                 AND d.module = 'base' AND d.name = 'group_system'
+                               WHERE r.uid = k.user_id) AS is_system,
                        k.revoked_at IS NOT NULL AS revoked,
                        (k.expires_at IS NOT NULL AND k.expires_at <= (now() AT TIME ZONE 'UTC')) AS expired,
                        u.active AS user_active

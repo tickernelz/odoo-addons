@@ -63,7 +63,7 @@ for scenario in $scenarios; do
     esac
     echo "== scenario $scenario"
     if ! docker run --rm --network "$net" -v "$data:/odoo-data:ro" -e SCENARIO="$scenario" \
-        -e ODOO_URL=http://odoo:8069 "$name-pytest-image" pytest -q -p no:cacheprovider -m "$scenario or always" \
+        -e ODOO_URL=http://odoo:8069 "$name-pytest-image" pytest -q -s -p no:cacheprovider -m "$scenario or always" \
         test_multidb.py; then
         status=1
         docker logs "$odoo" 2>&1 | grep -E "ERROR|Traceback" | tail -20 || true
