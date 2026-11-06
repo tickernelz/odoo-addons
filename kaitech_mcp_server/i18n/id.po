@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_permission.py:54 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:139
+#: code:addons/kaitech_mcp_server/models/mcp_permission.py:54 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:146
 #, python-format
 msgid "%s cannot: %s"
 msgstr "%s tidak dapat: %s"
@@ -85,13 +85,13 @@ msgstr ""
 "               terbatas pada model dan aksi yang Anda centang. Pakai MCP Server, Buat kunci untuk membuat yang pertama."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:117
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:138
 #, python-format
 msgid "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group."
 msgstr "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:183
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:205
 #, python-format
 msgid "A key's secret cannot be changed; rotate the key instead."
 msgstr "Rahasia kunci tidak bisa diubah; putar kuncinya."
@@ -102,7 +102,7 @@ msgid "A new key with the same permissions is created and this key stops working
 msgstr "Kunci baru dengan izin yang sama dibuat dan kunci ini berhenti bekerja sekarang. Lanjutkan?"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:206
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:228
 #, python-format
 msgid "A revoked key cannot be rotated; create a new key instead."
 msgstr "Kunci yang sudah dicabut tidak bisa diputar; buat kunci baru."
@@ -173,13 +173,13 @@ msgstr ""
 "                        nama database. Setiap database punya kunci dan log panggilan sendiri."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:159 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:66
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:180 code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:72
 #, python-format
 msgid "An MCP key cannot act as the Administrator (uid 1): that user bypasses every access right and record rule. Create a dedicated user for this client with only the groups it needs."
 msgstr "Kunci MCP tidak boleh bertindak sebagai Administrator (uid 1): user itu melewati semua hak akses dan record rule. Buat user khusus untuk klien ini dengan grup yang benar-benar diperlukan saja."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:163
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:184
 #, python-format
 msgid "An MCP key must act as an internal user, not a portal or public user."
 msgstr "Kunci MCP harus bertindak sebagai user internal, bukan user portal atau publik."
@@ -190,13 +190,13 @@ msgid "Apply"
 msgstr "Terapkan"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:169 code:addons/kaitech_mcp_server/models/mcp_settings.py:58
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:191 code:addons/kaitech_mcp_server/models/mcp_settings.py:64
 #, python-format
 msgid "At most %s records can be deleted per call."
 msgstr "Paling banyak %s record bisa dihapus per panggilan."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:171
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:193
 #, python-format
 msgid "At most %s records can be read or updated per call."
 msgstr "Paling banyak %s record bisa dibaca atau diubah per panggilan."
@@ -346,13 +346,13 @@ msgid "Day"
 msgstr "Hari"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_settings.py:62
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:68
 #, python-format
 msgid "Days cannot be negative."
 msgstr "Jumlah hari tidak boleh negatif."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_settings.py:56
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:62
 #, python-format
 msgid "Default limits must be greater than zero."
 msgstr "Batas bawaan harus lebih dari nol."
@@ -489,7 +489,7 @@ msgid "Group By"
 msgstr "Kelompokkan Menurut"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:49
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:55
 #, python-format
 msgid "HTTP %s"
 msgstr "HTTP %s"
@@ -507,7 +507,7 @@ msgid "HTTP 401 without a key: the endpoint answers for this database."
 msgstr "HTTP 401 tanpa kunci: endpoint menjawab untuk database ini."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:45
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:51
 #, python-format
 msgid "HTTP 401: the key is revoked, expired, or its user is archived."
 msgstr "HTTP 401: kunci dicabut, kedaluwarsa, atau user-nya diarsipkan."
@@ -519,7 +519,7 @@ msgid "HTTP 404: add the line shown above to odoo.conf and restart Odoo."
 msgstr "HTTP 404: tambahkan baris di atas ke odoo.conf dan mulai ulang Odoo."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:47
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:53
 #, python-format
 msgid "HTTP 404: run Test endpoint on MCP Overview for the fix."
 msgstr "HTTP 404: jalankan Uji endpoint di Ringkasan MCP untuk cara memperbaikinya."
@@ -706,7 +706,7 @@ msgid "MCP Settings"
 msgstr "Pengaturan MCP"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:214
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:236
 #, python-format
 msgid "MCP key rotated: copy the new key"
 msgstr "Kunci MCP diputar: salin kunci baru"
@@ -753,7 +753,7 @@ msgid "Models and tables"
 msgstr "Model dan tabel"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:64
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:70
 #, python-format
 msgid "Name the client and choose the Odoo user the key acts as."
 msgstr "Beri nama klien dan pilih user Odoo yang diwakili kunci ini."
@@ -774,19 +774,19 @@ msgid "New MCP Key Model"
 msgstr "Model Kunci MCP Baru"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:57 model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_key_wizard model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:63 model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_key_wizard model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form
 #, python-format
 msgid "New MCP key"
 msgstr "Kunci MCP baru"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:94
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:101
 #, python-format
 msgid "New MCP key: copy the key"
 msgstr "Kunci MCP baru: salin kunci"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:70
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:77
 #, python-format
 msgid "New MCP key: models and actions"
 msgstr "Kunci MCP baru: model dan aksi"
@@ -847,10 +847,22 @@ msgid "One per line or comma separated; wildcards allowed, for example hr_paysli
 msgstr "Satu per baris atau dipisah koma; boleh wildcard, misalnya hr_payslip* atau account_*"
 
 #. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:35
+#, python-format
+msgid "Only MCP managers can manage MCP keys."
+msgstr "Hanya manajer MCP yang bisa mengelola kunci MCP."
+
+#. module: kaitech_mcp_server
 #: code:addons/kaitech_mcp_server/models/mcp_overview.py:96
 #, python-format
 msgid "Only MCP managers can open the MCP overview."
 msgstr "Hanya manajer MCP yang bisa membuka ringkasan MCP."
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:46
+#, python-format
+msgid "Only administrators can read or change the MCP settings."
+msgstr "Hanya administrator yang bisa membaca atau mengubah pengaturan MCP."
 
 #. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_wizard_line_field_ids model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_permission_field_ids
@@ -1043,7 +1055,7 @@ msgid "SQL tables"
 msgstr "Tabel SQL"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:114
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:135
 #, python-format
 msgid "SQL through MCP is switched off in MCP Settings."
 msgstr "SQL lewat MCP dimatikan di Pengaturan MCP."
@@ -1120,7 +1132,7 @@ msgid "Test MCP Key"
 msgstr "Uji Kunci MCP"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:222 code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:57 model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:244 code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:63 model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_test_form
 #, python-format
 msgid "Test MCP key"
 msgstr "Uji kunci MCP"
@@ -1141,7 +1153,7 @@ msgid "Tested on"
 msgstr "Diuji pada"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_settings.py:60
+#: code:addons/kaitech_mcp_server/models/mcp_settings.py:66
 #, python-format
 msgid "The SELECT query time limit must be between 100 and 60000 ms."
 msgstr "Batas waktu query SELECT harus antara 100 dan 60000 ms."
@@ -1178,7 +1190,7 @@ msgstr ""
 "                                itu sendiri, field kata sandi dan token, serta field biner."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:43
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:49
 #, python-format
 msgid "The key is accepted but has no model permissions yet."
 msgstr "Kunci diterima tetapi belum punya izin model."
@@ -1199,7 +1211,7 @@ msgid "The key works through the public endpoint."
 msgstr "Kunci berfungsi lewat endpoint publik."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:31
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:37
 #, python-format
 msgid "The pasted text does not match this key. Keys are shown only once; rotate the key if it was lost."
 msgstr "Teks yang ditempel tidak cocok dengan kunci ini. Kunci hanya tampil sekali; putar kunci bila hilang."
@@ -1230,7 +1242,7 @@ msgid "This key is revoked: every call with it is refused with HTTP 401."
 msgstr "Kunci ini sudah dicabut: setiap panggilan dengannya ditolak dengan HTTP 401."
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:82
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_wizard.py:89
 #, python-format
 msgid "This key was already created."
 msgstr "Kunci ini sudah dibuat."
@@ -1256,7 +1268,7 @@ msgid "Tool"
 msgstr "Tool"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:42
+#: code:addons/kaitech_mcp_server/wizards/mcp_key_test.py:48
 #, python-format
 msgid ""
 "Tools this key can use:\n"
@@ -1281,7 +1293,7 @@ msgid "Unreachable"
 msgstr "Tidak terjangkau"
 
 #. module: kaitech_mcp_server
-#: code:addons/kaitech_mcp_server/models/mcp_key.py:101
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:122
 #, python-format
 msgid "Unsupported search on the key status."
 msgstr "Pencarian status kunci ini tidak didukung."
@@ -1344,6 +1356,12 @@ msgstr "Penulisan"
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_key_writes_per_minute model:ir.model.fields,field_description:kaitech_mcp_server.field_kaitech_mcp_settings_default_writes_per_minute
 msgid "Writes per minute"
 msgstr "Penulisan per menit"
+
+#. module: kaitech_mcp_server
+#: code:addons/kaitech_mcp_server/models/mcp_key.py:27
+#, python-format
+msgid "You cannot create a key for %s: that user has groups you do not have (%s). Ask an administrator, or choose a user with fewer rights."
+msgstr "Anda tidak bisa membuat kunci untuk %s: user itu punya grup yang tidak Anda miliki (%s). Minta administrator, atau pilih user dengan hak lebih sedikit."
 
 #. module: kaitech_mcp_server
 #: model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_form model:ir.ui.view,arch_db:kaitech_mcp_server.view_mcp_key_wizard_form

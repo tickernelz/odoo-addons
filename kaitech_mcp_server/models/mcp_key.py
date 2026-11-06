@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 
 from .. import grants, keys
@@ -12,6 +12,27 @@ STATES = [('active', 'Active'), ('expiring', 'Expiring soon'), ('expired', 'Expi
 
 def _setting(env, name):
     return grants.read_settings(env.cr)[name]
+
+
+def groups_beyond(env, user):
+    """Groups of user that the current user lacks; empty for the superuser."""
+    if env.user._is_superuser():
+        return env['res.groups']
+    return user.groups_id - env.user.groups_id
+
+
+def check_within_your_groups(env, user):
+    missing = groups_beyond(env, user)
+    if missing:
+        raise ValidationError(_(
+            "You cannot create a key for %s: that user has groups you do not have (%s). "
+            "Ask an administrator, or choose a user with fewer rights.") % (
+            user.name, ', '.join(missing.mapped('full_name'))))
+
+
+def check_manager(env):
+    if not env.user.has_group('kaitech_mcp_server.group_mcp_manager'):
+        raise AccessError(_("Only MCP managers can manage MCP keys."))
 
 
 class McpKey(models.Model):
@@ -161,6 +182,7 @@ class McpKey(models.Model):
                     "and record rule. Create a dedicated user for this client with only the groups it needs."))
             if key.user_id.share:
                 raise ValidationError(_("An MCP key must act as an internal user, not a portal or public user."))
+            check_within_your_groups(self.env, key.user_id)
 
     @api.constrains('rate_per_minute', 'writes_per_minute', 'max_read', 'max_write', 'max_delete')
     def _check_limits(self):

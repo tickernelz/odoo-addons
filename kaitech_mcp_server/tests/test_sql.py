@@ -89,6 +89,34 @@ class TestSql(EndpointCase):
             self.assertTrue(result['isError'], query)
             self.assertNotIn('leak-', result['content'][0]['text'])
 
+    def test_renamed_columns_never_carry_a_hidden_column(self):
+        with self.shared_env() as env:
+            env.cr.execute("CREATE TABLE mcp_hidden_probe (id serial PRIMARY KEY, name varchar, api_token varchar)")
+            env.cr.execute("INSERT INTO mcp_hidden_probe (name, api_token) SELECT 'row ' || n, 'LEAKED-' || n "
+                           "FROM generate_series(1, 5) n")
+            env['kaitech.mcp.key'].browse(self.key_id).write({'sql_table_ids': [(0, 0, {
+                'table_name': 'mcp_hidden_probe', 'can_select': True})]})
+        for query in ("SELECT name FROM mcp_hidden_probe ORDER BY id",
+                      "SELECT count(*) AS n FROM mcp_hidden_probe WHERE name LIKE 'row %'"):
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertFalse(result['isError'], (query, result))
+        leaks = (
+            "WITH x(a, b, c) AS (SELECT * FROM mcp_hidden_probe) SELECT x.c FROM x",
+            "WITH x(a, b, c) AS (SELECT * FROM mcp_hidden_probe) SELECT count(*) AS n FROM x WHERE x.c LIKE 'LEAKED-1%'",
+            "WITH x(a, b, c) AS MATERIALIZED (SELECT * FROM mcp_hidden_probe) SELECT x.c FROM x",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe) s(a, b, c)",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe LIMIT 100) s(a, b, c)",
+            "SELECT s.c FROM (SELECT * FROM mcp_hidden_probe OFFSET 0) s(a, b, c) WHERE s.c LIKE 'LEAKED%'",
+            "SELECT u.c FROM (SELECT * FROM mcp_hidden_probe UNION ALL SELECT * FROM mcp_hidden_probe) u(a, b, c)",
+            "SELECT name FROM mcp_hidden_probe WHERE EXISTS (SELECT 1 FROM (SELECT * FROM mcp_hidden_probe) s(a, b, c) "
+            "WHERE s.c = 'LEAKED-1' AND s.a = mcp_hidden_probe.id)",
+        )
+        for query in leaks:
+            result = self.call(self.token, 'sql_query', {'query': query})
+            self.assertTrue(result['isError'], query)
+            self.assertNotIn('LEAKED', result['content'][0]['text'], query)
+            self.assertNotIn('"n": 1', result['content'][0]['text'], query)
+
     def test_allow_sql_needs_the_setting(self):
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
@@ -130,7 +158,7 @@ class TestSql(EndpointCase):
             self.assertTrue(result['isError'], where)
         result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'city': 'Mcp Padang'},
                                                       'where': [['city', '=', 'Mcp Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         with self.shared_env() as env:
             env.cr.execute("SELECT count(*) FROM res_partner WHERE city = 'Mcp Padang'")
             self.assertEqual(env.cr.fetchone()[0], 0)
@@ -169,7 +197,7 @@ class TestSql(EndpointCase):
             victim = env['res.partner'].create({'name': 'SQL Victim'})
         self.assertIn('sql_delete', self.tool_names(self.token))
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['city', '=', 'Mcp Medan']]})
-        self.assertIn('matches 25 rows', result['structuredContent']['error'])
+        self.assertIn('matches more than 20 rows', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_delete', {'table': 'res_partner', 'where': [['id', '=', victim.id]]})
         self.assertEqual(result['structuredContent']['keys'], [victim.id])
         self.assertEqual(self.statement()['statement'], 'DELETE FROM "res_partner" WHERE "id" = %s RETURNING "id"')
@@ -192,6 +220,12 @@ class TestSql(EndpointCase):
         self.assertTrue(result['isError'])
         result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'x'}] * 21})
         self.assertTrue(result['isError'])
+        for column, value in (('create_uid', 1), ('write_uid', 1), ('create_date', '2001-01-01'), ('write_date', '2001-01-01')):
+            result = self.call(self.token, 'sql_insert', {'table': 'mcp_sql_probe', 'rows': [{'name': 'x', column: value}]})
+            self.assertIn('filled by the server', result['structuredContent']['error'])
+        result = self.call(self.token, 'sql_update', {'table': 'res_partner', 'values': {'write_uid': 1},
+                                                      'where': [['id', '=', self.partners[0].id]]})
+        self.assertIn('filled by the server', result['structuredContent']['error'])
         result = self.call(self.token, 'sql_insert', {'table': 'res_country', 'rows': [{'name': 'x'}]})
         self.assertIn('may not insert', result['structuredContent']['error'])
 

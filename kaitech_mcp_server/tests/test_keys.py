@@ -5,8 +5,8 @@ from odoo import SUPERUSER_ID, fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common
 
-from .. import keys
-from .common import new_key, new_user, set_setting
+from .. import grants, keys
+from .common import WRITER, new_key, new_user, set_setting
 
 
 @common.at_install(False)
@@ -17,7 +17,7 @@ class TestKeys(common.TransactionCase):
         super(TestKeys, self).setUp()
         self.user = new_user(self.env, 'mcp_key_user')
         self.manager = new_user(self.env, 'mcp_key_manager',
-                                groups=('base.group_user', 'kaitech_mcp_server.group_mcp_manager'))
+                                groups=('base.group_user', WRITER, 'kaitech_mcp_server.group_mcp_manager'))
 
     def test_token_is_shown_once_and_stored_as_a_digest(self):
         key, token = new_key(self.env, self.user, {'res.partner': {'read'}})
@@ -111,12 +111,49 @@ class TestKeys(common.TransactionCase):
         wizard.write({'line_ids': [(0, 0, {'model_id': partner_model.id, 'can_read': True, 'can_create': True})]})
         self.assertIn('Create', wizard.line_ids.access_warning)
 
+    def test_settings_refuse_everyone_but_administrators(self):
+        clerk = new_user(self.env, 'mcp_settings_clerk', groups=('base.group_user',))
+        portal = new_user(self.env, 'mcp_settings_portal', groups=('base.group_portal',))
+        Settings = self.env['kaitech.mcp.settings']
+        changes = dict(Settings.default_get(list(Settings._fields)), sql_enabled=True, audit_retention_days=1,
+                       default_rate_per_minute=100000, extra_forbidden_fields=False)
+        for user in (clerk, portal):
+            with self.assertRaises(AccessError):
+                Settings.sudo(user.id).new(changes).set_mcp_values()
+            with self.assertRaises(AccessError):
+                Settings.sudo(user.id).get_default_mcp_values([])
+        self.assertFalse(grants.read_settings(self.env.cr)['sql_enabled'])
+        self.assertEqual(grants.read_settings(self.env.cr)['audit_retention_days'], 90)
+
+    def test_settings_store_each_type_faithfully(self):
+        settings = self.env['kaitech.mcp.settings'].create({})
+        settings.write({'extra_forbidden_models': False, 'sql_statement_timeout_ms': 2500, 'delete_enabled': False})
+        settings.execute()
+        stored = grants.read_settings(self.env.cr)
+        self.assertEqual((stored['extra_forbidden_models'], stored['sql_statement_timeout_ms'], stored['delete_enabled']),
+                         ('', 2500, False))
+
+    def test_a_manager_cannot_hand_out_more_rights_than_they_hold(self):
+        administrator = new_user(self.env, 'mcp_key_sysadmin', groups=('base.group_user', 'base.group_system'))
+        keys_as_manager = self.env['kaitech.mcp.key'].sudo(self.manager.id)
+        with self.assertRaisesRegexp(ValidationError, 'groups you do not have'):
+            keys_as_manager.create({'name': 'escalate', 'user_id': administrator.id})
+        wizard = self.env['kaitech.mcp.key.wizard'].sudo(self.manager.id).create({
+            'name': 'escalate', 'user_id': administrator.id})
+        with self.assertRaisesRegexp(ValidationError, 'groups you do not have'):
+            wizard.action_next()
+        self.assertTrue(keys_as_manager.create({'name': 'fine', 'user_id': self.user.id}))
+
     def test_only_managers_manage_keys(self):
         clerk = new_user(self.env, 'mcp_clerk', groups=('base.group_user',))
         with self.assertRaises(AccessError):
             self.env['kaitech.mcp.key'].sudo(clerk.id).create({'name': 'x', 'user_id': self.user.id})
         with self.assertRaises(AccessError):
             self.env['kaitech.mcp.overview'].sudo(clerk.id).action_open()
+        for model in ('kaitech.mcp.key.wizard', 'kaitech.mcp.key.test'):
+            with self.assertRaises(AccessError):
+                self.env[model].sudo(clerk.id).create({'name': 'x', 'user_id': self.user.id} if 'wizard' in model
+                                                      else {'key_id': new_key(self.env, self.user, {})[0].id})
 
     def test_retention_removes_only_old_calls(self):
         key, _token = new_key(self.env, self.user, {'res.partner': {'read'}})

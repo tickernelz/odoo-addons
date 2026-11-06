@@ -35,6 +35,8 @@ class TestEndpoint(EndpointCase):
         response = self.client.get('/mcp/%s' % self.db)
         self.assertEqual(response.status_code, 405)
         self.assertEqual(response.headers['Allow'], 'POST')
+        missing = self.client.get('/mcp/no_such_db_zz')
+        self.assertEqual((missing.status_code, missing.data), (response.status_code, response.data))
         status, _body, _headers = self.post({'jsonrpc': '2.0', 'id': 1, 'method': 'ping'}, token=self.token,
                                             headers={'Origin': 'https://evil.example'})
         self.assertEqual(status, 403)

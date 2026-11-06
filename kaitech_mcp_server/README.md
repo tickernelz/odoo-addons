@@ -50,6 +50,7 @@ Never exposed: technical models and tables (`ir.*`, `base.*`, `bus.*`), users, g
 ## Security notes
 
 - One endpoint per database (`/mcp/<database>`); keys, permissions, limits and the call log live in that database. A database that does not exist, is rejected by `dbfilter`/`db_name` for the request host, or lacks the module, answers the same 404.
+- Only Settings administrators can read or change MCP Settings; only MCP Managers create keys, and only for users whose groups they hold themselves.
 - Rate limits per key (default 60 calls and 20 writes per minute) are counted from the call log under a per-key advisory lock, so they hold across prefork workers.
 - Requests from another site's pages (`Origin` of another host) are refused; bodies over 1 MB are refused.
 - The call log stores tool, model or table, record ids or primary keys, field names written and SQL text with placeholders; never field values.

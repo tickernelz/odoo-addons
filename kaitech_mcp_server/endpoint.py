@@ -119,11 +119,11 @@ def _bearer(request):
 
 
 def _answer(request):
+    if request.method != 'POST':
+        return _json(405, protocol.error(None, protocol.INVALID_REQUEST, "Only POST is served here."), {'Allow': 'POST'})
     db = database_of(request.path)
     if db is None or not database_available(db, request):
         return _not_found()
-    if request.method != 'POST':
-        return _json(405, protocol.error(None, protocol.INVALID_REQUEST, "Only POST is served here."), {'Allow': 'POST'})
     if _foreign_origin(request):
         return _json(403, protocol.error(None, protocol.REFUSED_HERE, FOREIGN_ORIGIN))
     body = _body(request)

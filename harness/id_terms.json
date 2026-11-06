@@ -250,5 +250,8 @@
  "hr.payslip*": "hr.payslip*",
  "hr_payslip*": "hr_payslip*",
  "res.partner.vat": "res.partner.vat",
- "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group.": "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan."
+ "A key that acts as a Settings administrator cannot use SQL. Bind it to a user without the Administration / Settings group.": "Kunci yang bertindak sebagai administrator Pengaturan tidak boleh memakai SQL. Ikat kunci ke user tanpa grup Administrasi / Pengaturan.",
+ "Only administrators can read or change the MCP settings.": "Hanya administrator yang bisa membaca atau mengubah pengaturan MCP.",
+ "You cannot create a key for %s: that user has groups you do not have (%s). Ask an administrator, or choose a user with fewer rights.": "Anda tidak bisa membuat kunci untuk %s: user itu punya grup yang tidak Anda miliki (%s). Minta administrator, atau pilih user dengan hak lebih sedikit.",
+ "Only MCP managers can manage MCP keys.": "Hanya manajer MCP yang bisa mengelola kunci MCP."
 }

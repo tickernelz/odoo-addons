@@ -7,7 +7,7 @@ One client configuration works against both module versions. Anything not listed
 - `POST https://<host>/mcp/<database>`, one JSON-RPC 2.0 message per body, answer `application/json` (no SSE, no `Mcp-Session-Id`).
 - `Authorization: Bearer o10mcp_<43 base64url chars>` (Odoo 10) / `o19mcp_...` (Odoo 19). Stored as sha256 plus the first 8 secret characters as `key_index`.
 - Protocol versions: `2026-07-28` (stateless, `server/discover`, `resultType`, `_meta` envelope, `Mcp-Protocol-Version`/`Mcp-Method`/`Mcp-Name` headers checked) and `2025-11-25`, `2025-06-18`, `2025-03-26`, `2024-11-05` (`initialize`).
-- HTTP: 200 answer, 202 notification, 400 malformed / header mismatch / unsupported version (modern era), 401 key missing, wrong, revoked, expired, superuser, archived user (`WWW-Authenticate: Bearer`), 403 foreign `Origin`, 404 database not served (one identical body for every cause), 405 non-POST, 413 body over 1 MB, 429 rate limit with `Retry-After`.
+- HTTP: 200 answer, 202 notification, 400 malformed / header mismatch / unsupported version (modern era), 401 key missing, wrong, revoked, expired, superuser, archived user (`WWW-Authenticate: Bearer`), 403 foreign `Origin`, 404 database not served (one identical body for every cause), 405 non-POST (answered before the database is looked up, so it reveals nothing), 413 body over 1 MB, 429 rate limit with `Retry-After`.
 - JSON-RPC codes: -32700, -32600, -32601, -32602, -32603, -32001 refused here, -32020 header mismatch, -32022 unsupported protocol version, -32029 rate limit.
 - Odoo and SQL business errors are tool results with `isError: true` and `structuredContent: {"error": "<message>"}`; never a traceback.
 
@@ -41,9 +41,10 @@ Shared argument rules:
 - `domain` and `where`: Polish-notation list of `[name, operator, value]` terms and `'&'`, `'|'`, `'!'`; implicit AND between terms. Operators: `= != < <= > >= in, not in, like, ilike, not like, not ilike, =like, =ilike` (`child_of` on the ORM path only). Values are JSON scalars or lists of scalars; SQL values are always bound parameters. `= null` and `!= null` become `IS NULL` / `IS NOT NULL`.
 - `order`: `"name asc, id desc"`, only readable columns or stored fields.
 - SQL identifiers are checked against `information_schema` of the `public` schema and always quoted.
-- `sql_update`/`sql_delete` change at most 20 rows (`max_delete` for delete); more matches change nothing and return `isError`. `dry_run` runs the statement in a savepoint, rolls back, and reports the count and keys.
+- `sql_update`/`sql_delete` change at most 20 rows (`max_delete` for delete); the matches are counted first, and more matches change nothing and return `isError`. `dry_run` runs the statement in a savepoint, rolls back, and reports the count and keys.
 - `sql_query` runs in a read-only savepoint with `statement_timeout` (setting `sql_statement_timeout_ms`, default 5000). Before running, `EXPLAIN (VERBOSE, FORMAT JSON)` must show only tables the key may select, no forbidden column (so `SELECT *` works only on tables without one), no whole-row reference, and only functions from a fixed allow-list; anything else is refused.
-- `sql_insert` fills `create_uid`, `write_uid` with the key's user and `create_date`, `write_date` with the current UTC time when the table has those columns and the row does not set them.
+- `sql_insert` fills `create_uid`, `write_uid` with the key's user and `create_date`, `write_date` with the current UTC time, and `sql_update` fills `write_uid` and `write_date`, when the table has those columns; callers may not set these four columns.
+- In `sql_query`, a scan output that lists a table's whole physical row is not treated as a read only when its consumer keeps column names; rows reaching a CTE, a subquery, a set operation, an InitPlan or a SubPlan are checked column by column, so renaming a hidden column through an alias list is refused.
 
 ## Permissions and settings
 
@@ -55,7 +56,7 @@ Shared argument rules:
 - Built-in forbidden models: `ir.*`, `res.users*`, `res.groups*`, `base.*`, `bus.*`, `kaitech.mcp.*`, `res.device*`, `auth_totp.*`. Built-in forbidden tables: `ir_*`, `res_users*`, `res_groups*`, `base_*`, `bus_*`, `kaitech_mcp_*`, `res_company_users_rel`, `rule_group_rel`, `res_device*`, `auth_totp*`, every table outside the `public` schema. Built-in forbidden fields and columns: `password`, `password_crypt`, `new_password`, `signup_token`, `oauth_access_token`, `access_token`, `totp_secret`, binary fields and `bytea` columns; SQL columns matching `*password*`, `*token*`, `*secret*`, `totp*` are hidden too. Settings add to these lists, never remove.
 - A key bound to a Settings administrator (`base.group_system`) cannot use SQL: refused when saving `allow_sql`, and the `sql_*` tools disappear at request time if the user gains that group later.
 - Version-forced differences: module `kaitech_mcp_server` / setting prefix `kaitech_mcp_server.` (Odoo 10) vs `kaitech_mcp` / `kaitech_mcp.` (Odoo 19, another addon already uses the name `kaitech_mcp_server`); refused superusers uid 1 (Odoo 10) vs uid 1 and 2 (Odoo 19); jsonb translated columns accept `{"en_US": "..."}` objects in `sql_insert`/`sql_update` (Odoo 19 only).
-- Groups: `MCP / Manager` (keys, permissions, overview, read audit) and `MCP / Auditor` (read audit); Settings for `base.group_system`.
+- Groups: `MCP / Manager` (keys, permissions, overview, read audit) and `MCP / Auditor` (read audit); Settings for `base.group_system`, checked in the settings methods themselves. A manager can bind a key only to a user whose groups are all groups the manager holds.
 
 ## Audit (`kaitech.mcp.call`), one row per audited request, committed even when the call rolls back
 

@@ -5,6 +5,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 
 from .. import grants
+from ..models.mcp_key import check_manager, check_within_your_groups
 
 STEPS = [('client', 'Client and user'), ('models', 'Models and actions'), ('done', 'Copy the key')]
 
@@ -26,6 +27,11 @@ class McpKeyWizard(models.TransientModel):
     config_desktop = fields.Text('Claude Desktop (mcp-remote)', compute='_compute_examples')
     config_http = fields.Text('Clients with HTTP headers (Cursor, n8n, Hermes)', compute='_compute_examples')
     delete_enabled = fields.Boolean(compute='_compute_delete_enabled')
+
+    @api.model
+    def create(self, values):
+        check_manager(self.env)
+        return super(McpKeyWizard, self).create(values)
 
     def _compute_delete_enabled(self):
         enabled = grants.read_settings(self.env.cr)['delete_enabled']
@@ -66,6 +72,7 @@ class McpKeyWizard(models.TransientModel):
             raise UserError(_(
                 "An MCP key cannot act as the Administrator (uid 1): that user bypasses every access right "
                 "and record rule. Create a dedicated user for this client with only the groups it needs."))
+        check_within_your_groups(self.env, self.user_id)
         self.step = 'models'
         return self._reopen(_('New MCP key: models and actions'))
 
