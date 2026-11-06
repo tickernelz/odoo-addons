@@ -2,7 +2,7 @@
 {
     'name': 'MCP Server',
     'summary': 'Model Context Protocol endpoint per database: keys, per-model permissions, audit',
-    'version': '10.0.1.0.0',
+    'version': '10.0.1.1.0',
     'category': 'Extra Tools',
     'author': 'tickernelz',
     'license': 'LGPL-3',
