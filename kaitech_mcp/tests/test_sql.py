@@ -35,7 +35,7 @@ class TestSql(EndpointCase):
                          ['sql_list_tables', 'sql_select', 'sql_query', 'sql_insert', 'sql_update'])
         self.assertFalse([name for name in self.tool_names(self.plain_token) if name.startswith('sql_')])
         result = self.call(self.plain_token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('There is no tool named sql_select', result['structuredContent']['error'])
         with self.shared_env() as env:
             set_setting(env, 'sql_enabled', 'False')
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
@@ -43,6 +43,24 @@ class TestSql(EndpointCase):
             set_setting(env, 'sql_enabled', 'True')
             env['kaitech.mcp.key'].browse(self.key_id).write({'allow_sql': False})
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
+
+    def test_closed_sql_tools_run_no_statement(self):
+        arguments = {
+            'sql_list_tables': {}, 'sql_select': {'table': 'res_country', 'columns': ['code']},
+            'sql_query': {'query': 'SELECT 1 AS n'}, 'sql_insert': {'table': 'res_country', 'rows': [{'code': 'QQ'}]},
+            'sql_update': {'table': 'res_country', 'values': {'code': 'QQ'}, 'where': [['id', '=', 1]]},
+            'sql_delete': {'table': 'res_country', 'where': [['id', '=', 1]]},
+        }
+        refused = {}
+        for token in (self.plain_token, self.token):
+            if token == self.token:
+                with self.shared_env() as env:
+                    set_setting(env, 'sql_enabled', 'False')
+            for tool, values in arguments.items():
+                with patch.object(sql.Run, '__init__', side_effect=AssertionError('sql.Run was built')):
+                    result = self.call(token, tool, values)
+                refused[(token == self.token, tool)] = result['structuredContent'].get('error', '')
+        self.assertEqual({call: error for call, error in refused.items() if 'There is no tool named' not in error}, {})
 
     def test_settings_administrators_never_get_sql(self):
         env = self.env
@@ -54,7 +72,7 @@ class TestSql(EndpointCase):
                            (env.ref('base.group_system').id, self.user.id))
         self.assertFalse([name for name in self.tool_names(self.token) if name.startswith('sql_')])
         result = self.call(self.token, 'sql_select', {'table': 'res_partner'})
-        self.assertIn('Unknown table', result['structuredContent']['error'])
+        self.assertIn('There is no tool named sql_select', result['structuredContent']['error'])
 
     def test_secret_looking_columns_are_hidden(self):
         with self.shared_env() as env:

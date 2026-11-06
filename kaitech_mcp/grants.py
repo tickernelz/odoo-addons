@@ -196,7 +196,7 @@ class Grant(object):
         return env[model_name]
 
     def fields(self, model):
-        """Fields of model this key may see: visible to the Odoo user, not forbidden, not binary."""
+        """Fields of model this key may see: visible to the Odoo user, not forbidden, not binary, not a relation to a model the user cannot read."""
         name = model._name
         if name in self._fields_cache:
             return self._fields_cache[name]
@@ -212,6 +212,8 @@ class Grant(object):
                 continue
             field = model._fields.get(fname)
             if field is None:
+                continue
+            if field.type in RELATIONAL and not model.env[field.comodel_name].has_access('read'):
                 continue
             allowed[fname] = field
         self._fields_cache[name] = allowed

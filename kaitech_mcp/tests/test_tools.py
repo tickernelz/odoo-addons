@@ -33,6 +33,32 @@ class TestTools(EndpointCase):
         for hidden in ('image_1920', 'signup_token'):
             self.assertNotIn(hidden, fields)
 
+    def test_relations_to_models_the_user_cannot_read_are_left_out(self):
+        with self.shared_env() as env:
+            env['ir.model.access'].search([('model_id.model', '=', 'res.partner.category'),
+                                           ('group_id', '=', env.ref('base.group_user').id)]).write({'perm_read': False})
+            self.partner.with_env(env).category_id = self.category.with_env(env)
+        result = self.call(self.reader_token, 'read_records', {'model': 'res.partner', 'ids': [self.partner.id]})
+        self.assertFalse(result['isError'], result['structuredContent'])
+        record = result['structuredContent']['records'][0]
+        self.assertEqual(record['name'], 'PT Contoh %s' % self.mark)
+        self.assertNotIn('category_id', record)
+        result = self.call(self.reader_token, 'search_records', {'model': 'res.partner', 'domain': [['city', '=', self.mark]]})
+        self.assertFalse(result['isError'], result['structuredContent'])
+        self.assertEqual(len(result['structuredContent']['records']), 1)
+        fields = self.call(self.reader_token, 'get_model_fields', {'model': 'res.partner'})['structuredContent']['fields']
+        self.assertNotIn('category_id', fields)
+        self.assertIn('country_id', fields)
+        refused = (
+            ('read_records', {'model': 'res.partner', 'ids': [self.partner.id], 'fields': ['category_id']}),
+            ('search_records', {'model': 'res.partner', 'domain': [['category_id', '=', self.category.id]]}),
+            ('update_records', {'model': 'res.partner', 'ids': [self.partner.id], 'values': {'category_id': []}}),
+        )
+        answers = {tool: self.call(self.reader_token, tool, values)['structuredContent'] for tool, values in refused}
+        self.assertEqual({tool: answer for tool, answer in answers.items() if 'forbidden field' not in answer.get('error', '')}, {})
+        result = self.call(self.token, 'read_records', {'model': 'res.partner', 'ids': [self.partner.id], 'fields': ['category_id']})
+        self.assertEqual(result['structuredContent']['records'][0]['category_id'], [self.category.id])
+
     def test_search_read_count_and_audit(self):
         result = self.call(self.token, 'search_records', {
             'model': 'res.partner', 'domain': [['city', 'ilike', self.mark.upper()]], 'fields': ['name', 'phone'], 'limit': 5})
