@@ -27,8 +27,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -q ruff==0.15.0
-      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp ci
-      - run: python -m compileall -q kaitech_mcp
+      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp pos_bank_card_program ci
+      - run: python -m compileall -q kaitech_mcp pos_bank_card_program
 
   odoo19-image:
     runs-on: ubuntu-24.04
@@ -105,11 +105,12 @@ jobs:
       DB_HOST: postgres
     steps:
       - uses: actions/checkout@v4
-      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n > fresh.pot
+      - run: mkdir -p fresh && ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kaitech_mcp > fresh/kaitech_mcp.pot
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_bank_card_program > fresh/pos_bank_card_program.pot
       - uses: actions/upload-artifact@v4
         with:
           name: fresh-pot
-          path: fresh.pot
+          path: fresh
           retention-days: 7
 
   i18n:
@@ -126,9 +127,10 @@ jobs:
           name: fresh-pot
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext >/dev/null
       - run: pip install -q polib==1.2.0
-      - run: python ci/i18n.py compare fresh.pot
+      - run: python ci/i18n.py compare fresh
       - run: python ci/i18n.py check
       - run: msgfmt --check --statistics -o /dev/null kaitech_mcp/i18n/id.po
+      - run: msgfmt --check --statistics -o /dev/null pos_bank_card_program/i18n/id.po
 
   multi-db:
     runs-on: ubuntu-24.04
