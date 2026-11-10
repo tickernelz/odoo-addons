@@ -7,3 +7,4 @@ from . import test_quota
 from . import test_pos_flow
 from . import test_tour
 from . import test_language
+from . import test_icon

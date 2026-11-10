@@ -122,3 +122,7 @@ claims, and point of sale users only read programmes, usage, and quota rows.
 The reservation, release, and confirm calls perform their writes on those
 three models under sudo after the eligibility and locking checks, so a
 cashier cannot adjust quota counters directly through the ORM.
+
+Icon: the source is static/description/icon.svg; regenerate the PNG with
+inkscape static/description/icon.svg --export-type=png --export-filename=static/description/icon.png -w 256 -h 256
+(run from the module directory).
