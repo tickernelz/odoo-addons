@@ -185,14 +185,22 @@ class TestPosBankCardFlow(TestPoSCommon):
         self.assertTrue(usage.offline)
         self.assertEqual(usage.discount_amount, 75000.0)
         self.assertEqual(usage.bank_share_amount, 37500.0)
+        self.assertFalse(usage.needs_review)
+        self.assertEqual(usage.claim_state, 'not_claimed')
 
-    def test_offline_discount_rejected_without_programme_permission(self):
+    def test_offline_discount_without_permission_is_not_claimable(self):
         self.open_new_session()
         order = self.make_order(self.program_half, 75000.0, offline=True,
                                 card_bin='900350', last4='9876')
-        with self.assertRaises(UserError) as caught:
-            order.action_pos_order_paid()
-        self.assertIn('does not allow offline', str(caught.exception))
+        order.action_pos_order_paid()
+        self.assertEqual(order.state, 'paid')
+        usage = order.bank_card_usage_id
+        self.assertTrue(usage)
+        self.assertTrue(usage.offline)
+        self.assertTrue(usage.needs_review)
+        self.assertEqual(usage.claim_state, 'cancelled')
+        self.assertEqual(usage.bank_share_amount, 0.0)
+        self.assertEqual(usage.store_share_amount, 75000.0)
 
     def test_offline_allowance_is_enforced_by_the_server(self):
         self.program_half.write({'offline_allowed': True, 'offline_allowance': 1})
@@ -200,11 +208,54 @@ class TestPosBankCardFlow(TestPoSCommon):
         first = self.make_order(self.program_half, 75000.0, offline=True,
                                 card_bin='900350', last4='9876')
         first.action_pos_order_paid()
+        self.assertFalse(first.bank_card_usage_id.needs_review)
+        self.assertEqual(first.bank_card_usage_id.bank_share_amount, 37500.0)
         second = self.make_order(self.program_half, 75000.0, offline=True,
                                  card_bin='900350', last4='9876')
-        with self.assertRaises(UserError) as caught:
-            second.action_pos_order_paid()
-        self.assertIn('allowance', str(caught.exception))
+        second.action_pos_order_paid()
+        self.assertEqual(second.state, 'paid')
+        self.assertTrue(second.bank_card_usage_id.needs_review)
+        self.assertEqual(second.bank_card_usage_id.bank_share_amount, 0.0)
+
+    def test_offline_order_syncs_from_ui_without_bank_claim(self):
+        self.open_new_session()
+        data = self.create_ui_order_data(
+            [
+                (self.product, 1),
+                {
+                    'product': self.discount_product,
+                    'quantity': 1,
+                    'price_unit': -75000.0,
+                    'price_subtotal': -75000.0,
+                    'price_subtotal_incl': -75000.0,
+                    'is_bank_card_discount': True,
+                },
+            ],
+            pos_order_ui_args={
+                'bank_card_program_id': self.program_half.id,
+                'bank_card_masked': '9003 50** **** 9876',
+                'bank_card_reservation_state': 'reserved',
+                'bank_card_offline': True,
+            },
+            payments=[(self.bank_pm1, 925000.0)],
+        )
+        data['payment_ids'][0][2].update({
+            'card_bin': '900350',
+            'card_no': '9876',
+            'card_tier': 'Signature',
+            'payment_method_authcode': 'AP1234',
+            'bank_card_program_id': self.program_half.id,
+            'bank_card_discount': 75000.0,
+            'bank_card_bank_share': 37500.0,
+        })
+        result = self.env['pos.order'].sync_from_ui([data])
+        order = self.env['pos.order'].browse(result['pos.order'][0]['id'])
+        self.assertEqual(order.state, 'paid')
+        usage = order.bank_card_usage_id
+        self.assertTrue(usage)
+        self.assertTrue(usage.needs_review)
+        self.assertEqual(usage.claim_state, 'cancelled')
+        self.assertEqual(usage.bank_share_amount, 0.0)
 
     def test_discount_without_card_payment_is_rejected(self):
         self.open_new_session()
@@ -303,8 +354,10 @@ class TestPosBankCardFlow(TestPoSCommon):
         self.pos_session.post_closing_cash_details(0)
         self.pos_session.close_session_from_ui()
         self.assertEqual(usage.reclass_move_id.state, 'posted')
+        sale_session = self.pos_session
         self.open_new_session()
         product_line = order.lines.filtered(lambda line: not line.is_bank_card_discount)
+        discount_line = order.lines.filtered('is_bank_card_discount')
         refund = self.env['pos.order'].create({
             'session_id': self.pos_session.id,
             'company_id': self.company.id,
@@ -313,16 +366,28 @@ class TestPosBankCardFlow(TestPoSCommon):
             'amount_paid': -925000.0,
             'amount_return': 0.0,
             'is_refund': True,
-            'lines': [(0, 0, {
-                'product_id': self.product.id,
-                'price_unit': 1000000.0,
-                'price_subtotal': -1000000.0,
-                'price_subtotal_incl': -1000000.0,
-                'qty': -1,
-                'tax_ids': [(5, 0, 0)],
-                'refunded_orderline_id': product_line.id,
-                'full_product_name': self.product.name,
-            })],
+            'lines': [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'price_unit': 1000000.0,
+                    'price_subtotal': -1000000.0,
+                    'price_subtotal_incl': -1000000.0,
+                    'qty': -1,
+                    'tax_ids': [(5, 0, 0)],
+                    'refunded_orderline_id': product_line.id,
+                    'full_product_name': self.product.name,
+                }),
+                (0, 0, {
+                    'product_id': self.discount_product.id,
+                    'price_unit': -75000.0,
+                    'price_subtotal': 75000.0,
+                    'price_subtotal_incl': 75000.0,
+                    'qty': -1,
+                    'tax_ids': [(5, 0, 0)],
+                    'refunded_orderline_id': discount_line.id,
+                    'full_product_name': self.discount_product.name,
+                }),
+            ],
             'payment_ids': [(0, 0, {
                 'payment_method_id': self.bank_pm1.id,
                 'amount': -925000.0,
@@ -337,6 +402,22 @@ class TestPosBankCardFlow(TestPoSCommon):
             lambda line: line.account_id == self.claim_account)
         self.assertEqual(
             sum(claim_lines.mapped('debit')) - sum(claim_lines.mapped('credit')), 0.0)
+        refund_session = self.pos_session
+        refund_session.post_closing_cash_details(0)
+        refund_session.close_session_from_ui()
+        all_moves = (
+            sale_session.move_id | usage.reclass_move_id | reversal | refund_session.move_id)
+        discount_lines = all_moves.line_ids.filtered(
+            lambda line: line.account_id == self.discount_account)
+        self.assertEqual(
+            sum(discount_lines.mapped('debit')) - sum(discount_lines.mapped('credit')), 0.0)
+        income_line = sale_session.move_id.line_ids.filtered(
+            lambda line: line.credit == 1000000.0)
+        self.assertTrue(income_line)
+        income_lines = all_moves.line_ids.filtered(
+            lambda line: line.account_id == income_line.account_id)
+        self.assertEqual(
+            sum(income_lines.mapped('credit')) - sum(income_lines.mapped('debit')), 0.0)
 
     def test_closing_releases_open_reservations(self):
         self.open_new_session()
@@ -369,9 +450,12 @@ class TestPosBankCardFlow(TestPoSCommon):
         self.assertTrue(manager.bank_card_manager_pin.startswith('pbkdf2$'))
         self.assertNotIn('4321', manager.bank_card_manager_pin)
         Program = self.env['pos.bank.card.program']
-        self.assertTrue(Program.verify_manager_pin('4321'))
-        self.assertFalse(Program.verify_manager_pin('0000'))
-        self.assertFalse(Program.verify_manager_pin(''))
+        self.assertTrue(Program.verify_manager_pin('4321')['verified'])
+        self.assertEqual(Program.verify_manager_pin('0000')['reason'], 'wrong')
+        self.assertFalse(Program.verify_manager_pin('')['verified'])
+        for _index in range(4):
+            Program.verify_manager_pin('0000')
+        self.assertEqual(Program.verify_manager_pin('4321')['reason'], 'locked')
 
     def test_card_context_is_stored_on_order_fields(self):
         fields = self.env['pos.order']._load_pos_data_fields(self.config)

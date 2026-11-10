@@ -486,18 +486,18 @@ class PosBankCardProgram(models.Model):
     def verify_manager_pin(self, pin):
         from .res_users import check_manager_pin
         if not pin:
-            return False
+            return {'verified': False, 'reason': 'wrong'}
         caller = self.env.user.sudo()
         now = fields.Datetime.now()
         if caller.bank_card_pin_locked_until and caller.bank_card_pin_locked_until > now:
-            return False
+            return {'verified': False, 'reason': 'locked'}
         manager_group = self.env.ref(
             'pos_bank_card_program.group_bank_card_manager', raise_if_not_found=False)
         pos_manager_group = self.env.ref(
             'point_of_sale.group_pos_manager', raise_if_not_found=False)
         groups = (manager_group | pos_manager_group) if manager_group or pos_manager_group else self.env['res.groups']
         if not groups:
-            return False
+            return {'verified': False, 'reason': 'wrong'}
         users = self.env['res.users'].sudo().search([
             ('bank_card_manager_pin', '!=', False),
             ('all_group_ids', 'in', groups.ids),
@@ -508,14 +508,16 @@ class PosBankCardProgram(models.Model):
             check_manager_pin(str(pin), user.bank_card_manager_pin) for user in users)
         if verified:
             caller.write({'bank_card_pin_attempts': 0, 'bank_card_pin_locked_until': False})
-            return True
+            return {'verified': True, 'reason': False}
         attempts = caller.bank_card_pin_attempts + 1
         values = {'bank_card_pin_attempts': attempts}
         if attempts >= 5:
             values['bank_card_pin_locked_until'] = now + datetime.timedelta(minutes=5)
             values['bank_card_pin_attempts'] = 0
         caller.write(values)
-        return False
+        if values.get('bank_card_pin_locked_until'):
+            return {'verified': False, 'reason': 'locked'}
+        return {'verified': False, 'reason': 'wrong'}
 
     @api.model
     def _load_pos_data_domain(self, data, config):

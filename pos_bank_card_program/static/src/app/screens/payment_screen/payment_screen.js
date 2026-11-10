@@ -89,9 +89,18 @@ patch(PaymentScreen.prototype, {
             if (pin === undefined || pin === null || pin === "") {
                 return;
             }
-            verified = await this.pos.data.call("pos.bank.card.program", "verify_manager_pin", [
-                String(pin),
-            ]);
+            const result = await this.pos.data.call(
+                "pos.bank.card.program",
+                "verify_manager_pin",
+                [String(pin)]
+            );
+            verified = Boolean(result?.verified);
+            if (!verified && result?.reason === "locked") {
+                this.notification.add(_t("PIN checks are locked for a few minutes."), {
+                    type: "warning",
+                });
+                return;
+            }
             if (!verified) {
                 this.notification.add(_t("The PIN is not correct."), { type: "warning" });
             }

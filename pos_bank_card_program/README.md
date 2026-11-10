@@ -60,12 +60,16 @@ usage row. Refunding a discounted order cancels its usage row so it is never
 claimed; the quota is returned only when the programme enables "Refund
 Returns Quota".
 
-Offline: discounts are refused while offline by default, and the server
-enforces it again when the order syncs. A programme with "Allow Offline"
-applies the discount from local data up to its per-outlet daily allowance,
-counted on the server from confirmed offline usage rows; the usage row is
-reserved when the order syncs, and an order that loses that check is refused
-at sync instead of being recorded silently.
+Offline: discounts are refused while offline by default in the dialog. A
+programme with "Allow Offline" applies the discount from local data up to
+its per-outlet daily allowance. Sync never refuses a sale that already
+happened: when the order syncs, the server re-checks the permission, the
+allowance for the order day, and the shared quota. An order that passes is
+recorded as a claimable offline usage; an order that does not (no
+permission, allowance used up, quota lost, approval code missing) is still
+stored as paid, but its usage row is marked as needing review with a bank
+share of zero and a cancelled claim state, so the store bears the discount
+and the bank is never charged for it.
 
 Accounting: the journal assumption is that POS prices are tax-included, so
 the discount line and the bank share already contain tax. When a session

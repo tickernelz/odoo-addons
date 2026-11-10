@@ -54,6 +54,7 @@ class PosBankCardUsage(models.Model):
     reclass_reversal_move_id = fields.Many2one(
         'account.move', string='Reclassification Reversal', ondelete='set null')
     offline = fields.Boolean(string='Offline', default=False)
+    needs_review = fields.Boolean(string='Needs Review', default=False)
 
     @api.depends('card_bin', 'card_last4')
     def _compute_masked_card(self):

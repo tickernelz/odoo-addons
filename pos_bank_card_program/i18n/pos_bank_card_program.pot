@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 16:02+0000\n"
-"PO-Revision-Date: 2026-11-10 16:02+0000\n"
+"POT-Creation-Date: 2026-11-10 16:38+0000\n"
+"PO-Revision-Date: 2026-11-10 16:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -762,6 +762,11 @@ msgid "Name"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__needs_review
+msgid "Needs Review"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__network
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_brand
 msgid "Network"
@@ -869,6 +874,12 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__config_ids
 msgid "Outlets"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "PIN checks are locked for a few minutes."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1201,14 +1212,6 @@ msgid ""
 msgstr ""
 
 #. module: pos_bank_card_program
-#. odoo-python
-#: code:addons/pos_bank_card_program/models/pos_order.py:0
-msgid ""
-"The bank card discount on order %s was applied offline, but programme %s "
-"does not allow offline discounts."
-msgstr ""
-
-#. module: pos_bank_card_program
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The bank card discount was removed with its card payment."
@@ -1285,20 +1288,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/controllers/main.py:0
 msgid "The language can only be changed from an open point of sale session."
-msgstr ""
-
-#. module: pos_bank_card_program
-#. odoo-python
-#: code:addons/pos_bank_card_program/models/pos_order.py:0
-msgid "The offline bank card discount on order %s cannot be recorded: %s"
-msgstr ""
-
-#. module: pos_bank_card_program
-#. odoo-python
-#: code:addons/pos_bank_card_program/models/pos_order.py:0
-msgid ""
-"The offline discount allowance of programme %s for this outlet is used up on"
-" order %s."
 msgstr ""
 
 #. module: pos_bank_card_program
