@@ -175,7 +175,8 @@ class PosBankCardProgram(models.Model):
     def _quota_for(self, day, create=False):
         self.ensure_one()
         start, end = self._quota_bucket_dates(day)
-        quota = self.env['pos.bank.card.quota'].search([
+        Quota = self.env['pos.bank.card.quota'].sudo() if create else self.env['pos.bank.card.quota']
+        quota = Quota.search([
             ('program_id', '=', self.id),
             ('date_from', '=', start),
             ('date_to', '=', end),
@@ -183,13 +184,13 @@ class PosBankCardProgram(models.Model):
         if not quota and create:
             try:
                 with self.env.cr.savepoint():
-                    quota = self.env['pos.bank.card.quota'].create({
+                    quota = Quota.create({
                         'program_id': self.id,
                         'date_from': start,
                         'date_to': end,
                     })
             except psycopg2.IntegrityError:
-                quota = self.env['pos.bank.card.quota'].search([
+                quota = Quota.search([
                     ('program_id', '=', self.id),
                     ('date_from', '=', start),
                     ('date_to', '=', end),
@@ -204,18 +205,19 @@ class PosBankCardProgram(models.Model):
             ('card_last4', '=', card_last4),
             ('date', '=', day),
         ]
-        limit = self.env['pos.bank.card.cardlimit'].search(domain, limit=1)
+        Cardlimit = self.env['pos.bank.card.cardlimit'].sudo() if create else self.env['pos.bank.card.cardlimit']
+        limit = Cardlimit.search(domain, limit=1)
         if not limit and create:
             try:
                 with self.env.cr.savepoint():
-                    limit = self.env['pos.bank.card.cardlimit'].create({
+                    limit = Cardlimit.create({
                         'program_id': self.id,
                         'card_bin': card_bin,
                         'card_last4': card_last4,
                         'date': day,
                     })
             except psycopg2.IntegrityError:
-                limit = self.env['pos.bank.card.cardlimit'].search(domain, limit=1)
+                limit = Cardlimit.search(domain, limit=1)
         return limit
 
     def _quota_remaining(self, day):
@@ -398,7 +400,7 @@ class PosBankCardProgram(models.Model):
                 'reason': 'quota_exhausted',
                 'message': self.env._('The programme quota has run out.'),
             }
-        usage = self.env['pos.bank.card.usage'].create({
+        usage = self.env['pos.bank.card.usage'].sudo().create({
             'program_id': program.id,
             'bin_range_id': bin_range.id,
             'pos_order_id': pos_order_id or False,

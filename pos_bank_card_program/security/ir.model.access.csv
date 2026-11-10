@@ -7,13 +7,13 @@ access_bin_range_finance,BIN range finance,model_pos_bank_card_bin_range,group_b
 access_bin_range_pos_user,BIN range POS user,model_pos_bank_card_bin_range,point_of_sale.group_pos_user,1,0,0,0
 access_usage_manager,Usage manager,model_pos_bank_card_usage,group_bank_card_manager,1,1,1,0
 access_usage_finance,Usage finance,model_pos_bank_card_usage,group_bank_card_finance,1,1,0,0
-access_usage_pos_user,Usage POS user,model_pos_bank_card_usage,point_of_sale.group_pos_user,1,1,1,0
+access_usage_pos_user,Usage POS user,model_pos_bank_card_usage,point_of_sale.group_pos_user,1,0,0,0
 access_quota_manager,Quota manager,model_pos_bank_card_quota,group_bank_card_manager,1,1,1,0
 access_quota_finance,Quota finance,model_pos_bank_card_quota,group_bank_card_finance,1,0,0,0
-access_quota_pos_user,Quota POS user,model_pos_bank_card_quota,point_of_sale.group_pos_user,1,1,1,0
+access_quota_pos_user,Quota POS user,model_pos_bank_card_quota,point_of_sale.group_pos_user,1,0,0,0
 access_cardlimit_manager,Card limit manager,model_pos_bank_card_cardlimit,group_bank_card_manager,1,1,1,0
 access_cardlimit_finance,Card limit finance,model_pos_bank_card_cardlimit,group_bank_card_finance,1,0,0,0
-access_cardlimit_pos_user,Card limit POS user,model_pos_bank_card_cardlimit,point_of_sale.group_pos_user,1,1,1,0
+access_cardlimit_pos_user,Card limit POS user,model_pos_bank_card_cardlimit,point_of_sale.group_pos_user,1,0,0,0
 access_claim_finance,Claim finance,model_pos_bank_card_claim,group_bank_card_finance,1,1,1,1
 access_claim_manager,Claim manager,model_pos_bank_card_claim,group_bank_card_manager,1,0,0,0
 access_claim_column_manager,Claim column manager,model_pos_bank_card_claim_column,group_bank_card_manager,1,1,1,1

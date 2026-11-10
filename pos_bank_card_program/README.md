@@ -28,5 +28,7 @@ Server API used by the point of sale:
 - pos.bank.card.program.confirm_quota(usage_id) confirms a reserved usage row.
 
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
-claims, and point of sale users read programmes and create usage rows through
-the reservation call.
+claims, and point of sale users only read programmes, usage, and quota rows.
+The reservation, release, and confirm calls perform their writes on those
+three models under sudo after the eligibility and locking checks, so a
+cashier cannot adjust quota counters directly through the ORM.

@@ -60,6 +60,19 @@ class TestAccess(BankCardCommon):
                 'date_to': '2026-01-31',
             })
 
+    def test_cashier_cannot_write_quota_directly(self):
+        program = self.make_programme(
+            quota_type='count', quota_period='day', quota_limit_count=5, card_daily_limit=0)
+        reserved = self.env['pos.bank.card.program'].reserve_quota(
+            program.id, '900550', '5555', 100000.0)
+        self.assertTrue(reserved['reserved'])
+        quota = self.env['pos.bank.card.quota'].browse(reserved['quota_id'])
+        with self.assertRaises(AccessError):
+            quota.with_user(self.cashier).write({'used_count': 0})
+        usage = self.env['pos.bank.card.usage'].browse(reserved['usage_id'])
+        with self.assertRaises(AccessError):
+            usage.with_user(self.cashier).write({'discount_amount': 1.0})
+
     def test_cashier_can_reserve_quota(self):
         result = self.env['pos.bank.card.program'].with_user(self.cashier).reserve_quota(
             self.program.id, '900150', '9999', 1000000.0)

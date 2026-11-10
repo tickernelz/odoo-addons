@@ -67,18 +67,18 @@ class PosBankCardUsage(models.Model):
         program = self.program_id
         program._lock_rows(self.quota_id, self.cardlimit_id)
         if self.quota_id:
-            self.quota_id.write({
+            self.quota_id.sudo().write({
                 'used_count': max(self.quota_id.used_count - 1, 0),
                 'used_amount': max(self.quota_id.used_amount - self.discount_amount, 0.0),
             })
         if self.cardlimit_id:
-            self.cardlimit_id.write({'used_count': max(self.cardlimit_id.used_count - 1, 0)})
-        self.write({'state': 'cancelled', 'claim_state': 'cancelled'})
+            self.cardlimit_id.sudo().write({'used_count': max(self.cardlimit_id.used_count - 1, 0)})
+        self.sudo().write({'state': 'cancelled', 'claim_state': 'cancelled'})
         return {'released': True, 'usage_id': self.id}
 
     def confirm_reservation(self):
         self.ensure_one()
         if self.state != 'reserved':
             return {'confirmed': False, 'reason': 'not_reserved'}
-        self.write({'state': 'confirmed'})
+        self.sudo().write({'state': 'confirmed'})
         return {'confirmed': True, 'usage_id': self.id}
