@@ -6,6 +6,7 @@ class PosBankCardClaim(models.Model):
     _description = 'Bank Card Claim'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_from desc, id desc'
+    _check_company_auto = True
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     bank_id = fields.Many2one(

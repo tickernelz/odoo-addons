@@ -69,7 +69,7 @@ class TestQuota(BankCardCommon):
         self.assertFalse(result['reserved'])
         self.assertEqual(result['reason'], 'tier_excluded')
 
-    def make_committed_programme(self):
+    def make_committed_programme(self, quota_type='count', card_daily_limit=0):
         cursor = self.env.registry.cursor()
         try:
             env = api.Environment(cursor, self.env.user.id, {})
@@ -79,10 +79,10 @@ class TestQuota(BankCardCommon):
                 'bank_id': bank.id,
                 'state': 'active',
                 'discount_percent': 10.0,
-                'quota_type': 'count',
+                'quota_type': quota_type,
                 'quota_period': 'day',
                 'quota_limit_count': 1,
-                'card_daily_limit': 0,
+                'card_daily_limit': card_daily_limit,
             })
             env['pos.bank.card.bin.range'].create({
                 'program_id': program.id,
@@ -117,32 +117,75 @@ class TestQuota(BankCardCommon):
         finally:
             cursor.close()
 
-    def test_concurrent_reservations_two_cursors(self):
-        bank_id, program_id = self.make_committed_programme()
+    def race_snapshot_reservations(self, program_id, last4_a, last4_b):
         cursor_a = self.env.registry.cursor()
         cursor_b = self.env.registry.cursor()
-        cursor_c = self.env.registry.cursor()
         try:
+            env_b = api.Environment(cursor_b, self.env.user.id, {})
+            cursor_b.execute('SELECT 1')
             env_a = api.Environment(cursor_a, self.env.user.id, {})
             first = env_a['pos.bank.card.program'].reserve_quota(
-                program_id, '900850', '1111', 100000.0)
+                program_id, '900850', last4_a, 100000.0)
             self.assertTrue(first['reserved'])
-            env_b = api.Environment(cursor_b, self.env.user.id, {})
-            cursor_b.execute("SET LOCAL lock_timeout = '2s'")
-            with self.assertRaises(psycopg2.errors.LockNotAvailable):
-                env_b['pos.bank.card.program'].reserve_quota(
-                    program_id, '900850', '2222', 100000.0)
-            cursor_b.rollback()
             cursor_a.commit()
-            env_c = api.Environment(cursor_c, self.env.user.id, {})
-            second = env_c['pos.bank.card.program'].reserve_quota(
-                program_id, '900850', '2222', 100000.0)
-            cursor_c.commit()
-            self.assertFalse(second['reserved'])
-            self.assertEqual(second['reason'], 'quota_exhausted')
-            self.assertEqual(self.count_committed_usages(program_id), 1)
+            with self.assertRaises(psycopg2.errors.SerializationFailure):
+                env_b['pos.bank.card.program'].reserve_quota(
+                    program_id, '900850', last4_b, 100000.0)
+            cursor_b.rollback()
         finally:
             cursor_a.close()
             cursor_b.close()
-            cursor_c.close()
+
+    def test_quota_bucket_creation_race_fails_closed(self):
+        bank_id, program_id = self.make_committed_programme()
+        try:
+            self.race_snapshot_reservations(program_id, '1111', '2222')
+            self.assertEqual(self.count_committed_usages(program_id), 1)
+        finally:
             self.drop_committed_programme(bank_id, program_id)
+
+    def test_cardlimit_creation_race_fails_closed(self):
+        bank_id, program_id = self.make_committed_programme(
+            quota_type='none', card_daily_limit=1)
+        try:
+            self.race_snapshot_reservations(program_id, '1111', '1111')
+            self.assertEqual(self.count_committed_usages(program_id), 1)
+        finally:
+            self.drop_committed_programme(bank_id, program_id)
+
+    def test_reserve_rejects_other_payment_method(self):
+        method_a = self.env['pos.payment.method'].create({'name': 'Card Method A'})
+        method_b = self.env['pos.payment.method'].create({'name': 'Card Method B'})
+        program = self.make_programme(payment_method_ids=[(6, 0, [method_a.id])])
+        detected = self.env['pos.bank.card.program'].detect_card(
+            '900550', '1111', basis_amount=100000.0, payment_method_id=method_b.id)
+        self.assertEqual(detected['reason'], 'bin_not_registered')
+        refused = self.env['pos.bank.card.program'].reserve_quota(
+            program.id, '900550', '1111', 100000.0, payment_method_id=method_b.id)
+        self.assertFalse(refused['reserved'])
+        self.assertEqual(refused['reason'], 'bin_not_registered')
+        accepted = self.env['pos.bank.card.program'].reserve_quota(
+            program.id, '900550', '1111', 100000.0, payment_method_id=method_a.id)
+        self.assertTrue(accepted['reserved'])
+
+    def test_reserve_targets_its_own_programme_when_bin_is_shared(self):
+        other = self.env['pos.bank.card.program'].create({
+            'name': 'Shared BIN Programme',
+            'bank_id': self.bank_b.id,
+            'state': 'active',
+            'discount_percent': 5.0,
+            'card_daily_limit': 0,
+        })
+        self.env['pos.bank.card.bin.range'].create({
+            'program_id': other.id,
+            'bin_from': '900100',
+            'bin_to': '900199',
+            'network': 'Network A',
+            'card_type': 'credit',
+            'tier': 'Platinum',
+            'eligible': True,
+        })
+        result = self.reserve(other, '900150', '8888', 100000.0)
+        self.assertTrue(result['reserved'])
+        usage = self.env['pos.bank.card.usage'].browse(result['usage_id'])
+        self.assertEqual(usage.program_id, other)

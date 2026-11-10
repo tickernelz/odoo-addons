@@ -16,6 +16,7 @@ class PosBankCardProgram(models.Model):
     _description = 'Bank Card Programme'
     _inherit = ['pos.load.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = 'name, id'
+    _check_company_auto = True
 
     name = fields.Char(string='Name', required=True, tracking=True)
     active = fields.Boolean(string='Active', default=True)
@@ -35,8 +36,9 @@ class PosBankCardProgram(models.Model):
     mode = fields.Selection(
         selection=[('discount', 'Immediate Discount'), ('marker', 'Marker (Bank Cashback)')],
         string='Mode', default='discount', required=True)
-    config_ids = fields.Many2many('pos.config', string='Outlets')
-    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods')
+    config_ids = fields.Many2many('pos.config', string='Outlets', check_company=True)
+    payment_method_ids = fields.Many2many(
+        'pos.payment.method', string='Payment Methods', check_company=True)
     bin_range_ids = fields.One2many('pos.bank.card.bin.range', 'program_id', string='BIN Ranges')
     usage_ids = fields.One2many('pos.bank.card.usage', 'program_id', string='Usage')
     quota_ids = fields.One2many('pos.bank.card.quota', 'program_id', string='Quota Buckets')
@@ -57,7 +59,8 @@ class PosBankCardProgram(models.Model):
     min_amount = fields.Monetary(string='Minimum Basis', currency_field='currency_id', default=0.0)
     max_discount = fields.Monetary(string='Maximum Discount', currency_field='currency_id', default=0.0)
     bank_share_percent = fields.Float(string='Bank Share %', default=100.0)
-    discount_product_id = fields.Many2one('product.product', string='Discount Product')
+    discount_product_id = fields.Many2one(
+        'product.product', string='Discount Product', check_company=True)
     excluded_product_ids = fields.Many2many('product.product', string='Excluded Products')
     excluded_categ_ids = fields.Many2many('product.category', string='Excluded Categories')
     quota_type = fields.Selection(
@@ -195,6 +198,9 @@ class PosBankCardProgram(models.Model):
                     ('date_from', '=', start),
                     ('date_to', '=', end),
                 ], limit=1)
+                if not quota:
+                    raise psycopg2.errors.SerializationFailure(
+                        'quota bucket created concurrently; retry the reservation')
         return quota
 
     def _cardlimit_for(self, card_bin, card_last4, day, create=False):
@@ -218,6 +224,9 @@ class PosBankCardProgram(models.Model):
                     })
             except psycopg2.IntegrityError:
                 limit = Cardlimit.search(domain, limit=1)
+                if not limit:
+                    raise psycopg2.errors.SerializationFailure(
+                        'daily card counter created concurrently; retry the reservation')
         return limit
 
     def _quota_remaining(self, day):
@@ -243,17 +252,24 @@ class PosBankCardProgram(models.Model):
             cardlimit.invalidate_recordset()
 
     @api.model
-    def _find_bin_range(self, card_bin, config_id=False, payment_method_id=False):
+    def _find_bin_range(self, card_bin, config_id=False, payment_method_id=False, program_id=False):
         if not card_bin or not str(card_bin).isdigit() or len(str(card_bin)) not in (6, 8):
             return self.env['pos.bank.card.bin.range']
         card_bin = str(card_bin)
         day = fields.Date.context_today(self)
+        if config_id:
+            company = self.env['pos.config'].browse(config_id).company_id
+        else:
+            company = self.env.company
         domain = [
             ('program_id.state', '=', 'active'),
             ('program_id.active', '=', True),
+            ('program_id.company_id', '=', company.id),
             '|', ('program_id.date_from', '=', False), ('program_id.date_from', '<=', day),
             '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', day),
         ]
+        if program_id:
+            domain.append(('program_id', '=', program_id))
         candidates = self.env['pos.bank.card.bin.range'].search(domain, order='id')
         low, high = bin_interval(card_bin, card_bin)
         matches = self.env['pos.bank.card.bin.range']
@@ -346,7 +362,7 @@ class PosBankCardProgram(models.Model):
 
     @api.model
     def reserve_quota(self, program_id, card_bin, card_last4, basis_amount, approval_code=False,
-                      config_id=False, pos_order_id=False, payment_id=False):
+                      config_id=False, payment_method_id=False, pos_order_id=False, payment_id=False):
         program = self.browse(program_id)
         if not program.exists():
             return {
@@ -355,7 +371,9 @@ class PosBankCardProgram(models.Model):
                 'message': self.env._('This card prefix is not registered in any active programme.'),
             }
         day = fields.Date.context_today(self)
-        bin_range = self._find_bin_range(card_bin, config_id=config_id)
+        bin_range = self._find_bin_range(
+            card_bin, config_id=config_id, payment_method_id=payment_method_id,
+            program_id=program.id)
         if not bin_range or bin_range.program_id != program:
             return {
                 'reserved': False,
@@ -378,9 +396,15 @@ class PosBankCardProgram(models.Model):
             }
         amounts = program.compute_discount(basis_amount or 0.0)
         quota = program._quota_for(day, create=True) if program.quota_type != 'none' else self.env['pos.bank.card.quota']
+        if program.quota_type != 'none' and not quota:
+            raise psycopg2.errors.SerializationFailure(
+                'quota bucket created concurrently; retry the reservation')
         cardlimit = self.env['pos.bank.card.cardlimit']
         if program.card_daily_limit:
             cardlimit = program._cardlimit_for(str(card_bin), str(card_last4 or ''), day, create=True)
+            if not cardlimit:
+                raise psycopg2.errors.SerializationFailure(
+                    'daily card counter created concurrently; retry the reservation')
         program._lock_rows(quota, cardlimit)
         if cardlimit and cardlimit.used_count >= program.card_daily_limit:
             return {
@@ -458,6 +482,7 @@ class PosBankCardProgram(models.Model):
         return [
             ('state', '=', 'active'),
             ('active', '=', True),
+            ('company_id', '=', config.company_id.id),
             '|', ('date_from', '=', False), ('date_from', '<=', day),
             '|', ('date_to', '=', False), ('date_to', '>=', day),
             '|', ('config_ids', '=', False), ('config_ids', 'in', [config.id]),

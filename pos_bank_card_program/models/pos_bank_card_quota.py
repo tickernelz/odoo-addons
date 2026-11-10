@@ -39,6 +39,8 @@ class PosBankCardCardlimit(models.Model):
 
     program_id = fields.Many2one(
         'pos.bank.card.program', string='Programme', required=True, ondelete='cascade', index=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', related='program_id.company_id', store=True, readonly=True)
     card_bin = fields.Char(string='Card BIN', required=True, index=True)
     card_last4 = fields.Char(string='Last 4 Digits', required=True, index=True)
     date = fields.Date(

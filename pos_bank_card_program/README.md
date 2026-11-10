@@ -21,11 +21,16 @@ Server API used by the point of sale:
 - pos.bank.card.program.compute_discount(basis_amount) on a programme record
   returns the discount and the bank and store shares.
 - pos.bank.card.program.reserve_quota(program_id, card_bin, card_last4,
-  basis_amount, approval_code, config_id, pos_order_id, payment_id) locks the
+  basis_amount, approval_code, config_id, payment_method_id, pos_order_id,
+  payment_id) locks the
   quota and daily card counter, creates a reserved usage row, and returns it.
 - pos.bank.card.program.release_quota(usage_id) cancels a reserved usage row
   and returns its quota.
 - pos.bank.card.program.confirm_quota(usage_id) confirms a reserved usage row.
+
+Known limit of this foundation stage: release_quota and confirm_quota address
+a usage row by id only. Binding them to the caller's order and session arrives
+with the cashier dialog stage that first wires them to an order.
 
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
 claims, and point of sale users only read programmes, usage, and quota rows.

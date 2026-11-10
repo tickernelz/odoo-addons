@@ -12,6 +12,8 @@ class PosBankCardBinRange(models.Model):
 
     program_id = fields.Many2one(
         'pos.bank.card.program', string='Programme', required=True, ondelete='cascade', index=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', related='program_id.company_id', store=True, readonly=True)
     bin_from = fields.Char(string='BIN From', required=True)
     bin_to = fields.Char(string='BIN To', required=True)
     bin_length = fields.Integer(string='BIN Length', compute='_compute_bin_length', store=True)
@@ -58,6 +60,7 @@ class PosBankCardBinRange(models.Model):
         return [
             ('program_id.state', '=', 'active'),
             ('program_id.active', '=', True),
+            ('company_id', '=', config.company_id.id),
             '|', ('program_id.date_from', '=', False), ('program_id.date_from', '<=', day),
             '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', day),
             '|', ('program_id.config_ids', '=', False), ('program_id.config_ids', 'in', [config.id]),

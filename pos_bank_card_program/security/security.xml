@@ -16,4 +16,47 @@
         <field name="sequence">20</field>
         <field name="privilege_id" ref="res_groups_privilege_bank_card"/>
     </record>
+
+    <record id="rule_bank_card_program_company" model="ir.rule">
+        <field name="name">Bank Card Programme: company</field>
+        <field name="model_id" ref="model_pos_bank_card_program"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_bin_range_company" model="ir.rule">
+        <field name="name">Bank Card BIN Range: company</field>
+        <field name="model_id" ref="model_pos_bank_card_bin_range"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_usage_company" model="ir.rule">
+        <field name="name">Bank Card Usage: company</field>
+        <field name="model_id" ref="model_pos_bank_card_usage"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_quota_company" model="ir.rule">
+        <field name="name">Bank Card Quota: company</field>
+        <field name="model_id" ref="model_pos_bank_card_quota"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_cardlimit_company" model="ir.rule">
+        <field name="name">Bank Card Daily Counter: company</field>
+        <field name="model_id" ref="model_pos_bank_card_cardlimit"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_claim_company" model="ir.rule">
+        <field name="name">Bank Card Claim: company</field>
+        <field name="model_id" ref="model_pos_bank_card_claim"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_bank_card_claim_column_company" model="ir.rule">
+        <field name="name">Bank Card Claim Column: company</field>
+        <field name="model_id" ref="model_pos_bank_card_claim_column"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('program_id.company_id', '=', False), ('program_id.company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>
