@@ -63,6 +63,8 @@ def check():
 
 def compare():
     target = sys.argv[2]
+    if not os.path.exists(target):
+        sys.exit("fresh export not found: %s" % target)
     problems = []
     total = 0
     if os.path.isdir(target):
