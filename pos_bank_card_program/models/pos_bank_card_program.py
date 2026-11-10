@@ -469,7 +469,7 @@ class PosBankCardProgram(models.Model):
         usage = self.env['pos.bank.card.usage'].browse(usage_id)
         if not usage.exists():
             return {'released': False, 'reason': 'not_found'}
-        if config_id and usage.config_id and usage.config_id.id != config_id:
+        if usage.config_id and usage.config_id.id != config_id:
             return {'released': False, 'reason': 'wrong_outlet'}
         return usage.release_reservation()
 
@@ -478,7 +478,7 @@ class PosBankCardProgram(models.Model):
         usage = self.env['pos.bank.card.usage'].browse(usage_id)
         if not usage.exists():
             return {'confirmed': False, 'reason': 'not_found'}
-        if config_id and usage.config_id and usage.config_id.id != config_id:
+        if usage.config_id and usage.config_id.id != config_id:
             return {'confirmed': False, 'reason': 'wrong_outlet'}
         return usage.confirm_reservation()
 

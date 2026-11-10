@@ -98,7 +98,7 @@
         <field name="config_id" ref="pos_config_outlet_1"/>
         <field name="quota_id" ref="quota_bank_a_two_days_ago"/>
         <field name="cardlimit_id" ref="cardlimit_bank_a_two_days_ago"/>
-        <field name="date" eval="datetime.now() - timedelta(days=2, hours=3)"/>
+        <field name="date" eval="(datetime.now() - timedelta(days=2)).replace(hour=3, minute=0)"/>
         <field name="card_bin">900150</field>
         <field name="card_last4">1111</field>
         <field name="approval_code">DEMO01</field>
@@ -131,7 +131,7 @@
         <field name="config_id" ref="pos_config_outlet_2"/>
         <field name="quota_id" ref="quota_bank_a_yesterday"/>
         <field name="cardlimit_id" ref="cardlimit_bank_a_yesterday"/>
-        <field name="date" eval="datetime.now() - timedelta(days=1, hours=5)"/>
+        <field name="date" eval="(datetime.now() - timedelta(days=1)).replace(hour=3, minute=0)"/>
         <field name="card_bin">900150</field>
         <field name="card_last4">2222</field>
         <field name="approval_code">DEMO02</field>
@@ -164,7 +164,7 @@
         <field name="config_id" ref="pos_config_outlet_1"/>
         <field name="quota_id" ref="quota_bank_b_three_days_ago"/>
         <field name="cardlimit_id" ref="cardlimit_bank_b_three_days_ago"/>
-        <field name="date" eval="datetime.now() - timedelta(days=3, hours=2)"/>
+        <field name="date" eval="(datetime.now() - timedelta(days=3)).replace(hour=3, minute=0)"/>
         <field name="card_bin">900350</field>
         <field name="card_last4">3333</field>
         <field name="approval_code">DEMO03</field>
@@ -197,7 +197,7 @@
         <field name="config_id" ref="pos_config_outlet_2"/>
         <field name="quota_id" ref="quota_bank_b_today"/>
         <field name="cardlimit_id" ref="cardlimit_bank_b_today"/>
-        <field name="date" eval="datetime.now() - timedelta(days=0, hours=6)"/>
+        <field name="date" eval="datetime.now() - timedelta(minutes=5)"/>
         <field name="card_bin">900350</field>
         <field name="card_last4">4444</field>
         <field name="approval_code">DEMO04</field>

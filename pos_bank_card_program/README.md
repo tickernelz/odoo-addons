@@ -29,8 +29,9 @@ Server API used by the point of sale:
 - pos.bank.card.program.confirm_quota(usage_id) confirms a reserved usage row.
 
 Since the cashier stage, release_quota and confirm_quota also check the
-outlet: when the caller passes its pos.config id, a usage row reserved at a
-different outlet is refused with reason wrong_outlet.
+outlet: a usage row reserved at an outlet can only be released or confirmed
+with that same pos.config id; any other value, including none, is refused
+with reason wrong_outlet.
 
 Cashier flow: a payment method flagged "Requires Bank Card Info" opens the
 bank card dialog after its payment line is added. The cashier enters the card
