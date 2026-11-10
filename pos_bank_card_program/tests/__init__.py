@@ -5,3 +5,4 @@ from . import test_detection
 from . import test_pos_data
 from . import test_quota
 from . import test_language
+from . import test_icon
