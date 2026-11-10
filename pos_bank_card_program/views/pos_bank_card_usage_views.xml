@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_bank_card_usage_list" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.list</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <list string="Bank Card Usage" decoration-muted="state == 'cancelled'">
+                <field name="date"/>
+                <field name="program_id"/>
+                <field name="bank_id"/>
+                <field name="config_id" string="Outlet"/>
+                <field name="masked_card"/>
+                <field name="approval_code"/>
+                <field name="pos_order_id"/>
+                <field name="basis_amount" sum="Basis"/>
+                <field name="discount_amount" sum="Discount"/>
+                <field name="bank_share_amount" sum="Bank Share"/>
+                <field name="store_share_amount" sum="Store Share"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"
+                       decoration-warning="state == 'reserved'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="claim_state" widget="badge"
+                       decoration-info="claim_state == 'not_claimed'"
+                       decoration-warning="claim_state == 'claimed'"
+                       decoration-success="claim_state == 'paid'"
+                       decoration-danger="claim_state in ('rejected', 'cancelled')"/>
+                <field name="claim_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_usage_form" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.form</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <form string="Bank Card Usage">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="reserved,confirmed,cancelled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Programme">
+                            <field name="program_id"/>
+                            <field name="bank_id"/>
+                            <field name="bin_range_id"/>
+                            <field name="claim_id"/>
+                            <field name="claim_state"/>
+                        </group>
+                        <group string="Transaction">
+                            <field name="date"/>
+                            <field name="pos_order_id"/>
+                            <field name="payment_id"/>
+                            <field name="session_id"/>
+                            <field name="config_id" string="Outlet"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Card">
+                            <field name="card_bin"/>
+                            <field name="card_last4"/>
+                            <field name="masked_card"/>
+                            <field name="approval_code"/>
+                            <field name="card_brand"/>
+                            <field name="card_type"/>
+                            <field name="card_tier"/>
+                        </group>
+                        <group string="Amounts">
+                            <field name="basis_amount"/>
+                            <field name="discount_amount"/>
+                            <field name="bank_share_amount"/>
+                            <field name="store_share_amount"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_usage_search" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.search</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <search string="Bank Card Usage">
+                <field name="masked_card"/>
+                <field name="card_bin"/>
+                <field name="approval_code"/>
+                <field name="program_id"/>
+                <field name="bank_id"/>
+                <field name="config_id"/>
+                <field name="pos_order_id"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="reserved" string="Reserved" domain="[('state', '=', 'reserved')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="not_claimed" string="Not Claimed" domain="[('claim_state', '=', 'not_claimed')]"/>
+                <filter name="claimed" string="Claimed" domain="[('claim_state', '=', 'claimed')]"/>
+                <filter name="paid" string="Paid" domain="[('claim_state', '=', 'paid')]"/>
+                <filter name="claim_cancelled" string="Claim Cancelled" domain="[('claim_state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="today" string="Today" domain="[('date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)))]"/>
+                <filter name="this_month" string="This Month" domain="[('date', '&gt;=', datetime.datetime.combine(context_today().replace(day=1), datetime.time(0, 0, 0)))]"/>
+                <filter name="group_bank" string="Bank" context="{'group_by': 'bank_id'}"/>
+                <filter name="group_program" string="Programme" context="{'group_by': 'program_id'}"/>
+                <filter name="group_outlet" string="Outlet" context="{'group_by': 'config_id'}"/>
+                <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                <filter name="group_claim_state" string="Claim Status" context="{'group_by': 'claim_state'}"/>
+                <filter name="group_date" string="Date" context="{'group_by': 'date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_usage_pivot" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.pivot</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <pivot string="Bank Card Usage" display_quantity="1">
+                <field name="program_id" type="row"/>
+                <field name="date" type="col" interval="month"/>
+                <field name="discount_amount" type="measure"/>
+                <field name="bank_share_amount" type="measure"/>
+                <field name="store_share_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_usage_graph" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.graph</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <graph string="Bank Card Usage" type="bar" stacked="0">
+                <field name="date" type="row" interval="day"/>
+                <field name="discount_amount" type="measure"/>
+                <field name="bank_share_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_usage_outlet_pivot" model="ir.ui.view">
+        <field name="name">pos.bank.card.usage.outlet.pivot</field>
+        <field name="model">pos.bank.card.usage</field>
+        <field name="arch" type="xml">
+            <pivot string="Bank Card Usage per Outlet" display_quantity="1">
+                <field name="config_id" type="row"/>
+                <field name="program_id" type="col"/>
+                <field name="discount_amount" type="measure"/>
+                <field name="bank_share_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_quota_pivot" model="ir.ui.view">
+        <field name="name">pos.bank.card.quota.pivot</field>
+        <field name="model">pos.bank.card.quota</field>
+        <field name="arch" type="xml">
+            <pivot string="Programme Quota Usage" display_quantity="1">
+                <field name="program_id" type="row"/>
+                <field name="used_count" type="measure"/>
+                <field name="used_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_quota_list" model="ir.ui.view">
+        <field name="name">pos.bank.card.quota.list</field>
+        <field name="model">pos.bank.card.quota</field>
+        <field name="arch" type="xml">
+            <list string="Programme Quota Usage">
+                <field name="program_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="used_count"/>
+                <field name="used_amount"/>
+                <field name="remaining_count"/>
+                <field name="remaining_amount"/>
+                <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_usage" model="ir.actions.act_window">
+        <field name="name">Bank Card Usage</field>
+        <field name="res_model">pos.bank.card.usage</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_pos_bank_card_usage_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No bank card usage yet</p>
+            <p>Usage appears here after a customer pays with an eligible bank card.</p>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_dashboard" model="ir.actions.act_window">
+        <field name="name">Programme Dashboard</field>
+        <field name="res_model">pos.bank.card.usage</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="domain">[('state', '=', 'confirmed')]</field>
+        <field name="search_view_id" ref="view_pos_bank_card_usage_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No bank card usage yet</p>
+            <p>The dashboard shows discount and bank share per day once cards are used.</p>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_detail" model="ir.actions.act_window">
+        <field name="name">Card Transaction Details</field>
+        <field name="res_model">pos.bank.card.usage</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_pos_bank_card_usage_search"/>
+    </record>
+
+    <record id="action_pos_bank_card_outlet_recap" model="ir.actions.act_window">
+        <field name="name">Usage per Outlet</field>
+        <field name="res_model">pos.bank.card.usage</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="domain">[('state', '=', 'confirmed')]</field>
+        <field name="search_view_id" ref="view_pos_bank_card_usage_search"/>
+    </record>
+    <record id="action_pos_bank_card_outlet_recap_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_pos_bank_card_usage_outlet_pivot"/>
+        <field name="act_window_id" ref="action_pos_bank_card_outlet_recap"/>
+    </record>
+
+    <record id="action_pos_bank_card_quota_usage" model="ir.actions.act_window">
+        <field name="name">Programme Quota Usage</field>
+        <field name="res_model">pos.bank.card.quota</field>
+        <field name="view_mode">pivot,list</field>
+    </record>
+    <record id="action_pos_bank_card_quota_usage_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_pos_bank_card_quota_pivot"/>
+        <field name="act_window_id" ref="action_pos_bank_card_quota_usage"/>
+    </record>
+    <record id="action_pos_bank_card_quota_usage_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_pos_bank_card_quota_list"/>
+        <field name="act_window_id" ref="action_pos_bank_card_quota_usage"/>
+    </record>
+</odoo>

@@ -8,6 +8,8 @@ class PosBankCardUsage(models.Model):
 
     program_id = fields.Many2one(
         'pos.bank.card.program', string='Programme', required=True, ondelete='restrict', index=True)
+    bank_id = fields.Many2one(
+        'res.partner', string='Bank', related='program_id.bank_id', store=True, readonly=True, index=True)
     bin_range_id = fields.Many2one('pos.bank.card.bin.range', string='BIN Range', ondelete='set null')
     company_id = fields.Many2one(
         'res.company', string='Company', related='program_id.company_id', store=True, readonly=True)

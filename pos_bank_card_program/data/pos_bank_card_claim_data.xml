@@ -8,4 +8,14 @@
             <field name="padding">5</field>
         </record>
     </data>
+    <record id="product_bank_card_claim_template" model="product.template">
+        <field name="name">Bank Card Programme Claim</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="list_price">0</field>
+        <field name="sale_ok" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="taxes_id" eval="[(6, 0, [])]"/>
+        <field name="supplier_taxes_id" eval="[(6, 0, [])]"/>
+    </record>
 </odoo>

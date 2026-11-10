@@ -1192,3 +1192,448 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__quota_period__program
 msgid "Whole Programme Period"
 msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__amount_0_30
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+msgid "0-30 Days"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__amount_31_60
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+msgid "31-60 Days"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "<span class=\"o_stat_text\">Invoice</span>"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "A %(state)s claim cannot be invoiced."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "A paid claim cannot be cancelled."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
+msgid "Amounts"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Back"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_claim_wizard
+msgid "Bank Card Claim Wizard"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_claim_wizard_line
+msgid "Bank Card Claim Wizard Line"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_claim
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_pivot
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_search
+msgid "Bank Card Claims"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_outstanding
+msgid "Bank Card Outstanding per Bank"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:product.template,name:pos_bank_card_program.product_bank_card_claim_template
+msgid "Bank Card Programme Claim"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_outlet_pivot
+msgid "Bank Card Usage per Outlet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card
+msgid "Bank Cards"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"Bank card claim %(claim)s: %(programme)s (%(date_from)s to %(date_to)s)"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Cancel"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Cancel invoice %(invoice)s before releasing this claim."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_detail
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_detail
+msgid "Card Transaction Details"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"Claim %(number)s already covers %(bank)s for an overlapping period "
+"(%(date_from)s to %(date_to)s). One bank can only be claimed once per "
+"period."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+msgid "Claim Cancelled"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Claim Invoice"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_claim_wizard
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim_wizard
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Claim to Bank"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Create Claim"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Create Invoice"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_outstanding
+msgid "Every confirmed bank share has been paid or cancelled."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__export_file
+msgid "Excel Export"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__export_filename
+msgid "Excel Filename"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Export Excel"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Invoice %(invoice)s is not paid yet, so the claim stays outstanding."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Mark Paid"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Mark Sent"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_claim
+msgid "No bank card claims yet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_dashboard
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_usage
+msgid "No bank card usage yet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"No income account is configured for product %(product)s or its category. Set"
+" one before creating the claim invoice."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
+msgid "No unclaimed confirmed usage matches this bank, programme and period."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_outstanding
+msgid "Nothing outstanding"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Only a draft claim can be sent."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Only a sent claim can be marked paid."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Only a sent claim can be reconciled."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Only a sent claim can be recorded as rejected."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__total_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+msgid "Outstanding"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_outstanding
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_outstanding
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_pivot
+msgid "Outstanding per Bank"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__amount_over_60
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+msgid "Over 60 Days"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__line_ids
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Per Outlet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_search
+msgid "Period"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_wizard__state__preview
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Preview"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Programme %(programme)s belongs to %(bank)s, not to the claim bank."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_dashboard
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_dashboard
+msgid "Programme Dashboard"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_quota_usage
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_quota_usage
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_quota_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_quota_pivot
+msgid "Programme Quota Usage"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Reconcile"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "Record Rejected"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_wizard__state__select
+msgid "Select"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__state
+msgid "Step"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"The bank rejected this claim. %(count)s usage lines totalling %(amount)s "
+"were released and can be claimed again."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"The claim was cancelled. %(count)s usage lines totalling %(amount)s were "
+"released and can be claimed again."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_dashboard
+msgid ""
+"The dashboard shows discount and bank share per day once cards are used."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "The total bank share is zero, so there is nothing to invoice."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"There is no invoice to reconcile against. Create the invoice, or use Mark "
+"Paid when the bank paid without one."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+msgid "This Month"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "This claim already has invoice %(invoice)s."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"This claim has an invoice. Register its payment and use Reconcile so the "
+"claim follows the invoice."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "This claim has no confirmed usage to export."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "This claim has no confirmed usage to invoice."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "This claim has no confirmed usage to send."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+msgid "Today"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Total"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__total_discount_amount
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__total_discount_amount
+msgid "Total Discount"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
+msgid "Transaction"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__usage_count
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__usage_count
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__usage_count
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__usage_count
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+msgid "Usage Lines"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_usage
+msgid "Usage appears here after a customer pays with an eligible bank card."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_outlet_recap
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_outlet_recap
+msgid "Usage per Outlet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_claim
+msgid ""
+"Use the Claim to Bank wizard under Bank Cards to build the first claim."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "claim_id"
+msgstr ""
