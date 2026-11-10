@@ -3,7 +3,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestBankCardTour(TestPointOfSaleHttpCommon):
+class BankCardTourBase(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -62,6 +62,10 @@ class TestBankCardTour(TestPointOfSaleHttpCommon):
             'payment_method_ids': [(4, cls.card_method.id)],
         })
 
+
+@tagged('post_install', '-at_install')
+class TestBankCardTour(BankCardTourBase):
+
     def test_bank_card_cashier_flow(self):
         self.main_pos_config.open_ui()
         self.start_tour(
@@ -74,3 +78,20 @@ class TestBankCardTour(TestPointOfSaleHttpCommon):
         self.assertEqual(len(confirmed), 1)
         self.assertEqual(confirmed.discount_amount, 100000.0)
         self.assertEqual(len(cancelled), 1)
+
+
+@tagged('post_install', '-at_install')
+class TestBankCardLanguageTour(BankCardTourBase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang'].with_context(active_test=False).search([
+            ('code', 'in', ['en_US', 'id_ID']),
+        ]).write({'active': True})
+
+    def test_language_switch_keeps_the_open_order(self):
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            '/pos/ui/%d' % self.main_pos_config.id,
+            'pos_bank_card_program_language_tour', login='pos_admin')
