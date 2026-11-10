@@ -47,7 +47,10 @@ claim over the confirmed usage that is not claimed yet. Cancelled usage
 never joins a claim. A bank can only have one live claim per period and
 programme scope: an overlapping claim is refused until the first one is
 cancelled or recorded as rejected, which releases its usage lines back to
-not claimed.
+not claimed. The claim menus also live under Accounting > Customers, so a
+Finance user reaches them without point of sale groups; creating the claim
+invoice and reconciling it additionally needs Invoicing/Billing rights
+(account.group_account_invoice), because both act on account.move.
 
 On the claim, Export Excel writes one sheet per programme using that
 programme's claim columns (sequence, value, and header are configurable per

@@ -1,5 +1,6 @@
 import base64
 import io
+from datetime import datetime
 
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
@@ -29,16 +30,20 @@ class TestClaim(BankCardCommon):
         cls.bank_a.property_account_receivable_id = cls.receivable_account
         cls.bank_b.property_account_receivable_id = cls.receivable_account
         cls.finance = cls.make_user('claim_finance', 'pos_bank_card_program.group_bank_card_finance')
+        cls.finance_billing = cls.make_user(
+            'claim_finance_billing', 'pos_bank_card_program.group_bank_card_finance',
+            'account.group_account_invoice')
+        cls.finance_jakarta = cls.make_user(
+            'claim_finance_jakarta', 'pos_bank_card_program.group_bank_card_finance', tz='Asia/Jakarta')
         cls.manager = cls.make_user('claim_manager', 'pos_bank_card_program.group_bank_card_manager')
         cls.cashier = cls.make_user('claim_cashier', 'point_of_sale.group_pos_user')
 
     @classmethod
-    def make_user(cls, login, group_xmlid):
-        return cls.env['res.users'].create({
-            'name': login,
-            'login': login,
-            'group_ids': [(4, cls.env.ref('base.group_user').id), (4, cls.env.ref(group_xmlid).id)],
-        })
+    def make_user(cls, login, *group_xmlids, **values):
+        groups = [(4, cls.env.ref('base.group_user').id)]
+        groups += [(4, cls.env.ref(xmlid).id) for xmlid in group_xmlids]
+        values.update({'name': login, 'login': login, 'group_ids': groups})
+        return cls.env['res.users'].create(values)
 
     def make_usage(self, program=None, date='2026-01-15 10:00:00', bank_share=100000.0,
                    discount=100000.0, config=None, **overrides):
@@ -209,9 +214,14 @@ class TestClaim(BankCardCommon):
         self.assertEqual(invoiced.state, 'paid')
         self.assertEqual(february_usage.claim_state, 'paid')
 
-    def pay_invoice(self, invoice):
+    def pay_invoice(self, invoice, user=None):
+        if user:
+            invoice = invoice.with_user(user)
         invoice.action_post()
-        register = self.env['account.payment.register'].with_context(
+        register = self.env['account.payment.register']
+        if user:
+            register = register.with_user(user)
+        register = register.with_context(
             active_model='account.move', active_ids=invoice.ids).create({
                 'journal_id': self.bank_journal.id})
         register.action_create_payments()
@@ -226,6 +236,77 @@ class TestClaim(BankCardCommon):
         claim.invoice_id.write({'state': 'cancel'})
         claim.action_cancel()
         self.assertEqual(claim.state, 'cancelled')
+
+    def test_excel_dates_use_the_users_timezone(self):
+        usage = self.make_usage(date='2026-01-31 18:30:00')
+        january = self.make_wizard().with_user(self.finance_jakarta)
+        january.action_preview()
+        self.assertEqual(january.usage_count, 0)
+        february = self.make_wizard(
+            date_from='2026-02-01', date_to='2026-02-28').with_user(self.finance_jakarta)
+        february.action_preview()
+        self.assertEqual(february.usage_count, 1)
+        claim = self.env['pos.bank.card.claim'].browse(
+            february.action_create_claim()['res_id']).with_user(self.finance_jakarta)
+        claim.action_export_xlsx()
+        self.assertEqual(self.read_excel_dates(claim), [datetime(2026, 2, 1, 1, 30)])
+        self.assertEqual(usage.claim_id.id, claim.id)
+
+    def read_excel_dates(self, claim):
+        import openpyxl
+
+        workbook = openpyxl.load_workbook(
+            io.BytesIO(base64.b64decode(claim.export_file)), read_only=True, data_only=True)
+        sheet = workbook.active
+        headers = [cell.value for cell in sheet[1]]
+        column = headers.index('Date')
+        return [
+            row[column].value for row in sheet.iter_rows(min_row=2)
+            if isinstance(row[column].value, datetime)
+        ]
+
+    def test_export_survives_colliding_sheet_names(self):
+        import openpyxl
+
+        self.make_usage()
+        slashed = self.make_programme(name='Promo A/B')
+        plain = self.make_programme(name='Promo AB')
+        self.make_usage(program=slashed, card_bin='900550')
+        self.make_usage(program=plain, card_bin='900550')
+        claim = self.run_wizard()
+        claim.action_export_xlsx()
+        workbook = openpyxl.load_workbook(
+            io.BytesIO(base64.b64decode(claim.export_file)), read_only=True)
+        names = workbook.sheetnames
+        self.assertEqual(len(names), 3)
+        self.assertEqual(len({name.lower() for name in names}), 3)
+
+    def test_finance_with_billing_without_pos_groups_completes_the_flow(self):
+        user = self.finance_billing
+        usage = self.make_usage(config=self.outlet_1)
+        self.assertEqual(usage.with_user(user).config_id.name, 'Outlet 1')
+        visible = self.env['ir.ui.menu'].with_user(user)._visible_menu_ids()
+        self.assertIn(
+            self.env.ref('pos_bank_card_program.menu_pos_bank_card_claim_accounting').id, visible)
+        self.assertIn(
+            self.env.ref('pos_bank_card_program.menu_pos_bank_card_claim_wizard_accounting').id,
+            visible)
+        self.assertIn(
+            self.env.ref('pos_bank_card_program.menu_pos_bank_card_outstanding_accounting').id,
+            visible)
+        wizard = self.make_wizard().with_user(user)
+        wizard.action_preview()
+        self.assertEqual(wizard.usage_count, 1)
+        claim = self.env['pos.bank.card.claim'].browse(
+            wizard.action_create_claim()['res_id']).with_user(user)
+        claim.action_export_xlsx()
+        self.assertTrue(claim.export_file)
+        claim.action_create_invoice()
+        claim.action_send()
+        self.pay_invoice(claim.invoice_id, user=user)
+        claim.action_reconcile()
+        self.assertEqual(claim.state, 'paid')
+        self.assertEqual(usage.claim_state, 'paid')
 
     def test_claim_access_by_role(self):
         self.make_usage()

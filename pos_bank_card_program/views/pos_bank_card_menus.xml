@@ -24,6 +24,25 @@
               groups="group_bank_card_finance"
               sequence="30"/>
 
+    <menuitem id="menu_pos_bank_card_claim_accounting"
+              name="Bank Card Claims"
+              parent="account.menu_finance_receivables"
+              action="action_pos_bank_card_claim"
+              groups="group_bank_card_finance"
+              sequence="50"/>
+    <menuitem id="menu_pos_bank_card_claim_wizard_accounting"
+              name="Claim to Bank"
+              parent="account.menu_finance_receivables"
+              action="action_pos_bank_card_claim_wizard"
+              groups="group_bank_card_finance"
+              sequence="51"/>
+    <menuitem id="menu_pos_bank_card_outstanding_accounting"
+              name="Outstanding per Bank"
+              parent="account.menu_finance_receivables"
+              action="action_pos_bank_card_outstanding"
+              groups="group_bank_card_finance"
+              sequence="52"/>
+
     <menuitem id="menu_pos_bank_card_usage"
               name="Bank Card Usage"
               parent="point_of_sale.menu_point_rep"

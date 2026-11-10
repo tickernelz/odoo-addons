@@ -1,8 +1,10 @@
 import base64
 import io
 
+import psycopg2
+
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ConcurrencyError, UserError, ValidationError
 
 MONEY_COLUMN_CODES = ('basis_amount', 'discount_amount', 'bank_share_amount', 'store_share_amount')
 
@@ -56,8 +58,16 @@ class PosBankCardClaim(models.Model):
             claim.total_discount_amount = sum(usages.mapped('discount_amount'))
             claim.total_amount = sum(usages.mapped('bank_share_amount'))
 
+    def _lock_banks(self, bank_ids):
+        for bank_id in sorted(set(bank_ids)):
+            try:
+                self.env.cr.execute('UPDATE res_partner SET id = id WHERE id = %s', (bank_id,))
+            except psycopg2.errors.SerializationFailure as error:
+                raise ConcurrencyError(str(error)) from error
+
     @api.model_create_multi
     def create(self, vals_list):
+        self._lock_banks(vals.get('bank_id') for vals in vals_list if vals.get('bank_id'))
         for vals in vals_list:
             if not vals.get('name') or vals.get('name') == '/':
                 vals['name'] = self.env['ir.sequence'].next_by_code('pos.bank.card.claim') or '/'
@@ -117,7 +127,7 @@ class PosBankCardClaim(models.Model):
 
     def _column_value(self, usage, code):
         if code == 'date':
-            return usage.date
+            return fields.Datetime.context_timestamp(self, usage.date).replace(tzinfo=None)
         if code == 'order':
             return usage.pos_order_id.name or ''
         if code == 'outlet':
@@ -147,10 +157,10 @@ class PosBankCardClaim(models.Model):
             workbook.add_worksheet('Claim')
         used_sheet_names = set()
         for program in programs:
-            sheet_name = (program.name or 'Claim')[:31]
-            if sheet_name in used_sheet_names:
+            sheet_name = ''.join(char for char in (program.name or '') if char not in '[]:*?/\\')[:31] or 'Claim'
+            if sheet_name.lower() in used_sheet_names:
                 sheet_name = ('%s %s' % (sheet_name[:27], program.id))[:31]
-            used_sheet_names.add(sheet_name)
+            used_sheet_names.add(sheet_name.lower())
             sheet = workbook.add_worksheet(sheet_name)
             columns = self._claim_columns_for(program)
             for index, (_code, header) in enumerate(columns):
@@ -214,7 +224,9 @@ class PosBankCardClaim(models.Model):
             raise UserError(self.env._('This claim has no confirmed usage to invoice.'))
         if self.currency_id.is_zero(self.total_amount):
             raise UserError(self.env._('The total bank share is zero, so there is nothing to invoice.'))
-        product = self.env.ref('pos_bank_card_program.product_bank_card_claim_template').product_variant_id
+        product = self.env.ref(
+            'pos_bank_card_program.product_bank_card_claim_template'
+        ).with_company(self.company_id).product_variant_id
         account = self._invoice_line_account(product)
         lines = []
         for program in usages.mapped('program_id'):
@@ -233,7 +245,7 @@ class PosBankCardClaim(models.Model):
                 'account_id': account.id,
                 'tax_ids': [(6, 0, [])],
             }))
-        invoice = self.env['account.move'].create({
+        invoice = self.env['account.move'].with_company(self.company_id).create({
             'move_type': 'out_invoice',
             'partner_id': self.bank_id.id,
             'company_id': self.company_id.id,

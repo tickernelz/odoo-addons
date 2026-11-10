@@ -32,19 +32,19 @@
         <field name="arch" type="xml">
             <form string="Bank Card Claim">
                 <header>
-                    <button name="action_export_xlsx" string="Export Excel" type="object"
+                    <button name="action_export_xlsx" groups="pos_bank_card_program.group_bank_card_finance" string="Export Excel" type="object"
                             class="btn-primary" invisible="state not in ('draft', 'sent')"/>
-                    <button name="action_create_invoice" string="Create Invoice" type="object"
+                    <button name="action_create_invoice" groups="pos_bank_card_program.group_bank_card_finance" string="Create Invoice" type="object"
                             invisible="state not in ('draft', 'sent')"/>
-                    <button name="action_send" string="Mark Sent" type="object"
+                    <button name="action_send" groups="pos_bank_card_program.group_bank_card_finance" string="Mark Sent" type="object"
                             invisible="state != 'draft'"/>
-                    <button name="action_reconcile" string="Reconcile" type="object"
+                    <button name="action_reconcile" groups="pos_bank_card_program.group_bank_card_finance" string="Reconcile" type="object"
                             class="btn-primary" invisible="state != 'sent'"/>
-                    <button name="action_mark_paid" string="Mark Paid" type="object"
+                    <button name="action_mark_paid" groups="pos_bank_card_program.group_bank_card_finance" string="Mark Paid" type="object"
                             invisible="state != 'sent'"/>
-                    <button name="action_reject" string="Record Rejected" type="object"
+                    <button name="action_reject" groups="pos_bank_card_program.group_bank_card_finance" string="Record Rejected" type="object"
                             invisible="state != 'sent'"/>
-                    <button name="action_cancel" string="Cancel" type="object"
+                    <button name="action_cancel" groups="pos_bank_card_program.group_bank_card_finance" string="Cancel" type="object"
                             invisible="state not in ('draft', 'sent')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,paid"/>
                 </header>
