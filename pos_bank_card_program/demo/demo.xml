@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_bank_a" model="res.partner">
+        <field name="name">Bank A</field>
+        <field name="is_company" eval="True"/>
+    </record>
+    <record id="partner_bank_b" model="res.partner">
+        <field name="name">Bank B</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="program_bank_a" model="pos.bank.card.program">
+        <field name="name">Bank A Card Programme</field>
+        <field name="bank_id" ref="partner_bank_a"/>
+        <field name="state">active</field>
+        <field name="discount_percent" eval="15.0"/>
+        <field name="discount_basis">subtotal</field>
+        <field name="min_amount" eval="500000.0"/>
+        <field name="max_discount" eval="100000.0"/>
+        <field name="bank_share_percent" eval="100.0"/>
+        <field name="quota_type">count</field>
+        <field name="quota_period">day</field>
+        <field name="quota_limit_count" eval="3"/>
+        <field name="card_daily_limit" eval="1"/>
+    </record>
+    <record id="bin_bank_a_platinum" model="pos.bank.card.bin.range">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="bin_from">900100</field>
+        <field name="bin_to">900199</field>
+        <field name="network">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="tier">Platinum</field>
+        <field name="eligible" eval="True"/>
+    </record>
+    <record id="bin_bank_a_gold" model="pos.bank.card.bin.range">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="bin_from">900200</field>
+        <field name="bin_to">900299</field>
+        <field name="network">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="tier">Gold</field>
+        <field name="eligible" eval="False"/>
+        <field name="ineligible_reason">The Gold tier is not included in this programme.</field>
+    </record>
+
+    <record id="program_bank_b" model="pos.bank.card.program">
+        <field name="name">Bank B Card Programme</field>
+        <field name="bank_id" ref="partner_bank_b"/>
+        <field name="state">active</field>
+        <field name="discount_percent" eval="10.0"/>
+        <field name="discount_basis">subtotal</field>
+        <field name="max_discount" eval="75000.0"/>
+        <field name="bank_share_percent" eval="50.0"/>
+        <field name="quota_type">amount</field>
+        <field name="quota_period">program</field>
+        <field name="quota_limit_amount" eval="1000000.0"/>
+        <field name="card_daily_limit" eval="1"/>
+    </record>
+    <record id="bin_bank_b_signature" model="pos.bank.card.bin.range">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="bin_from">900300</field>
+        <field name="bin_to">900399</field>
+        <field name="network">Network B</field>
+        <field name="card_type">credit</field>
+        <field name="tier">Signature</field>
+        <field name="eligible" eval="True"/>
+    </record>
+</odoo>

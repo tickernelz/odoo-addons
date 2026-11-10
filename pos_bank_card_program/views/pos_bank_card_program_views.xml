@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_bank_card_program_tree" model="ir.ui.view">
+        <field name="name">pos.bank.card.program.tree</field>
+        <field name="model">pos.bank.card.program</field>
+        <field name="arch" type="xml">
+            <list string="Bank Card Programmes" decoration-muted="not active">
+                <field name="active" column_invisible="1"/>
+                <field name="name"/>
+                <field name="bank_id"/>
+                <field name="mode"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="discount_percent"/>
+                <field name="bank_share_percent"/>
+                <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'draft'"
+                       decoration-muted="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_program_form" model="ir.ui.view">
+        <field name="name">pos.bank.card.program.form</field>
+        <field name="model">pos.bank.card.program</field>
+        <field name="arch" type="xml">
+            <form string="Bank Card Programme">
+                <header>
+                    <button name="action_activate" string="Activate" type="object"
+                            class="btn-primary" invisible="state == 'active'"/>
+                    <button name="action_close" string="Close" type="object"
+                            invisible="state != 'active'"/>
+                    <button name="action_set_draft" string="Set to Draft" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" required="True" placeholder="Programme name"/></h1>
+                    </div>
+                    <group>
+                        <group name="main" string="Programme">
+                            <field name="bank_id"/>
+                            <field name="mode"/>
+                            <field name="active"/>
+                        </group>
+                        <group name="validity" string="Validity">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="summary" string="Summary">
+                            <group>
+                                <group string="Where It Applies">
+                                    <field name="config_ids" widget="many2many_tags"/>
+                                    <field name="payment_method_ids" widget="many2many_tags"/>
+                                </group>
+                                <group string="Cashier Requirements">
+                                    <field name="require_approval_code"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="bin_ranges" string="BIN Ranges">
+                            <field name="bin_range_ids">
+                                <list editable="bottom" string="BIN Ranges">
+                                    <field name="bin_from"/>
+                                    <field name="bin_to"/>
+                                    <field name="bin_length" readonly="1"/>
+                                    <field name="network"/>
+                                    <field name="card_type"/>
+                                    <field name="tier"/>
+                                    <field name="eligible"/>
+                                    <field name="ineligible_reason" column_invisible="0"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="benefit" string="Benefit">
+                            <group>
+                                <group string="Discount">
+                                    <field name="discount_percent"/>
+                                    <field name="discount_basis"/>
+                                    <field name="promo_order"/>
+                                    <field name="min_amount"/>
+                                    <field name="max_discount"/>
+                                    <field name="bank_share_percent"/>
+                                    <field name="discount_product_id"/>
+                                </group>
+                                <group string="Exclusions">
+                                    <field name="excluded_product_ids" widget="many2many_tags"/>
+                                    <field name="excluded_categ_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="quota" string="Quota">
+                            <group>
+                                <group string="Shared Quota">
+                                    <field name="quota_type"/>
+                                    <field name="quota_period" invisible="quota_type == 'none'"/>
+                                    <field name="quota_limit_count" invisible="quota_type != 'count'"/>
+                                    <field name="quota_limit_amount" invisible="quota_type != 'amount'"/>
+                                </group>
+                                <group string="Per Card and Offline">
+                                    <field name="card_daily_limit"/>
+                                    <field name="offline_allowed"/>
+                                    <field name="offline_allowance" invisible="not offline_allowed"/>
+                                    <field name="refund_returns_quota"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="accounts" string="Accounts">
+                            <group>
+                                <field name="discount_account_id"/>
+                                <field name="receivable_account_id"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </page>
+                        <page name="claim_template" string="Claim Template">
+                            <group>
+                                <field name="claim_period"/>
+                            </group>
+                            <field name="claim_column_ids">
+                                <list editable="bottom" string="Claim Columns">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="header"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_program_search" model="ir.ui.view">
+        <field name="name">pos.bank.card.program.search</field>
+        <field name="model">pos.bank.card.program</field>
+        <field name="arch" type="xml">
+            <search string="Bank Card Programmes">
+                <field name="name"/>
+                <field name="bank_id"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="active_programmes" string="Active" domain="[('state', '=', 'active')]"/>
+                <filter name="closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="group_bank" string="Bank" context="{'group_by': 'bank_id'}"/>
+                <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_program" model="ir.actions.act_window">
+        <field name="name">Bank Card Programmes</field>
+        <field name="res_model">pos.bank.card.program</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_pos_bank_card_program_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a bank card programme</p>
+        </field>
+    </record>
+</odoo>

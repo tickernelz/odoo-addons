@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_pos_bank_card_program"
+              name="Bank Card Programmes"
+              parent="point_of_sale.menu_point_root"
+              action="action_pos_bank_card_program"
+              groups="group_bank_card_manager,group_bank_card_finance"
+              sequence="40"/>
+</odoo>

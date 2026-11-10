@@ -1,0 +1,22 @@
+{
+    'name': 'POS Bank Card Programmes',
+    'summary': 'Bank card programmes in the point of sale: BIN detection, discount, shared quota, bank claims',
+    'version': '19.0.1.0.0',
+    'category': 'Point of Sale',
+    'author': 'tickernelz',
+    'license': 'LGPL-3',
+    'depends': ['point_of_sale', 'account'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/pos_bank_card_claim_data.xml',
+        'views/pos_bank_card_program_views.xml',
+        'views/pos_payment_method_views.xml',
+        'views/pos_bank_card_menus.xml',
+    ],
+    'demo': [
+        'demo/demo.xml',
+    ],
+    'installable': True,
+    'application': False,
+}

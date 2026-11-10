@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_payment_method_form_bank_card" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.bank.card</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='Payment methods']" position="after">
+                <group string="Bank Card Programmes">
+                    <field name="bank_card_required"/>
+                    <field name="bank_card_program_id" invisible="not bank_card_required"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
