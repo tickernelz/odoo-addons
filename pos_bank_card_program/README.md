@@ -29,8 +29,9 @@ Server API used by the point of sale:
 - pos.bank.card.program.confirm_quota(usage_id) confirms a reserved usage row.
 
 Since the cashier stage, release_quota and confirm_quota also check the
-outlet: when the caller passes its pos.config id, a usage row reserved at a
-different outlet is refused with reason wrong_outlet.
+outlet: a usage row reserved at an outlet can only be released or confirmed
+with that same pos.config id; any other value, including none, is refused
+with reason wrong_outlet.
 
 Cashier flow: a payment method flagged "Requires Bank Card Info" opens the
 bank card dialog after its payment line is added. The cashier enters the card
@@ -113,15 +114,146 @@ Updating the translation catalogue:
    must report no difference. English is the source language; Indonesian
    text lives only in i18n/id.po.
 
-Known limit of this foundation stage: release_quota and confirm_quota address
-a usage row by id only. Binding them to the caller's order and session arrives
-with the cashier dialog stage that first wires them to an order.
-
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
 claims, and point of sale users only read programmes, usage, and quota rows.
 The reservation, release, and confirm calls perform their writes on those
 three models under sudo after the eligibility and locking checks, so a
 cashier cannot adjust quota counters directly through the ORM.
+
+## Models
+
+- pos.bank.card.program: a bank programme. Bank, validity dates, outlets
+  (pos.config) and payment methods it applies to, mode, discount percent
+  and basis, minimum basis, maximum discount, promotion order, bank share
+  percent, excluded products and categories, quota (type, period, limit),
+  per-card daily limit, offline setting, and the discount product, discount
+  account, claim receivable account, and reclassification journal.
+- pos.bank.card.bin.range: one BIN range of a programme (6 or 8 digits,
+  ranges of one programme may not overlap), with network, card type, tier,
+  eligibility, and the refusal reason shown for an excluded tier.
+- pos.bank.card.quota: one quota bucket per programme and period (unique),
+  holding the used transaction count and amount.
+- pos.bank.card.cardlimit: one daily counter per programme, card (BIN plus
+  last four digits), and day (unique).
+- pos.bank.card.usage: one row per discounted payment. Masked card,
+  approval code, basis, discount, bank and store shares, outlet, status
+  (reserved, confirmed, cancelled), claim status, the claim it joined, and
+  its reclassification entries. The full card number is never stored.
+- pos.bank.card.claim: one claim to a bank over confirmed usage of one
+  period, with its Excel export, customer invoice, and status (draft,
+  sent, paid, rejected, cancelled). A claim that still holds usage lines
+  cannot be deleted; cancel or reject it to release the lines first.
+- pos.bank.card.claim.column: the Excel columns of a programme claim
+  (sequence, value, header).
+- pos.bank.card.outstanding: read-only report model, confirmed bank share
+  not yet paid, per bank and age bucket.
+- pos.bank.card.claim.wizard: the transient wizard that previews usage per
+  outlet and creates a claim for a bank and period.
+
+Extensions: pos.payment.method gains "Requires Bank Card Info" and a
+default programme; pos.payment carries the card BIN, tier, programme, and
+discount shares; pos.order carries the card context (programme, masked
+card, reservation status, usage row); res.users carries the hashed Store
+Manager PIN.
+
+## Demo data
+
+Installing with demo data creates Bank A and Bank B, Outlet 1 and Outlet 2
+(point of sale configurations with a Card Bank payment method that requires
+bank card info), and two programmes: Bank A Card Programme (15 percent,
+minimum 500,000, maximum discount 100,000, bank share 100 percent, quota of
+3 transactions per day, one use per card per day; BIN 900100-900199
+Platinum eligible, BIN 900200-900299 Gold excluded) and Bank B Card
+Programme (10 percent, maximum discount 75,000, bank share 50 percent,
+quota of 1,000,000 in discount amount, one use per card per day; BIN
+900300-900399 Signature eligible). Four confirmed usage rows from the last
+three days, two per bank and outlet, populate the claim wizard and the
+reports on an empty database. Demo card prefixes 900150 and 900350 with any
+last four digits exercise the cashier dialog.
+
+## Assumptions
+
+- Programme percentages, minimum, maximum, BIN ranges, and names are data,
+  not code; change them on the programme form without a deployment.
+- The claim period is one month by default; the wizard accepts any period.
+- POS prices are tax-included for the journal entry math: the discount line
+  and the bank share already contain tax.
+- Offline discounts are refused by default; a programme must explicitly
+  allow them and set its per-outlet daily allowance.
+- Language is a per-user Odoo setting. Cashiers sharing one account share
+  one language, at the register and in the back office.
+- Programme names and product names are not translated (one name
+  everywhere). The refusal reason of a BIN range is a translatable field.
+- Back office status badges keep the default Odoo contrast, and product
+  names on order lines added before a language switch keep their language.
+
+## Performance
+
+Detection at the register is local: entering card digits makes no server
+call. Measured server side with 500 BIN ranges on one programme (queries
+and seconds per call, Odoo 19 test database): loading the ranges when a
+session opens 5 queries, 0.006 s; loading the programmes 8 queries,
+0.004 s; one detect_card call 6 queries, 0.005 s; one reserve_quota call,
+which re-checks eligibility, locks the counters, and writes the usage row,
+19 queries, 0.009 s. Applying a discount costs exactly that one
+reserve_quota call.
+
+## Limitations
+
+- No EDC terminal integration and no card processing: the cashier types the
+  card prefix, the last four digits, and the approval code from the
+  terminal slip.
+- Marker mode (bank cashback) is stored on the programme but has no
+  separate cashier behaviour in this release; a marker programme currently
+  behaves like an immediate discount programme. Whether marker mode is used
+  at all is a client decision that is still open, so leave the mode on
+  Immediate Discount.
+- One bank card discount per card payment line, and the per-card daily
+  limit counts reservations, so a reservation released at another outlet
+  frees the card for the rest of the day.
+- There is no POS-side check that the approval code belongs to the card;
+  the code is recorded as typed and checked later against terminal reports.
+
+## Acceptance scenarios
+
+Each scenario is an automated test in this module:
+
+1. Platinum card of Bank A on a 1,000,000 purchase: 100,000 discount
+   (15 percent capped) and a usage row.
+   TestDetection.test_eligible_acceptance_scenario,
+   TestPosBankCardFlow.test_paid_order_confirms_usage, and the cashier
+   tour test_bank_card_cashier_flow.
+2. Tier not included: refused with the tier reason, no usage row.
+   TestDetection.test_tier_excluded,
+   TestQuota.test_reserve_rejects_excluded_tier, and the cashier tour.
+3. Daily quota exhausted: refused with the quota reason, and the sale can
+   continue. TestDetection.test_quota_exhausted,
+   TestQuota.test_second_reservation_gets_quota_exhausted, and the cashier
+   tour continue-without-discount steps.
+4. Same card twice in one day: the second use is refused.
+   TestDetection.test_card_used_today and
+   TestQuota.test_card_daily_limit_on_reserve.
+5. Bank B 50:50 programme: half the discount becomes a bank receivable,
+   half stays promotion cost. TestDetection.test_discount_half_share and
+   TestPosBankCardFlow.test_closing_reclassifies_only_the_bank_share.
+6. Refund of a discounted sale: the claim line is cancelled and never
+   billed.
+   TestPosBankCardFlow.test_refund_cancels_usage_and_keeps_quota_by_default,
+   and the TestClaim scenario 7 test asserting cancelled usage stays out
+   of the claim.
+7. Claim wizard, one bank and one month: the Excel and invoice totals
+   equal the usage rows.
+   TestClaim.test_scenario_7_wizard_excel_and_invoice_totals_match_usage.
+8. Usage graph after two transactions: discount and bank share grow
+   accordingly.
+   TestReports.test_scenario_8_graph_totals_grow_with_two_transactions.
+9. Language switched from English to Indonesian with an order open: the
+   order, discount line, and card context stay, and module text turns
+   Indonesian. TestPosLanguage.test_set_writes_user_language_and_session_context
+   and the language tour test_language_switch_keeps_the_open_order.
+10. Single-language database: the Language menu item does not appear. The
+    cashier tour test_bank_card_cashier_flow checks the menu on a database
+    with one language installed.
 
 ## Claims
 

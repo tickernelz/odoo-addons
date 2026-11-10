@@ -78,6 +78,18 @@ class TestClaim(BankCardCommon):
         action = wizard.action_create_claim()
         return self.env['pos.bank.card.claim'].browse(action['res_id'])
 
+    def test_claim_holding_usage_cannot_be_deleted(self):
+        self.make_usage()
+        claim = self.run_wizard()
+        self.assertEqual(set(claim.usage_ids.mapped('claim_state')), {'claimed'})
+        with self.assertRaises(UserError):
+            claim.with_user(self.finance).unlink()
+        self.assertTrue(claim.exists())
+        claim.action_cancel()
+        self.assertEqual(set(claim.usage_ids.mapped('claim_state')), set())
+        claim.with_user(self.finance).unlink()
+        self.assertFalse(claim.exists())
+
     def test_scenario_7_wizard_excel_and_invoice_totals_match_usage(self):
         first = self.make_usage(config=self.outlet_1, bank_share=100000.0, discount=100000.0)
         second = self.make_usage(config=self.outlet_2, bank_share=50000.0, discount=50000.0)

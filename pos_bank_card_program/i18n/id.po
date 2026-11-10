@@ -1900,6 +1900,16 @@ msgid "This claim has no confirmed usage to send."
 msgstr "Klaim ini tidak memiliki pemakaian terkonfirmasi untuk dikirim."
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid ""
+"This claim still holds usage lines. Cancel or reject the claim to release "
+"them before deleting it."
+msgstr ""
+"Klaim ini masih memuat baris pemakaian. Batalkan atau catat klaim sebagai "
+"ditolak untuk melepaskannya sebelum menghapus klaim."
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__tier
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_tier
 msgid "Tier"

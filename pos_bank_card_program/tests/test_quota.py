@@ -67,9 +67,13 @@ class TestQuota(BankCardCommon):
         self.assertEqual(result['reason'], 'bin_not_registered')
 
     def test_reserve_rejects_excluded_tier(self):
+        before = self.env['pos.bank.card.usage'].search_count([
+            ('program_id', '=', self.program.id)])
         result = self.reserve(self.program, '900250', '1111', 1000000.0)
         self.assertFalse(result['reserved'])
         self.assertEqual(result['reason'], 'tier_excluded')
+        self.assertEqual(self.env['pos.bank.card.usage'].search_count([
+            ('program_id', '=', self.program.id)]), before)
 
     def make_committed_programme(self, quota_type='count', card_daily_limit=0):
         cursor = self.env.registry.cursor()

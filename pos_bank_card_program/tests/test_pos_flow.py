@@ -462,6 +462,12 @@ class TestPosBankCardFlow(TestPoSCommon):
 
     def test_release_quota_from_another_outlet_is_refused(self):
         usage = self.reserve(self.program_half, '900350', '9876', 1000000.0)
+        result = self.env['pos.bank.card.program'].release_quota(usage.id)
+        self.assertFalse(result['released'])
+        self.assertEqual(result['reason'], 'wrong_outlet')
+        result = self.env['pos.bank.card.program'].confirm_quota(usage.id)
+        self.assertFalse(result['confirmed'])
+        self.assertEqual(result['reason'], 'wrong_outlet')
         result = self.env['pos.bank.card.program'].release_quota(
             usage.id, config_id=self.other_currency_config.id)
         self.assertFalse(result['released'])

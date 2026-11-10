@@ -10,6 +10,8 @@ registry.category("web_tour.tours").add("pos_bank_card_program_tour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            Chrome.notExistMenuOption("Language"),
+            Chrome.clickMenuButton(),
             ProductScreen.addOrderline("Outlet Tour Product", "1", "1000000"),
             ProductScreen.totalAmountIs("1,000,000.00"),
             ProductScreen.clickPayButton(),
@@ -128,5 +130,55 @@ registry.category("web_tour.tours").add("pos_bank_card_program_tour", {
                 trigger: ".pos-receipt:not(:has(.pos-receipt-bank-card))",
             },
             ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("pos_bank_card_program_language_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Outlet Tour Product", "1", "1000000"),
+            ProductScreen.totalAmountIs("1,000,000.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Card Bank"),
+            Dialog.is({ title: "Bank Card Programme" }),
+            {
+                content: "enter card prefix",
+                trigger: "#bank-card-bin",
+                run: "edit 900150",
+            },
+            {
+                content: "enter last four digits",
+                trigger: "#bank-card-last4",
+                run: "edit 1234",
+            },
+            {
+                content: "enter approval code",
+                trigger: "#bank-card-approval",
+                run: "edit AP1234",
+            },
+            {
+                content: "apply the discount",
+                trigger: ".o_dialog button:contains(Apply Discount):not([disabled])",
+                run: "click",
+            },
+            {
+                content: "remove discount button is available",
+                trigger: "button:contains(Remove Bank Card Discount)",
+            },
+            PaymentScreen.totalIs("900,000.00"),
+            Chrome.clickMenuOption("Language"),
+            Dialog.is({ title: "Language" }),
+            {
+                content: "pick Indonesian",
+                trigger: ".o_dialog button:contains(Bahasa)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                content: "order, discount and card context survive in Indonesian",
+                trigger: ".payment-screen button:contains(Hapus Diskon Kartu Bank)",
+            },
         ].flat(),
 });
