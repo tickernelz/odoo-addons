@@ -10,11 +10,9 @@ class TestPosLanguage(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        lang = cls.env['res.lang'].with_context(active_test=False).search([
-            ('code', '=', 'id_ID'),
-        ])
-        if lang and not lang.active:
-            lang.write({'active': True})
+        cls.env['res.lang'].with_context(active_test=False).search([
+            ('code', 'in', ['en_US', 'id_ID']),
+        ]).write({'active': True})
         cls.cashier = new_test_user(
             cls.env, login='langcashier', lang='en_US',
             groups='base.group_user,point_of_sale.group_pos_user')
