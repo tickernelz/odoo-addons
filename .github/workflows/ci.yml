@@ -49,7 +49,7 @@ jobs:
       DB_HOST: postgres
     steps:
       - uses: actions/checkout@v4
-      - run: apt-get update -qq && apt-get install -y -qq chromium >/dev/null
+      - run: apt-get update -qq && curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /tmp/chrome.deb && apt-get install -y -qq /tmp/chrome.deb >/dev/null
       - run: pip install -q --break-system-packages websocket-client
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/odoo-tests.sh
       - uses: actions/upload-artifact@v4
