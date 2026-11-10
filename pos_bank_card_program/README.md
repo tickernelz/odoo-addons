@@ -100,3 +100,7 @@ claim status), Programme Dashboard (discount and bank share per day),
 Outstanding per Bank (confirmed bank share not yet paid, aged 0-30, 31-60,
 and over 60 days by usage date), Card Transaction Details, Usage per
 Outlet, and Programme Quota Usage.
+
+Icon: the source is static/description/icon.svg; regenerate the PNG with
+inkscape static/description/icon.svg --export-type=png --export-filename=static/description/icon.png -w 256 -h 256
+(run from the module directory).
