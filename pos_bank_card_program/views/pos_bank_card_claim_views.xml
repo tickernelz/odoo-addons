@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_bank_card_claim_list" model="ir.ui.view">
+        <field name="name">pos.bank.card.claim.list</field>
+        <field name="model">pos.bank.card.claim</field>
+        <field name="arch" type="xml">
+            <list string="Bank Card Claims" decoration-muted="state in ('cancelled', 'rejected')">
+                <field name="name"/>
+                <field name="bank_id"/>
+                <field name="program_id" optional="show"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="usage_count" sum="Usage Lines"/>
+                <field name="total_discount_amount" sum="Discount"/>
+                <field name="total_amount" sum="Bank Share"/>
+                <field name="invoice_id"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'draft'"
+                       decoration-info="state == 'sent'"
+                       decoration-success="state == 'paid'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_claim_form" model="ir.ui.view">
+        <field name="name">pos.bank.card.claim.form</field>
+        <field name="model">pos.bank.card.claim</field>
+        <field name="arch" type="xml">
+            <form string="Bank Card Claim">
+                <header>
+                    <button name="action_export_xlsx" groups="pos_bank_card_program.group_bank_card_finance" string="Export Excel" type="object"
+                            class="btn-primary" invisible="state not in ('draft', 'sent')"/>
+                    <button name="action_create_invoice" groups="pos_bank_card_program.group_bank_card_finance" string="Create Invoice" type="object"
+                            invisible="state not in ('draft', 'sent')"/>
+                    <button name="action_send" groups="pos_bank_card_program.group_bank_card_finance" string="Mark Sent" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reconcile" groups="pos_bank_card_program.group_bank_card_finance" string="Reconcile" type="object"
+                            class="btn-primary" invisible="state != 'sent'"/>
+                    <button name="action_mark_paid" groups="pos_bank_card_program.group_bank_card_finance" string="Mark Paid" type="object"
+                            invisible="state != 'sent'"/>
+                    <button name="action_reject" groups="pos_bank_card_program.group_bank_card_finance" string="Record Rejected" type="object"
+                            invisible="state != 'sent'"/>
+                    <button name="action_cancel" groups="pos_bank_card_program.group_bank_card_finance" string="Cancel" type="object"
+                            invisible="state not in ('draft', 'sent')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_usages" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="usage_count" widget="statinfo" string="Usage Lines"/>
+                        </button>
+                        <button name="action_open_invoice" type="object" class="oe_stat_button"
+                                icon="fa-pencil-square-o" invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                                <field name="invoice_id" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group string="Claim">
+                            <field name="bank_id" readonly="state != 'draft'"/>
+                            <field name="program_id" readonly="state != 'draft'"/>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Amounts">
+                            <field name="total_discount_amount"/>
+                            <field name="total_amount"/>
+                            <field name="export_file" filename="export_filename"
+                                   invisible="not export_file"/>
+                            <field name="export_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="usages" string="Claimed Usage">
+                            <field name="usage_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="program_id"/>
+                                    <field name="config_id" string="Outlet"/>
+                                    <field name="masked_card"/>
+                                    <field name="approval_code"/>
+                                    <field name="basis_amount" sum="Basis"/>
+                                    <field name="discount_amount" sum="Discount"/>
+                                    <field name="bank_share_amount" sum="Bank Share"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="claim_state" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_claim_search" model="ir.ui.view">
+        <field name="name">pos.bank.card.claim.search</field>
+        <field name="model">pos.bank.card.claim</field>
+        <field name="arch" type="xml">
+            <search string="Bank Card Claims">
+                <field name="name"/>
+                <field name="bank_id"/>
+                <field name="program_id"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <filter name="group_bank" string="Bank" context="{'group_by': 'bank_id'}"/>
+                <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                <filter name="group_period" string="Period" context="{'group_by': 'date_from:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_claim_pivot" model="ir.ui.view">
+        <field name="name">pos.bank.card.claim.pivot</field>
+        <field name="model">pos.bank.card.claim</field>
+        <field name="arch" type="xml">
+            <pivot string="Bank Card Claims" display_quantity="1">
+                <field name="bank_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="total_amount" type="measure"/>
+                <field name="usage_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_claim" model="ir.actions.act_window">
+        <field name="name">Bank Card Claims</field>
+        <field name="res_model">pos.bank.card.claim</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_pos_bank_card_claim_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No bank card claims yet</p>
+            <p>Use the Claim to Bank wizard under Bank Cards to build the first claim.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_bank_card_outstanding_list" model="ir.ui.view">
+        <field name="name">pos.bank.card.outstanding.list</field>
+        <field name="model">pos.bank.card.outstanding</field>
+        <field name="arch" type="xml">
+            <list string="Outstanding per Bank" create="0" edit="0" delete="0">
+                <field name="bank_id"/>
+                <field name="usage_count" sum="Usage Lines"/>
+                <field name="amount_0_30" sum="0-30 Days"/>
+                <field name="amount_31_60" sum="31-60 Days"
+                       decoration-warning="amount_31_60"/>
+                <field name="amount_over_60" sum="Over 60 Days"
+                       decoration-danger="amount_over_60"/>
+                <field name="total_amount" sum="Outstanding"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_bank_card_outstanding_pivot" model="ir.ui.view">
+        <field name="name">pos.bank.card.outstanding.pivot</field>
+        <field name="model">pos.bank.card.outstanding</field>
+        <field name="arch" type="xml">
+            <pivot string="Outstanding per Bank" display_quantity="1">
+                <field name="bank_id" type="row"/>
+                <field name="amount_0_30" type="measure"/>
+                <field name="amount_31_60" type="measure"/>
+                <field name="amount_over_60" type="measure"/>
+                <field name="total_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_pos_bank_card_outstanding" model="ir.actions.act_window">
+        <field name="name">Outstanding per Bank</field>
+        <field name="res_model">pos.bank.card.outstanding</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing outstanding</p>
+            <p>Every confirmed bank share has been paid or cancelled.</p>
+        </field>
+    </record>
+</odoo>
