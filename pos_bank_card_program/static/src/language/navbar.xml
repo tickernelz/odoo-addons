@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[@onSelected='() => this.reloadProducts()']" position="after">
+            <DropdownItem t-if="canSwitchLanguage" onSelected="() => this.openLanguageDialog()">
+                <span>Language</span>
+                <span class="text-muted ms-2" t-esc="currentLanguageName"/>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

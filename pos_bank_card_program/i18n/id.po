@@ -587,6 +587,13 @@ msgid "Is Follower"
 msgstr "Adalah Follower"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+#: code:addons/pos_bank_card_program/static/src/language/navbar.xml:0
+msgid "Language"
+msgstr "Bahasa"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
 msgid "Last 4 Digits"
@@ -1032,6 +1039,24 @@ msgstr "Persen diskon harus antara 0 dan 100."
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
 msgstr "Tanggal akhir tidak boleh mendahului tanggal mulai."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language %s is not installed."
+msgstr "Bahasa %s tidak terpasang."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language can only be changed from an open point of sale session."
+msgstr "Bahasa hanya bisa diganti dari sesi point of sale yang terbuka."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+msgid "The open order is kept."
+msgstr "Order yang terbuka tetap ada."
 
 #. module: pos_bank_card_program
 #. odoo-python

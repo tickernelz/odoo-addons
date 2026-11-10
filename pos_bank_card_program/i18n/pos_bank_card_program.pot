@@ -584,6 +584,13 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+#: code:addons/pos_bank_card_program/static/src/language/navbar.xml:0
+msgid "Language"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
 msgid "Last 4 Digits"
@@ -1024,6 +1031,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language %s is not installed."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language can only be changed from an open point of sale session."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+msgid "The open order is kept."
 msgstr ""
 
 #. module: pos_bank_card_program
