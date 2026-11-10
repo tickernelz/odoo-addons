@@ -1,6 +1,8 @@
-import psycopg2
+from functools import partial
+from unittest import mock
 
 from odoo import api
+from odoo.service.model import retrying
 from odoo.tests import tagged
 
 from .common import BankCardCommon
@@ -128,27 +130,32 @@ class TestQuota(BankCardCommon):
                 program_id, '900850', last4_a, 100000.0)
             self.assertTrue(first['reserved'])
             cursor_a.commit()
-            with self.assertRaises(psycopg2.errors.SerializationFailure):
-                env_b['pos.bank.card.program'].reserve_quota(
-                    program_id, '900850', last4_b, 100000.0)
-            cursor_b.rollback()
+            with mock.patch('odoo.service.model.time.sleep'):
+                second = retrying(partial(
+                    env_b['pos.bank.card.program'].reserve_quota,
+                    program_id, '900850', last4_b, 100000.0), env_b)
+            return second
         finally:
             cursor_a.close()
             cursor_b.close()
 
-    def test_quota_bucket_creation_race_fails_closed(self):
+    def test_quota_bucket_creation_race_retries_into_exhaustion(self):
         bank_id, program_id = self.make_committed_programme()
         try:
-            self.race_snapshot_reservations(program_id, '1111', '2222')
+            second = self.race_snapshot_reservations(program_id, '1111', '2222')
+            self.assertFalse(second['reserved'])
+            self.assertEqual(second['reason'], 'quota_exhausted')
             self.assertEqual(self.count_committed_usages(program_id), 1)
         finally:
             self.drop_committed_programme(bank_id, program_id)
 
-    def test_cardlimit_creation_race_fails_closed(self):
+    def test_cardlimit_creation_race_retries_into_daily_limit(self):
         bank_id, program_id = self.make_committed_programme(
             quota_type='none', card_daily_limit=1)
         try:
-            self.race_snapshot_reservations(program_id, '1111', '1111')
+            second = self.race_snapshot_reservations(program_id, '1111', '1111')
+            self.assertFalse(second['reserved'])
+            self.assertEqual(second['reason'], 'card_used_today')
             self.assertEqual(self.count_committed_usages(program_id), 1)
         finally:
             self.drop_committed_programme(bank_id, program_id)

@@ -3,7 +3,7 @@ import datetime
 import psycopg2
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ConcurrencyError, ValidationError
 
 
 def bin_interval(value_from, value_to):
@@ -199,7 +199,7 @@ class PosBankCardProgram(models.Model):
                     ('date_to', '=', end),
                 ], limit=1)
                 if not quota:
-                    raise psycopg2.errors.SerializationFailure(
+                    raise ConcurrencyError(
                         'quota bucket created concurrently; retry the reservation')
         return quota
 
@@ -225,7 +225,7 @@ class PosBankCardProgram(models.Model):
             except psycopg2.IntegrityError:
                 limit = Cardlimit.search(domain, limit=1)
                 if not limit:
-                    raise psycopg2.errors.SerializationFailure(
+                    raise ConcurrencyError(
                         'daily card counter created concurrently; retry the reservation')
         return limit
 
@@ -397,13 +397,13 @@ class PosBankCardProgram(models.Model):
         amounts = program.compute_discount(basis_amount or 0.0)
         quota = program._quota_for(day, create=True) if program.quota_type != 'none' else self.env['pos.bank.card.quota']
         if program.quota_type != 'none' and not quota:
-            raise psycopg2.errors.SerializationFailure(
+            raise ConcurrencyError(
                 'quota bucket created concurrently; retry the reservation')
         cardlimit = self.env['pos.bank.card.cardlimit']
         if program.card_daily_limit:
             cardlimit = program._cardlimit_for(str(card_bin), str(card_last4 or ''), day, create=True)
             if not cardlimit:
-                raise psycopg2.errors.SerializationFailure(
+                raise ConcurrencyError(
                     'daily card counter created concurrently; retry the reservation')
         program._lock_rows(quota, cardlimit)
         if cardlimit and cardlimit.used_count >= program.card_daily_limit:
