@@ -49,6 +49,8 @@ jobs:
       DB_HOST: postgres
     steps:
       - uses: actions/checkout@v4
+      - run: apt-get update -qq && curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /tmp/chrome.deb && apt-get install -y -qq /tmp/chrome.deb >/dev/null
+      - run: pip install -q --break-system-packages websocket-client
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/odoo-tests.sh
       - uses: actions/upload-artifact@v4
         if: always()
@@ -76,8 +78,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$PINNED_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
-      - run: apt-get update -qq && apt-get install -y -qq libldap2-dev libsasl2-dev >/dev/null
-      - run: pip install -q -r /tmp/src/requirements.txt
+      - run: apt-get update -qq && apt-get install -y -qq libldap2-dev libsasl2-dev chromium >/dev/null
+      - run: pip install -q -r /tmp/src/requirements.txt websocket-client
       - run: ODOO_BIN="python3 /tmp/src/odoo-bin" ADDONS_PATH="$GITHUB_WORKSPACE,/tmp/src/addons,/tmp/src/odoo/addons" sh ci/odoo-tests.sh
       - uses: actions/upload-artifact@v4
         if: always()

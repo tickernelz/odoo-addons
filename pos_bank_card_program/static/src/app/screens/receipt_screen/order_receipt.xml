@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bank_card_program.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="before">
+            <div t-if="order.bank_card_program_id" class="pos-receipt-bank-card pt-2">
+                <div class="fw-bolder" t-esc="order.bank_card_program_id.name"/>
+                <div class="d-flex justify-content-between">
+                    <span>Bank Card Discount</span>
+                    <span class="pos-receipt-right-align font-monospace" t-out="formatCurrency(order.getBankCardPayment()?.bank_card_discount || 0)"/>
+                </div>
+                <div t-if="order.bank_card_masked" t-esc="order.bank_card_masked"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

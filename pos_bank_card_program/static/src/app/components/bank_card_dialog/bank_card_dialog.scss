@@ -1,0 +1,20 @@
+.o-bank-card-dialog {
+    .o-bank-card-input {
+        min-height: 44px;
+    }
+    .o-bank-card-chip {
+        font-size: 0.875rem;
+    }
+}
+
+.o-bank-card-button {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o-bank-card-dialog * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
