@@ -217,6 +217,37 @@ class TestPosBankCardFlow(TestPoSCommon):
         self.assertTrue(second.bank_card_usage_id.needs_review)
         self.assertEqual(second.bank_card_usage_id.bank_share_amount, 0.0)
 
+    def test_offline_without_card_payment_leaves_review_usage(self):
+        self.program_half.write({'offline_allowed': True, 'offline_allowance': 2})
+        self.open_new_session()
+        order = self.make_order(self.program_half, 75000.0, offline=True,
+                                card_bin='900350', last4='9876')
+        order.payment_ids.write({'bank_card_program_id': False})
+        order.action_pos_order_paid()
+        self.assertEqual(order.state, 'paid')
+        usage = order.bank_card_usage_id
+        self.assertTrue(usage)
+        self.assertTrue(usage.needs_review)
+        self.assertEqual(usage.claim_state, 'cancelled')
+        self.assertEqual(usage.bank_share_amount, 0.0)
+        self.assertEqual(usage.discount_amount, 75000.0)
+
+    def test_offline_amount_mismatch_needs_review(self):
+        self.program_half.write({'offline_allowed': True, 'offline_allowance': 2})
+        self.open_new_session()
+        order = self.make_order(self.program_half, 50000.0, offline=True,
+                                card_bin='900350', last4='9876')
+        order.action_pos_order_paid()
+        self.assertEqual(order.state, 'paid')
+        usage = order.bank_card_usage_id
+        self.assertTrue(usage)
+        self.assertTrue(usage.needs_review)
+        self.assertEqual(usage.bank_share_amount, 0.0)
+        self.assertEqual(usage.discount_amount, 50000.0)
+        usages = self.env['pos.bank.card.usage'].search(
+            [('pos_order_id', '=', order.id)])
+        self.assertEqual(len(usages), 1)
+
     def test_offline_order_syncs_from_ui_without_bank_claim(self):
         self.open_new_session()
         data = self.create_ui_order_data(

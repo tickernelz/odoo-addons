@@ -128,23 +128,67 @@ class PosOrder(models.Model):
             return sum(lines.mapped('price_subtotal_incl'))
         return sum(lines.mapped('price_subtotal'))
 
+    def _masked_card_parts(self):
+        digits = ''.join(char for char in (self.bank_card_masked or '') if char.isdigit())
+        card_bin = digits[:-4] if len(digits) > 4 else ''
+        card_last4 = digits[-4:] if len(digits) >= 4 else digits
+        return card_bin or '000000', card_last4
+
+    def _create_review_usage(self, program, payment, basis):
+        discount_lines = self.lines.filtered('is_bank_card_discount')
+        discount = abs(sum(discount_lines.mapped('price_subtotal_incl')))
+        masked_bin, masked_last4 = self._masked_card_parts()
+        usage = self.env['pos.bank.card.usage'].sudo().create({
+            'program_id': program.id,
+            'pos_order_id': self.id,
+            'payment_id': payment.id if payment else False,
+            'config_id': self.config_id.id,
+            'card_bin': (payment.card_bin if payment else '') or masked_bin,
+            'card_last4': (payment.card_no if payment else '') or masked_last4,
+            'approval_code': (payment.payment_method_authcode if payment else '') or False,
+            'card_brand': (payment.card_brand if payment else '') or False,
+            'card_type': (payment.card_type if payment else '') or False,
+            'card_tier': (payment.card_tier if payment else '') or False,
+            'basis_amount': basis,
+            'discount_amount': discount,
+            'bank_share_amount': 0.0,
+            'store_share_amount': discount,
+            'state': 'confirmed',
+            'claim_state': 'cancelled',
+            'offline': True,
+            'needs_review': True,
+        })
+        self.write({
+            'bank_card_usage_id': usage.id,
+            'bank_card_reservation_state': 'confirmed',
+        })
+        return usage
+
     def _settle_offline_usage(self):
         self.ensure_one()
         payment = self._bank_card_payments()[:1]
-        if not payment:
-            self.write({'bank_card_reservation_state': 'released'})
-            return
-        program = self.bank_card_program_id or payment.bank_card_program_id
+        program = self.bank_card_program_id or (payment.bank_card_program_id if payment else False)
         if not program:
             self.write({'bank_card_reservation_state': 'released'})
+            self.message_post(body=self.env._(
+                'A bank card discount was applied offline without a programme card '
+                'payment, so no bank claim was recorded.'))
+            return
+        if not payment:
+            self._create_review_usage(program, payment, 0.0)
             return
         Usage = self.env['pos.bank.card.usage'].sudo()
         usage = self.bank_card_usage_id
         if not usage and self.bank_card_usage_ref and str(self.bank_card_usage_ref).isdigit():
             usage = Usage.browse(int(self.bank_card_usage_ref)).exists()
         basis = self._offline_basis(program, payment)
+        line_total = abs(sum(
+            self.lines.filtered('is_bank_card_discount').mapped('price_subtotal_incl')))
+        expected = program.compute_discount(basis)
+        amounts_match = self.currency_id.compare_amounts(
+            line_total, expected['discount_amount']) == 0
         approval_ok = not program.require_approval_code or bool(payment.payment_method_authcode)
-        if not usage and approval_ok and self._offline_allowance_left(program):
+        if not usage and approval_ok and amounts_match and self._offline_allowance_left(program):
             result = self.env['pos.bank.card.program'].reserve_quota(
                 program.id, payment.card_bin or '', payment.card_no or '', basis,
                 approval_code=payment.payment_method_authcode or False,
@@ -154,32 +198,7 @@ class PosOrder(models.Model):
             if result.get('reserved'):
                 usage = Usage.browse(result['usage_id'])
         if not usage:
-            discount_lines = self.lines.filtered('is_bank_card_discount')
-            discount = abs(sum(discount_lines.mapped('price_subtotal_incl')))
-            usage = Usage.create({
-                'program_id': program.id,
-                'pos_order_id': self.id,
-                'payment_id': payment.id,
-                'config_id': self.config_id.id,
-                'card_bin': payment.card_bin or '',
-                'card_last4': payment.card_no or '',
-                'approval_code': payment.payment_method_authcode or False,
-                'card_brand': payment.card_brand or False,
-                'card_type': payment.card_type or False,
-                'card_tier': payment.card_tier or False,
-                'basis_amount': basis,
-                'discount_amount': discount,
-                'bank_share_amount': 0.0,
-                'store_share_amount': discount,
-                'state': 'confirmed',
-                'claim_state': 'cancelled',
-                'offline': True,
-                'needs_review': True,
-            })
-            self.write({
-                'bank_card_usage_id': usage.id,
-                'bank_card_reservation_state': 'confirmed',
-            })
+            self._create_review_usage(program, payment, basis)
             return
         usage.write({
             'pos_order_id': self.id,
