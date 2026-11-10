@@ -28,6 +28,35 @@ Server API used by the point of sale:
   and returns its quota.
 - pos.bank.card.program.confirm_quota(usage_id) confirms a reserved usage row.
 
+Language:
+
+- When more than one language is installed, the point of sale menu shows a
+  Language item under Reload Data, with the current language next to it. The
+  dialog lists the languages installed on the server; picking one writes the
+  user language and the session context through
+  /pos_bank_card_program/lang/set, then reloads the page. The route rejects a
+  language that is not installed and a user without an open point of sale
+  session, and it can only ever change the caller's own language.
+- The open order is kept across the reload. Product names on order lines
+  that were already added do not change language; only lines added after the
+  switch use the new language.
+- Language is a per-user setting, also outside the point of sale. Cashiers
+  who take turns on one shared account share one language, in the register
+  and in the back office alike.
+
+Updating the translation catalogue:
+
+1. Export a fresh template from a database where the module is installed:
+   ADDONS_PATH="<repo>,<odoo addons>" sh ci/export-pot.sh <db> pos_bank_card_program > /tmp/fresh.pot
+2. Copy /tmp/fresh.pot over i18n/pos_bank_card_program.pot, then merge it
+   into i18n/id.po with msgmerge --no-fuzzy-matching, fill every empty
+   entry, and drop obsolete ones with msgattrib --no-obsolete.
+3. Check the result: python3 ci/i18n.py check and
+   msgfmt --check -o /dev/null pos_bank_card_program/i18n/id.po must both
+   pass, and python3 ci/i18n.py compare <folder holding the fresh .pot>
+   must report no difference. English is the source language; Indonesian
+   text lives only in i18n/id.po.
+
 Known limit of this foundation stage: release_quota and confirm_quota address
 a usage row by id only. Binding them to the caller's order and session arrives
 with the cashier dialog stage that first wires them to an order.

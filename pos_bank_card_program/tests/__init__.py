@@ -6,3 +6,4 @@ from . import test_pos_data
 from . import test_quota
 from . import test_claim
 from . import test_reports
+from . import test_language

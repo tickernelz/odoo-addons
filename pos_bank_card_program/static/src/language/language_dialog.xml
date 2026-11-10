@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bank_card_program.LanguageDialog">
+        <Dialog title.translate="Language" size="'sm'" footer="false">
+            <div class="d-flex flex-column gap-2">
+                <button t-foreach="props.langs" t-as="lang" t-key="lang.code" class="btn btn-lg d-flex justify-content-between align-items-center" t-att-class="lang.code === props.current ? 'btn-primary' : 'btn-secondary'" t-on-click="() => this.select(lang.code)">
+                    <span t-esc="lang.name"/>
+                    <i t-if="lang.code === props.current" class="fa fa-check" aria-hidden="true"/>
+                </button>
+                <p class="text-muted m-0 mt-2">The open order is kept.</p>
+            </div>
+        </Dialog>
+    </t>
+</templates>
