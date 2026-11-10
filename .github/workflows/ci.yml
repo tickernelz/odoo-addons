@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: ['10.0', '10.0-*']
+  pull_request:
+    branches: ['10.0']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PG_ENV: -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres
+  DB_ENV: -e DB_HOST=postgres -e DB_USER=odoo -e DB_PASSWORD=odoo
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: >-
+          docker run --rm -v "$PWD:/repo" -w /repo python:2.7.18-slim sh -c
+          'pip install -q flake8==3.9.2 && python -m flake8 kaitech_mcp_server && python -m compileall -q kaitech_mcp_server'
+
+  odoo10-image:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: odoo10-image-empty-db
+            extra: ''
+          - name: odoo10-image-sale-account-stock
+            extra: sale,account,stock,purchase
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker network create ci && docker run -d --name postgres --network ci $PG_ENV postgres:9.6
+      - run: >-
+          docker run --rm --network ci -u root -v "$PWD:/repo" -w /repo $DB_ENV
+          -e ADDONS_PATH=/repo,/usr/lib/python2.7/dist-packages/odoo/addons -e EXTRA_INSTALL='${{ matrix.extra }}'
+          --entrypoint sh odoo:10.0 harness/ci-odoo-tests.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.name }}-log
+          path: |
+            odoo-tests.log
+            install.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  odoo10-source:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: odoo10-2017-build-py2718
+            commit: cb01cfe9ff3c98bc91e923617bde492b69e3ecfe
+            postgres: postgres:9.6
+          - name: odoo10-pinned-core-py2718-pg15
+            commit: 28c3f51c4878fbcd79b2e819948465fcf2160ebc
+            postgres: -e POSTGRES_INITDB_ARGS=--auth-host=md5 postgres:15 postgres -c password_encryption=md5
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker network create ci && docker run -d --name postgres --network ci $PG_ENV ${{ matrix.postgres }}
+      - run: >-
+          docker run --rm --network ci -v "$PWD:/repo" -w /repo $DB_ENV python:2.7.18-buster sh -c
+          'sh harness/ci-source-runtime.sh "${{ matrix.commit }}" &&
+          ODOO_BIN="python /tmp/src/odoo-bin" ADDONS_PATH="/repo,/tmp/src/addons,/tmp/src/odoo/addons" sh harness/ci-odoo-tests.sh'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.name }}-log
+          path: odoo-tests.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  i18n-template:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker network create ci && docker run -d --name postgres --network ci $PG_ENV postgres:9.6
+      - run: >-
+          docker run --rm --network ci -u root -v "$PWD:/repo" -w /repo --entrypoint sh odoo:10.0 -c
+          'until python -c "import psycopg2; psycopg2.connect(host=\"postgres\", user=\"odoo\", password=\"odoo\", dbname=\"postgres\")" 2>/dev/null; do sleep 1; done;
+          A=/repo,/usr/lib/python2.7/dist-packages/odoo/addons;
+          odoo --addons-path=$A --db_host postgres --db_user odoo --db_password odoo -d i18n -i kaitech_mcp_server --without-demo=all --stop-after-init --log-level=warn &&
+          sh harness/export-pot.sh i18n --addons-path=$A --db_host postgres --db_user odoo --db_password odoo > fresh.pot'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fresh-pot
+          path: fresh.pot
+          retention-days: 7
+
+  i18n:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    needs: i18n-template
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: fresh-pot
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext >/dev/null
+      - run: pip install -q polib==1.2.0
+      - run: python harness/i18n.py compare fresh.pot
+      - run: python harness/i18n.py check
+      - run: msgfmt --check --statistics -o /dev/null kaitech_mcp_server/i18n/id.po
+
+  multi-db:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh harness/multidb.sh open dbfilter list_db_off not_server_wide perf

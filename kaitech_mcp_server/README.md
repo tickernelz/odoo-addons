@@ -2,7 +2,7 @@
 
 Lets MCP clients (Claude Desktop, Cursor, n8n, Hermes, any client of the Model Context Protocol) read and change data in one Odoo 10 database, as one Odoo user per key, limited to the models, tables and actions an administrator ticks. Every call is in a call log.
 
-The wire contract (endpoint, tools, arguments, errors, audit) is shared with the Odoo 19 module and written down in `CONTRACT.md` at the repository root.
+The wire contract (endpoint, tools, arguments, errors, audit) is shared with the Odoo 19 module `kaitech_mcp` (branch `19.0`) and written down in `CONTRACT.md` next to this README.
 
 ## Install
 
@@ -76,7 +76,7 @@ Screens, messages and labels are English in the sources; Indonesian comes from `
 
 ## Compatibility
 
-Module tests (96) and harnesses, per target. "CI" jobs run on every pipeline of the repository; the production copy run is local because the data stays off CI.
+Module tests (96) and harnesses, per target. "CI" jobs run in GitHub Actions on every push to the branch; the production copy run is local because the data stays off CI.
 
 | Target | Odoo build | Python | PostgreSQL | Database | Result | Where |
 |---|---|---|---|---|---|---|
