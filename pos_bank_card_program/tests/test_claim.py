@@ -284,7 +284,10 @@ class TestClaim(BankCardCommon):
     def test_finance_with_billing_without_pos_groups_completes_the_flow(self):
         user = self.finance_billing
         usage = self.make_usage(config=self.outlet_1)
-        self.assertEqual(usage.with_user(user).config_id.name, 'Outlet 1')
+        with self.assertRaises(AccessError):
+            usage.with_user(user).config_id.name
+        [row] = usage.with_user(user).web_read({'config_id': {'fields': {'display_name': {}}}})
+        self.assertEqual(row['config_id'], {'id': self.outlet_1.id, 'display_name': 'Outlet 1'})
         visible = self.env['ir.ui.menu'].with_user(user)._visible_menu_ids()
         self.assertIn(
             self.env.ref('pos_bank_card_program.menu_pos_bank_card_claim_accounting').id, visible)

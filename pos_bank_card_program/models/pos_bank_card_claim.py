@@ -129,15 +129,15 @@ class PosBankCardClaim(models.Model):
         if code == 'date':
             return fields.Datetime.context_timestamp(self, usage.date).replace(tzinfo=None)
         if code == 'order':
-            return usage.pos_order_id.name or ''
+            return usage.sudo().pos_order_id.name or ''
         if code == 'outlet':
-            return usage.config_id.name or ''
+            return usage.sudo().config_id.name or ''
         if code == 'masked_card':
             return usage.masked_card or ''
         if code == 'approval_code':
             return usage.approval_code or ''
         if code == 'program':
-            return usage.program_id.name or ''
+            return usage.sudo().program_id.name or ''
         return usage[code] or 0.0
 
     def _build_workbook(self):
