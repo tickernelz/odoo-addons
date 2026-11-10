@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 14:55+0000\n"
+"POT-Creation-Date: 2026-11-10 16:00+0000\n"
 "PO-Revision-Date: 2026-11-10 13:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -210,6 +210,16 @@ msgid "Bank Card Offline Discount"
 msgstr "Diskon Kartu Bank Offline"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_pin_attempts
+msgid "Bank Card PIN Attempts"
+msgstr "Percobaan PIN Kartu Bank"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_pin_locked_until
+msgid "Bank Card PIN Locked Until"
+msgstr "PIN Kartu Bank Terkunci Sampai"
+
+#. module: pos_bank_card_program
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_program
@@ -276,6 +286,12 @@ msgstr "% Porsi Bank"
 #: code:addons/pos_bank_card_program/models/pos_session.py:0
 msgid "Bank card claim reclassification %s"
 msgstr "Reklasifikasi klaim kartu bank %s"
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_usage.py:0
+msgid "Bank card claim reclassification reversal %s"
+msgstr "Pembalikan reklasifikasi klaim kartu bank %s"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__basis_amount
@@ -816,6 +832,11 @@ msgid "Number of messages with delivery error"
 msgstr "Jumlah pesan dengan kesalahan pengiriman"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__offline
+msgid "Offline"
+msgstr "Offline"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__offline_allowance
 msgid "Offline Allowance per Outlet"
 msgstr "Jatah Offline per Outlet"
@@ -992,6 +1013,11 @@ msgid "Reclassification Journal"
 msgstr "Jurnal Reklas"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__reclass_reversal_move_id
+msgid "Reclassification Reversal"
+msgstr "Pembalikan Reklasifikasi"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__refund_returns_quota
 msgid "Refund Returns Quota"
 msgstr "Refund Mengembalikan Kuota"
@@ -1145,6 +1171,26 @@ msgstr ""
 "terapkan program lagi."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"The bank card discount is not paid with the programme card payment. Pay with"
+" the card or remove the discount."
+msgstr ""
+"Diskon kartu bank tidak dibayar dengan pembayaran kartu program. Bayar "
+"dengan kartu atau hapus diskon."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount lines on order %s do not match the reserved discount "
+"amount."
+msgstr ""
+"Baris diskon kartu bank pada order %s tidak sama dengan jumlah diskon yang "
+"tereservasi."
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid ""
@@ -1153,6 +1199,32 @@ msgid ""
 msgstr ""
 "Diskon kartu bank pada order %s belum punya catatan pemakaian. Hapus baris "
 "diskon atau terapkan program lagi agar kuota tereservasi."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s is not paid with the programme card "
+"payment. Pay with the card or remove the discount line."
+msgstr ""
+"Diskon kartu bank pada order %s tidak dibayar dengan pembayaran kartu "
+"program. Bayar dengan kartu atau hapus baris diskon."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s was applied offline, but programme %s "
+"does not allow offline discounts."
+msgstr ""
+"Diskon kartu bank pada order %s diterapkan saat offline, tetapi program %s "
+"tidak mengizinkan diskon offline."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The bank card discount was removed with its card payment."
+msgstr "Diskon kartu bank dihapus bersama pembayaran kartunya."
 
 #. module: pos_bank_card_program
 #. odoo-javascript
@@ -1186,6 +1258,14 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s was reserved at a different outlet."
+msgstr ""
+"Catatan pemakaian kartu bank pada order %s tereservasi di outlet lain."
+
+#. module: pos_bank_card_program
+#. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The bank share percent must be between 0 and 100."
 msgstr "Persen porsi bank harus antara 0 dan 100."
@@ -1211,6 +1291,20 @@ msgstr ""
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
 msgstr "Tanggal akhir tidak boleh mendahului tanggal mulai."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid "The offline bank card discount on order %s cannot be recorded: %s"
+msgstr "Diskon kartu bank offline pada order %s tidak bisa dicatat: %s"
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The offline discount allowance of programme %s for this outlet is used up on"
+" order %s."
+msgstr "Jatah diskon offline program %s untuk outlet ini habis pada order %s."
 
 #. module: pos_bank_card_program
 #. odoo-javascript

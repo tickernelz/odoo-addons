@@ -21,6 +21,7 @@
             'pos_bank_card_program/static/src/app/utils/bank_card_detection.js',
             'pos_bank_card_program/static/src/app/models/bank_card_models.js',
             'pos_bank_card_program/static/src/app/models/pos_order.js',
+            'pos_bank_card_program/static/src/app/services/pos_store.js',
             'pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.js',
             'pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml',
             'pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.scss',

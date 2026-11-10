@@ -45,8 +45,13 @@ state) is stored on order and payment fields, so it survives a page reload
 and a language switch. Removing the discount uses the "Remove Bank Card
 Discount" button on the payment screen and requires the Store Manager PIN:
 the bank_card_manager_pin field of a user in the Programme Manager or POS
-Manager group, verified on the server; three wrong entries return to the
-payment screen. Removal releases the reserved quota.
+Manager group of the same company. PINs are stored hashed (PBKDF2), verified
+on the server, and five failed attempts lock verification for the calling
+user for five minutes; three wrong entries in the dialog return to the
+payment screen. Removal releases the reserved quota. Deleting the card
+payment line or the whole order also releases the discount and its
+reservation, and closing a session releases reservations that were never
+paid.
 
 Validation guards: an order whose bank card discount line has no usage row
 cannot be paid, and an empty Approval Code is rejected with a message naming
@@ -55,17 +60,23 @@ usage row. Refunding a discounted order cancels its usage row so it is never
 claimed; the quota is returned only when the programme enables "Refund
 Returns Quota".
 
-Offline: discounts are refused while offline by default. A programme with
-"Allow Offline" applies the discount from local data up to its per-outlet
-allowance of offline orders, and the usage row is created when the order
-syncs.
+Offline: discounts are refused while offline by default, and the server
+enforces it again when the order syncs. A programme with "Allow Offline"
+applies the discount from local data up to its per-outlet daily allowance,
+counted on the server from confirmed offline usage rows; the usage row is
+reserved when the order syncs, and an order that loses that check is refused
+at sync instead of being recorded silently.
 
 Accounting: the journal assumption is that POS prices are tax-included, so
 the discount line and the bank share already contain tax. When a session
 closes, one reclassification entry per programme moves the bank share from
 the programme discount account to the bank claim receivable account with the
-bank as partner (debit receivable, credit discount). With 50:50 funding only
-the bank half is reclassified; the store half stays promotion cost. The entry
+bank as partner (debit receivable, credit discount). The discount order line
+itself posts to the programme discount account at closing, so after the
+reclassification that account keeps exactly the store share. With 50:50
+funding only the bank half is reclassified; the store half stays promotion
+cost. Refunding an order whose share was already reclassified posts a
+reversal entry for that usage, in the same or a later session. The entry
 uses the programme reclassification journal when set. Programmes without both
 accounts are skipped, and each usage row records its entry so a share is
 never reclassified twice.

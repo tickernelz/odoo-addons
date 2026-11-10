@@ -18,6 +18,15 @@ patch(OrderPaymentValidation.prototype, {
             }
             const payment = order.getBankCardPayment();
             const program = order.bank_card_program_id;
+            if (!payment) {
+                this.pos.dialog.add(AlertDialog, {
+                    title: _t("Bank Card Discount"),
+                    body: _t(
+                        "The bank card discount is not paid with the programme card payment. Pay with the card or remove the discount."
+                    ),
+                });
+                return false;
+            }
             if (
                 program?.require_approval_code &&
                 !String(payment?.payment_method_authcode || "").trim()

@@ -17,7 +17,8 @@ class PosBankCardUsage(models.Model):
     pos_order_id = fields.Many2one('pos.order', string='POS Order', ondelete='set null', index=True)
     payment_id = fields.Many2one('pos.payment', string='POS Payment', ondelete='set null')
     session_id = fields.Many2one(
-        'pos.session', string='Session', related='pos_order_id.session_id', store=True, readonly=True)
+        'pos.session', string='Session', related='pos_order_id.session_id', store=True,
+        readonly=True, index=True)
     config_id = fields.Many2one('pos.config', string='Outlet')
     quota_id = fields.Many2one('pos.bank.card.quota', string='Quota Bucket', ondelete='set null')
     cardlimit_id = fields.Many2one('pos.bank.card.cardlimit', string='Daily Card Counter', ondelete='set null')
@@ -50,6 +51,9 @@ class PosBankCardUsage(models.Model):
         string='Claim Status', default='not_claimed', required=True, index=True)
     claim_id = fields.Many2one('pos.bank.card.claim', string='Claim', ondelete='set null', index=True)
     reclass_move_id = fields.Many2one('account.move', string='Reclassification Entry', ondelete='set null')
+    reclass_reversal_move_id = fields.Many2one(
+        'account.move', string='Reclassification Reversal', ondelete='set null')
+    offline = fields.Boolean(string='Offline', default=False)
 
     @api.depends('card_bin', 'card_last4')
     def _compute_masked_card(self):
@@ -90,6 +94,40 @@ class PosBankCardUsage(models.Model):
         self.sudo().write({'state': 'confirmed'})
         return {'confirmed': True, 'usage_id': self.id}
 
+    def _reverse_reclassification(self):
+        self.ensure_one()
+        move = self.reclass_move_id
+        if not move or move.state != 'posted' or self.reclass_reversal_move_id:
+            return
+        program = self.program_id
+        amount = self.bank_share_amount
+        if not amount or not (program.receivable_account_id and program.discount_account_id):
+            return
+        name = self.env._('Bank card claim reclassification reversal %s', program.name)
+        reversal = self.env['account.move'].sudo().create({
+            'journal_id': move.journal_id.id,
+            'date': fields.Date.context_today(self),
+            'ref': move.ref or move.name,
+            'company_id': move.company_id.id,
+            'line_ids': [
+                (0, 0, {
+                    'name': name,
+                    'account_id': program.discount_account_id.id,
+                    'debit': amount,
+                    'credit': 0.0,
+                }),
+                (0, 0, {
+                    'name': name,
+                    'account_id': program.receivable_account_id.id,
+                    'partner_id': program.bank_id.id,
+                    'debit': 0.0,
+                    'credit': amount,
+                }),
+            ],
+        })
+        reversal.action_post()
+        self.sudo().write({'reclass_reversal_move_id': reversal.id})
+
     def cancel_for_refund(self):
         self.ensure_one()
         if self.state == 'cancelled':
@@ -104,6 +142,7 @@ class PosBankCardUsage(models.Model):
                 })
             if self.cardlimit_id:
                 self.cardlimit_id.sudo().write({'used_count': max(self.cardlimit_id.used_count - 1, 0)})
+        self._reverse_reclassification()
         self.sudo().write({'state': 'cancelled', 'claim_state': 'cancelled'})
         if self.pos_order_id:
             self.pos_order_id.write({'bank_card_reservation_state': 'released'})

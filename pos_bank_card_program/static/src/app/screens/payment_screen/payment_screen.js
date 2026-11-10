@@ -23,6 +23,7 @@ patch(PaymentScreen.prototype, {
         const applied = await makeAwaitable(this.dialog, BankCardDialog, {
             order,
             paymentMethod,
+            paymentAmount: payment.getAmount(),
         });
         if (!applied) {
             return added;
@@ -44,6 +45,33 @@ patch(PaymentScreen.prototype, {
             });
         }
         return added;
+    },
+
+    async bankCardCleanupIfPaymentRemoved() {
+        const order = this.currentOrder;
+        if (!order.getBankCardDiscountLine()) {
+            return;
+        }
+        if (order.bank_card_usage_ref) {
+            await this.pos.data.call("pos.bank.card.program", "release_quota", [
+                parseInt(order.bank_card_usage_ref),
+                this.pos.config.id,
+            ]);
+        }
+        order.clearBankCardDiscount();
+        await this.pos.data.synchronizeLocalDataInIndexedDB();
+        this.notification.add(_t("The bank card discount was removed with its card payment."), {
+            type: "warning",
+        });
+    },
+
+    deletePaymentLine(uuid) {
+        const line = this.paymentLines.find((payment) => payment.uuid === uuid);
+        const wasBankCardPayment = Boolean(line?.bank_card_program_id);
+        super.deletePaymentLine(uuid);
+        if (wasBankCardPayment && !this.paymentLines.includes(line)) {
+            this.bankCardCleanupIfPaymentRemoved();
+        }
     },
 
     async removeBankCardDiscount() {

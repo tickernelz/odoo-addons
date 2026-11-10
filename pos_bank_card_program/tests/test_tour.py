@@ -68,6 +68,9 @@ class TestBankCardTour(TestPointOfSaleHttpCommon):
             '/pos/ui/%d' % self.main_pos_config.id,
             'pos_bank_card_program_tour', login='pos_admin')
         usages = self.env['pos.bank.card.usage'].search([('program_id', '=', self.program.id)])
-        self.assertEqual(len(usages), 1)
-        self.assertEqual(usages.state, 'confirmed')
-        self.assertEqual(usages.discount_amount, 100000.0)
+        self.assertEqual(len(usages), 2)
+        confirmed = usages.filtered(lambda usage: usage.state == 'confirmed')
+        cancelled = usages.filtered(lambda usage: usage.state == 'cancelled')
+        self.assertEqual(len(confirmed), 1)
+        self.assertEqual(confirmed.discount_amount, 100000.0)
+        self.assertEqual(len(cancelled), 1)

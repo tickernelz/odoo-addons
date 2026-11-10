@@ -14,6 +14,25 @@ class PosSession(models.Model):
         self._reclassify_bank_card_shares()
         return result
 
+    def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        self._release_open_bank_card_reservations()
+        return super()._validate_session(
+            balancing_account, amount_to_balance, bank_payment_method_diffs)
+
+    def _release_open_bank_card_reservations(self):
+        self.ensure_one()
+        Usage = self.env['pos.bank.card.usage'].sudo()
+        open_usages = Usage.search([
+            ('config_id', '=', self.config_id.id),
+            ('state', '=', 'reserved'),
+        ])
+        for usage in open_usages:
+            order = usage.pos_order_id
+            if order and order.state in ('paid', 'done', 'invoiced'):
+                usage.confirm_reservation()
+            else:
+                usage.release_reservation()
+
     def _reclassify_bank_card_shares(self):
         self.ensure_one()
         Usage = self.env['pos.bank.card.usage'].sudo()

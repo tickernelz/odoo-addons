@@ -484,7 +484,12 @@ class PosBankCardProgram(models.Model):
 
     @api.model
     def verify_manager_pin(self, pin):
+        from .res_users import check_manager_pin
         if not pin:
+            return False
+        caller = self.env.user.sudo()
+        now = fields.Datetime.now()
+        if caller.bank_card_pin_locked_until and caller.bank_card_pin_locked_until > now:
             return False
         manager_group = self.env.ref(
             'pos_bank_card_program.group_bank_card_manager', raise_if_not_found=False)
@@ -494,11 +499,23 @@ class PosBankCardProgram(models.Model):
         if not groups:
             return False
         users = self.env['res.users'].sudo().search([
-            ('bank_card_manager_pin', '=', str(pin)),
+            ('bank_card_manager_pin', '!=', False),
             ('all_group_ids', 'in', groups.ids),
             ('active', '=', True),
-        ], limit=1)
-        return bool(users)
+            ('company_ids', 'in', [self.env.company.id]),
+        ])
+        verified = any(
+            check_manager_pin(str(pin), user.bank_card_manager_pin) for user in users)
+        if verified:
+            caller.write({'bank_card_pin_attempts': 0, 'bank_card_pin_locked_until': False})
+            return True
+        attempts = caller.bank_card_pin_attempts + 1
+        values = {'bank_card_pin_attempts': attempts}
+        if attempts >= 5:
+            values['bank_card_pin_locked_until'] = now + datetime.timedelta(minutes=5)
+            values['bank_card_pin_attempts'] = 0
+        caller.write(values)
+        return False
 
     @api.model
     def _load_pos_data_domain(self, data, config):

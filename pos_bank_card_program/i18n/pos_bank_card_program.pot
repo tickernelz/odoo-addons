@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 14:55+0000\n"
-"PO-Revision-Date: 2026-11-10 14:55+0000\n"
+"POT-Creation-Date: 2026-11-10 16:00+0000\n"
+"PO-Revision-Date: 2026-11-10 16:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -207,6 +207,16 @@ msgid "Bank Card Offline Discount"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_pin_attempts
+msgid "Bank Card PIN Attempts"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_pin_locked_until
+msgid "Bank Card PIN Locked Until"
+msgstr ""
+
+#. module: pos_bank_card_program
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_program
@@ -272,6 +282,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_session.py:0
 msgid "Bank card claim reclassification %s"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_usage.py:0
+msgid "Bank card claim reclassification reversal %s"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -813,6 +829,11 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__offline
+msgid "Offline"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__offline_allowance
 msgid "Offline Allowance per Outlet"
 msgstr ""
@@ -989,6 +1010,11 @@ msgid "Reclassification Journal"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__reclass_reversal_move_id
+msgid "Reclassification Reversal"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__refund_returns_quota
 msgid "Refund Returns Quota"
 msgstr ""
@@ -1136,11 +1162,49 @@ msgid ""
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"The bank card discount is not paid with the programme card payment. Pay with"
+" the card or remove the discount."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount lines on order %s do not match the reserved discount "
+"amount."
+msgstr ""
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid ""
 "The bank card discount on order %s has no usage record. Remove the discount "
 "line or apply the programme again so the quota is reserved."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s is not paid with the programme card "
+"payment. Pay with the card or remove the discount line."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s was applied offline, but programme %s "
+"does not allow offline discounts."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The bank card discount was removed with its card payment."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1173,6 +1237,13 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s was reserved at a different outlet."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The bank share percent must be between 0 and 100."
 msgstr ""
@@ -1195,6 +1266,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid "The offline bank card discount on order %s cannot be recorded: %s"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The offline discount allowance of programme %s for this outlet is used up on"
+" order %s."
 msgstr ""
 
 #. module: pos_bank_card_program

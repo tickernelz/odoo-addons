@@ -16,6 +16,7 @@ export class BankCardDialog extends Component {
     static props = {
         order: Object,
         paymentMethod: Object,
+        paymentAmount: { type: Number, optional: true },
         getPayload: Function,
         close: Function,
     };
@@ -43,7 +44,7 @@ export class BankCardDialog extends Component {
         }
         return this.props.order.getBankCardBasis(
             range.program_id,
-            this.props.order.remainingDue || 0
+            this.props.paymentAmount || 0
         );
     }
 
