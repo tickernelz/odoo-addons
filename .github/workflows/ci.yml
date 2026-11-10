@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches: ['19.0', '19.0-*']
+  pull_request:
+    branches: ['19.0']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PINNED_ODOO_COMMIT: e07db5eaff8355aad4e19b1ccea441d4a0a7f6d7
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q ruff==0.15.0
+      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp ci
+      - run: python -m compileall -q kaitech_mcp
+
+  odoo19-image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: odoo:19.0
+      options: --user root
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 30
+    env:
+      DB_HOST: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/odoo-tests.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: odoo19-image-log
+          path: odoo-tests.log
+          retention-days: 14
+
+  odoo19-pinned-core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    container:
+      image: python:3.12.3-bookworm
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 30
+    env:
+      DB_HOST: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p /tmp/src && curl -sSL "https://codeload.github.com/odoo/odoo/tar.gz/$PINNED_ODOO_COMMIT" | tar xz -C /tmp/src --strip-components=1
+      - run: apt-get update -qq && apt-get install -y -qq libldap2-dev libsasl2-dev >/dev/null
+      - run: pip install -q -r /tmp/src/requirements.txt
+      - run: ODOO_BIN="python3 /tmp/src/odoo-bin" ADDONS_PATH="$GITHUB_WORKSPACE,/tmp/src/addons,/tmp/src/odoo/addons" sh ci/odoo-tests.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: odoo19-pinned-core-log
+          path: odoo-tests.log
+          retention-days: 14
+
+  i18n-template:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    container:
+      image: odoo:19.0
+      options: --user root
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 30
+    env:
+      DB_HOST: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n > fresh.pot
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fresh-pot
+          path: fresh.pot
+          retention-days: 7
+
+  i18n:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    needs: i18n-template
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: fresh-pot
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext >/dev/null
+      - run: pip install -q polib==1.2.0
+      - run: python ci/i18n.py compare fresh.pot
+      - run: python ci/i18n.py check
+      - run: msgfmt --check --statistics -o /dev/null kaitech_mcp/i18n/id.po
+
+  multi-db:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh ci/multidb.sh open dbfilter list_db_off not_server_wide perf
