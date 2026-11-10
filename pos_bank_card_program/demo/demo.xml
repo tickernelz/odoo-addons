@@ -65,4 +65,149 @@
         <field name="tier">Signature</field>
         <field name="eligible" eval="True"/>
     </record>
+
+    <record id="payment_method_card_bank" model="pos.payment.method">
+        <field name="name">Card Bank</field>
+        <field name="bank_card_required" eval="True"/>
+    </record>
+    <record id="pos_config_outlet_1" model="pos.config">
+        <field name="name">Outlet 1</field>
+        <field name="payment_method_ids" eval="[(4, ref('payment_method_card_bank'))]"/>
+    </record>
+    <record id="pos_config_outlet_2" model="pos.config">
+        <field name="name">Outlet 2</field>
+        <field name="payment_method_ids" eval="[(4, ref('payment_method_card_bank'))]"/>
+    </record>
+    <record id="quota_bank_a_two_days_ago" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=2)).date()"/>
+        <field name="date_to" eval="(datetime.now() - timedelta(days=2)).date()"/>
+        <field name="used_count" eval="1"/>
+        <field name="used_amount" eval="100000.0"/>
+    </record>
+    <record id="cardlimit_bank_a_two_days_ago" model="pos.bank.card.cardlimit">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="card_bin">900150</field>
+        <field name="card_last4">1111</field>
+        <field name="date" eval="(datetime.now() - timedelta(days=2)).date()"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_a_outlet_1" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="bin_range_id" ref="bin_bank_a_platinum"/>
+        <field name="config_id" ref="pos_config_outlet_1"/>
+        <field name="quota_id" ref="quota_bank_a_two_days_ago"/>
+        <field name="cardlimit_id" ref="cardlimit_bank_a_two_days_ago"/>
+        <field name="date" eval="datetime.now() - timedelta(days=2, hours=3)"/>
+        <field name="card_bin">900150</field>
+        <field name="card_last4">1111</field>
+        <field name="approval_code">DEMO01</field>
+        <field name="card_brand">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Platinum</field>
+        <field name="basis_amount" eval="1000000.0"/>
+        <field name="discount_amount" eval="100000.0"/>
+        <field name="bank_share_amount" eval="100000.0"/>
+        <field name="store_share_amount" eval="0.0"/>
+        <field name="state">confirmed</field>
+    </record>
+    <record id="quota_bank_a_yesterday" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=1)).date()"/>
+        <field name="date_to" eval="(datetime.now() - timedelta(days=1)).date()"/>
+        <field name="used_count" eval="1"/>
+        <field name="used_amount" eval="100000.0"/>
+    </record>
+    <record id="cardlimit_bank_a_yesterday" model="pos.bank.card.cardlimit">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="card_bin">900150</field>
+        <field name="card_last4">2222</field>
+        <field name="date" eval="(datetime.now() - timedelta(days=1)).date()"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_a_outlet_2" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_a"/>
+        <field name="bin_range_id" ref="bin_bank_a_platinum"/>
+        <field name="config_id" ref="pos_config_outlet_2"/>
+        <field name="quota_id" ref="quota_bank_a_yesterday"/>
+        <field name="cardlimit_id" ref="cardlimit_bank_a_yesterday"/>
+        <field name="date" eval="datetime.now() - timedelta(days=1, hours=5)"/>
+        <field name="card_bin">900150</field>
+        <field name="card_last4">2222</field>
+        <field name="approval_code">DEMO02</field>
+        <field name="card_brand">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Platinum</field>
+        <field name="basis_amount" eval="800000.0"/>
+        <field name="discount_amount" eval="100000.0"/>
+        <field name="bank_share_amount" eval="100000.0"/>
+        <field name="store_share_amount" eval="0.0"/>
+        <field name="state">confirmed</field>
+    </record>
+    <record id="quota_bank_b_three_days_ago" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=3)).date()"/>
+        <field name="date_to" eval="(datetime.now() - timedelta(days=3)).date()"/>
+        <field name="used_count" eval="1"/>
+        <field name="used_amount" eval="50000.0"/>
+    </record>
+    <record id="cardlimit_bank_b_three_days_ago" model="pos.bank.card.cardlimit">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="card_bin">900350</field>
+        <field name="card_last4">3333</field>
+        <field name="date" eval="(datetime.now() - timedelta(days=3)).date()"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_b_outlet_1" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="bin_range_id" ref="bin_bank_b_signature"/>
+        <field name="config_id" ref="pos_config_outlet_1"/>
+        <field name="quota_id" ref="quota_bank_b_three_days_ago"/>
+        <field name="cardlimit_id" ref="cardlimit_bank_b_three_days_ago"/>
+        <field name="date" eval="datetime.now() - timedelta(days=3, hours=2)"/>
+        <field name="card_bin">900350</field>
+        <field name="card_last4">3333</field>
+        <field name="approval_code">DEMO03</field>
+        <field name="card_brand">Network B</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Signature</field>
+        <field name="basis_amount" eval="500000.0"/>
+        <field name="discount_amount" eval="50000.0"/>
+        <field name="bank_share_amount" eval="25000.0"/>
+        <field name="store_share_amount" eval="25000.0"/>
+        <field name="state">confirmed</field>
+    </record>
+    <record id="quota_bank_b_today" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=0)).date()"/>
+        <field name="date_to" eval="(datetime.now() - timedelta(days=0)).date()"/>
+        <field name="used_count" eval="1"/>
+        <field name="used_amount" eval="25000.0"/>
+    </record>
+    <record id="cardlimit_bank_b_today" model="pos.bank.card.cardlimit">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="card_bin">900350</field>
+        <field name="card_last4">4444</field>
+        <field name="date" eval="(datetime.now() - timedelta(days=0)).date()"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_b_outlet_2" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_b"/>
+        <field name="bin_range_id" ref="bin_bank_b_signature"/>
+        <field name="config_id" ref="pos_config_outlet_2"/>
+        <field name="quota_id" ref="quota_bank_b_today"/>
+        <field name="cardlimit_id" ref="cardlimit_bank_b_today"/>
+        <field name="date" eval="datetime.now() - timedelta(days=0, hours=6)"/>
+        <field name="card_bin">900350</field>
+        <field name="card_last4">4444</field>
+        <field name="approval_code">DEMO04</field>
+        <field name="card_brand">Network B</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Signature</field>
+        <field name="basis_amount" eval="250000.0"/>
+        <field name="discount_amount" eval="25000.0"/>
+        <field name="bank_share_amount" eval="12500.0"/>
+        <field name="store_share_amount" eval="12500.0"/>
+        <field name="state">confirmed</field>
+    </record>
 </odoo>
