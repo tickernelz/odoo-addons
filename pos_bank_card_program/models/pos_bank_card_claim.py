@@ -361,6 +361,15 @@ class PosBankCardClaim(models.Model):
                 'were released and can be claimed again.',
                 count=len(released), amount=released_total))
 
+    def unlink(self):
+        for claim in self:
+            if claim.usage_ids.filtered(
+                    lambda usage: usage.claim_state in ('claimed', 'paid')):
+                raise UserError(self.env._(
+                    'This claim still holds usage lines. Cancel or reject the claim '
+                    'to release them before deleting it.'))
+        return super().unlink()
+
 
 class PosBankCardClaimColumn(models.Model):
     _name = 'pos.bank.card.claim.column'
