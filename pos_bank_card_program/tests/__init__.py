@@ -4,3 +4,5 @@ from . import test_bin_range
 from . import test_detection
 from . import test_pos_data
 from . import test_quota
+from . import test_claim
+from . import test_reports

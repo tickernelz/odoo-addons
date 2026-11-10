@@ -18,3 +18,7 @@ access_claim_finance,Claim finance,model_pos_bank_card_claim,group_bank_card_fin
 access_claim_manager,Claim manager,model_pos_bank_card_claim,group_bank_card_manager,1,0,0,0
 access_claim_column_manager,Claim column manager,model_pos_bank_card_claim_column,group_bank_card_manager,1,1,1,1
 access_claim_column_finance,Claim column finance,model_pos_bank_card_claim_column,group_bank_card_finance,1,0,0,0
+access_outstanding_finance,Outstanding finance,model_pos_bank_card_outstanding,group_bank_card_finance,1,0,0,0
+access_outstanding_manager,Outstanding manager,model_pos_bank_card_outstanding,group_bank_card_manager,1,0,0,0
+access_claim_wizard_finance,Claim wizard finance,model_pos_bank_card_claim_wizard,group_bank_card_finance,1,1,1,1
+access_claim_wizard_line_finance,Claim wizard line finance,model_pos_bank_card_claim_wizard_line,group_bank_card_finance,1,1,1,1

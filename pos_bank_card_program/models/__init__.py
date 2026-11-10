@@ -3,6 +3,7 @@ from . import pos_bank_card_claim
 from . import pos_bank_card_program
 from . import pos_bank_card_quota
 from . import pos_bank_card_usage
+from . import pos_bank_card_outstanding
 from . import pos_order
 from . import pos_payment
 from . import pos_session
