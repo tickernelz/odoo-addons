@@ -51,7 +51,7 @@ class TestQuota(BankCardCommon):
         self.assertTrue(confirmed['confirmed'])
         usage = self.env['pos.bank.card.usage'].browse(reserved['usage_id'])
         self.assertEqual(usage.state, 'confirmed')
-        self.assertEqual(usage.masked_card, '900150 **** 3333')
+        self.assertEqual(usage.masked_card, '9001 50** **** 3333')
         released = self.env['pos.bank.card.program'].release_quota(reserved['usage_id'])
         self.assertFalse(released['released'])
 

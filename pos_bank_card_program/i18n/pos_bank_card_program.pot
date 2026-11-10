@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0+e\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 13:06+0000\n"
-"PO-Revision-Date: 2026-11-10 13:06+0000\n"
+"POT-Creation-Date: 2026-11-10 14:55+0000\n"
+"PO-Revision-Date: 2026-11-10 14:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "%s applies to this card."
 msgstr ""
 
@@ -85,6 +87,14 @@ msgid "Allow Offline"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Apply Discount"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__approval_code
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__approval_code
 msgid "Approval Code"
@@ -172,11 +182,33 @@ msgid "Bank Card Daily Use per Card"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_bank_card_program/static/src/app/screens/receipt_screen/order_receipt.xml:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_discount
+#: model:product.template,name:pos_bank_card_program.product_bank_card_discount_product_template
 msgid "Bank Card Discount"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__is_bank_card_discount
+msgid "Bank Card Discount Line"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_manager_pin
+msgid "Bank Card Manager PIN"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_offline
+msgid "Bank Card Offline Discount"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_program_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_program_id
@@ -215,6 +247,11 @@ msgid "Bank Card Usage"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_usage_ref
+msgid "Bank Card Usage Reference"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__receivable_account_id
 msgid "Bank Claim Receivable Account"
 msgstr ""
@@ -229,6 +266,12 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__bank_share_percent
 msgid "Bank Share %"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_session.py:0
+msgid "Bank card claim reclassification %s"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -271,6 +314,12 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_basis__card_amount
 msgid "Card Payment Amount"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Card Prefix (6-8 digits)"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -338,6 +387,8 @@ msgid "Closed"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__company_id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__company_id
@@ -349,6 +400,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_usage__state__confirmed
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_order__bank_card_reservation_state__confirmed
 msgid "Confirmed"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Continue Without Discount"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -379,6 +436,8 @@ msgid "Created on"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_bin_range__card_type__credit
 msgid "Credit"
 msgstr ""
@@ -404,6 +463,8 @@ msgid "Date"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_bin_range__card_type__debit
 msgid "Debit"
 msgstr ""
@@ -454,9 +515,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -470,6 +533,18 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__eligible
 msgid "Eligible"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Enter the PIN to remove the bank card discount."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.js:0
+msgid "Enter the first 6 to 8 digits of the card to check the programme."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -530,9 +605,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -584,6 +661,8 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
 msgid "Last 4 Digits"
@@ -814,6 +893,11 @@ msgid "Period To"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model,name:pos_bank_card_program.model_pos_order
 msgid "Point of Sale Orders"
 msgstr ""
@@ -895,6 +979,11 @@ msgid "Quota Type"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__reclass_move_id
+msgid "Reclassification Entry"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__journal_id
 msgid "Reclassification Journal"
 msgstr ""
@@ -924,6 +1013,12 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__remaining_count
 msgid "Remaining (Transactions)"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.xml:0
+msgid "Remove Bank Card Discount"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -998,6 +1093,12 @@ msgid ""
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Store Manager PIN"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__store_share_amount
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__store_share_amount
 msgid "Store Share"
@@ -1006,6 +1107,68 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Summary"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid "The Approval Code field is required by programme %s on order %s."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid "The Approval Code field is required by programme %s."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The PIN is not correct."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"The bank card discount has no quota reservation. Remove the discount line or"
+" apply the programme again."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s has no usage record. Remove the discount "
+"line or apply the programme again so the quota is reserved."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The bank card discount was removed."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s already belongs to another order."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s belongs to a different programme."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s was cancelled. Remove the discount "
+"line or apply the programme again so the quota is reserved."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1021,14 +1184,24 @@ msgid "The discount percent must be between 0 and 100."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"The discount product is not available in this point of sale, so the discount"
+" was not applied."
+msgstr ""
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "The point of sale is offline, so the shared quota cannot be checked."
 msgstr ""
 
@@ -1039,9 +1212,22 @@ msgid "The programme quota has run out."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid ""
+"The programme quota has run out. The sale can continue without the discount."
+msgstr ""
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The purchase is below the programme minimum of %s."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid "The purchase is below the programme minimum."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1067,20 +1253,32 @@ msgid "There is already a quota bucket for this programme and period."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card has already been used today."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid "This card is not eligible for a programme discount."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card prefix is not registered in any active programme."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card tier is not included in the programme."
 msgstr ""
 
@@ -1119,6 +1317,11 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__used_count
 msgid "Used (Transactions)"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_res_users
+msgid "User"
 msgstr ""
 
 #. module: pos_bank_card_program

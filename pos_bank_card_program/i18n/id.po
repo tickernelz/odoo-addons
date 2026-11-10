@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 13:06+0000\n"
+"POT-Creation-Date: 2026-11-10 14:55+0000\n"
 "PO-Revision-Date: 2026-11-10 13:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,8 +17,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "%s applies to this card."
 msgstr "%s berlaku untuk kartu ini."
 
@@ -86,6 +88,14 @@ msgid "Allow Offline"
 msgstr "Izinkan Offline"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Apply Discount"
+msgstr "Terapkan Diskon"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__approval_code
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__approval_code
 msgid "Approval Code"
@@ -175,11 +185,33 @@ msgid "Bank Card Daily Use per Card"
 msgstr "Pemakaian Kartu Bank per Hari per Kartu"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_bank_card_program/static/src/app/screens/receipt_screen/order_receipt.xml:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_discount
+#: model:product.template,name:pos_bank_card_program.product_bank_card_discount_product_template
 msgid "Bank Card Discount"
 msgstr "Diskon Kartu Bank"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__is_bank_card_discount
+msgid "Bank Card Discount Line"
+msgstr "Baris Diskon Kartu Bank"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__bank_card_manager_pin
+msgid "Bank Card Manager PIN"
+msgstr "PIN Manajer Kartu Bank"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_offline
+msgid "Bank Card Offline Discount"
+msgstr "Diskon Kartu Bank Offline"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_program_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_program_id
@@ -218,6 +250,11 @@ msgid "Bank Card Usage"
 msgstr "Pemakaian Kartu Bank"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_usage_ref
+msgid "Bank Card Usage Reference"
+msgstr "Referensi Pemakaian Kartu Bank"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__receivable_account_id
 msgid "Bank Claim Receivable Account"
 msgstr "Akun Piutang Klaim Bank"
@@ -233,6 +270,12 @@ msgstr "Porsi Bank"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__bank_share_percent
 msgid "Bank Share %"
 msgstr "% Porsi Bank"
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_session.py:0
+msgid "Bank card claim reclassification %s"
+msgstr "Reklasifikasi klaim kartu bank %s"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__basis_amount
@@ -275,6 +318,12 @@ msgstr "BIN Kartu"
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_basis__card_amount
 msgid "Card Payment Amount"
 msgstr "Nominal Pembayaran Kartu"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Card Prefix (6-8 digits)"
+msgstr "Awalan Kartu (6-8 digit)"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__card_tier
@@ -341,6 +390,8 @@ msgid "Closed"
 msgstr "Ditutup"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__company_id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__company_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__company_id
@@ -353,6 +404,12 @@ msgstr "Perusahaan"
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_order__bank_card_reservation_state__confirmed
 msgid "Confirmed"
 msgstr "Dikonfirmasi"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Continue Without Discount"
+msgstr "Lanjut Tanpa Diskon"
 
 #. module: pos_bank_card_program
 #: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_program
@@ -382,6 +439,8 @@ msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_bin_range__card_type__credit
 msgid "Credit"
 msgstr "Kredit"
@@ -407,6 +466,8 @@ msgid "Date"
 msgstr "Tanggal"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_bin_range__card_type__debit
 msgid "Debit"
 msgstr "Debit"
@@ -457,9 +518,11 @@ msgstr "Produk Diskon"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
@@ -474,6 +537,18 @@ msgstr "Draft"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__eligible
 msgid "Eligible"
 msgstr "Memenuhi Syarat"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Enter the PIN to remove the bank card discount."
+msgstr "Masukkan PIN untuk menghapus diskon kartu bank."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.js:0
+msgid "Enter the first 6 to 8 digits of the card to check the programme."
+msgstr "Masukkan 6 sampai 8 digit pertama kartu untuk memeriksa program."
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__excluded_categ_ids
@@ -533,9 +608,11 @@ msgstr "Judul Kolom"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order_line__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -587,6 +664,8 @@ msgid "Is Follower"
 msgstr "Adalah Follower"
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
 msgid "Last 4 Digits"
@@ -817,6 +896,11 @@ msgid "Period To"
 msgstr "Periode Sampai"
 
 #. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Baris Pesanan Point of Sale"
+
+#. module: pos_bank_card_program
 #: model:ir.model,name:pos_bank_card_program.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Order Point of Sale"
@@ -898,6 +982,11 @@ msgid "Quota Type"
 msgstr "Jenis Kuota"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__reclass_move_id
+msgid "Reclassification Entry"
+msgstr "Jurnal Reklasifikasi"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__journal_id
 msgid "Reclassification Journal"
 msgstr "Jurnal Reklas"
@@ -928,6 +1017,12 @@ msgstr "Sisa (Nominal)"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__remaining_count
 msgid "Remaining (Transactions)"
 msgstr "Sisa (Transaksi)"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.xml:0
+msgid "Remove Bank Card Discount"
+msgstr "Hapus Diskon Kartu Bank"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__require_approval_code
@@ -1005,6 +1100,12 @@ msgstr ""
 "Direncanakan: Aktivitas yang akan datang."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Store Manager PIN"
+msgstr "PIN Store Manager"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__store_share_amount
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__store_share_amount
 msgid "Store Share"
@@ -1014,6 +1115,74 @@ msgstr "Porsi Toko"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Summary"
 msgstr "Ringkasan"
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid "The Approval Code field is required by programme %s on order %s."
+msgstr "Isian Kode Approval wajib diisi oleh program %s pada order %s."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid "The Approval Code field is required by programme %s."
+msgstr "Isian Kode Approval wajib diisi oleh program %s."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The PIN is not correct."
+msgstr "PIN tidak benar."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"The bank card discount has no quota reservation. Remove the discount line or"
+" apply the programme again."
+msgstr ""
+"Diskon kartu bank belum punya reservasi kuota. Hapus baris diskon atau "
+"terapkan program lagi."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card discount on order %s has no usage record. Remove the discount "
+"line or apply the programme again so the quota is reserved."
+msgstr ""
+"Diskon kartu bank pada order %s belum punya catatan pemakaian. Hapus baris "
+"diskon atau terapkan program lagi agar kuota tereservasi."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "The bank card discount was removed."
+msgstr "Diskon kartu bank dihapus."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s already belongs to another order."
+msgstr "Catatan pemakaian kartu bank pada order %s sudah milik order lain."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s belongs to a different programme."
+msgstr "Catatan pemakaian kartu bank pada order %s milik program lain."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_order.py:0
+msgid ""
+"The bank card usage record on order %s was cancelled. Remove the discount "
+"line or apply the programme again so the quota is reserved."
+msgstr ""
+"Catatan pemakaian kartu bank pada order %s sudah dibatalkan. Hapus baris "
+"diskon atau terapkan program lagi agar kuota tereservasi."
 
 #. module: pos_bank_card_program
 #. odoo-python
@@ -1028,14 +1197,26 @@ msgid "The discount percent must be between 0 and 100."
 msgstr "Persen diskon harus antara 0 dan 100."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"The discount product is not available in this point of sale, so the discount"
+" was not applied."
+msgstr ""
+"Produk diskon tidak tersedia di point of sale ini, jadi diskon tidak "
+"diterapkan."
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The end date must not be before the start date."
 msgstr "Tanggal akhir tidak boleh mendahului tanggal mulai."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "The point of sale is offline, so the shared quota cannot be checked."
 msgstr ""
 "Point of sale sedang offline, sehingga kuota bersama tidak dapat diperiksa."
@@ -1047,10 +1228,23 @@ msgid "The programme quota has run out."
 msgstr "Kuota program sudah habis."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid ""
+"The programme quota has run out. The sale can continue without the discount."
+msgstr "Kuota program habis. Penjualan bisa lanjut tanpa diskon."
+
+#. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The purchase is below the programme minimum of %s."
 msgstr "Belanja di bawah minimal program sebesar %s."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid "The purchase is below the programme minimum."
+msgstr "Belanja di bawah minimum program."
 
 #. module: pos_bank_card_program
 #. odoo-python
@@ -1075,20 +1269,32 @@ msgid "There is already a quota bucket for this programme and period."
 msgstr "Sudah ada bucket kuota untuk program dan periode ini."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card has already been used today."
 msgstr "Kartu ini sudah dipakai hari ini."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
+msgid "This card is not eligible for a programme discount."
+msgstr "Kartu ini tidak eligible untuk diskon program."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card prefix is not registered in any active programme."
 msgstr "Awalan kartu ini tidak terdaftar di program aktif mana pun."
 
 #. module: pos_bank_card_program
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+#: code:addons/pos_bank_card_program/static/src/app/utils/bank_card_detection.js:0
 msgid "This card tier is not included in the programme."
 msgstr "Tier kartu ini tidak termasuk dalam program."
 
@@ -1128,6 +1334,11 @@ msgstr "Terpakai (Nominal)"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__used_count
 msgid "Used (Transactions)"
 msgstr "Terpakai (Transaksi)"
+
+#. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_res_users
+msgid "User"
+msgstr "Pengguna"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__card_daily_limit

@@ -60,7 +60,9 @@ class PosBankCardProgram(models.Model):
     max_discount = fields.Monetary(string='Maximum Discount', currency_field='currency_id', default=0.0)
     bank_share_percent = fields.Float(string='Bank Share %', default=100.0)
     discount_product_id = fields.Many2one(
-        'product.product', string='Discount Product', check_company=True)
+        'product.product', string='Discount Product', check_company=True,
+        default=lambda self: self.env.ref(
+            'pos_bank_card_program.product_bank_card_discount', raise_if_not_found=False))
     excluded_product_ids = fields.Many2many('product.product', string='Excluded Products')
     excluded_categ_ids = fields.Many2many('product.category', string='Excluded Categories')
     quota_type = fields.Selection(
@@ -463,18 +465,40 @@ class PosBankCardProgram(models.Model):
         }
 
     @api.model
-    def release_quota(self, usage_id):
+    def release_quota(self, usage_id, config_id=False):
         usage = self.env['pos.bank.card.usage'].browse(usage_id)
         if not usage.exists():
             return {'released': False, 'reason': 'not_found'}
+        if config_id and usage.config_id and usage.config_id.id != config_id:
+            return {'released': False, 'reason': 'wrong_outlet'}
         return usage.release_reservation()
 
     @api.model
-    def confirm_quota(self, usage_id):
+    def confirm_quota(self, usage_id, config_id=False):
         usage = self.env['pos.bank.card.usage'].browse(usage_id)
         if not usage.exists():
             return {'confirmed': False, 'reason': 'not_found'}
+        if config_id and usage.config_id and usage.config_id.id != config_id:
+            return {'confirmed': False, 'reason': 'wrong_outlet'}
         return usage.confirm_reservation()
+
+    @api.model
+    def verify_manager_pin(self, pin):
+        if not pin:
+            return False
+        manager_group = self.env.ref(
+            'pos_bank_card_program.group_bank_card_manager', raise_if_not_found=False)
+        pos_manager_group = self.env.ref(
+            'point_of_sale.group_pos_manager', raise_if_not_found=False)
+        groups = (manager_group | pos_manager_group) if manager_group or pos_manager_group else self.env['res.groups']
+        if not groups:
+            return False
+        users = self.env['res.users'].sudo().search([
+            ('bank_card_manager_pin', '=', str(pin)),
+            ('all_group_ids', 'in', groups.ids),
+            ('active', '=', True),
+        ], limit=1)
+        return bool(users)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
