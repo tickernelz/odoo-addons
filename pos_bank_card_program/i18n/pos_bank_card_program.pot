@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 16:00+0000\n"
-"PO-Revision-Date: 2026-11-10 16:00+0000\n"
+"POT-Creation-Date: 2026-11-10 16:02+0000\n"
+"PO-Revision-Date: 2026-11-10 16:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -678,6 +678,13 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+#: code:addons/pos_bank_card_program/static/src/language/navbar.xml:0
+msgid "Language"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
@@ -1270,6 +1277,18 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language %s is not installed."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language can only be changed from an open point of sale session."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid "The offline bank card discount on order %s cannot be recorded: %s"
 msgstr ""
@@ -1280,6 +1299,12 @@ msgstr ""
 msgid ""
 "The offline discount allowance of programme %s for this outlet is used up on"
 " order %s."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+msgid "The open order is kept."
 msgstr ""
 
 #. module: pos_bank_card_program

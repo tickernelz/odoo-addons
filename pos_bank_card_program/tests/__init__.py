@@ -6,3 +6,4 @@ from . import test_pos_data
 from . import test_quota
 from . import test_pos_flow
 from . import test_tour
+from . import test_language

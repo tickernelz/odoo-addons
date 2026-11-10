@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 16:00+0000\n"
+"POT-Creation-Date: 2026-11-10 16:02+0000\n"
 "PO-Revision-Date: 2026-11-10 13:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -681,6 +681,13 @@ msgstr "Adalah Follower"
 
 #. module: pos_bank_card_program
 #. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+#: code:addons/pos_bank_card_program/static/src/language/navbar.xml:0
+msgid "Language"
+msgstr "Bahasa"
+
+#. module: pos_bank_card_program
+#. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__card_last4
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_last4
@@ -1164,8 +1171,8 @@ msgstr "PIN tidak benar."
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
 msgid ""
-"The bank card discount has no quota reservation. Remove the discount line or"
-" apply the programme again."
+"The bank card discount has no quota reservation. Remove the discount line or "
+"apply the programme again."
 msgstr ""
 "Diskon kartu bank belum punya reservasi kuota. Hapus baris diskon atau "
 "terapkan program lagi."
@@ -1174,8 +1181,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/utils/order_payment_validation.js:0
 msgid ""
-"The bank card discount is not paid with the programme card payment. Pay with"
-" the card or remove the discount."
+"The bank card discount is not paid with the programme card payment. Pay with "
+"the card or remove the discount."
 msgstr ""
 "Diskon kartu bank tidak dibayar dengan pembayaran kartu program. Bayar "
 "dengan kartu atau hapus diskon."
@@ -1261,8 +1268,7 @@ msgstr ""
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid ""
 "The bank card usage record on order %s was reserved at a different outlet."
-msgstr ""
-"Catatan pemakaian kartu bank pada order %s tereservasi di outlet lain."
+msgstr "Catatan pemakaian kartu bank pada order %s tereservasi di outlet lain."
 
 #. module: pos_bank_card_program
 #. odoo-python
@@ -1280,8 +1286,8 @@ msgstr "Persen diskon harus antara 0 dan 100."
 #. odoo-javascript
 #: code:addons/pos_bank_card_program/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"The discount product is not available in this point of sale, so the discount"
-" was not applied."
+"The discount product is not available in this point of sale, so the discount "
+"was not applied."
 msgstr ""
 "Produk diskon tidak tersedia di point of sale ini, jadi diskon tidak "
 "diterapkan."
@@ -1294,6 +1300,18 @@ msgstr "Tanggal akhir tidak boleh mendahului tanggal mulai."
 
 #. module: pos_bank_card_program
 #. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language %s is not installed."
+msgstr "Bahasa %s tidak terpasang."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/controllers/main.py:0
+msgid "The language can only be changed from an open point of sale session."
+msgstr "Bahasa hanya bisa diganti dari sesi point of sale yang terbuka."
+
+#. module: pos_bank_card_program
+#. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid "The offline bank card discount on order %s cannot be recorded: %s"
 msgstr "Diskon kartu bank offline pada order %s tidak bisa dicatat: %s"
@@ -1302,9 +1320,15 @@ msgstr "Diskon kartu bank offline pada order %s tidak bisa dicatat: %s"
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_order.py:0
 msgid ""
-"The offline discount allowance of programme %s for this outlet is used up on"
-" order %s."
+"The offline discount allowance of programme %s for this outlet is used up on "
+"order %s."
 msgstr "Jatah diskon offline program %s untuk outlet ini habis pada order %s."
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/language/language_dialog.xml:0
+msgid "The open order is kept."
+msgstr "Order yang terbuka tetap ada."
 
 #. module: pos_bank_card_program
 #. odoo-javascript
