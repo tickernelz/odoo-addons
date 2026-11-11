@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.search.inherit.pos_checkout_extras</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="payment_reference"/>
+            </xpath>
+            <xpath expr="//filter[@name='invoiced']" position="before">
+                <filter string="Missing customer" name="missing_customer" domain="[('partner_id', '=', False), ('state', 'in', ('paid', 'done'))]"/>
+                <filter string="With payment reference" name="with_payment_reference" domain="[('payment_reference', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.pos_checkout_extras</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="payment_reference" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.pos_checkout_extras</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="payment_reference" invisible="not payment_reference" readonly="state in ('done', 'cancel')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

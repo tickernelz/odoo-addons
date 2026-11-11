@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_analytic_sync_wizard_view_form" model="ir.ui.view">
+        <field name="name">pos.analytic.sync.wizard.form</field>
+        <field name="model">pos.analytic.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Synchronise Analytic Distribution">
+                <field name="state" invisible="1"/>
+                <group invisible="state == 'done'">
+                    <group>
+                        <field name="config_id" placeholder="All points of sale" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="distribution_label"/>
+                    </group>
+                    <group>
+                        <label for="date_from" string="Period"/>
+                        <div class="o_row">
+                            <field name="date_from"/>
+                            <span>to</span>
+                            <field name="date_to"/>
+                        </div>
+                        <field name="mode" widget="radio"/>
+                    </group>
+                </group>
+                <div class="alert alert-info mb-2" role="status" invisible="state == 'done'">
+                    <strong><field name="matched_count" class="d-inline"/></strong> journal items from
+                    <field name="session_count" class="d-inline"/> closed sessions match this selection.
+                    <strong><field name="pending_count" class="d-inline"/></strong> will be updated,
+                    <field name="stamped_count" class="d-inline"/> already carry the distribution.
+                    Up to 10,000 items are updated per click.
+                </div>
+                <div class="alert alert-warning mb-2" role="alert" invisible="state == 'done' or overwrite_count == 0">
+                    <strong><field name="overwrite_count" class="d-inline"/></strong> journal items carry another analytic distribution and will be replaced.
+                </div>
+                <div invisible="state != 'done'">
+                    <div class="alert alert-success mb-2" role="status">
+                        <strong><field name="updated_count" class="d-inline"/></strong> journal items updated in
+                        <field name="duration" class="d-inline"/> seconds.
+                    </div>
+                    <div class="alert alert-warning mb-2" role="alert" invisible="skipped_count == 0">
+                        <strong><field name="skipped_count" class="d-inline"/></strong> journal items were refused by accounting and left unchanged.
+                    </div>
+                    <div class="alert alert-info mb-2" role="status" invisible="pending_count == 0">
+                        <strong><field name="pending_count" class="d-inline"/></strong> journal items remain. Click Synchronise again to continue.
+                    </div>
+                    <p class="text-muted" invisible="pending_count != 0">Nothing left to update for this selection. The run is recorded in the Analytic Sync Log.</p>
+                </div>
+                <footer>
+                    <button name="action_synchronise" type="object" string="Synchronise" class="btn-primary" invisible="pending_count == 0" data-hotkey="q"/>
+                    <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="state != 'done'"/>
+                    <button string="Close" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

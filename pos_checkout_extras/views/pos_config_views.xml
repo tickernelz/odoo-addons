@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.pos_checkout_extras</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div id="pos_checkout_extras" invisible="context.get('pos_config_create_mode', False)">
+                    <h2 class="mt-4">Checkout Extras</h2>
+                    <div class="row mt16 o_settings_container">
+                        <setting id="pos_checkout_extras_customer" string="Customer required" help="The cashier cannot finish an order of this point of sale until a customer is set.">
+                            <field name="customer_required_mode" widget="radio"/>
+                            <div class="content-group mt-2" invisible="customer_required_mode == 'off'">
+                                <label for="customer_required_since" class="o_light_label me-2"/>
+                                <field name="customer_required_since"/>
+                            </div>
+                        </setting>
+                        <setting id="pos_checkout_extras_reference" string="Payment Reference" help="Let the cashier add a reference to an order from the payment screen.">
+                            <field name="allow_payment_reference"/>
+                        </setting>
+                        <setting id="pos_checkout_extras_analytic" string="Analytic Distribution" help="Added to the journal items created when a session of this point of sale is closed." groups="analytic.group_analytic_accounting">
+                            <field name="analytic_precision" invisible="1"/>
+                            <div class="content-group mt-2">
+                                <field name="analytic_distribution" widget="analytic_distribution" options="{'business_domain': 'general'}"/>
+                                <div class="row mt-2">
+                                    <label string="Apply to" for="analytic_scope" class="col-lg-3 o_light_label"/>
+                                    <field name="analytic_scope" class="col-lg-9"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

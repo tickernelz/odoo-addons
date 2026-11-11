@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pos_analytic_coverage" model="ir.actions.report">
+        <field name="name">POS Analytic Coverage</field>
+        <field name="model">pos.analytic.coverage.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_checkout_extras.report_pos_analytic_coverage</field>
+        <field name="report_file">pos_checkout_extras.report_pos_analytic_coverage</field>
+        <field name="print_report_name">'POS Analytic Coverage'</field>
+    </record>
+
+    <template id="report_pos_analytic_coverage">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="rows" t-value="coverage[doc.id][0]"/>
+                <t t-set="totals" t-value="coverage[doc.id][1]"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>POS Analytic Coverage</h2>
+                        <p class="text-muted">
+                            Journal items of closed POS sessions and their analytic distribution,
+                            <span t-field="doc.date_from"/> to <span t-field="doc.date_to"/>.
+                        </p>
+                        <table class="table table-sm mt-3" style="table-layout: fixed; width: 100%;">
+                            <colgroup>
+                                <col style="width: 16%;"/>
+                                <col style="width: 24%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 14%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr class="text-nowrap" style="font-size: 0.9em;">
+                                    <th class="text-start">Point of Sale</th>
+                                    <th class="text-start">Distribution</th>
+                                    <th class="text-end">Sessions</th>
+                                    <th class="text-end">Items</th>
+                                    <th class="text-end">Stamped</th>
+                                    <th class="text-end">Missing</th>
+                                    <th class="text-end">Other</th>
+                                    <th class="text-end">Coverage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="rows" t-as="row" style="page-break-inside: avoid;">
+                                    <td><strong t-out="row['name']"/></td>
+                                    <td>
+                                        <span t-if="row['distribution']" t-out="row['distribution']"/>
+                                        <span t-else="" class="text-muted">not set</span>
+                                        <div class="small text-muted" t-out="row['scope']"/>
+                                    </td>
+                                    <td class="text-end" t-out="row['sessions']"/>
+                                    <td class="text-end" t-out="row['items']"/>
+                                    <td class="text-end" t-out="row['stamped']"/>
+                                    <td class="text-end" t-out="row['missing']"/>
+                                    <td class="text-end" t-out="row['other']"/>
+                                    <td class="text-end">
+                                        <strong t-attf-style="color: {{ '#017e84' if row['coverage'] == 100 else '#c05600' }};"><t t-out="row['coverage']"/>%</strong>
+                                        <div style="height: 6px; background-color: #e9ecef; margin-top: 3px;">
+                                            <div t-attf-style="height: 6px; width: {{ row['coverage'] }}%; background-color: {{ '#017e84' if row['coverage'] == 100 else '#e46e10' }};"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="fw-bold border-top">
+                                    <td colspan="2">Total</td>
+                                    <td class="text-end" t-out="totals['sessions']"/>
+                                    <td class="text-end" t-out="totals['items']"/>
+                                    <td class="text-end" t-out="totals['stamped']"/>
+                                    <td class="text-end" t-out="totals['missing']"/>
+                                    <td class="text-end" t-out="totals['other']"/>
+                                    <td class="text-end"><t t-out="totals['coverage']"/>%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="small text-muted mt-4">
+                            Stamped: the journal item carries exactly the distribution set on the point of sale today.
+                            Missing: no distribution, usually items created before the distribution was set; use Synchronise in the point of sale settings.
+                            Other: a different distribution, for example one entered by hand or an older distribution of the counter.
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

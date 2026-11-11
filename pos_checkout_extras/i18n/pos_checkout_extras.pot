@@ -1,0 +1,711 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_checkout_extras
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 07:49+0000\n"
+"PO-Revision-Date: 2026-11-11 07:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_checkout_extras
+#: model:ir.actions.report,print_report_name:pos_checkout_extras.action_report_pos_analytic_coverage
+msgid "'POS Analytic Coverage'"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "<span>to</span>"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.xml:0
+msgid "Add Payment Reference"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid ""
+"Added to the journal items created when a session of this point of sale is "
+"closed."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__analytic_scope__all
+msgid "All lines"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "All points of sale"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__stamped_count
+msgid "Already stamped"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_distribution
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_analytic_distribution
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Analytic Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_precision
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.actions.act_window,name:pos_checkout_extras.action_pos_analytic_sync_log
+#: model:ir.ui.menu,name:pos_checkout_extras.menu_pos_analytic_sync_log
+msgid "Analytic Sync Log"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_scope
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_analytic_scope
+msgid "Apply To"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Apply to"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "Back"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.js:0
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid ""
+"Changing the distribution only affects sessions closed afterwards. Use "
+"Synchronise to update journal items that already exist."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Checkout Extras"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "Close"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__company_id
+msgid "Company"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Coverage"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__create_uid
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__create_date
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__create_date
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__customer_required_mode
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_customer_required_mode
+msgid "Customer Required"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__customer_required_since
+msgid "Customer Required Since"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.js:0
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Customer required"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_log_view_list
+msgid "Date"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_report_pos_checkout_extras_report_pos_analytic_coverage__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_report_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__distribution_label
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_log__kind__distribution
+msgid "Distribution changed"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_wizard__state__done
+msgid "Done"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-python
+#: code:addons/pos_checkout_extras/wizard/pos_analytic_sync_wizard.py:0
+msgid "Each point of sale's own distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_log__mode__replace
+msgid "Every item"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__date_from
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__date_from
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__date_from
+msgid "From"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_report_pos_checkout_extras_report_pos_analytic_coverage__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_report_pos_order__id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Items"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_log__mode__missing
+msgid "Items without a distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__matched_count
+msgid "Journal items"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Journal items of closed POS sessions and their analytic distribution,"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__kind
+msgid "Kind"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__write_uid
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__write_date
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__write_date
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_analytic_coverage_wizard__config_ids
+msgid "Leave empty to include every point of sale."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_analytic_sync_wizard__config_id
+msgid ""
+"Leave empty to synchronise every point of sale that has an analytic "
+"distribution."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid ""
+"Let the cashier add a reference to an order from the payment screen, for "
+"example a transfer number or an EDC approval code. It is printed on the "
+"receipt and kept on the order."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+msgid "Let the cashier add a reference to an order from the payment screen."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Missing"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_order_filter
+msgid "Missing customer"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__mode
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__mode
+msgid "Mode"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__new_distribution
+msgid "New Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__customer_required_mode__off
+msgid "Not required"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid ""
+"Nothing left to update for this selection. The run is recorded in the "
+"Analytic Sync Log."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__old_distribution
+msgid "Old Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_wizard__mode__missing
+msgid "Only items without a distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-python
+#: code:addons/pos_checkout_extras/models/pos_order.py:0
+msgid ""
+"Order %(order)s has no customer. %(pos)s requires a customer on every paid "
+"order."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_config__customer_required_since
+msgid ""
+"Orders dated from this moment are refused by the server when they are paid "
+"without a customer."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Other"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__overwrite_count
+msgid "Other distribution replaced"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.actions.act_window,name:pos_checkout_extras.action_pos_analytic_coverage_wizard
+#: model:ir.actions.report,name:pos_checkout_extras.action_report_pos_analytic_coverage
+#: model:ir.model,name:pos_checkout_extras.model_pos_analytic_coverage_wizard
+#: model:ir.ui.menu,name:pos_checkout_extras.menu_pos_analytic_coverage
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "POS Analytic Coverage"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_report_pos_checkout_extras_report_pos_analytic_coverage
+msgid "POS Analytic Coverage Report"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_analytic_sync_log
+msgid "POS Analytic Sync Log"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.xml:0
+msgid "Payment Ref."
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.xml:0
+#: code:addons/pos_checkout_extras/static/src/app/payment_screen_patch.js:0
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__allow_payment_reference
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_order__payment_reference
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_payment__payment_reference
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_report_pos_order__payment_reference
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_allow_payment_reference
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_payment_search
+msgid "Payment Reference"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_payment_graph
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_payment_pivot
+msgid "Payments"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "Period"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__config_id
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__config_id
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Point of Sale"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_report_pos_order
+msgid "Point of Sale Orders Report"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_session
+msgid "Point of Sale Session"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__config_ids
+msgid "Points of Sale"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_wizard__state__preview
+msgid "Preview"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_coverage_wizard_view_form
+msgid "Print"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__analytic_scope__pnl
+msgid "Profit and loss lines"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_order__payment_reference
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_payment__payment_reference
+msgid ""
+"Reference given by the cashier at payment, for example a transfer number or "
+"an approval code."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid ""
+"Refunds and unpaid draft orders are never blocked. Orders created before "
+"this option was turned on are accepted."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_wizard__mode__replace
+msgid "Replace the distribution of every item"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.xml:0
+msgid "Required"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__customer_required_mode__order
+msgid "Required at order"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__customer_required_mode__payment
+msgid "Required at payment"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__duration
+msgid "Seconds"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/customer_required.js:0
+msgid "Select customer"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/order_payment_validation_patch.js:0
+msgid "Select the customer before you validate the payment."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__session_count
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Sessions"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__skipped_count
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__skipped_count
+msgid "Skipped"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Stamped"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid ""
+"Stamped: the journal item carries exactly the distribution set on the point of sale today.\n"
+"                            Missing: no distribution, usually items created before the distribution was set; use Synchronise in the point of sale settings.\n"
+"                            Other: a different distribution, for example one entered by hand or an older distribution of the counter."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__state
+msgid "State"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_analytic_sync_log__kind__sync
+msgid "Synchronisation"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "Synchronise"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-python
+#: code:addons/pos_checkout_extras/wizard/pos_analytic_sync_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "Synchronise Analytic Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model,name:pos_checkout_extras.model_pos_analytic_sync_wizard
+msgid "Synchronise POS Analytic Distribution"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Synchronise all counters"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Synchronise this counter"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid ""
+"The cashier cannot finish an order of this point of sale until a customer is"
+" set."
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/pos_store_patch.js:0
+msgid ""
+"This point of sale needs a customer on every order. Select a customer to "
+"continue to payment."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__date_to
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__date_to
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__date_to
+msgid "To"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__pending_count
+msgid "To update"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "Total"
+msgstr ""
+
+#. module: pos_checkout_extras
+#. odoo-javascript
+#: code:addons/pos_checkout_extras/static/src/app/payment_screen_patch.js:0
+msgid "Transfer number, approval code, voucher..."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__updated_count
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__updated_count
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_log_view_list
+msgid "Updated"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__user_id
+msgid "User"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_order_filter
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_payment_search
+msgid "With payment reference"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.view_pos_payment_search
+msgid "Without payment reference"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid ""
+"already carry the distribution.\n"
+"                    Up to 10,000 items are updated per click."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "closed sessions match this selection."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid ""
+"journal items carry another analytic distribution and will be replaced."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "journal items from"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "journal items remain. Click Synchronise again to continue."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "journal items updated in"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "journal items were refused by accounting and left unchanged."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "not set"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "seconds."
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
+msgid "to"
+msgstr ""
+
+#. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
+msgid "will be updated,"
+msgstr ""
