@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_mcp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.mcp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="MCP Server" name="kaitech_mcp_server"
+                     logo="/kaitech_mcp_server/static/description/icon.png">
+
+                    <block title="Audit Log Retention" name="mcp_retention">
+                        <setting string="Session Retention (days)"
+                                 help="How long to keep MCP session records before the cleanup cron removes them.">
+                            <field name="mcp_session_retention_days"/>
+                        </setting>
+                        <setting string="Log Retention (days)"
+                                 help="How long to keep MCP tool call log records before the cleanup cron removes them.">
+                            <field name="mcp_log_retention_days"/>
+                        </setting>
+                    </block>
+
+                    <block title="Rate Limiting" name="mcp_rate_limit">
+                        <setting string="Max Requests per Window"
+                                 help="Maximum number of MCP requests allowed per time window. Individual tokens can override this value.">
+                            <field name="mcp_rate_limit_per_minute"/>
+                        </setting>
+                        <setting string="Window (seconds)"
+                                 help="Duration of the rate limit window in seconds.">
+                            <field name="mcp_rate_limit_window_seconds"/>
+                        </setting>
+                        <setting string="Use Redis for Rate Limiting"
+                                 help="Distribute rate limit counters via Redis so all Odoo workers share the same window. Requires a running Redis instance and the redis-py package.">
+                            <field name="mcp_enable_redis_rate_limit"/>
+                            <div class="content-group mt8" invisible="not mcp_enable_redis_rate_limit">
+                                <div class="row">
+                                    <label for="mcp_redis_url" class="col-lg-4 o_light_label"
+                                           string="Redis URL"/>
+                                    <field name="mcp_redis_url" class="col-lg-8"
+                                           placeholder="redis://localhost:6379/0"/>
+                                </div>
+                                <div class="row mt8">
+                                    <div class="col-lg-12">
+                                        <button type="object" name="action_test_redis"
+                                                string="Test Redis Connection"
+                                                class="btn btn-secondary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Schema Cache" name="mcp_schema_cache">
+                        <setting string="Enable Schema Cache"
+                                 help="Cache Odoo model/field metadata in memory to avoid repeated ORM introspection on every odoo_fields_get call.">
+                            <field name="mcp_enable_schema_cache"/>
+                            <div class="content-group mt8" invisible="not mcp_enable_schema_cache">
+                                <div class="row">
+                                    <label for="mcp_schema_cache_ttl_seconds"
+                                           class="col-lg-6 o_light_label"
+                                           string="Cache TTL (seconds)"/>
+                                    <field name="mcp_schema_cache_ttl_seconds" class="col-lg-6"/>
+                                </div>
+                                <div class="row mt8">
+                                    <div class="col-lg-12">
+                                        <button type="object" name="action_clear_schema_cache"
+                                                string="Clear Schema Cache"
+                                                class="btn btn-secondary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Module Generator" name="mcp_module_generator">
+                        <setting string="Enable Module Generator"
+                                 help="Allow admin-scoped MCP tokens to generate installable Odoo modules via the odoo_generate_module tool. Disabled by default. Enable only on trusted environments.">
+                            <field name="mcp_enable_module_generator"/>
+                            <div class="content-group mt8" invisible="not mcp_enable_module_generator">
+                                <div class="row">
+                                    <label for="mcp_generated_modules_path"
+                                           class="col-lg-4 o_light_label"
+                                           string="Generated Modules Path"/>
+                                    <field name="mcp_generated_modules_path" class="col-lg-8"
+                                           placeholder="/path/to/custom/addons"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="portal_page" name="MCP Portal Page">
+<t t-set="theme_class" t-value="page.theme == 'dark' and 'theme-dark' or (page.theme == 'auto' and 'theme-auto') or 'theme-light'"/>
+<t t-set="spec_title" t-value="spec.get('title') or page.name"/>
+<t t-set="spec_subtitle" t-value="spec.get('subtitle') or ''"/>
+<t t-set="spec_filters" t-value="spec.get('filters') or []"/>
+<html t-attf-class="#{theme_class}" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="robots" content="noindex, nofollow"/>
+    <title><t t-out="page.name"/> &#8212; MCP Portal</title>
+    <style>
+        /* ---- Reset &amp; base ---- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; font-size: 16px; }
+
+        /* ---- Theme variables ---- */
+        .theme-light {
+            --bg: #f4f6f9;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --header-bg: #ffffff;
+            --header-border: #e2e8f0;
+            --kpi-bg: #ffffff;
+            --table-stripe: #f8fafc;
+            --table-header-bg: #f1f5f9;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .theme-dark {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --border: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --header-bg: #1e293b;
+            --header-border: #334155;
+            --kpi-bg: #1e293b;
+            --table-stripe: #263448;
+            --table-header-bg: #263448;
+            --input-bg: #263448;
+            --input-border: #475569;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        @media (prefers-color-scheme: dark) {
+            .theme-auto {
+                --bg: #0f172a; --surface: #1e293b; --border: #334155;
+                --text: #f1f5f9; --text-muted: #94a3b8;
+                --header-bg: #1e293b; --header-border: #334155;
+                --kpi-bg: #1e293b; --table-stripe: #263448; --table-header-bg: #263448;
+                --input-bg: #263448; --input-border: #475569;
+                --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            }
+        }
+        @media (prefers-color-scheme: light) {
+            .theme-auto {
+                --bg: #f4f6f9; --surface: #ffffff; --border: #e2e8f0;
+                --text: #1e293b; --text-muted: #64748b;
+                --header-bg: #ffffff; --header-border: #e2e8f0;
+                --kpi-bg: #ffffff; --table-stripe: #f8fafc; --table-header-bg: #f1f5f9;
+                --input-bg: #ffffff; --input-border: #cbd5e1;
+                --shadow: 0 1px 3px rgba(0,0,0,0.08);
+            }
+        }
+
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* ---- Layout ---- */
+        .mcp-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+        .mcp-header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--header-border);
+            padding: 1.25rem 0;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        .mcp-header .mcp-wrapper { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+        .mcp-title-block h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+        .mcp-title-block p  { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* ---- Filter bar ---- */
+        .mcp-filter-bar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+        .mcp-filter-item label  { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .mcp-filter-item input, .mcp-filter-item select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.875rem;
+            padding: 0.4rem 0.65rem;
+            outline: none;
+        }
+        .mcp-filter-item input:focus, .mcp-filter-item select:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.15); }
+        .mcp-apply-btn {
+            background: #6366f1; color: #fff; border: none; border-radius: 6px;
+            padding: 0.45rem 1rem; font-size: 0.875rem; font-weight: 500; cursor: pointer;
+        }
+        .mcp-apply-btn:hover { background: #4f46e5; }
+
+        /* ---- Widget grid ---- */
+        .mcp-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 1024px) { .mcp-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px)  { .mcp-grid { grid-template-columns: 1fr; } }
+
+        .mcp-widget {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .mcp-widget-header {
+            padding: 0.85rem 1rem 0.65rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        /* Wide widgets span full row */
+        .mcp-widget-full  { grid-column: 1 / -1; }
+        .mcp-widget-half  { grid-column: span 2; }
+
+        /* ---- KPI tile ---- */
+        .mcp-kpi { padding: 1.25rem 1rem; display: flex; align-items: center; gap: 1rem; }
+        .mcp-kpi-icon {
+            width: 48px; height: 48px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; flex-shrink: 0;
+            background: rgba(99,102,241,0.1);
+        }
+        .mcp-kpi-body { flex: 1; min-width: 0; }
+        .mcp-kpi-value { font-size: 1.75rem; font-weight: 700; line-height: 1.1; }
+        .mcp-kpi-label { font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.15rem; }
+        .mcp-kpi-error  { font-size: 0.8125rem; color: #ef4444; padding: 1rem; }
+
+        /* ---- Chart ---- */
+        .mcp-chart-container { padding: 0.75rem 0.5rem 0.5rem; }
+        .mcp-echart { width: 100%; height: 280px; }
+
+        /* ---- Table ---- */
+        .mcp-table-outer { overflow-x: auto; }
+        table.mcp-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+        table.mcp-table th {
+            background: var(--table-header-bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.6rem 0.85rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        table.mcp-table th:hover { color: var(--text); }
+        table.mcp-table td { padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--border); }
+        table.mcp-table tr:nth-child(even) td { background: var(--table-stripe); }
+        table.mcp-table tr:last-child td { border-bottom: none; }
+        table.mcp-table .sort-asc::after  { content: " \25B2"; font-size: 0.65em; }
+        table.mcp-table .sort-desc::after { content: " \25BC"; font-size: 0.65em; }
+
+        /* ---- Error banner ---- */
+        .mcp-error-banner {
+            background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+            border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.8125rem;
+            margin: 0.5rem 1rem 0.75rem;
+        }
+        .theme-dark .mcp-error-banner { background: #3b1818; border-color: #7f1d1d; color: #fca5a5; }
+
+        /* ---- Footer ---- */
+        .mcp-footer {
+            text-align: center; color: var(--text-muted); font-size: 0.75rem;
+            padding: 1.5rem 0 2rem; border-top: 1px solid var(--border); margin-top: 1rem;
+        }
+        .mcp-footer a { color: #6366f1; text-decoration: none; }
+        .mcp-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="mcp-header">
+        <div class="mcp-wrapper">
+            <div class="mcp-title-block">
+                <h1 t-out="spec_title"/>
+                <p t-if="spec_subtitle" t-out="spec_subtitle"/>
+            </div>
+            <!-- Filter bar (only shown when filters are defined) -->
+            <t t-if="spec_filters">
+                <form class="mcp-filter-bar" method="GET" id="mcp-filter-form">
+                    <t t-foreach="spec_filters" t-as="flt" t-key="flt.get('name', flt_index)">
+                        <div class="mcp-filter-item">
+                            <label t-out="flt.get('label') or flt.get('name', '')"/>
+                            <t t-if="flt.get('type') == 'date'">
+                                <input type="date"
+                                       t-att-name="flt.get('name')"
+                                       t-att-value="flt.get('default', '')"/>
+                            </t>
+                            <t t-elif="flt.get('type') == 'select'">
+                                <select t-att-name="flt.get('name')">
+                                    <t t-foreach="flt.get('options') or []" t-as="opt" t-key="opt_index">
+                                        <option t-att-value="opt.get('value', opt)" t-out="opt.get('label', opt)"/>
+                                    </t>
+                                </select>
+                            </t>
+                            <t t-else="">
+                                <input type="text"
+                                       t-att-name="flt.get('name')"
+                                       t-att-placeholder="flt.get('label', '')"
+                                       t-att-value="flt.get('default', '')"/>
+                            </t>
+                        </div>
+                    </t>
+                    <div class="mcp-filter-item">
+                        <label> </label>
+                        <button type="submit" class="mcp-apply-btn">Apply</button>
+                    </div>
+                </form>
+            </t>
+        </div>
+    </header>
+
+    <!-- Widget grid -->
+    <main class="mcp-wrapper">
+        <div class="mcp-grid">
+            <t t-foreach="widgets" t-as="w" t-key="w_index">
+                <!-- KPI widget -->
+                <t t-if="w.get('type') == 'kpi'">
+                    <div class="mcp-widget">
+                        <div class="mcp-widget-header" t-out="w.get('title', '')"/>
+                        <t t-if="w.get('error')">
+                            <div class="mcp-error-banner" t-out="w['error']"/>
+                        </t>
+                        <t t-else="">
+                            <div class="mcp-kpi">
+                                <div class="mcp-kpi-icon"
+                                     t-attf-style="background: #{w.get('color', '#6366f1')}1a; color: #{w.get('color', '#6366f1')};">
+                                    <i t-attf-class="fa #{w.get('icon', 'fa-bar-chart')}"/>
+                                </div>
+                                <div class="mcp-kpi-body">
+                                    <div class="mcp-kpi-value"
+                                         t-attf-style="color: #{w.get('color', 'var(--text)')}"
+                                         t-out="w.get('formatted', '0')"/>
+                                    <div class="mcp-kpi-label" t-out="w.get('title', '')"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Chart widget -->
+                <t t-elif="w.get('type') == 'chart'">
+                    <div class="mcp-widget mcp-widget-half">
+                        <div class="mcp-widget-header" t-out="w.get('title', '')"/>
+                        <t t-if="w.get('error')">
+                            <div class="mcp-error-banner" t-out="w['error']"/>
+                        </t>
+                        <t t-else="">
+                            <div class="mcp-chart-container">
+                                <div t-attf-id="chart-#{w_index}" class="mcp-echart"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Table widget -->
+                <t t-elif="w.get('type') == 'table'">
+                    <div class="mcp-widget mcp-widget-full">
+                        <div class="mcp-widget-header" t-out="w.get('title', '')"/>
+                        <t t-if="w.get('error')">
+                            <div class="mcp-error-banner" t-out="w['error']"/>
+                        </t>
+                        <t t-else="">
+                            <div class="mcp-table-outer">
+                                <table class="mcp-table" t-attf-id="table-#{w_index}">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="w.get('headers') or []" t-as="hdr" t-key="hdr_index">
+                                                <th t-att-data-col="hdr_index" t-out="hdr"/>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="w.get('rows') or []" t-as="row" t-key="row_index">
+                                            <tr>
+                                                <t t-foreach="row" t-as="cell" t-key="cell_index">
+                                                    <td t-out="cell"/>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <t t-if="not (w.get('rows'))">
+                                            <tr>
+                                                <td t-att-colspan="len(w.get('headers') or [1])"
+                                                    style="text-align:center; color: var(--text-muted); padding: 1.5rem;">
+                                                    No data available.
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Unknown widget type fallback -->
+                <t t-else="">
+                    <div class="mcp-widget">
+                        <div class="mcp-widget-header" t-out="w.get('title', 'Widget')"/>
+                        <div class="mcp-error-banner">
+                            Unsupported widget type: <t t-out="w.get('type', '(unknown)')"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mcp-footer">
+        <div class="mcp-wrapper">
+            <t t-if="page.last_viewed">
+                Last updated: <t t-out="page.last_viewed"/>  &#183;
+            </t>
+            Powered by <a href="https://kaitech.io" target="_blank" rel="noopener">MCP Server for Odoo</a>
+        </div>
+    </footer>
+
+    <!-- Font Awesome (for KPI icons) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" crossorigin="anonymous"/>
+
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" crossorigin="anonymous"/>
+
+    <!-- Chart initialisation — one block per chart widget -->
+    <script>
+    (function() {
+        var theme = document.documentElement.className.indexOf('theme-dark') >= 0 ? 'dark' : null;
+        var chartData = <t t-out="json_charts_data"/>;
+        chartData.forEach(function(item) {
+            var el = document.getElementById('chart-' + item.index);
+            if (!el || typeof echarts === 'undefined') return;
+            var chart = echarts.init(el, theme, {renderer: 'canvas'});
+            chart.setOption(item.option);
+            window.addEventListener('resize', function() { chart.resize(); });
+        });
+
+        // Client-side table sort
+        document.querySelectorAll('.mcp-table').forEach(function(tbl) {
+            tbl.querySelectorAll('th').forEach(function(th, colIdx) {
+                th.addEventListener('click', function() {
+                    var tbody = tbl.querySelector('tbody');
+                    var rows = Array.from(tbody.querySelectorAll('tr'));
+                    var asc = !th.classList.contains('sort-asc');
+                    tbl.querySelectorAll('th').forEach(function(h) { h.classList.remove('sort-asc', 'sort-desc'); });
+                    th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+                    rows.sort(function(a, b) {
+                        var av = (a.cells[colIdx] ? a.cells[colIdx].textContent : '').trim();
+                        var bv = (b.cells[colIdx] ? b.cells[colIdx].textContent : '').trim();
+                        var an = parseFloat(av.replace(/[^0-9.\-]/g, ''));
+                        var bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
+                        if (!isNaN(an) &amp;&amp; !isNaN(bn)) return asc ? an - bn : bn - an;
+                        return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+                    });
+                    rows.forEach(function(r) { tbody.appendChild(r); });
+                });
+            });
+        });
+    })();
+    </script>
+</body>
+</html>
+</template>
+</odoo>

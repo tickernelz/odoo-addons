@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mcp_session_view_list" model="ir.ui.view">
+        <field name="name">mcp.session.list</field>
+        <field name="model">mcp.session</field>
+        <field name="arch" type="xml">
+            <list string="MCP Sessions"
+                  decoration-success="state == 'active'"
+                  decoration-muted="state == 'closed'"
+                  create="false">
+                <field name="session_id"/>
+                <field name="user_id"/>
+                <field name="transport" widget="badge"
+                       decoration-info="transport == 'http'"
+                       decoration-success="transport == 'sse'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'closed'"/>
+                <field name="ip_address"/>
+                <field name="message_count" string="Requests"/>
+                <field name="tool_call_count" string="Tool Calls"/>
+                <field name="last_activity"/>
+                <field name="create_date" string="Connected At"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mcp_session_view_form" model="ir.ui.view">
+        <field name="name">mcp.session.form</field>
+        <field name="model">mcp.session</field>
+        <field name="arch" type="xml">
+            <form string="MCP Session" create="false">
+                <header>
+                    <button name="action_close" string="Close Session"
+                            type="object" class="btn-secondary"
+                            invisible="state == 'closed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="active,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Session Info">
+                            <field name="session_id"/>
+                            <field name="user_id"/>
+                            <field name="token_id"/>
+                            <field name="transport"/>
+                            <field name="ip_address"/>
+                        </group>
+                        <group string="Activity">
+                            <field name="message_count" string="Requests (total)"/>
+                            <field name="tool_call_count" string="Tool Calls"/>
+                            <field name="last_activity"/>
+                            <field name="create_date" string="Connected At"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Tool Calls" name="tool_calls">
+                            <field name="log_ids" readonly="1">
+                                <list decoration-danger="is_error == True"
+                                      decoration-success="is_error == False"
+                                      create="false" delete="false">
+                                    <field name="create_date" string="Time"/>
+                                    <field name="tool_name"/>
+                                    <field name="odoo_model" string="Model"/>
+                                    <field name="record_count" string="Records"/>
+                                    <field name="duration_ms" string="ms"/>
+                                    <field name="is_error" widget="boolean" string="Error"/>
+                                    <field name="error_message" string="Detail"
+                                           optional="hide"/>
+                                    <field name="transport" widget="badge" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mcp_session_action" model="ir.actions.act_window">
+        <field name="name">MCP Sessions</field>
+        <field name="res_model">mcp.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Log record form — shown when opening a row in the Tool Calls inline list -->
+    <record id="mcp_session_log_view_form" model="ir.ui.view">
+        <field name="name">mcp.session.log.form</field>
+        <field name="model">mcp.session.log</field>
+        <field name="arch" type="xml">
+            <form string="Tool Call Log" create="false">
+                <sheet>
+                    <group>
+                        <group string="Call Info">
+                            <field name="create_date" string="Time" readonly="1"/>
+                            <field name="tool_name" readonly="1"/>
+                            <field name="odoo_model" string="Model" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="transport" readonly="1"/>
+                            <field name="session_id" readonly="1"/>
+                        </group>
+                        <group string="Outcome">
+                            <field name="record_count" string="Records" readonly="1"/>
+                            <field name="duration_ms" string="Duration (ms)" readonly="1"/>
+                            <field name="is_error" string="Error" readonly="1"/>
+                            <field name="error_message" string="Error Detail" readonly="1"
+                                   invisible="not is_error"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Request Payload" name="request_payload">
+                            <div class="text-muted mb-2">
+                                Tool arguments (PII redacted). Only captured when the token
+                                has "Capture Payloads" enabled.
+                            </div>
+                            <field name="request_payload" readonly="1" nolabel="1"
+                                   widget="code" colspan="2"
+                                   invisible="not request_payload"/>
+                            <p invisible="request_payload" class="text-muted">
+                                No payload captured for this call.
+                            </p>
+                        </page>
+                        <page string="Response Payload" name="response_payload">
+                            <div class="text-muted mb-2">
+                                Tool result (PII redacted). Only captured when the token
+                                has "Capture Payloads" enabled.
+                            </div>
+                            <field name="response_payload" readonly="1" nolabel="1"
+                                   widget="code" colspan="2"
+                                   invisible="not response_payload"/>
+                            <p invisible="response_payload" class="text-muted">
+                                No payload captured for this call.
+                            </p>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

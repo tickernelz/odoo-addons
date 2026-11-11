@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MCP Server for Odoo — Connect Claude, ChatGPT &amp; AI Agents to Live ERP Data</title>
+</head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; color:#121212;">
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     1. HERO
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-4" style="background-color:#f3f0ff; border-radius:16px; padding:36px;">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <img src="icon.png" alt="MCP Server for Odoo" style="width:90px; border-radius:18px;"/>
+        </div>
+        <div class="col">
+            <p style="margin-bottom:4px; text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px;">kaitech.io</p>
+            <h1 style="color:#16122a; font-size:30px; font-weight:800; line-height:1.2;">
+                <span style="color:#5b4da0;">MCP Server</span> — Connect AI Agents to Live Odoo Data
+            </h1>
+            <p style="color:#64728f; font-size:15px; margin-top:10px; margin-bottom:14px;">
+                Turn Odoo into an AI-ready tool server. Securely expose your ERP to Claude, ChatGPT, Gemini, Cursor, n8n, LangChain, and any MCP-capable client through a single endpoint — with OAuth 2.0, scoped tokens, audit logs, BI tools, portal pages, async jobs, and AI-driven module generation.
+            </p>
+            <span style="display:inline-block; border-radius:20px; padding:4px 12px; font-size:12px; font-weight:600; margin-right:4px; background-color:#ede7f6; color:#3f3274; border:1px solid #d1c4e9;">Odoo 18</span>
+            <span style="display:inline-block; border-radius:20px; padding:4px 12px; font-size:12px; font-weight:600; margin-right:4px; background-color:#e3f2fd; color:#1565c0; border:1px solid #bbdefb;">OPL-1</span>
+            <span style="display:inline-block; border-radius:20px; padding:4px 12px; font-size:12px; font-weight:600; background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9;">34+ MCP Tools</span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <a href="mailto:info@kaitech.io"
+               style="background-color:#5b4da0; display:inline-block; padding:8px 28px; border:1px solid #5b4da0; border-radius:35px; text-decoration:none; margin:4px;">
+                <img style="width:20px; vertical-align:middle;" src="assets/email.svg" alt=""/>
+                <span style="color:#fff; font-size:14px; vertical-align:middle; margin-left:6px;">Email Us</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 d-flex align-items-center justify-content-center flex-wrap">
+            <div style="background-color:#5b4da0; color:#fff; font-size:12px; font-weight:600; padding:5px 18px; border-radius:50px; margin:4px;">Community</div>
+            <div style="background-color:#3f3274; color:#fff; font-size:12px; font-weight:600; padding:5px 18px; border-radius:50px; margin:4px;">Enterprise</div>
+            <div style="background-color:#121212; color:#fff; font-size:12px; font-weight:600; padding:5px 18px; border-radius:50px; margin:4px;">Odoo.sh</div>
+            <div style="background-color:#00897b; color:#fff; font-size:12px; font-weight:600; padding:5px 18px; border-radius:50px; margin:4px;">On-Premise</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     2. BRAND BANNER
+═══════════════════════════════════════════════════════════════ -->
+<div class="mb-4" style="background-color:#f3f0ff; border-radius:20px; padding:32px 24px; text-align:center;">
+    <div style="margin:0 auto;">
+        <img src="assets/brand.png" alt="kaitech.io" class="img-fluid" style="border-radius:12px;"/>
+    </div>
+    <p style="margin-top:16px; font-size:14px; color:#7c6fd4; font-weight:600;">
+        kaitech.io is a provider of business software solutions specializing in custom Odoo development. We help businesses unlock the full potential of their Odoo instances through reliable, well-tested modules.
+    </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     3. DEMO PREVIEW
+═══════════════════════════════════════════════════════════════ -->
+<div class="mb-4 mt-2">
+    <p style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; text-align:center; margin-bottom:4px;">Demo Preview</p>
+    <h2 style="font-weight:800; font-size:28px; line-height:1.2; text-align:center; margin-bottom:16px;">
+        <span style="color:#121212;">See </span><span style="color:#5b4da0;">MCP Server</span><span style="color:#121212;"> in Action</span>
+    </h2>
+    <div style="background-color:#ffffff; border-radius:22px; padding:16px; border:1px solid #e8ebf2;">
+        <div style="border-radius:12px; background-color:#f8fafc; border:1px solid #dde3ee; padding:0;">
+            <img src="assets/video.gif" alt="Demo preview" class="img-fluid" style="border-radius:12px;"/>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ADMIN CONFIGURATION
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5" style="background-color:#f3f0ff; border-radius:16px; padding:40px 24px; border:1px solid #e0d9f5;">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Admin Guide</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">How Do You Perform </span><span style="color:#5b4da0;">Maintenance in Odoo?</span>
+    </h2>
+    <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+        MCP Server ships with built-in admin controls — manage tokens, audit sessions, clear cache, set retention policies, and test Redis connectivity — all from within Odoo Settings.
+    </p>
+
+    <div style="background-color:#ffffff; border-radius:22px; padding:16px; border:1px solid #d1c4e9;">
+        <div style="border-radius:12px; background-color:#f8fafc; border:1px solid #dde3ee; padding:0;">
+            <img src="assets/screenshots/ui-odoo-demo.gif" alt="MCP Server settings and configuration screen" class="img-fluid" style="border-radius:12px;"/>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     USE CASES: What You Can Build
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Use Cases</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">What You Can Build with </span><span style="color:#5b4da0;">MCP + Odoo</span>
+    </h2>
+    <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+        Turn Odoo into an AI-ready tool server. Connect Claude, ChatGPT, Gemini, Cursor/Claude Code, n8n, LangChain, crewAI (and more) to live Odoo data — with governance and audit logs.
+    </p>
+
+    <div class="row mb-3">
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#5b4da0; margin-bottom:8px;">Prompt-to-Dashboard</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Dashboards inside Odoo</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Generate KPI tiles, tables, and interactive ECharts visuals — with filters and drill-down to Odoo records.</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Create a sales executive dashboard for YTD revenue by month and top customers."</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#5b4da0; margin-bottom:8px;">Prompt-to-Portal</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Public pages from live Odoo data</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Create shareable portal pages that render server-side and stay always up-to-date (KPIs, charts, tables).</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Create a shipping schedule page at /mcp-page/shipping with today's outgoing pickings."</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#5b4da0; margin-bottom:8px;">Reporting / BI-Ready</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Pivot, time-series, funnel, cohort</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Opinionated helpers for analytics queries: pivot, timeseries, top-N, cohort, funnel, and export in one call.</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Top 10 customers by revenue this quarter, grouped by salesperson."</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1565c0; margin-bottom:8px;">Prompt-to-Workflow</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Automations that respect ACLs</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Create/update records via scoped keys, run batch operations, and offload heavy work to async background jobs.</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Create leads from this CSV and assign by territory (batch + background job)."</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1565c0; margin-bottom:8px;">Prompt-to-Module</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Generate installable Odoo modules</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Build a validated module spec, generate a ZIP, and install (or download) — including models, security, menus, and views.</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Create a theme park management module with a kanban view and access groups."</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:24px 20px; height:100%; border:1px solid #e0d9f5; background-color:#fff;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#2e7d32; margin-bottom:8px;">External Apps</p>
+                <h5 style="font-weight:700; color:#121212; font-size:16px; margin-bottom:10px;">Standalone dashboards &amp; portals</h5>
+                <p style="color:#64728f; font-size:13px; line-height:1.6; margin-bottom:12px;">Build shipping schedules, executive dashboards, or customer portals outside Odoo — backed by live ERP data through one MCP endpoint.</p>
+                <p style="font-size:12px; color:#64728f; margin:0;"><strong style="color:#121212;">Example:</strong> "Build a sales portal that shows real-time order status by customer."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     4. SCREENSHOTS
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Screenshots</p>
+    <h2 class="text-center" style="font-weight:800; font-size:28px; line-height:1.2; margin-bottom:24px;">
+        <span style="color:#121212;">Visual </span><span style="color:#5b4da0;">Walkthrough</span>
+    </h2>
+
+    <!-- Screenshot 1: OAuth Authorize -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">OAuth 2.0</span>
+            <span style="color:#5b4da0;"> Authorize Access</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Standards-compliant OAuth 2.0 Authorization Code flow with PKCE S256. Users authorize MCP clients through a branded login screen — credentials never leave Odoo.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/01-authorize-access.png" class="img-fluid" style="border-radius:6px;" alt="OAuth Authorize Access"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 2: PAT -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">Personal</span>
+            <span style="color:#5b4da0;"> Access Tokens</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Each user can mint their own scoped Personal Access Tokens for command-line tools, CI pipelines, and headless integrations. SHA-256 hashed at rest, shown only once.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/02-PAT.png" class="img-fluid" style="border-radius:6px;" alt="Personal Access Tokens"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 3: Token Management -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">Token</span>
+            <span style="color:#5b4da0;"> Governance</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Configure per-token scope (read-only, read-write, admin), model allowlist, field allowlist, IP allowlist/denylist, and audit payload capture — least-privilege access by default.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/03-token-management.png" class="img-fluid" style="border-radius:6px;" alt="Token Governance"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 4: Session Overview -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">Session</span>
+            <span style="color:#5b4da0;"> Audit Trail</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Every MCP session is recorded with transport type, IP address, tool call count, duration, and (optionally) full request/response payloads with PII redaction.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/04-session-overview.png" class="img-fluid" style="border-radius:6px;" alt="Session Overview"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 5: Async Job Queue -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">Async</span>
+            <span style="color:#5b4da0;"> Job Queue</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Offload heavy work — bulk updates, mass exports, multi-step automations — to a background queue. Poll progress, inspect payloads, retry failures, and surface results back to the AI client without hitting HTTP timeout limits.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/05-async-jobs.png" class="img-fluid" style="border-radius:6px;" alt="Async Job Queue"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 6: Portal Pages -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">AI-Generated</span>
+            <span style="color:#5b4da0;"> Portal Pages</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Ask Claude to "create a shipping dashboard at /mcp-page/shipping" and get a public, mobile-responsive page rendered server-side from live Odoo data — KPI tiles, ECharts visuals, and interactive tables, no front-end work required.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/06a-portal-pages.png" class="img-fluid" style="border-radius:6px;" alt="Portal Pages Admin List"/>
+        </div>
+        <div style="background-color:#fff; border-radius:10px; padding:12px; margin-top:12px;">
+            <img src="assets/screenshots/06b-examples-portal.png" class="img-fluid" style="border-radius:6px;" alt="Portal Pages Live Example"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 7: Module Generator -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">Prompt-to-Module</span>
+            <span style="color:#5b4da0;"> Generator</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Describe the module you need in plain English. Claude produces a validated spec, the generator builds a fully-formed Odoo module (models, security, views, menus), and you can install it directly or download the ZIP for review.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/07-generated-modules.png" class="img-fluid" style="border-radius:6px;" alt="Generated Modules"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 8: Settings Panel -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">One Settings Panel for </span>
+            <span style="color:#5b4da0;"> Everything MCP</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+        Manage retention policies, rate limits, Redis caching, schema cache TTL, and the module-generator feature flag — all from a single screen inside Odoo Settings. No external admin UI required.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px;">
+            <img src="assets/screenshots/08-settings-config.png" class="img-fluid" style="border-radius:6px;" alt="Generated Modules"/>
+        </div>
+    </div>
+
+    <!-- Screenshot 9: AI Chat -->
+    <div class="mb-5" style="border-radius:10px; background-color:#fafafa; padding:32px 24px;">
+        <h3 class="text-center mb-2" style="font-weight:700; font-size:24px;">
+            <span style="color:#121212;">AI Agent</span>
+            <span style="color:#5b4da0;"> Conversations</span>
+        </h3>
+        <p class="text-center mb-4" style="color:#64728f; font-size:15px;">
+            Real conversations with Claude querying live Odoo data — search records, create sale orders, post chatter messages, generate reports, all through natural language.
+        </p>
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:12px;">
+                    <img src="assets/screenshots/sample-chat-1.png" class="img-fluid" style="border-radius:6px;" alt="AI Chat Sample 1"/>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:12px;">
+                    <img src="assets/screenshots/sample-chat-2.png" class="img-fluid" style="border-radius:6px;" alt="AI Chat Sample 2"/>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:12px;">
+                    <img src="assets/screenshots/sample-chat-3.png" class="img-fluid" style="border-radius:6px;" alt="AI Chat Sample 3"/>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:12px;">
+                    <img src="assets/screenshots/sample-chat-4.png" class="img-fluid" style="border-radius:6px;" alt="AI Chat Sample 4"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MOBILE ACCESS
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5" style="background-color:#eef4ff; border-radius:16px; padding:40px 24px; border:1px solid #c7d2e6;">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#1565c0; font-weight:700; font-size:11px; margin-bottom:8px;">Mobile Access</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:26px; line-height:1.3; color:#121212;">
+        Ask Claude on Your Phone.<br/>Get Live Odoo Data in Seconds.
+    </h2>
+    <p class="text-center mb-4" style="color:#64728f; font-size:14px;">
+        No VPN. No Odoo login screen. No reports to run. Just open Claude on your phone, ask a question in plain English,<br/>and get live ERP data back instantly — from anywhere, on any device.
+    </p>
+    <div class="text-center mb-4">
+        <div style="display:inline-block; border-radius:36px; border:3px solid #c7d2e6; padding:10px; background-color:#fff; max-width:320px;">
+            <img src="assets/screenshots/mobile-demo.gif" class="img-fluid" style="border-radius:28px;" alt="Ask Claude on your phone"/>
+        </div>
+        <p style="font-size:11px; color:#9e9e9e; margin-top:8px;">Click to open full size</p>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <p style="font-size:22px; margin-bottom:6px;">📱</p>
+            <h6 style="font-weight:700; color:#121212; font-size:14px; margin-bottom:4px;">Any Device, Anywhere</h6>
+            <p style="color:#1565c0; font-size:12px; margin:0;">Phone, tablet, or desktop. The Claude connection follows the user — not the device or the office network.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+            <p style="font-size:22px; margin-bottom:6px;">💬</p>
+            <h6 style="font-weight:700; color:#121212; font-size:14px; margin-bottom:4px;">Plain English Queries</h6>
+            <p style="color:#1565c0; font-size:12px; margin:0;">"What are my open invoices?" — Claude queries Odoo and returns a clear, structured answer in seconds.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+            <p style="font-size:22px; margin-bottom:6px;">🔒</p>
+            <h6 style="font-weight:700; color:#121212; font-size:14px; margin-bottom:4px;">Fully Governed</h6>
+            <p style="color:#1565c0; font-size:12px; margin:0;">Per-key scopes, Odoo ACLs, and audit logs — every mobile query is controlled, traceable, and least-privilege.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     5. FEATURES
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Features</p>
+    <h2 class="text-center mb-4" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">What You </span><span style="color:#5b4da0;">Get</span>
+    </h2>
+
+    <!-- Feature Group: Connectivity & Auth (Purple) -->
+    <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#5b4da0; margin-bottom:10px;">Connectivity &amp; Authentication</p>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #d1c4e9; background-color:#f3f0ff;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#3f3274;">🔐 OAuth 2.0 + PKCE</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Standards-compliant Authorization Code flow with PKCE S256, dynamic client registration (RFC 7591), refresh token rotation, and auto-discovery via /.well-known endpoints.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #d1c4e9; background-color:#f3f0ff;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#3f3274;">🔑 Personal Access Tokens</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Self-service token management. Each user mints PATs for headless integrations. SHA-256 hashed at rest, displayed only once at creation.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #d1c4e9; background-color:#f3f0ff;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#3f3274;">⚡ Dual Transport</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Streamable HTTP transport (MCP spec 2025-03-26) plus legacy SSE — works with Claude Desktop, ChatGPT, Cursor, Gemini, n8n, LangChain, and any MCP-capable client.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Group: Governance (Blue) -->
+    <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#1565c0; margin-bottom:10px;">Governance &amp; Audit</p>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #bbdefb; background-color:#e3f2fd;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#0d47a1;">🛡️ Per-Token Scope</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Read-only, read+write, or admin. Restrict the blast radius of each token. Combine with model allowlist and field allowlist for precise least-privilege access.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #bbdefb; background-color:#e3f2fd;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#0d47a1;">🌐 IP Allow/Deny Lists</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">CIDR-based IP restrictions per token. Lock tokens to your office network, your VPN range, or a specific automation server.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #bbdefb; background-color:#e3f2fd;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#0d47a1;">🔎 Audit Trail + Redaction</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Every tool call logged with duration, record count, and result. Optional payload capture with automatic PII redaction (passwords, tokens, SSN, credit cards).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Group: Power Tools (Green) -->
+    <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#2e7d32; margin-bottom:10px;">Advanced Capabilities</p>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #c8e6c9; background-color:#e8f5e9;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#1b5e20;">📊 BI Reporting Tools</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Seven analytics tools in one call: pivot tables, time-series with gap-filling, top-N ranking, cohort retention, funnel conversion, CSV and XLSX exports.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #c8e6c9; background-color:#e8f5e9;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#1b5e20;">🌍 Portal Pages</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Public shareable dashboards with KPI tiles, ECharts visualizations, and tables. Server-side rendered, always live, mobile-responsive, embeddable via signed URL.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div style="border-radius:14px; padding:22px 18px; height:100%; border:1px solid #c8e6c9; background-color:#e8f5e9;">
+                <h6 style="font-weight:700; font-size:14px; margin-bottom:5px; color:#1b5e20;">⚙️ Async Job Queue</h6>
+                <p style="color:#64728f; font-size:13px; margin:0; line-height:1.6;">Submit bulk updates, exports of 100k+ records, or heavy method calls and poll for status. Background cron processes jobs respecting token scope and restrictions.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DEPLOYMENT & PERFORMANCE
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Infrastructure</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">Deployment </span><span style="color:#5b4da0;">&amp; Performance</span>
+    </h2>
+    <p class="text-center mb-4" style="color:#64728f; font-size:14px;">Designed from the ground up for production use with horizontal scalability and observability.</p>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fff; border-radius:14px; padding:24px; height:100%; border:1px solid #e0d9f5;">
+                <h5 style="font-weight:700; color:#121212; font-size:17px; margin-bottom:14px;">🚀 Horizontal scalability</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;">Works with 1 worker, 10 workers, or 100+ workers</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;">Redis-backed distributed rate limiting (no coordination needed)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;">Shared cache for model schemas across all workers</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;">No session affinity or sticky sessions required</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;">Automatic fallback if Redis unavailable</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fff; border-radius:14px; padding:24px; height:100%; border:1px solid #e0d9f5;">
+                <h5 style="font-weight:700; color:#121212; font-size:17px; margin-bottom:14px;">⚡ Performance benchmarks</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Cached requests:</strong> ~2ms (96% faster)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Uncached requests:</strong> ~50-100ms (standard)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;"><strong style="color:#121212;">Throughput:</strong> 4x improvement with caching</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Cache hit ratio:</strong> 80-90% typical</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Latency percentiles:</strong> p50: 3ms, p95: 25ms, p99: 80ms</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CAPABILITIES
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">What You Get</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">Capabilities</span>
+    </h2>
+    <p class="text-center mb-4" style="color:#64728f; font-size:14px;">Built for secure AI connectivity with governance, least privilege, and predictable tooling.</p>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fff; border-radius:14px; padding:24px; height:100%; border:1px solid #e0d9f5;">
+                <h5 style="font-weight:700; color:#121212; font-size:17px; margin-bottom:14px;">🔧 Core capabilities</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">MCP-style JSON-RPC endpoint</strong> for tool discovery and execution</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">CRUD tools</strong> for controlled read/write operations</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Model discovery &amp; description</strong> for agent planning</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;"><strong style="color:#121212;">Reporting/BI helpers</strong> (pivot, timeseries, top-N, cohort, funnel, export)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;"><strong style="color:#121212;">Portal pages</strong> at /mcp-page/&lt;slug&gt; (KPIs, charts, tables)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Module Builder</strong> for validated specs + installable ZIP modules</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Batch &amp; async tools</strong> for efficient multi-call flows and long-running jobs</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fff; border-radius:14px; padding:24px; height:100%; border:1px solid #e0d9f5;">
+                <h5 style="font-weight:700; color:#121212; font-size:17px; margin-bottom:14px;">🛡️ Valuable safeguards</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Per-key scopes</strong> and standard Odoo ACLs/record rules</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Field allowlists</strong> and domain filters for least privilege</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;"><strong style="color:#121212;">Distributed rate limits</strong> with Redis backing (or in-memory fallback)</li>
+                    <li style="padding:4px 0; font-size:13px; color:#1565c0;"><strong style="color:#121212;">Token rotation</strong> with zero-downtime grace periods</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Schema caching</strong> with automatic invalidation</li>
+                    <li style="padding:4px 0; font-size:13px; color:#64728f;"><strong style="color:#121212;">Audit logs</strong> with optional payload capture and retention policy</li>
+                </ul>
+                <p style="font-size:12px; color:#1565c0; margin-top:14px; margin-bottom:0;">Connect multiple LLMs and agent frameworks: Claude, ChatGPT, Gemini, custom LLMs, LangChain, and crewAI.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     6. ARCHITECTURE
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <div class="mb-4" style="background-color:#f3f0ff; border-radius:12px; padding:32px 24px; border:1px solid #e0d9f5;">
+        <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">System Architecture</p>
+        <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+            <span style="color:#121212;">End-to-End </span><span style="color:#5b4da0;">Integration</span>
+        </h2>
+        <p class="text-center mb-4" style="color:#64728f; font-size:14px;">AI client → OAuth or Bearer token → /mcp endpoint → governance gate → tool dispatcher → live Odoo data</p>
+
+        <div class="row text-center">
+            <div class="col-md-3 mb-3">
+                <div style="background-color:#fff; border:1px solid #e0d9f5; border-radius:14px; padding:22px 16px; height:100%;">
+                    <div style="color:#3f3274; font-size:13px; font-weight:700; margin-bottom:5px;">AI Client</div>
+                    <div style="color:#64728f; font-size:11px;">Claude, ChatGPT, Cursor, Gemini, n8n, LangChain</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div style="background-color:#fff; border:1px solid #e0d9f5; border-radius:14px; padding:22px 16px; height:100%;">
+                    <div style="color:#3f3274; font-size:13px; font-weight:700; margin-bottom:5px;">Auth Layer</div>
+                    <div style="color:#64728f; font-size:11px;">OAuth 2.0 PKCE / Bearer Token / PAT — SHA-256 hashed</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div style="background-color:#fff; border:2px solid #5b4da0; border-radius:14px; padding:22px 16px; height:100%;">
+                    <div style="color:#3f3274; font-size:13px; font-weight:700; margin-bottom:5px;">MCP Server</div>
+                    <div style="color:#64728f; font-size:11px;">Scope check, rate limit, schema cache, tool dispatch</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div style="background-color:#fff; border:1px solid #e0d9f5; border-radius:14px; padding:22px 16px; height:100%;">
+                    <div style="color:#3f3274; font-size:13px; font-weight:700; margin-bottom:5px;">Odoo ORM</div>
+                    <div style="color:#64728f; font-size:11px;">Operations execute as authenticated user, respecting ACL and record rules</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transport Modes -->
+    <div class="mb-4" style="background-color:#fafafa; border-radius:12px; padding:24px;">
+        <h4 class="text-center mb-3" style="font-weight:700; color:#121212; font-size:18px;">Transport Modes</h4>
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:16px; border:1px solid #e0d9f5;">
+                    <div style="font-weight:700; color:#3f3274; font-size:14px; margin-bottom:6px;">Streamable HTTP</div>
+                    <div style="color:#64728f; font-size:12px;">POST /mcp — MCP spec 2025-03-26. Stateless, sticky-session-free, scales horizontally.</div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:16px; border:1px solid #e0d9f5;">
+                    <div style="font-weight:700; color:#3f3274; font-size:14px; margin-bottom:6px;">Server-Sent Events</div>
+                    <div style="color:#64728f; font-size:12px;">GET /mcp/sse + POST /mcp/messages — legacy MCP transport for older clients.</div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div style="background-color:#fff; border-radius:10px; padding:16px; border:1px solid #e0d9f5;">
+                    <div style="font-weight:700; color:#3f3274; font-size:14px; margin-bottom:6px;">Portal HTTP</div>
+                    <div style="color:#64728f; font-size:12px;">GET /mcp-page/&lt;slug&gt; — public dashboards backed by live Odoo data.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Specs -->
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Technical Specifications</p>
+    <h2 class="text-center mb-3" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">Built on </span><span style="color:#5b4da0;">Odoo 18 Standards</span>
+    </h2>
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fafafa; border-radius:12px; padding:24px; height:100%;">
+                <h5 style="font-weight:700; color:#121212; margin-bottom:14px;">📦 Dependencies</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">base, web, mail</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Optional: redis-py (for distributed rate limit)</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Optional: xlsxwriter (for XLSX export)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fafafa; border-radius:12px; padding:24px; height:100%;">
+                <h5 style="font-weight:700; color:#121212; margin-bottom:14px;">🖥️ Deployment</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Odoo Community &amp; Enterprise</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Odoo.sh (PaaS)</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">On-Premise multi-worker</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fafafa; border-radius:12px; padding:24px; height:100%;">
+                <h5 style="font-weight:700; color:#121212; margin-bottom:14px;">⚡ Performance</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Schema cache for fields_get / get_models / get_views (configurable TTL)</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Redis-backed distributed rate limit with in-memory fallback</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Auto-invalidation on schema change, LRU eviction at 1000 entries</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div style="background-color:#fafafa; border-radius:12px; padding:24px; height:100%;">
+                <h5 style="font-weight:700; color:#121212; margin-bottom:14px;">🔒 Security</h5>
+                <ul style="padding-left:20px; margin:0;">
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Bearer tokens SHA-256 hashed, 30-day access / 90-day refresh expiry</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">Per-token scope, model allowlist, field allowlist, IP allow/deny lists</li>
+                    <li style="padding:5px 0; font-size:14px; color:#64728f;">HTTPS enforcement option, CORS preflight, RFC 7009 token revocation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HOW TO CONNECT: Claude Web, Grok, ChatGPT
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Integration Guides</p>
+    <h2 class="text-center mb-2" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">How to </span><span style="color:#5b4da0;">Connect</span>
+    </h2>
+    <p class="text-center mb-5" style="color:#64728f; font-size:15px;">
+        Connect your favorite AI client to live Odoo data in minutes. No code required.
+    </p>
+
+    <!-- Connect: Claude Web -->
+    <div class="mb-5" style="border-radius:14px; background-color:#f3f0ff; padding:32px 24px; border:1px solid #e0d9f5;">
+        <p style="text-transform:uppercase; letter-spacing:2px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:6px;">Step-by-step</p>
+        <h3 style="font-weight:700; font-size:22px; margin-bottom:8px; color:#121212;">
+            Connect with <span style="color:#5b4da0;">Claude Web</span>
+        </h3>
+        <p style="color:#64728f; font-size:14px; margin-bottom:20px; line-height:1.7;">
+            Use Claude.ai with MCP to query Odoo data, create records, run reports, and build dashboards — directly from your browser.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px; border:1px solid #e0d9f5;">
+            <img src="assets/screenshots/connect-claude.gif" class="img-fluid" style="border-radius:6px;" alt="Connect with Claude Web"/>
+        </div>
+    </div>
+
+    <!-- Connect: Grok -->
+    <div class="mb-5" style="border-radius:14px; background-color:#fafafa; padding:32px 24px; border:1px solid #e8ebf2;">
+        <p style="text-transform:uppercase; letter-spacing:2px; color:#00897b; font-weight:700; font-size:11px; margin-bottom:6px;">Step-by-step</p>
+        <h3 style="font-weight:700; font-size:22px; margin-bottom:8px; color:#121212;">
+            Connect with <span style="color:#00897b;">Grok</span>
+        </h3>
+        <p style="color:#64728f; font-size:14px; margin-bottom:20px; line-height:1.7;">
+            Grok supports MCP connections for tool use. Link it to your Odoo instance and query your business data with natural language from the Grok interface.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px; border:1px solid #e8ebf2;">
+            <img src="assets/screenshots/connect-grok.gif" class="img-fluid" style="border-radius:6px;" alt="Connect with Grok"/>
+        </div>
+    </div>
+
+    <!-- Connect: ChatGPT -->
+    <div class="mb-5" style="border-radius:14px; background-color:#e8f5e9; padding:32px 24px; border:1px solid #c8e6c9;">
+        <p style="text-transform:uppercase; letter-spacing:2px; color:#2e7d32; font-weight:700; font-size:11px; margin-bottom:6px;">Step-by-step</p>
+        <h3 style="font-weight:700; font-size:22px; margin-bottom:8px; color:#121212;">
+            Connect with <span style="color:#2e7d32;">ChatGPT</span>
+        </h3>
+        <p style="color:#64728f; font-size:14px; margin-bottom:20px; line-height:1.7;">
+            ChatGPT supports MCP servers through its connector framework. Point it at your Odoo MCP endpoint and give ChatGPT full access to your live ERP data.
+        </p>
+        <div style="background-color:#fff; border-radius:10px; padding:12px; border:1px solid #c8e6c9;">
+            <img src="assets/screenshots/connect-chatgpt.gif" class="img-fluid" style="border-radius:6px;" alt="Connect with ChatGPT"/>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     7. CHANGELOG
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Version History</p>
+    <h2 class="text-center mb-4" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">What's </span><span style="color:#5b4da0;">New</span>
+    </h2>
+
+    <!-- v18.0.3.0.0 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div style="background-color:#fafafa; border-radius:12px; padding:18px 20px; border-left:4px solid #5b4da0; border-top:1px solid #f0edf9; border-right:1px solid #f0edf9; border-bottom:1px solid #f0edf9;">
+                <div class="mb-2">
+                    <span style="background-color:#5b4da0; color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-right:8px;">LATEST</span>
+                    <span style="font-weight:800; font-size:16px; color:#121212;">v18.0.3.0.0</span>
+                    <span style="font-size:12px; color:#9e9e9e; margin-left:8px;">May 2026</span>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">odoo_execute_wizard — wizard execution</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">odoo_write — update existing records</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-bottom:4px;">Required field pre-flight validation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- v18.0.2.0.0 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div style="background-color:#fafafa; border-radius:12px; padding:18px 20px; border-left:4px solid #37474f; border-top:1px solid #f0edf9; border-right:1px solid #f0edf9; border-bottom:1px solid #f0edf9;">
+                <div class="mb-2">
+                    <span style="font-weight:800; font-size:16px; color:#121212;">v18.0.2.0.0</span>
+                    <span style="font-size:12px; color:#9e9e9e; margin-left:8px;">May 2026</span>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Per-token scope (read/write/admin)</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">IP allow/deny lists</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Field allowlist</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Audit payload capture</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Schema cache</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Redis rate limit</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Async job queue</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Portal pages</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">BI reporting (7 tools)</span>
+                    <span style="background-color:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-bottom:4px;">Module generator</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initial release v18.0.1.0.0 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div style="background-color:#fafafa; border-radius:12px; padding:18px 20px; border-left:4px solid #37474f; border-top:1px solid #f0edf9; border-right:1px solid #f0edf9; border-bottom:1px solid #f0edf9;">
+                <div class="mb-2">
+                    <span style="font-weight:800; font-size:16px; color:#121212;">v18.0.1.0.0</span>
+                    <span style="font-size:12px; color:#9e9e9e; margin-left:8px;">April 2026</span>
+                    <span style="background-color:#eceff1; color:#37474f; border:1px solid #cfd8dc; border-radius:6px; padding:2px 8px; font-size:11px; font-weight:600; margin-left:8px;">Initial Release</span>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <span style="background-color:#eceff1; color:#37474f; border:1px solid #cfd8dc; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">OAuth 2.0 PKCE + PAT</span>
+                    <span style="background-color:#eceff1; color:#37474f; border:1px solid #cfd8dc; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">Streamable HTTP + SSE transport</span>
+                    <span style="background-color:#eceff1; color:#37474f; border:1px solid #cfd8dc; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:4px;">15 core MCP tools</span>
+                    <span style="background-color:#eceff1; color:#37474f; border:1px solid #cfd8dc; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:600; margin-bottom:4px;">MCP Resources (5 URIs)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     8. FAQ
+═══════════════════════════════════════════════════════════════ -->
+<div class="my-5">
+    <p class="text-center" style="text-transform:uppercase; letter-spacing:3px; color:#5b4da0; font-weight:700; font-size:11px; margin-bottom:4px;">Frequently Asked Questions</p>
+    <h2 class="text-center mb-4" style="font-weight:800; font-size:28px; line-height:1.2;">
+        <span style="color:#121212;">Got </span><span style="color:#5b4da0;">Questions?</span>
+    </h2>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            Which AI clients can connect to this MCP Server?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Any client implementing the Model Context Protocol — including Claude Desktop, Claude Code, Cursor, ChatGPT, Gemini, n8n, LangChain, crewAI, and custom MCP-aware applications. Both Streamable HTTP (MCP 2025-03-26 spec) and legacy SSE transports are supported.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            How is authentication handled? Are credentials stored?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Authentication is delegated entirely to Odoo's res.users — no separate user database. OAuth 2.0 Authorization Code flow with PKCE S256 issues 30-day Bearer tokens with 90-day refresh tokens. Tokens are SHA-256 hashed at rest; only the hash is stored. Passwords are never persisted by this module.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            Can I limit what a token can read or write?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Yes. Every token has a configurable scope (read-only, read+write, admin), an optional model allowlist and denylist, a field allowlist (JSON per model), and IP allow/deny lists with CIDR support. All checks are enforced server-side before any ORM operation. Beyond these, Odoo's own ACL and record rules still apply — the token cannot bypass them.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            What tools does the AI client get out of the box?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Over 30 MCP tools across five categories: CRUD (search, read, create, update, delete, call_method); workflow (message_post, default_get, onchange, get_views, print_report, create_attachment); analytics (count, name_search, read_group); BI reporting (pivot, time_series, top_n, cohort, funnel, export_csv, export_xlsx); operations (submit_job, job_status, job_list, job_cancel, create_portal_page, list_portal_pages, update_portal_page); module generation (validate_module_spec, generate_module, list_generated_modules, install_generated_module).
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            What are Portal Pages and how do they work?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Portal Pages are public shareable dashboards backed by live Odoo data. An AI agent can create a dashboard via odoo_create_portal_page with a JSON spec describing KPI tiles, ECharts visualizations, and tables. The result is a clean URL like /mcp-page/sales-dashboard with optional signed embed tokens for iframe embedding. Pages render server-side, are mobile-responsive, and run as the page creator with that user's permissions enforced.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            What is the Async Job Queue for?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Heavy operations — bulk updates across thousands of records, CSV/XLSX exports of large datasets, batch method calls — exceed normal HTTP timeouts. The async queue lets the AI submit a job, receive a job_id immediately, and poll status until completion. A background cron processes jobs respecting the token's original scope and restrictions. Exports yield downloadable attachments.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            How does the Module Generator work? Is it safe?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            The AI submits a JSON spec describing a module — models, fields, views, security. The generator validates the spec (snake_case names, reserved-keyword checks, field-type allowlist, AST parse of every generated .py file) and produces an installable ZIP archive. Installation is feature-flagged off by default and requires admin scope plus a configured extraction path (refuses to write into community/ or enterprise/ folders). Atomic rollback removes extracted files if installation fails.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            What about rate limiting and performance at scale?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            A sliding-window rate limiter caps per-token requests by default. For multi-worker or multi-instance Odoo deployments, configure a Redis URL in MCP Server settings and the limiter switches to Redis sorted-set sliding window with sub-millisecond latency. A schema cache (LRU, configurable TTL) reduces fields_get, get_models, and get_views latency dramatically with automatic invalidation when ir.model or ir.model.fields change.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            Is this available for Odoo Community and Enterprise?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Yes. The module is available for both Community and Enterprise editions, as well as Odoo.sh and on-premise deployments. No additional Enterprise-only modules are required as dependencies.
+        </div>
+    </details>
+
+    <details style="margin-bottom:10px; border:1px solid #e9ecef; border-radius:10px;">
+        <summary style="cursor:pointer; background-color:#f8f8f8; padding:14px 20px; font-size:15px; font-weight:600; color:#121212;">
+            Do purchases include future version upgrades?
+        </summary>
+        <div style="padding:14px 20px; font-size:14px; color:#64728f; line-height:1.7; border-top:1px solid #f0edf9;">
+            Each purchase covers the specific Odoo version purchased. Upgrades to newer major versions are available at a reduced upgrade price. Bug fixes and minor updates within the same version are provided free of charge.
+        </div>
+    </details>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     9. RELATED PRODUCTS
+═══════════════════════════════════════════════════════════════ -->
+<section class="oe_container mt32">
+    <h2 style="color:#091E42; font-family:'Montserrat'; text-align:center; margin:25px auto; text-transform:uppercase;" class="oe_slogan">
+        <b>Related Products</b>
+    </h2>
+    <div id="demo" class="row carousel slide mt64 mb32" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float:left; padding:10px;">
+                    <a href="https://apps.odoo.com/apps/modules/18.0/lm_ai_summary" target="_blank" style="color:#000; text-decoration:none;">
+                        <div style="border-radius:6px; padding:16px; border:1px solid #cbcbcb;" class="shadow-sm">
+                            <img class="img img-responsive center-block" style="max-width:100%;" src="./assets/modules/1.png"/>
+                            <h4 class="mt0 text-truncate" style="text-align:center; width:100%; margin-bottom:0; font-weight:600; padding-top:16px; font-size:18px; padding-bottom:8px;">
+                                AI Summary</h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float:left; padding:10px;">
+                    <a href="https://apps.odoo.com/apps/modules/18.0/lm_bank_statement_import_id" target="_blank" style="color:#000; text-decoration:none;">
+                        <div style="border-radius:6px; padding:16px; border:1px solid #cbcbcb;" class="shadow-sm">
+                            <img class="img img-responsive center-block" style="max-width:100%;" src="./assets/modules/2.png"/>
+                            <h4 class="mt0 text-truncate" style="text-align:center; width:100%; margin-bottom:0; font-weight:600; padding-top:16px; font-size:18px; padding-bottom:8px;">
+                                Indonesia Bank Statement Import</h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float:left; padding:10px;">
+                    <a href="https://apps.odoo.com/apps/modules/18.0/lm_id_withholding" target="_blank" style="color:#000; text-decoration:none;">
+                        <div style="border-radius:6px; padding:16px; border:1px solid #cbcbcb;" class="shadow-sm">
+                            <img class="img img-responsive center-block" style="max-width:100%;" src="./assets/modules/3.png"/>
+                            <h4 class="mt0 text-truncate" style="text-align:center; width:100%; margin-bottom:0; font-weight:600; padding-top:16px; font-size:18px; padding-bottom:8px;">
+                                Indonesia Withholding Tax</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#demo" data-bs-slide="prev" style="margin-left:-30px; width:35px; color:#000;">
+            <span class="carousel-control-prev-icon">
+                <i class="fa fa-chevron-left" style="font-size:24px;"></i>
+            </span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-bs-slide="next" style="margin-right:-30px; width:35px; color:#000;">
+            <span class="carousel-control-next-icon">
+                <i class="fa fa-chevron-right" style="font-size:24px;"></i>
+            </span>
+        </a>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     10. FOOTER
+═══════════════════════════════════════════════════════════════ -->
+<div class="d-flex align-items-center justify-content-between flex-wrap py-3 mb-4" style="border-top:1px solid #e9ecef;">
+    <img src="assets/brand.png" alt="kaitech.io" style="height:30px;"/>
+    <span style="font-size:12px; color:#9e9e9e;">MCP Server for Odoo v18.0 &nbsp;·&nbsp; OPL-1 License &nbsp;·&nbsp; © 2026 kaitech.io</span>
+    <div>
+        <a href="mailto:info@kaitech.io" style="color:#64728f; font-size:13px; text-decoration:none;">
+            <img src="assets/email.svg" width="15" style="vertical-align:middle; margin-right:4px;" alt=""/>
+            info@kaitech.io
+        </a>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

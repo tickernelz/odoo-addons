@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mcp_pat_wizard_view_form" model="ir.ui.view">
+        <field name="name">mcp.pat.wizard.form</field>
+        <field name="model">mcp.pat.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Personal Access Token">
+                <sheet>
+                    <div class="alert alert-warning mb-3" role="alert">
+                        <strong>Save this token now.</strong>
+                        It is shown <strong>only once</strong> and cannot be retrieved later.
+                        Store it securely — treat it like a password.
+                    </div>
+                    <group string="Your Personal Access Token">
+                        <field name="raw_token"
+                               widget="CopyClipboardChar"
+                               readonly="1"
+                               style="font-family: monospace; font-size: 1.05em;"/>
+                    </group>
+                    <group string="Token Details">
+                        <field name="user_id" readonly="1"/>
+                        <field name="expires_at" readonly="1"/>
+                    </group>
+                    <div class="text-muted mt-2">
+                        Add to your MCP client config as:
+                        <code>Authorization: Bearer &lt;token&gt;</code>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="I have saved the token" special="cancel" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mcp_token_view_list" model="ir.ui.view">
+        <field name="name">mcp.token.list</field>
+        <field name="model">mcp.token</field>
+        <field name="arch" type="xml">
+            <list string="MCP Tokens"
+                  decoration-success="state == 'active'"
+                  decoration-muted="state != 'active'"
+                  create="false">
+                <header>
+                    <button name="action_generate_pat"
+                            string="Generate PAT"
+                            type="object"
+                            class="btn-primary"
+                            display="always"/>
+                </header>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="token_type" widget="badge"
+                       decoration-info="token_type == 'pat'"
+                       decoration-success="token_type == 'oauth'"/>
+                <field name="scope" widget="badge"
+                       decoration-warning="scope == 'read'"
+                       decoration-info="scope == 'write'"
+                       decoration-success="scope == 'admin'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'expired'"
+                       decoration-danger="state == 'revoked'"/>
+                <field name="expires_at"/>
+                <field name="last_used"/>
+                <field name="create_date" string="Issued At"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mcp_token_view_form" model="ir.ui.view">
+        <field name="name">mcp.token.form</field>
+        <field name="model">mcp.token</field>
+        <field name="arch" type="xml">
+            <form string="MCP Token" create="false">
+                <header>
+                    <button name="action_revoke" string="Revoke Token"
+                            type="object" class="btn-danger"
+                            invisible="state != 'active'"
+                            confirm="Are you sure? The connected client will lose access immediately."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="active,revoked,expired"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Token Info">
+                            <field name="name"/>
+                            <field name="user_id"/>
+                            <field name="token_type"/>
+                        </group>
+                        <group string="Validity">
+                            <field name="expires_at"/>
+                            <field name="refresh_token_expires_at" string="Refresh Expires At"
+                                   invisible="token_type != 'oauth'"/>
+                            <field name="last_used"/>
+                            <field name="create_date" string="Issued At"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Governance" name="governance">
+                            <group string="Scope">
+                                <field name="scope" widget="radio"/>
+                                <field name="capture_payloads"/>
+                            </group>
+
+                            <group string="Model Access">
+                                <div class="text-muted mb-2" colspan="2">
+                                    Leave both lists empty to allow access to all models.
+                                    Denied models are evaluated before allowed models.
+                                </div>
+                                <field name="allowed_model_ids"
+                                       widget="many2many_tags"
+                                       string="Allowed Models"
+                                       placeholder="Empty = all models allowed"/>
+                                <field name="denied_model_ids"
+                                       widget="many2many_tags"
+                                       string="Denied Models"
+                                       placeholder="Empty = no models blocked"/>
+                            </group>
+
+                            <group string="Field Restrictions (JSON)">
+                                <div class="text-muted mb-2" colspan="2">
+                                    JSON object: model name → list of allowed field names.
+                                    For read operations, fields outside the list are silently dropped.
+                                    For write operations, fields outside the list raise a permission error.
+                                    Example: {"sale.order": ["name", "partner_id", "amount_total"]}
+                                </div>
+                                <field name="field_restrictions"
+                                       nolabel="1"
+                                       colspan="2"
+                                       placeholder='{"sale.order": ["name", "partner_id"], "res.partner": ["name", "email"]}'
+                                       widget="code"/>
+                            </group>
+
+                            <group string="IP Restrictions">
+                                <div class="text-muted mb-2" colspan="2">
+                                    One IP address or CIDR range per line. Supports IPv4, IPv6.
+                                    Lines starting with # are ignored. Leave blank to allow/deny nothing.
+                                    Denylist is evaluated before allowlist.
+                                </div>
+                                <field name="ip_allowlist"
+                                       string="IP Allowlist"
+                                       nolabel="0"
+                                       placeholder="192.168.1.0/24&#10;10.0.0.1&#10;# office network&#10;2001:db8::/32"
+                                       colspan="2"/>
+                                <field name="ip_denylist"
+                                       string="IP Denylist"
+                                       nolabel="0"
+                                       placeholder="203.0.113.5&#10;198.51.100.0/24"
+                                       colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mcp_token_action" model="ir.actions.act_window">
+        <field name="name">MCP Tokens</field>
+        <field name="res_model">mcp.token</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_session_admin,mcp.session.admin,model_mcp_session,base.group_system,1,1,1,1
+access_mcp_session_user,mcp.session.user,model_mcp_session,base.group_user,1,0,0,0
+access_mcp_session_log_admin,mcp.session.log.admin,model_mcp_session_log,base.group_system,1,1,1,1
+access_mcp_session_log_user,mcp.session.log.user,model_mcp_session_log,base.group_user,1,0,0,0
+access_mcp_token_admin,mcp.token.admin,model_mcp_token,base.group_system,1,1,1,1
+access_mcp_token_user,mcp.token.user,model_mcp_token,base.group_user,1,1,1,1
+access_mcp_auth_code_admin,mcp.auth.code.admin,model_mcp_auth_code,base.group_system,1,1,1,1
+access_mcp_pat_wizard_admin,mcp.pat.wizard.admin,model_mcp_pat_wizard,base.group_system,1,1,1,1
+access_mcp_pat_wizard_user,mcp.pat.wizard.user,model_mcp_pat_wizard,base.group_user,1,1,1,1
+access_mcp_job_user,mcp.job.user,model_mcp_job,base.group_user,1,1,1,0
+access_mcp_job_system,mcp.job.system,model_mcp_job,base.group_system,1,1,1,1
+access_mcp_portal_page_user,mcp.portal.page.user,model_mcp_portal_page,base.group_user,1,1,1,0
+access_mcp_portal_page_system,mcp.portal.page.system,model_mcp_portal_page,base.group_system,1,1,1,1
+access_mcp_html_artifact_user,mcp.html.artifact.user,model_mcp_html_artifact,base.group_user,1,1,1,0
+access_mcp_html_artifact_system,mcp.html.artifact.system,model_mcp_html_artifact,base.group_system,1,1,1,1
+access_mcp_generated_module_admin,mcp.generated.module.admin,model_mcp_generated_module,base.group_system,1,1,1,1
