@@ -27,8 +27,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -q ruff==0.15.0
-      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp pos_bank_card_program kai_pos_promotion ci
-      - run: python -m compileall -q kaitech_mcp pos_bank_card_program kai_pos_promotion
+      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp pos_bank_card_program pos_hr_manager_validation kai_pos_promotion ci
+      - run: python -m compileall -q kaitech_mcp pos_bank_card_program pos_hr_manager_validation kai_pos_promotion
+      - run: python ci/manifest_graph.py
 
   odoo19-image:
     runs-on: ubuntu-24.04
@@ -109,6 +110,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: mkdir -p fresh && ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kaitech_mcp > fresh/kaitech_mcp.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_bank_card_program > fresh/pos_bank_card_program.pot
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_hr_manager_validation > fresh/pos_hr_manager_validation.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kai_pos_promotion > fresh/kai_pos_promotion.pot
       - uses: actions/upload-artifact@v4
         with:
@@ -135,6 +137,7 @@ jobs:
       - run: python ci/i18n.py check
       - run: msgfmt --check --statistics -o /dev/null kaitech_mcp/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null pos_bank_card_program/i18n/id.po
+      - run: msgfmt --check --statistics -o /dev/null pos_hr_manager_validation/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null kai_pos_promotion/i18n/id.po
 
   multi-db:

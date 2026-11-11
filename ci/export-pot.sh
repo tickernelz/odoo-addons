@@ -12,7 +12,7 @@ db_user = ${DB_USER:-odoo}
 db_password = ${DB_PASSWORD:-odoo}
 without_demo = True
 EOF
-$odoo_bin -c "$conf" -d "$db" -i kaitech_mcp,pos_bank_card_program,kai_pos_promotion --stop-after-init --log-level=warn >/tmp/install.log 2>&1 \
+$odoo_bin -c "$conf" -d "$db" -i kaitech_mcp,pos_bank_card_program,pos_hr_manager_validation,kai_pos_promotion --stop-after-init --log-level=warn >/tmp/install.log 2>&1 \
     || { cat /tmp/install.log >&2; exit 1; }
 $odoo_bin --addons-path="$ADDONS_PATH" i18n export -c "$conf" -d "$db" -o "/tmp/$module.pot" "$module" >/tmp/export.log 2>&1 \
     || { cat /tmp/export.log >&2; exit 1; }
