@@ -4,9 +4,11 @@ import io
 import psycopg2
 
 from odoo import api, fields, models
-from odoo.exceptions import ConcurrencyError, UserError, ValidationError
+from odoo.exceptions import AccessError, ConcurrencyError, UserError, ValidationError
 
 MONEY_COLUMN_CODES = ('basis_amount', 'discount_amount', 'bank_share_amount', 'store_share_amount')
+SUMMARY_COLUMN_CODES = ('basis_amount', 'discount_amount', 'bank_share_amount')
+DETAIL_COLUMN_CODES = ('date', 'order', 'outlet', 'masked_card', 'approval_code', 'program') + MONEY_COLUMN_CODES
 
 
 class PosBankCardClaim(models.Model):
@@ -140,6 +142,97 @@ class PosBankCardClaim(models.Model):
             return usage.sudo().program_id.name or ''
         return usage[code] or 0.0
 
+    @api.model
+    def _claim_report_data(self, usages, details=True):
+        summary = []
+        per_config = {}
+        rows = []
+        totals = dict.fromkeys(MONEY_COLUMN_CODES, 0.0)
+        program_totals = {}
+        for usage in usages:
+            key = usage.config_id.id or 0
+            if key not in per_config:
+                per_config[key] = dict.fromkeys(SUMMARY_COLUMN_CODES, 0.0)
+                per_config[key].update({
+                    'config_id': usage.config_id,
+                    'outlet': usage.sudo().config_id.name or '',
+                    'usage_count': 0,
+                })
+                summary.append(per_config[key])
+            line = per_config[key]
+            line['usage_count'] += 1
+            for code in SUMMARY_COLUMN_CODES:
+                line[code] += usage[code] or 0.0
+            if usage.program_id.id not in program_totals:
+                program_totals[usage.program_id.id] = dict.fromkeys(MONEY_COLUMN_CODES, 0.0)
+            for code in MONEY_COLUMN_CODES:
+                amount = usage[code] or 0.0
+                totals[code] += amount
+                program_totals[usage.program_id.id][code] += amount
+            if details:
+                row = {code: self._column_value(usage, code) for code in DETAIL_COLUMN_CODES}
+                row['program_id'] = usage.program_id
+                rows.append(row)
+        return {
+            'summary': summary,
+            'details': rows,
+            'usage_count': len(usages),
+            'totals': totals,
+            'program_totals': program_totals,
+        }
+
+    @api.model
+    def _check_claim_pdf_access(self):
+        if not self.env.user.has_group('pos_bank_card_program.group_bank_card_finance'):
+            raise AccessError(self.env._('Only Finance users can print the bank card claim.'))
+
+    @api.model
+    def _claim_pdf_values(self, usages, bank, program, company, date_from, date_to, number):
+        data = self._claim_report_data(usages)
+        details = []
+        for row in data['details']:
+            values = dict(row)
+            stamp = values.pop('date')
+            values.pop('program_id')
+            values['date_label'] = stamp.strftime('%Y-%m-%d %H:%M') if stamp else ''
+            details.append(values)
+        printed_at = fields.Datetime.context_timestamp(self, fields.Datetime.now())
+        return {
+            'company': company.name or '',
+            'bank': bank.name or '',
+            'program': program.name if program else self.env._('All Programmes'),
+            'date_from_label': date_from.isoformat() if date_from else '',
+            'date_to_label': date_to.isoformat() if date_to else '',
+            'number': number or '',
+            'printed_at_label': printed_at.strftime('%Y-%m-%d %H:%M'),
+            'precision': company.currency_id.decimal_places,
+            'summary': data['summary'],
+            'details': details,
+            'usage_count': data['usage_count'],
+            'totals': data['totals'],
+        }
+
+    def _printable_usages(self):
+        self.ensure_one()
+        self._check_claim_pdf_access()
+        usages = self._billable_usages()
+        if not usages:
+            raise UserError(self.env._('This claim has no confirmed usage to print.'))
+        return usages
+
+    def _claim_pdf_data(self):
+        return self._claim_pdf_values(
+            self._printable_usages(), self.bank_id, self.program_id, self.company_id,
+            self.date_from, self.date_to, self.name)
+
+    def action_print_pdf(self):
+        self._printable_usages()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/report/pdf/pos_bank_card_program.report_bank_card_claim/%s' % self.id,
+            'target': 'new',
+        }
+
     def _build_workbook(self):
         import xlsxwriter
 
@@ -152,6 +245,7 @@ class PosBankCardClaim(models.Model):
         total_label_format = workbook.add_format({'bold': True, 'top': 1})
         date_format = workbook.add_format({'num_format': 'yyyy-mm-dd hh:mm'})
         usages = self._billable_usages()
+        data = self._claim_report_data(usages)
         programs = usages.mapped('program_id')
         if not programs:
             workbook.add_worksheet('Claim')
@@ -166,16 +260,17 @@ class PosBankCardClaim(models.Model):
             for index, (_code, header) in enumerate(columns):
                 sheet.write(0, index, header, header_format)
                 sheet.set_column(index, index, 18)
-            totals = dict.fromkeys(MONEY_COLUMN_CODES, 0.0)
+            totals = data['program_totals'][program.id]
             row = 1
-            for usage in usages.filtered(lambda item: item.program_id == program):
+            for item in data['details']:
+                if item['program_id'] != program:
+                    continue
                 for index, (code, _header) in enumerate(columns):
-                    value = self._column_value(usage, code)
+                    value = item[code]
                     if code == 'date':
                         sheet.write_datetime(row, index, value, date_format)
                     elif code in MONEY_COLUMN_CODES:
                         sheet.write_number(row, index, value, money_format)
-                        totals[code] += value
                     else:
                         sheet.write_string(row, index, str(value))
                 row += 1

@@ -30,6 +30,8 @@ class PosBankCardClaimWizard(models.TransientModel):
     line_ids = fields.One2many(
         'pos.bank.card.claim.wizard.line', 'wizard_id', string='Per Outlet')
     usage_count = fields.Integer(string='Usage Lines', compute='_compute_totals')
+    total_basis_amount = fields.Monetary(
+        string='Total Basis', currency_field='currency_id', compute='_compute_totals')
     total_discount_amount = fields.Monetary(
         string='Total Discount', currency_field='currency_id', compute='_compute_totals')
     total_bank_share_amount = fields.Monetary(
@@ -45,10 +47,13 @@ class PosBankCardClaimWizard(models.TransientModel):
         today = fields.Date.context_today(self)
         return today.replace(day=1) - timedelta(days=1)
 
-    @api.depends('line_ids.usage_count', 'line_ids.discount_amount', 'line_ids.bank_share_amount')
+    @api.depends(
+        'line_ids.usage_count', 'line_ids.basis_amount',
+        'line_ids.discount_amount', 'line_ids.bank_share_amount')
     def _compute_totals(self):
         for wizard in self:
             wizard.usage_count = sum(wizard.line_ids.mapped('usage_count'))
+            wizard.total_basis_amount = sum(wizard.line_ids.mapped('basis_amount'))
             wizard.total_discount_amount = sum(wizard.line_ids.mapped('discount_amount'))
             wizard.total_bank_share_amount = sum(wizard.line_ids.mapped('bank_share_amount'))
 
@@ -94,16 +99,39 @@ class PosBankCardClaimWizard(models.TransientModel):
         self.ensure_one()
         if self.date_to < self.date_from:
             raise UserError(self.env._('The end date must not be before the start date.'))
-        groups = self.env['pos.bank.card.usage']._read_group(
-            self._usage_domain(), ['config_id'], ['discount_amount:sum', 'bank_share_amount:sum', '__count'])
+        usages = self.env['pos.bank.card.usage'].search(self._usage_domain())
+        data = self.env['pos.bank.card.claim']._claim_report_data(usages, details=False)
         lines = [(5, 0, 0)] + [(0, 0, {
-            'config_id': config.id if config else False,
-            'usage_count': count,
-            'discount_amount': discount,
-            'bank_share_amount': bank_share,
-        }) for config, discount, bank_share, count in groups]
+            'config_id': line['config_id'].id or False,
+            'usage_count': line['usage_count'],
+            'basis_amount': line['basis_amount'],
+            'discount_amount': line['discount_amount'],
+            'bank_share_amount': line['bank_share_amount'],
+        }) for line in data['summary']]
         self.write({'line_ids': lines, 'state': 'preview'})
         return self._reopen()
+
+    def _check_printable(self):
+        self.ensure_one()
+        self.env['pos.bank.card.claim']._check_claim_pdf_access()
+        if not self.env['pos.bank.card.usage'].search_count(self._usage_domain(), limit=1):
+            raise UserError(self.env._(
+                'No unclaimed confirmed usage matches this bank, programme and period.'))
+
+    def _claim_pdf_data(self):
+        self._check_printable()
+        usages = self.env['pos.bank.card.usage'].search(self._usage_domain(), order='date, id')
+        return self.env['pos.bank.card.claim']._claim_pdf_values(
+            usages, self.bank_id, self.program_id, self.company_id,
+            self.date_from, self.date_to, False)
+
+    def action_print_pdf(self):
+        self._check_printable()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/report/pdf/pos_bank_card_program.report_bank_card_claim_wizard/%s' % self.id,
+            'target': 'new',
+        }
 
     def action_back(self):
         self.ensure_one()
@@ -152,6 +180,8 @@ class PosBankCardClaimWizardLine(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency', string='Currency', related='wizard_id.currency_id', readonly=True)
     usage_count = fields.Integer(string='Usage Lines', readonly=True)
+    basis_amount = fields.Monetary(
+        string='Basis', currency_field='currency_id', readonly=True)
     discount_amount = fields.Monetary(
         string='Discount', currency_field='currency_id', readonly=True)
     bank_share_amount = fields.Monetary(

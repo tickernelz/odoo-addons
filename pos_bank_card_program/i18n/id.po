@@ -122,6 +122,12 @@ msgid "After Other Promotions"
 msgstr "Setelah Promosi Lain"
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "All Programmes"
+msgstr "Semua Program"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__offline_allowed
 msgid "Allow Offline"
 msgstr "Izinkan Offline"
@@ -143,6 +149,7 @@ msgstr "Terapkan Diskon"
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__approval_code
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__approval_code
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Approval Code"
 msgstr "Kode Approval"
 
@@ -224,6 +231,8 @@ msgstr "Rentang BIN Kartu Bank"
 #: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_claim
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model:ir.actions.report,name:pos_bank_card_program.action_report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Bank Card Claim"
 msgstr "Klaim Kartu Bank"
 
@@ -231,6 +240,11 @@ msgstr "Klaim Kartu Bank"
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_claim_column
 msgid "Bank Card Claim Export Column"
 msgstr "Kolom Ekspor Klaim Kartu Bank"
+
+#. module: pos_bank_card_program
+#: model:ir.actions.report,name:pos_bank_card_program.action_report_bank_card_claim_wizard
+msgid "Bank Card Claim Preview"
+msgstr "Pratinjau Klaim Kartu Bank"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_claim_state
@@ -383,6 +397,7 @@ msgstr "Akun Piutang Klaim Bank"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Bank Share"
 msgstr "Porsi Bank"
 
@@ -416,6 +431,9 @@ msgstr "Pembalikan reklasifikasi klaim kartu bank %s"
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__basis_amount
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__basis_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Basis"
 msgstr "Basis"
 
@@ -455,6 +473,7 @@ msgstr "Dibatalkan"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__masked_card
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__masked_card
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Card"
 msgstr "Kartu"
 
@@ -679,6 +698,7 @@ msgstr "Penghitung Kartu Harian"
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__date
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__date
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Date"
 msgstr "Tanggal"
 
@@ -703,6 +723,7 @@ msgstr "Program Kartu Bank Bawaan"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Discount"
 msgstr "Diskon"
 
@@ -1159,6 +1180,12 @@ msgstr "Jatah Offline per Outlet"
 #. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "Only Finance users can print the bank card claim."
+msgstr "Hanya pengguna Finance yang dapat mencetak klaim kartu bank."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
 msgid "Only a draft claim can be sent."
 msgstr "Hanya klaim draf yang dapat dikirim."
 
@@ -1204,6 +1231,7 @@ msgstr "Total Order"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Outlet"
 msgstr "Outlet"
 
@@ -1338,6 +1366,12 @@ msgstr "Sesi Point of Sale"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Preview"
 msgstr "Pratinjau"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid "Print PDF"
+msgstr "Cetak PDF"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__program_id
@@ -1589,6 +1623,11 @@ msgstr "Porsi Toko"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Summary"
 msgstr "Ringkasan"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "Summary by Outlet"
+msgstr "Ringkasan per Outlet"
 
 #. module: pos_bank_card_program
 #. odoo-python
@@ -1922,6 +1961,12 @@ msgstr "Klaim ini tidak memiliki pemakaian terkonfirmasi untuk difakturkan."
 #. module: pos_bank_card_program
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
+msgid "This claim has no confirmed usage to print."
+msgstr "Klaim ini tidak memiliki pemakaian terkonfirmasi untuk dicetak."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
 msgid "This claim has no confirmed usage to send."
 msgstr "Klaim ini tidak memiliki pemakaian terkonfirmasi untuk dikirim."
 
@@ -1959,6 +2004,11 @@ msgid "Total Bank Share"
 msgstr "Total Porsi Bank"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__total_basis_amount
+msgid "Total Basis"
+msgstr "Total Basis"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__total_discount_amount
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__total_discount_amount
 msgid "Total Discount"
@@ -1968,6 +2018,11 @@ msgstr "Total Diskon"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
 msgid "Transaction"
 msgstr "Transaksi"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "Transaction Details"
+msgstr "Detail Transaksi"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,help:pos_bank_card_program.field_pos_bank_card_claim__activity_exception_decoration
@@ -1989,6 +2044,7 @@ msgstr "Pemakaian"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Usage Lines"
 msgstr "Baris Pemakaian"
 
@@ -2090,3 +2146,48 @@ msgstr "Wizard"
 #: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
 msgid "claim_id"
 msgstr "claim_id"
+
+#. module: pos_bank_card_program
+#: model:ir.actions.report,print_report_name:pos_bank_card_program.action_report_bank_card_claim_wizard
+msgid "'Claim - %s - %s to %s' % (object.bank_id.name or '', object.date_from or '', object.date_to or '')"
+msgstr "'Claim - %s - %s to %s' % (object.bank_id.name or '', object.date_from or '', object.date_to or '')"
+
+#. module: pos_bank_card_program
+#: model:ir.actions.report,print_report_name:pos_bank_card_program.action_report_bank_card_claim
+msgid "'Claim - %s' % (object.name or '')"
+msgstr "'Claim - %s' % (object.name or '')"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Bank</strong>"
+msgstr "<strong>Bank</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Claim Number</strong>"
+msgstr "<strong>Nomor Klaim</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Company</strong>"
+msgstr "<strong>Perusahaan</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Period</strong>"
+msgstr "<strong>Periode</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Printed On</strong>"
+msgstr "<strong>Dicetak Pada</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Programme</strong>"
+msgstr "<strong>Program</strong>"
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"

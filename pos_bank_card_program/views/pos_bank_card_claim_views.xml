@@ -34,6 +34,7 @@
                 <header>
                     <button name="action_export_xlsx" groups="pos_bank_card_program.group_bank_card_finance" string="Export Excel" type="object"
                             class="btn-primary" invisible="state not in ('draft', 'sent')"/>
+                    <button name="action_print_pdf" groups="pos_bank_card_program.group_bank_card_finance" string="Print PDF" type="object"/>
                     <button name="action_create_invoice" groups="pos_bank_card_program.group_bank_card_finance" string="Create Invoice" type="object"
                             invisible="state not in ('draft', 'sent')"/>
                     <button name="action_send" groups="pos_bank_card_program.group_bank_card_finance" string="Mark Sent" type="object"

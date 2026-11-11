@@ -9,6 +9,7 @@ from . import test_quota
 from . import test_pos_flow
 from . import test_tour
 from . import test_claim
+from . import test_claim_pdf
 from . import test_reports
 from . import test_language
 from . import test_icon

@@ -298,6 +298,18 @@ the outstanding balance.
 
 ## Reports
 
+Print PDF on a claim form, and on the Claim to Bank wizard preview step,
+generates the bank claim report as PDF: a header with the company, bank,
+programme, period, claim number, and print date, a summary per outlet
+(lines, basis, discount, bank share) with totals, then the transaction
+details (date, outlet, masked card, approval code, basis, discount, bank
+share). The wizard print uses the same bank, programme, and period
+selection, so the report exists before the claim is created. The PDF, the
+Excel export, and the wizard preview all read one collector method, so
+their rows and totals always agree. Only Finance users can print, and a
+claim without confirmed usage cannot be printed. Full card numbers are
+never stored or printed; the report shows the masked card.
+
 Under Point of Sale > Reporting, all with native list, pivot, and graph
 views: Bank Card Usage (filter by bank, programme, outlet, status, and
 claim status), Programme Dashboard (discount and bank share per day),
