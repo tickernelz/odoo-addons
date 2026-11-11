@@ -27,8 +27,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -q ruff==0.15.0
-      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion ci
-      - run: python -m compileall -q kaitech_mcp pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion
+      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion ci
+      - run: python -m compileall -q kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion
       - run: python ci/manifest_graph.py
 
   odoo19-image:
@@ -129,7 +129,7 @@ jobs:
       DB_HOST: postgres
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p fresh && ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kaitech_mcp > fresh/kaitech_mcp.pot
+      - run: mkdir -p fresh && ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kaitech_mcp_server > fresh/kaitech_mcp_server.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_bank_card_program > fresh/pos_bank_card_program.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_checkout_extras > fresh/pos_checkout_extras.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_hr_manager_validation > fresh/pos_hr_manager_validation.pot
@@ -157,7 +157,7 @@ jobs:
       - run: pip install -q polib==1.2.0
       - run: python ci/i18n.py compare fresh
       - run: python ci/i18n.py check
-      - run: msgfmt --check --statistics -o /dev/null kaitech_mcp/i18n/id.po
+      - run: msgfmt --check --statistics -o /dev/null kaitech_mcp_server/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null pos_bank_card_program/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null pos_checkout_extras/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null pos_hr_manager_validation/i18n/id.po

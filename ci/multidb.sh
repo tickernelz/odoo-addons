@@ -30,8 +30,8 @@ odoo_run() {
     docker run --rm --network "$net" --memory 2g -v "$data:/var/lib/odoo" --entrypoint odoo "$name-odoo-image" \
         --db_host "$db" --db_user odoo --db_password odoo --without-demo=all --stop-after-init "$@"
 }
-odoo_run -d db_a -i kaitech_mcp >/tmp/install_a.log 2>&1 || { tail -40 /tmp/install_a.log; exit 1; }
-odoo_run -d db_b -i kaitech_mcp >/tmp/install_b.log 2>&1 || { tail -40 /tmp/install_b.log; exit 1; }
+odoo_run -d db_a -i kaitech_mcp_server >/tmp/install_a.log 2>&1 || { tail -40 /tmp/install_a.log; exit 1; }
+odoo_run -d db_b -i kaitech_mcp_server >/tmp/install_b.log 2>&1 || { tail -40 /tmp/install_b.log; exit 1; }
 odoo_run -d db_c -i base >/tmp/install_c.log 2>&1 || { tail -40 /tmp/install_c.log; exit 1; }
 
 start_odoo() {
@@ -54,10 +54,10 @@ start_odoo() {
 status=0
 for scenario in $scenarios; do
     case "$scenario" in
-        open) start_odoo --load=base,rpc,web,kaitech_mcp ;;
-        perf) start_odoo --load=base,rpc,web,kaitech_mcp ;;
-        dbfilter) start_odoo --load=base,rpc,web,kaitech_mcp '--db-filter=^%d$' ;;
-        list_db_off) start_odoo --load=base,rpc,web,kaitech_mcp --no-database-list ;;
+        open) start_odoo --load=base,rpc,web,kaitech_mcp_server ;;
+        perf) start_odoo --load=base,rpc,web,kaitech_mcp_server ;;
+        dbfilter) start_odoo --load=base,rpc,web,kaitech_mcp_server '--db-filter=^%d$' ;;
+        list_db_off) start_odoo --load=base,rpc,web,kaitech_mcp_server --no-database-list ;;
         not_server_wide) start_odoo --load=base,rpc,web ;;
         *) echo "unknown scenario $scenario"; exit 2 ;;
     esac
