@@ -273,15 +273,17 @@ Each scenario is an automated test in this module:
 
 ## Claims
 
-Finance bills a bank from Point of Sale > Bank Cards > Claim to Bank. The
-wizard takes a bank, an optional programme restriction, and a period
-(monthly by default), previews the bank share per outlet, then creates one
-claim over the confirmed usage that is not claimed yet. Cancelled usage
+Finance bills a bank from Bank Cards > Claims > Claim to Bank. The
+wizard takes a bank, an optional programme restriction, and a period (from
+the oldest unclaimed usage of that bank up to today by default), previews
+the bank share per outlet, then creates one claim over the confirmed usage
+that is not claimed yet. When nothing matches, the preview says so and
+offers only Back and Cancel. Cancelled usage
 never joins a claim. A bank can only have one live claim per period and
 programme scope: an overlapping claim is refused until the first one is
 cancelled or recorded as rejected, which releases its usage lines back to
-not claimed. The claim menus also live under Accounting > Customers, so a
-Finance user reaches them without point of sale groups; creating the claim
+not claimed. Bank Cards is its own app, so a Finance user reaches the
+claims without point of sale groups; creating the claim
 invoice and reconciling it additionally needs Invoicing/Billing rights
 (account.group_account_invoice), because both act on account.move.
 
@@ -310,12 +312,18 @@ their rows and totals always agree. Only Finance users can print, and a
 claim without confirmed usage cannot be printed. Full card numbers are
 never stored or printed; the report shows the masked card.
 
-Under Point of Sale > Reporting, all with native list, pivot, and graph
-views: Bank Card Usage (filter by bank, programme, outlet, status, and
-claim status), Programme Dashboard (discount and bank share per day),
-Outstanding per Bank (confirmed bank share not yet paid, aged 0-30, 31-60,
-and over 60 days by usage date), Card Transaction Details, Usage per
-Outlet, and Programme Quota Usage.
+The Bank Cards app has one menu per purpose: Dashboard, Card Usage, Quota
+Usage, Claims (Claim to Bank, Bank Card Claims, Outstanding per Bank), and
+Configuration (Programmes). The Dashboard shows, for a bank, programme, and
+period, the card transactions, discount given, bank share (and how much is
+not claimed yet), claims awaiting payment (Finance only), discount and bank
+share per day, the quota used this period per programme with a progress
+bar, and the bank share per outlet. Card Usage lists every confirmed,
+reserved, and cancelled use with filters by bank, programme, outlet, status,
+and claim status, plus pivot and graph views. Quota Usage lists each quota
+period with its limit, used, left, and a progress bar. Outstanding per Bank
+ages the confirmed bank share not yet paid in 0-30, 31-60, and over 60 days
+by usage date.
 
 Icon: the source is static/description/icon.svg; regenerate the PNG with
 inkscape static/description/icon.svg --export-type=png --export-filename=static/description/icon.png -w 256 -h 256

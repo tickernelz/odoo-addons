@@ -5,6 +5,7 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { serializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 
@@ -21,6 +22,7 @@ export class BankCardDashboard extends Component {
         this.canvas = useRef("chart");
         this.state = useState({ data: null, bankId: false, programId: false, dateFrom: null, dateTo: null });
         this.chart = null;
+        this.keepLast = new KeepLast();
         onWillStart(async () => {
             await loadBundle("web.chartjs_lib");
             await this.load();
@@ -38,12 +40,14 @@ export class BankCardDashboard extends Component {
     }
 
     async load() {
-        const data = await this.orm.call("pos.bank.card.dashboard", "get_dashboard", [], {
-            date_from: this.state.dateFrom ? serializeDate(this.state.dateFrom) : false,
-            date_to: this.state.dateTo ? serializeDate(this.state.dateTo) : false,
-            bank_id: this.state.bankId,
-            program_id: this.state.programId,
-        });
+        const data = await this.keepLast.add(
+            this.orm.call("pos.bank.card.dashboard", "get_dashboard", [], {
+                date_from: this.state.dateFrom ? serializeDate(this.state.dateFrom) : false,
+                date_to: this.state.dateTo ? serializeDate(this.state.dateTo) : false,
+                bank_id: this.state.bankId,
+                program_id: this.state.programId,
+            })
+        );
         this.state.dateFrom = DateTime.fromISO(data.date_from);
         this.state.dateTo = DateTime.fromISO(data.date_to);
         this.state.data = data;

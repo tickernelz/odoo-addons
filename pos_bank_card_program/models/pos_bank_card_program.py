@@ -130,14 +130,18 @@ class PosBankCardProgram(models.Model):
 
     def _program_claims(self):
         self.ensure_one()
-        return self.env['pos.bank.card.usage'].search(
-            [('program_id', '=', self.id), ('claim_id', '!=', False)]).claim_id
+        groups = self.env['pos.bank.card.usage']._read_group(
+            [('program_id', '=', self.id), ('claim_id', '!=', False)], ['claim_id'])
+        return self.env['pos.bank.card.claim'].browse([claim.id for [claim] in groups])
 
     def _compute_claim_count(self):
-        claims = self.env['pos.bank.card.claim']
-        readable = claims.has_access('read')
+        counts = {}
+        if self.env['pos.bank.card.claim'].has_access('read'):
+            counts = dict(self.env['pos.bank.card.usage']._read_group(
+                [('program_id', 'in', self.ids), ('claim_id', '!=', False)],
+                ['program_id'], ['claim_id:count_distinct']))
         for program in self:
-            program.claim_count = len(program._program_claims()) if readable and program.id else 0
+            program.claim_count = counts.get(program, 0)
 
     def action_open_claims(self):
         self.ensure_one()
