@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet//field[@name='lang']" position="after">
                 <field name="bank_card_manager_pin" password="True"
+                       placeholder="Set a PIN to approve bank card overrides"
                        groups="pos_bank_card_program.group_bank_card_manager"/>
             </xpath>
         </field>

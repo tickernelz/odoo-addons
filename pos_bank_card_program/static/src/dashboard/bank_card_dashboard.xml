@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_bank_card_program.BankCardDashboard">
+        <Layout display="{ controlPanel: {} }" className="'o_bank_card_dashboard'">
+            <div class="container-fluid py-3" t-if="state.data">
+                <div class="d-flex flex-wrap align-items-end gap-3 mb-3">
+                    <div>
+                        <label class="o_form_label d-block" for="bank_card_dashboard_bank">Bank</label>
+                        <select id="bank_card_dashboard_bank" class="form-select" style="min-width: 12rem;" t-on-change="onBankChange">
+                            <option value="" t-att-selected="!state.bankId">All banks</option>
+                            <t t-foreach="state.data.banks" t-as="bank" t-key="bank.id">
+                                <option t-att-value="bank.id" t-att-selected="bank.id === state.bankId" t-esc="bank.name"/>
+                            </t>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="o_form_label d-block" for="bank_card_dashboard_program">Programme</label>
+                        <select id="bank_card_dashboard_program" class="form-select" style="min-width: 12rem;" t-on-change="onProgramChange">
+                            <option value="" t-att-selected="!state.programId">All programmes</option>
+                            <t t-foreach="programs" t-as="program" t-key="program.id">
+                                <option t-att-value="program.id" t-att-selected="program.id === state.programId" t-esc="program.name"/>
+                            </t>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="o_form_label d-block">From</span>
+                        <DateTimeInput type="'date'" value="state.dateFrom" onChange="(value) => this.onDateChange('dateFrom', value)"/>
+                    </div>
+                    <div>
+                        <span class="o_form_label d-block">To</span>
+                        <DateTimeInput type="'date'" value="state.dateTo" onChange="(value) => this.onDateChange('dateTo', value)"/>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <t t-foreach="state.data.kpis" t-as="kpi" t-key="kpi.key">
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="card h-100 o_bank_card_kpi" t-att-data-kpi="kpi.key">
+                                <div class="card-body">
+                                    <div class="text-muted small text-uppercase fw-bold" t-esc="kpi.label"/>
+                                    <div class="fs-3 fw-bold my-1" t-esc="kpi.value"/>
+                                    <div class="text-muted small" t-esc="kpi.hint"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-xl-8">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Discount and Bank Share per Day</span>
+                                <button class="btn btn-link btn-sm p-0" t-on-click="openUsage">Card Usage</button>
+                            </div>
+                            <div class="card-body">
+                                <div style="height: 320px;"><canvas t-ref="chart"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-4">
+                        <div class="card h-100 o_bank_card_quotas">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Quota This Period</span>
+                                <button class="btn btn-link btn-sm p-0" t-on-click="openQuota">Quota Usage</button>
+                            </div>
+                            <div class="card-body">
+                                <div t-if="!state.data.quotas.length" class="text-muted">No active programme with a shared quota.</div>
+                                <t t-foreach="state.data.quotas" t-as="quota" t-key="quota.id">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold text-truncate" t-esc="quota.name"/>
+                                            <span class="text-nowrap ms-2"><t t-esc="quota.used"/> / <t t-esc="quota.limit"/></span>
+                                        </div>
+                                        <div class="progress my-1" style="height: 8px;" role="progressbar" t-att-aria-valuenow="quota.percent" aria-valuemin="0" aria-valuemax="100">
+                                            <div t-attf-class="progress-bar {{ progressClass(quota.percent) }}" t-attf-style="width: {{ quota.percent }}%"/>
+                                        </div>
+                                        <div class="text-muted small"><t t-esc="quota.bank"/> · <t t-esc="quota.period"/></div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card o_bank_card_outlets">
+                            <div class="card-header fw-bold">Usage per Outlet</div>
+                            <div class="card-body p-0">
+                                <div t-if="!state.data.outlets.length" class="text-muted p-3">No card usage in this period.</div>
+                                <table t-else="" class="table table-sm table-hover mb-0 o_list_table">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-3">Outlet</th>
+                                            <th class="text-end">Transactions</th>
+                                            <th class="text-end">Discount</th>
+                                            <th class="text-end">Bank Share</th>
+                                            <th class="pe-3" style="width: 30%;">Share of Bank Share</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="state.data.outlets" t-as="outlet" t-key="outlet_index">
+                                            <td class="ps-3" t-esc="outlet.name"/>
+                                            <td class="text-end" t-esc="outlet.count"/>
+                                            <td class="text-end text-nowrap" t-esc="outlet.discount"/>
+                                            <td class="text-end text-nowrap" t-esc="outlet.bank_share"/>
+                                            <td class="pe-3">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                                        <div class="progress-bar" t-attf-style="width: {{ outlet.share_percent }}%"/>
+                                                    </div>
+                                                    <span class="small text-muted text-nowrap"><t t-esc="outlet.share_percent"/>%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    </t>
+</templates>

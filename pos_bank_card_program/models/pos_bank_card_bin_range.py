@@ -24,6 +24,13 @@ class PosBankCardBinRange(models.Model):
     eligible = fields.Boolean(string='Eligible', default=True)
     ineligible_reason = fields.Char(string='Ineligible Reason', translate=True)
 
+    @api.depends('bin_from', 'bin_to', 'tier')
+    def _compute_display_name(self):
+        for record in self:
+            digits = record.bin_from if record.bin_from == record.bin_to else '%s-%s' % (
+                record.bin_from or '', record.bin_to or '')
+            record.display_name = '%s %s' % (digits, record.tier) if record.tier else digits
+
     @api.depends('bin_from')
     def _compute_bin_length(self):
         for record in self:

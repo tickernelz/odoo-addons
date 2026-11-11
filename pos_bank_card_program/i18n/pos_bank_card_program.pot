@@ -16,6 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "%(left)s of %(limit)s"
+msgstr ""
+
+#. module: pos_bank_card_program
 #. odoo-javascript
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
@@ -38,6 +44,11 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 msgid "<span class=\"o_stat_text\">Invoice</span>"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "<span class=\"o_stat_text\">Quota Left</span>"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -64,6 +75,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_claim.py:0
 msgid "A paid claim cannot be cancelled."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_program
+msgid ""
+"A programme sets the bank, the eligible card ranges, the discount and the "
+"shared quota."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -125,8 +143,41 @@ msgid "All Programmes"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "All banks"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "All outlets"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "All payment methods"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "All programmes"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+msgid "All programmes of this bank"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__offline_allowed
 msgid "Allow Offline"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.js:0
+msgid "Amount (%s)"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -200,6 +251,8 @@ msgid "Back"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__bank_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__bank_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__bank_id
@@ -209,6 +262,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_search
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
 msgid "Bank"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Bank %(bank)s, store %(store)s"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -258,8 +317,7 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_claim
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim_accounting
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_claim
 #: model:res.groups.privilege,name:pos_bank_card_program.res_groups_privilege_bank_card_claim
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_pivot
@@ -328,6 +386,11 @@ msgid "Bank Card Programme Claim"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_dashboard
+msgid "Bank Card Programme Dashboard"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_quota
 msgid "Bank Card Programme Quota"
 msgstr ""
@@ -339,7 +402,6 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_program
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_program
 #: model:res.groups.privilege,name:pos_bank_card_program.res_groups_privilege_bank_card
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_search
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_tree
@@ -355,7 +417,6 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_usage
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_order__bank_card_usage_id
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_usage
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_graph
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
@@ -370,12 +431,7 @@ msgid "Bank Card Usage Reference"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_outlet_pivot
-msgid "Bank Card Usage per Outlet"
-msgstr ""
-
-#. module: pos_bank_card_program
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_root
 msgid "Bank Cards"
 msgstr ""
 
@@ -385,15 +441,19 @@ msgid "Bank Claim Receivable Account"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.js:0
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__bank_share_amount
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__bank_share_amount
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_payment__bank_card_bank_share
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__bank_share_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Bank Share"
 msgstr ""
 
@@ -422,14 +482,19 @@ msgid "Bank card claim reclassification reversal %s"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__basis_amount
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__basis_amount
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__basis_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
-#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__basis_amount
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Basis"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Basis %s"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -496,15 +561,22 @@ msgid "Card Tier"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_detail
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_detail
-msgid "Card Transaction Details"
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Card Transactions"
 msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__card_type
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__card_type
 msgid "Card Type"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_usage
+msgid "Card Usage"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -564,8 +636,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_claim_wizard
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim_wizard
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_claim_wizard_accounting
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_claim_wizard
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Claim to Bank"
 msgstr ""
@@ -583,6 +654,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__usage_ids
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 msgid "Claimed Usage"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__claim_count
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_claims
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "Claims"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Claims Awaiting Payment"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -609,10 +693,20 @@ msgid "Company"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_usage__state__confirmed
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_order__bank_card_reservation_state__confirmed
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
 msgid "Confirmed"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__usage_count
+msgid "Confirmed Usage"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -686,12 +780,23 @@ msgid "Daily Card Counter"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_dashboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__date
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__date
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__date
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Date"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.js:0
+msgid "Day"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -707,15 +812,22 @@ msgid "Default Bank Card Programme"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_payment_method_form_bank_card
+msgid "Detected from the card prefix"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.js:0
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__discount_amount
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__discount_amount
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__discount_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Discount"
 msgstr ""
 
@@ -740,6 +852,12 @@ msgid "Discount Basis"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Discount Given"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__discount_product_id
 msgid "Discount Product"
 msgstr ""
@@ -750,12 +868,25 @@ msgid "Discount Type"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "Discount and Bank Share per Day"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
+msgid "Discount:"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_column__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__display_name
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_dashboard__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__display_name
@@ -863,6 +994,18 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "From"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "From %s"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__has_message
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__has_message
 msgid "Has Message"
@@ -880,6 +1023,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_column__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__id
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_dashboard__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__id
@@ -988,6 +1132,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__remaining_display
+msgid "Left"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 msgid "Mark Paid"
 msgstr ""
@@ -1080,14 +1229,40 @@ msgid "No Quota"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "No active programme with a shared quota."
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_claim
 msgid "No bank card claims yet"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_dashboard
 #: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_usage
 msgid "No bank card usage yet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "No card usage in this period."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "No end limit"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "No excluded categories"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "No excluded products"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1100,8 +1275,43 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "No limit"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "No outlet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "No quota"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_quota_usage
+msgid "No quota used yet"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "No start limit"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
 #: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
 msgid "No unclaimed confirmed usage matches this bank, programme and period."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
+msgid ""
+"No unclaimed confirmed usage matches this bank, programme and period. Go "
+"back to choose another period or programme."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1114,6 +1324,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_payment__bank_card_claim_state__not_claimed
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
 msgid "Not Claimed"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Not claimed yet: %(amount)s (%(count)s)"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1196,6 +1412,12 @@ msgid "Only a sent claim can be recorded as rejected."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_dashboard.py:0
+msgid "Open claims: %s"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__order
 msgid "Order"
 msgstr ""
@@ -1211,15 +1433,17 @@ msgid "Order Total"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__config_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__config_id
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__outlet
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Outlet"
 msgstr ""
 
@@ -1236,8 +1460,7 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_outstanding
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_outstanding
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_outstanding_accounting
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_outstanding
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_pivot
 msgid "Outstanding per Bank"
@@ -1362,6 +1585,8 @@ msgid "Print PDF"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__program_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__program_id
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__program_id
@@ -1383,8 +1608,7 @@ msgid "Programme %(programme)s belongs to %(bank)s, not to the claim bank."
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_dashboard
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_dashboard
+#: model:ir.actions.client,name:pos_bank_card_program.action_bank_card_dashboard
 msgid "Programme Dashboard"
 msgstr ""
 
@@ -1395,7 +1619,6 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_quota_usage
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_quota_usage
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_quota_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_quota_pivot
 msgid "Programme Quota Usage"
@@ -1407,11 +1630,29 @@ msgid "Programme name"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_program
+msgid "Programmes"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_quota_usage
+msgid ""
+"Programmes with a shared quota show what has been used and what remains in "
+"each period."
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_quota_list
+msgid "Progress"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__promo_order
 msgid "Promotion Order"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__limit_display
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Quota"
 msgstr ""
@@ -1437,13 +1678,31 @@ msgid "Quota Buckets"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__quota_left_label
+msgid "Quota Left"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__quota_period
 msgid "Quota Period"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "Quota This Period"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__quota_type
 msgid "Quota Type"
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+#: model:ir.ui.menu,name:pos_bank_card_program.menu_bank_card_quota_usage
+msgid "Quota Usage"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1556,13 +1815,29 @@ msgid "Session"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_users_form_bank_card_pin
+msgid "Set a PIN to approve bank card overrides"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Set to Draft"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "Share of Bank Share"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Shared Quota"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
+msgid "Sharing and Posting"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1732,12 +2007,6 @@ msgstr ""
 msgid ""
 "The claim was cancelled. %(count)s usage lines totalling %(amount)s were "
 "released and can be claimed again."
-msgstr ""
-
-#. module: pos_bank_card_program
-#: model_terms:ir.actions.act_window,help:pos_bank_card_program.action_pos_bank_card_dashboard
-msgid ""
-"The dashboard shows discount and bank share per day once cards are used."
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1943,6 +2212,12 @@ msgid "Tier"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "To"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
 msgid "Today"
 msgstr ""
@@ -1981,13 +2256,26 @@ msgid "Transaction Details"
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
+msgid "Transactions"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,help:pos_bank_card_program.field_pos_bank_card_claim__activity_exception_decoration
 #: model:ir.model.fields,help:pos_bank_card_program.field_pos_bank_card_program__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "Until %s"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__usage_ids
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Usage"
 msgstr ""
 
@@ -1996,11 +2284,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard__usage_count
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__usage_count
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_outstanding__usage_count
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Usage Lines"
 msgstr ""
 
@@ -2010,8 +2297,8 @@ msgid "Usage appears here after a customer pays with an eligible bank card."
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model:ir.actions.act_window,name:pos_bank_card_program.action_pos_bank_card_outlet_recap
-#: model:ir.ui.menu,name:pos_bank_card_program.menu_pos_bank_card_outlet_recap
+#. odoo-javascript
+#: code:addons/pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml:0
 msgid "Usage per Outlet"
 msgstr ""
 
@@ -2023,7 +2310,13 @@ msgstr ""
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__used_count
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__used_display
 msgid "Used"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_quota__used_percent
+msgid "Used %"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -2057,6 +2350,7 @@ msgid "Valid To"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__validity_label
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 msgid "Validity"
 msgstr ""

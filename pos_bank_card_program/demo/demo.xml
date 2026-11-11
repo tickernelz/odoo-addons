@@ -40,7 +40,7 @@
         <field name="card_type">credit</field>
         <field name="tier">Gold</field>
         <field name="eligible" eval="False"/>
-        <field name="ineligible_reason">The Gold tier is not included in this programme.</field>
+        <field name="ineligible_reason">Gold cards are excluded.</field>
     </record>
 
     <record id="program_bank_b" model="pos.bank.card.program">
@@ -93,8 +93,14 @@
         <field name="eligible" eval="True"/>
     </record>
 
+    <record id="journal_card_bank" model="account.journal">
+        <field name="name">Card Bank</field>
+        <field name="code">CBNK</field>
+        <field name="type">bank</field>
+    </record>
     <record id="payment_method_card_bank" model="pos.payment.method">
         <field name="name">Card Bank</field>
+        <field name="journal_id" ref="journal_card_bank"/>
         <field name="bank_card_required" eval="True"/>
     </record>
     <record id="pos_config_outlet_1" model="pos.config">
@@ -235,6 +241,54 @@
         <field name="discount_amount" eval="25000.0"/>
         <field name="bank_share_amount" eval="12500.0"/>
         <field name="store_share_amount" eval="12500.0"/>
+        <field name="state">confirmed</field>
+    </record>
+    <record id="quota_bank_c_forty_days_ago" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_c"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=40)).date().replace(day=1)"/>
+        <field name="date_to" eval="((datetime.now() - timedelta(days=40)).date().replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_c_forty_days_ago" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_c"/>
+        <field name="bin_range_id" ref="bin_bank_c_classic"/>
+        <field name="config_id" ref="pos_config_outlet_1"/>
+        <field name="quota_id" ref="quota_bank_c_forty_days_ago"/>
+        <field name="date" eval="(datetime.now() - timedelta(days=40)).replace(hour=3, minute=0)"/>
+        <field name="card_bin">900450</field>
+        <field name="card_last4">5555</field>
+        <field name="approval_code">DEMO05</field>
+        <field name="card_brand">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Classic</field>
+        <field name="basis_amount" eval="150000.0"/>
+        <field name="discount_amount" eval="1000.0"/>
+        <field name="bank_share_amount" eval="1000.0"/>
+        <field name="store_share_amount" eval="0.0"/>
+        <field name="state">confirmed</field>
+    </record>
+    <record id="quota_bank_c_eighty_days_ago" model="pos.bank.card.quota">
+        <field name="program_id" ref="program_bank_c"/>
+        <field name="date_from" eval="(datetime.now() - timedelta(days=80)).date().replace(day=1)"/>
+        <field name="date_to" eval="((datetime.now() - timedelta(days=80)).date().replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)"/>
+        <field name="used_count" eval="1"/>
+    </record>
+    <record id="usage_bank_c_eighty_days_ago" model="pos.bank.card.usage">
+        <field name="program_id" ref="program_bank_c"/>
+        <field name="bin_range_id" ref="bin_bank_c_classic"/>
+        <field name="config_id" ref="pos_config_outlet_2"/>
+        <field name="quota_id" ref="quota_bank_c_eighty_days_ago"/>
+        <field name="date" eval="(datetime.now() - timedelta(days=80)).replace(hour=3, minute=0)"/>
+        <field name="card_bin">900450</field>
+        <field name="card_last4">6666</field>
+        <field name="approval_code">DEMO06</field>
+        <field name="card_brand">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="card_tier">Classic</field>
+        <field name="basis_amount" eval="150000.0"/>
+        <field name="discount_amount" eval="1000.0"/>
+        <field name="bank_share_amount" eval="1000.0"/>
+        <field name="store_share_amount" eval="0.0"/>
         <field name="state">confirmed</field>
     </record>
 </odoo>

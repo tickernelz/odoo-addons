@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools import format_amount
 
 
 class PosBankCardQuota(models.Model):
@@ -20,16 +21,42 @@ class PosBankCardQuota(models.Model):
     remaining_count = fields.Integer(string='Remaining (Transactions)', compute='_compute_remaining')
     remaining_amount = fields.Monetary(
         string='Remaining (Amount)', currency_field='currency_id', compute='_compute_remaining')
+    used_percent = fields.Float(string='Used %', compute='_compute_remaining')
+    limit_display = fields.Char(string='Quota', compute='_compute_display_amounts')
+    used_display = fields.Char(string='Used', compute='_compute_display_amounts')
+    remaining_display = fields.Char(string='Left', compute='_compute_display_amounts')
+
+    @api.depends('used_count', 'used_amount', 'program_id.quota_type',
+                 'program_id.quota_limit_count', 'program_id.quota_limit_amount')
+    def _compute_display_amounts(self):
+        for quota in self:
+            if quota.program_id.quota_type == 'amount':
+                currency = quota.currency_id
+                quota.limit_display = format_amount(self.env, quota.program_id.quota_limit_amount, currency)
+                quota.used_display = format_amount(self.env, quota.used_amount, currency)
+                quota.remaining_display = format_amount(self.env, quota.remaining_amount, currency)
+            else:
+                quota.limit_display = str(quota.program_id.quota_limit_count)
+                quota.used_display = str(quota.used_count)
+                quota.remaining_display = str(quota.remaining_count)
 
     _unique_bucket = models.Constraint(
         'UNIQUE(program_id, date_from, date_to)',
         'There is already a quota bucket for this programme and period.')
 
-    @api.depends('used_count', 'used_amount', 'program_id.quota_limit_count', 'program_id.quota_limit_amount')
+    @api.depends(
+        'used_count', 'used_amount', 'program_id.quota_type',
+        'program_id.quota_limit_count', 'program_id.quota_limit_amount')
     def _compute_remaining(self):
         for quota in self:
             quota.remaining_count = max(quota.program_id.quota_limit_count - quota.used_count, 0)
             quota.remaining_amount = max(quota.program_id.quota_limit_amount - quota.used_amount, 0.0)
+            if quota.program_id.quota_type == 'count' and quota.program_id.quota_limit_count:
+                quota.used_percent = 100.0 * quota.used_count / quota.program_id.quota_limit_count
+            elif quota.program_id.quota_type == 'amount' and quota.program_id.quota_limit_amount:
+                quota.used_percent = 100.0 * quota.used_amount / quota.program_id.quota_limit_amount
+            else:
+                quota.used_percent = 0.0
 
 
 class PosBankCardCardlimit(models.Model):

@@ -5,39 +5,52 @@
         <field name="model">pos.bank.card.claim.wizard</field>
         <field name="arch" type="xml">
             <form string="Claim to Bank">
+                <field name="state" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
                 <group>
-                    <field name="state" invisible="1"/>
-                    <field name="bank_id" readonly="state == 'preview'"/>
-                    <field name="program_id" readonly="state == 'preview'"/>
-                    <field name="date_from" readonly="state == 'preview'"/>
-                    <field name="date_to" readonly="state == 'preview'"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="state == 'preview'"/>
-                    <field name="currency_id" invisible="1"/>
+                    <group name="claim_target">
+                        <field name="bank_id" readonly="state == 'preview'"/>
+                        <field name="program_id" readonly="state == 'preview'"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="state == 'preview'"/>
+                    </group>
+                    <group name="claim_period">
+                        <field name="date_from" readonly="state == 'preview'"/>
+                        <field name="date_to" readonly="state == 'preview'"/>
+                    </group>
                 </group>
-                <group string="Per Outlet" invisible="state != 'preview'">
+                <div class="alert alert-info" role="alert" invisible="state != 'preview' or usage_count">
+                    No unclaimed confirmed usage matches this bank, programme and period. Go back to choose another period or programme.
+                </div>
+                <div invisible="state != 'preview' or not usage_count">
+                    <separator string="Per Outlet"/>
                     <field name="line_ids" readonly="1" nolabel="1">
                         <list create="0" edit="0" delete="0">
                             <field name="config_id" string="Outlet"/>
-                            <field name="usage_count" sum="Usage Lines"/>
-                            <field name="basis_amount" sum="Basis"/>
-                            <field name="discount_amount" sum="Discount"/>
-                            <field name="bank_share_amount" sum="Bank Share"/>
+                            <field name="usage_count" width="100px"/>
+                            <field name="basis_amount"/>
+                            <field name="discount_amount"/>
+                            <field name="bank_share_amount"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>
                     </field>
-                    <field name="usage_count"/>
-                    <field name="total_basis_amount"/>
-                    <field name="total_discount_amount"/>
-                    <field name="total_bank_share_amount"/>
-                </group>
+                    <group>
+                        <group/>
+                        <group name="totals" class="oe_subtotal_footer">
+                            <field name="usage_count"/>
+                            <field name="total_basis_amount"/>
+                            <field name="total_discount_amount"/>
+                            <field name="total_bank_share_amount" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                </div>
                 <footer>
                     <button name="action_preview" string="Preview" type="object"
                             class="btn-primary" invisible="state != 'select'"/>
                     <button name="action_create_claim" string="Create Claim" type="object"
-                            class="btn-primary" invisible="state != 'preview'"/>
+                            class="btn-primary" invisible="state != 'preview' or not usage_count"/>
                     <button name="action_print_pdf" string="Print PDF" type="object"
                             groups="pos_bank_card_program.group_bank_card_finance"
-                            invisible="state != 'preview'"/>
+                            invisible="state != 'preview' or not usage_count"/>
                     <button name="action_back" string="Back" type="object"
                             invisible="state != 'preview'"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>

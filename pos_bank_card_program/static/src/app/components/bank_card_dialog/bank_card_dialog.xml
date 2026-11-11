@@ -44,8 +44,8 @@
                      role="status">
                     <i t-att-class="detection.eligible and !state.serverMessage ? 'fa fa-check-circle me-1' : 'fa fa-exclamation-triangle me-1'"/>
                     <span t-esc="resultMessage"/>
-                    <span t-if="detection.eligible" class="d-block fw-bold">
-                        <t t-esc="env.utils.formatCurrency(detection.discount_amount)"/>
+                    <span t-if="detection.eligible and !state.serverMessage" class="d-block">
+                        Discount: <span class="fw-bold" t-esc="env.utils.formatCurrency(detection.discount_amount)"/>
                     </span>
                 </div>
             </div>
