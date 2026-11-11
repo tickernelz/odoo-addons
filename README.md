@@ -6,6 +6,7 @@ Each addon sits at the root of the branch, so the checkout itself is an addons p
 | Addon | What it does |
 |---|---|
 | [`kaitech_mcp`](kaitech_mcp/README.md) | One MCP (Model Context Protocol) endpoint per database at `POST /mcp/<database>`: per-key access to records, read-only SQL, code exploration and method calls, with a call log. |
+| [`pos_hr_manager_validation`](pos_hr_manager_validation/README.md) | Sensitive point of sale actions wait for a manager validation PIN checked on the server, set per point of sale. |
 
 ## Use
 

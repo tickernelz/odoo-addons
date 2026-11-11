@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr_manager_validation.ManagerPinDialog">
+        <Dialog title="props.title" size="'sm'" bodyClass="'d-flex flex-column o_mv_dialog'">
+            <div t-if="props.subtitle" class="o_mv_subtitle text-center text-muted mb-2" t-esc="props.subtitle"/>
+            <div t-if="props.managers.length > 1" class="o_mv_managers d-flex flex-wrap justify-content-center gap-2 mb-2">
+                <t t-foreach="props.managers" t-as="manager" t-key="manager.id">
+                    <button class="btn" t-att-class="manager.id === state.managerId ? 'btn-primary' : 'btn-secondary'"
+                            t-on-click="() => this.selectManager(manager.id)" t-esc="manager.name"/>
+                </t>
+            </div>
+            <div t-else="" class="o_mv_manager text-center fw-bold mb-2" t-esc="managerName"/>
+            <div class="o_mv_pin popup-input value form-control form-control-lg text-center mb-2">
+                <span t-if="state.pin" class="input-value" t-esc="maskedPin"/>
+                <span t-else="" class="text-muted">Validation PIN</span>
+            </div>
+            <div t-if="state.error" class="o_mv_error alert alert-danger py-2 mb-2 text-center" role="alert" t-esc="state.error"/>
+            <Numpad buttons="buttons" onClick="(value) => this.press(value)"/>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-grow-1 justify-content-center w-100">
+                    <button class="btn btn-primary btn-lg lh-lg o-default-button me-2 flex-fill o_mv_validate"
+                            t-att-disabled="!state.pin or state.busy" t-on-click="confirm">
+                        Validate
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg o-default-button flex-fill" t-on-click="cancel">
+                        Discard
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>
