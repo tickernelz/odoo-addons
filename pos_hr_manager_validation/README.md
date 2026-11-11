@@ -36,10 +36,10 @@ Actions that reach the server without the point of sale screen are checked there
 
 | Path | Check |
 |---|---|
-| Closing a session (POS, backend button, RPC) | Refused without a validation for that session in the last ten minutes |
+| Closing a session (POS, backend button, and every RPC route: closing control, validate, close) | Refused without a validation for that session in the last ten minutes |
 | Cash in/out (RPC) | Refused without a validation; one validation per move |
 | Refund and payment from the backend order form | Opens the validation wizard first; refused without a validation |
-| Cancelling a draft order with lines | Refused without a validation for that order, except while closing a validated session and on restaurant points of sale |
+| Cancelling or deleting a draft order with lines (any route that writes the cancel state or unlinks it) | Refused without a validation for that order, except while closing a validated session, on restaurant points of sale, and for the superuser |
 | Synced orders with a line discount or a global discount, another pricelist or fiscal position, a payment or a refund | Saved, and marked "Unvalidated Actions" when no validation exists for that order |
 
 Removing a line, decreasing a quantity, changing a price and creating a product are guarded on the point of sale
@@ -61,6 +61,9 @@ with a price as manual too.
 
 - The guard on line removal, quantity decrease and product creation is only as strong as the point of sale client.
 - Restaurant points of sale move and merge orders client-side, so cancelling their orders is not checked on the server.
+- The server knows one cashier per session: when two devices share a session, the cashier set last decides
+  whether the manager-at-the-register shortcut applies to calls made outside the point of sale screen. The screen
+  itself still asks for the PIN.
 - A self-order kiosk with session closing validated is closed from the backend session form, which asks for the PIN.
 - With "Restrict Price Modifications to Managers" also on, a cashier without price rights is still refused after the PIN.
 
