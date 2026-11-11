@@ -23,6 +23,14 @@ msgid "%(promotion)s cannot go from %(old)s to %(new)s."
 msgstr "%(promotion)s tidak bisa berpindah dari %(old)s ke %(new)s."
 
 #. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid ""
+"%s is used on point of sale orders and cannot be deleted. Archive it "
+"instead."
+msgstr "%s sudah dipakai di order POS sehingga tidak bisa dihapus. Arsipkan saja."
+
+#. module: kai_pos_promotion
 #: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
 msgid "<span>-</span>"
 msgstr "<span>-</span>"

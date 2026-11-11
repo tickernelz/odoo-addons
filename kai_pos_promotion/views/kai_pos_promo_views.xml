@@ -5,7 +5,7 @@
         <field name="model">kai.pos.promo</field>
         <field name="arch" type="xml">
             <list>
-                <field name="priority" widget="handle"/>
+                <field name="priority" widget="handle" readonly="state != 'draft'"/>
                 <field name="name"/>
                 <field name="promo_type"/>
                 <field name="exclusive_group"/>

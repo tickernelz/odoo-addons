@@ -1,7 +1,7 @@
 {
     'name': 'POS Promotions',
     'summary': 'Tiered promotions, exclusive groups and happy hours for the point of sale, on top of Discount & Loyalty',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Point of Sale',
     'author': 'tickernelz',
     'license': 'LGPL-3',

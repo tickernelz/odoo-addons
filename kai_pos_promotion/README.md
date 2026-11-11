@@ -20,7 +20,8 @@ programmes take part in the same rules.
 - **Cashier screen**: one upsell banner (shortest way to a better discount, or the reached tier), a happy hour
   badge with the time left on product cards, the same banner on the customer display, and the promotion name
   on the order line and receipt.
-- **Approval**: Draft, Waiting Approval, Approved, Active, Ended, Stopped. Only drafts can be edited or deleted.
+- **Approval**: Draft, Waiting Approval, Approved, Active, Ended, Stopped. Only drafts can be edited or deleted;
+  a promotion already used on an order can only be archived, and dragging the list reorders drafts only.
   The Approver group (POS Promotions privilege) approves; an hourly cron starts and ends promotions by date.
 - A warning on the form lists every running promotion and programme that shares the exclusive group.
 
