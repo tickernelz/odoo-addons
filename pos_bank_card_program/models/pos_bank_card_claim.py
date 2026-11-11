@@ -212,21 +212,26 @@ class PosBankCardClaim(models.Model):
             'totals': data['totals'],
         }
 
-    def _claim_pdf_data(self):
+    def _printable_usages(self):
         self.ensure_one()
         self._check_claim_pdf_access()
         usages = self._billable_usages()
         if not usages:
             raise UserError(self.env._('This claim has no confirmed usage to print.'))
+        return usages
+
+    def _claim_pdf_data(self):
         return self._claim_pdf_values(
-            usages, self.bank_id, self.program_id, self.company_id,
+            self._printable_usages(), self.bank_id, self.program_id, self.company_id,
             self.date_from, self.date_to, self.name)
 
     def action_print_pdf(self):
-        self.ensure_one()
-        self._claim_pdf_data()
-        return self.env.ref(
-            'pos_bank_card_program.action_report_bank_card_claim').report_action(self)
+        self._printable_usages()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/report/pdf/pos_bank_card_program.report_bank_card_claim/%s' % self.id,
+            'target': 'new',
+        }
 
     def _build_workbook(self):
         import xlsxwriter

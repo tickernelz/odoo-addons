@@ -108,6 +108,12 @@ class TestClaimPdf(BankCardCommon):
         self.assertEqual(summary['Outlet 1']['basis_amount'], per_outlet[self.outlet_1].basis_amount)
         self.assertIn('Outlet 1', self.render_html(
             'pos_bank_card_program.action_report_bank_card_claim_wizard', wizard, self.finance))
+        action = wizard.action_print_pdf()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertEqual(action['target'], 'new')
+        self.assertEqual(
+            action['url'],
+            '/report/pdf/pos_bank_card_program.report_bank_card_claim_wizard/%s' % wizard.id)
 
         claim = self.env['pos.bank.card.claim'].browse(wizard.action_create_claim()['res_id'])
         claim_data = claim.with_user(self.finance)._claim_pdf_data()
@@ -179,7 +185,11 @@ class TestClaimPdf(BankCardCommon):
             self.render_html(
                 'pos_bank_card_program.action_report_bank_card_claim', claim, self.manager)
         action = claim.with_user(self.finance).action_print_pdf()
-        self.assertEqual(action['type'], 'ir.actions.report')
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertEqual(action['target'], 'new')
+        self.assertEqual(
+            action['url'],
+            '/report/pdf/pos_bank_card_program.report_bank_card_claim/%s' % claim.id)
 
     def test_report_works_on_demo_usage_when_loaded(self):
         demo_usage = self.env.ref(

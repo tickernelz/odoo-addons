@@ -146,6 +146,7 @@ msgstr ""
 #: code:addons/pos_bank_card_program/static/src/app/components/bank_card_dialog/bank_card_dialog.xml:0
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__approval_code
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__approval_code
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Approval Code"
 msgstr ""
 
@@ -225,6 +226,8 @@ msgstr ""
 #: code:addons/pos_bank_card_program/wizard/pos_bank_card_claim_wizard.py:0
 #: model:ir.model,name:pos_bank_card_program.model_pos_bank_card_claim
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
+#: model:ir.actions.report,name:pos_bank_card_program.action_report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Bank Card Claim"
 msgstr ""
 
@@ -389,6 +392,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Bank Share"
 msgstr ""
 
@@ -421,6 +425,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__basis_amount
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim_wizard_line__basis_amount
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Basis"
 msgstr ""
 
@@ -460,6 +467,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__masked_card
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__masked_card
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Card"
 msgstr ""
 
@@ -681,6 +689,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_usage__date
 #: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_claim_column__code__date
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Date"
 msgstr ""
 
@@ -705,6 +714,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_program_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Discount"
 msgstr ""
 
@@ -1193,6 +1203,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_usage_search
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Outlet"
 msgstr ""
 
@@ -1577,7 +1588,7 @@ msgid "Summary"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Summary by Outlet"
 msgstr ""
 
@@ -1938,7 +1949,7 @@ msgid "Transaction"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Transaction Details"
 msgstr ""
 
@@ -1962,6 +1973,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_list
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_outstanding_list
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "Usage Lines"
 msgstr ""
 
@@ -2071,36 +2083,36 @@ msgid "'Claim - %s' % (object.name or '')"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Bank</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Claim Number</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Company</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Period</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Printed On</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Programme</strong>"
 msgstr ""
 
 #. module: pos_bank_card_program
-#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim
+#: model_terms:ir.ui.view,arch_db:pos_bank_card_program.report_bank_card_claim_document
 msgid "<strong>Total</strong>"
 msgstr ""

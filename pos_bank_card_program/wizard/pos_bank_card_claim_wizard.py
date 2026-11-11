@@ -111,23 +111,27 @@ class PosBankCardClaimWizard(models.TransientModel):
         self.write({'line_ids': lines, 'state': 'preview'})
         return self._reopen()
 
-    def _claim_pdf_data(self):
+    def _check_printable(self):
         self.ensure_one()
-        claim_model = self.env['pos.bank.card.claim']
-        claim_model._check_claim_pdf_access()
-        usages = self.env['pos.bank.card.usage'].search(self._usage_domain(), order='date, id')
-        if not usages:
+        self.env['pos.bank.card.claim']._check_claim_pdf_access()
+        if not self.env['pos.bank.card.usage'].search_count(self._usage_domain(), limit=1):
             raise UserError(self.env._(
                 'No unclaimed confirmed usage matches this bank, programme and period.'))
-        return claim_model._claim_pdf_values(
+
+    def _claim_pdf_data(self):
+        self._check_printable()
+        usages = self.env['pos.bank.card.usage'].search(self._usage_domain(), order='date, id')
+        return self.env['pos.bank.card.claim']._claim_pdf_values(
             usages, self.bank_id, self.program_id, self.company_id,
             self.date_from, self.date_to, False)
 
     def action_print_pdf(self):
-        self.ensure_one()
-        self._claim_pdf_data()
-        return self.env.ref(
-            'pos_bank_card_program.action_report_bank_card_claim_wizard').report_action(self)
+        self._check_printable()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/report/pdf/pos_bank_card_program.report_bank_card_claim_wizard/%s' % self.id,
+            'target': 'new',
+        }
 
     def action_back(self):
         self.ensure_one()
