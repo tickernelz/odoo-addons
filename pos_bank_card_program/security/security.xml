@@ -16,6 +16,9 @@
         <field name="sequence">20</field>
         <field name="privilege_id" ref="res_groups_privilege_bank_card"/>
     </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="group_ids" eval="[(4, ref('group_bank_card_manager')), (4, ref('group_bank_card_finance'))]"/>
+    </record>
 
     <record id="rule_bank_card_program_company" model="ir.rule">
         <field name="name">Bank Card Programme: company</field>

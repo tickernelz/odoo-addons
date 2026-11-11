@@ -1,4 +1,5 @@
 from . import test_access
+from . import test_admin_groups
 from . import test_company
 from . import test_bin_range
 from . import test_detection
