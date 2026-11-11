@@ -23,17 +23,20 @@ class PosOrder(models.Model):
         self.ensure_one()
         return 'pos.order,%s' % self.id
 
-    def _mv_check_deletion(self):
+    def _mv_check_deletion(self, consume=True):
         if self.env.su:
-            return
+            return []
         Validation = self.env['pos.manager.validation']
+        checked = []
         for order in self.filtered(lambda order: order.state == 'draft' and order.lines):
             config = order.config_id
             if not config._mv_guards('delete_order') or config.module_pos_restaurant:
                 continue
             if Validation._mv_find_grant(config, 'close_session', [order.session_id._mv_reference()], include_consumed=True):
                 continue
-            Validation._mv_require(config, 'delete_order', order.uuid, session=order.session_id)
+            Validation._mv_require(config, 'delete_order', order.uuid, session=order.session_id, consume=consume)
+            checked.append((config, order.uuid))
+        return checked
 
     def write(self, vals):
         if vals.get('state') == 'cancel':
@@ -41,8 +44,12 @@ class PosOrder(models.Model):
         return super().write(vals)
 
     def unlink(self):
-        self._mv_check_deletion()
-        return super().unlink()
+        checked = self._mv_check_deletion(consume=False)
+        result = super().unlink()
+        Validation = self.env['pos.manager.validation']
+        for config, uuid in checked:
+            Validation._mv_consume(config, 'delete_order', uuid)
+        return result
 
     def refund(self):
         for order in self:
