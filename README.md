@@ -21,7 +21,7 @@ Each addon sits at the root of the branch, so the checkout itself is an addons p
 
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) runs on every push to `19.0` and `19.0-*` and on pull requests into `19.0`: lint, module tests on the official `odoo:19.0` image and on a pinned Odoo core commit, i18n checks, and a multi-database harness.
+GitHub Actions (`.github/workflows/ci.yml`) runs on every push to `19.0` and `19.0-*` and on pull requests into `19.0`: lint and a depends cycle check (`ci/addons.py graph`), installs of every addon one by one in forward and reverse order (`ci/install-orders.sh`), module tests on the official `odoo:19.0` image and on a pinned Odoo core commit, i18n checks, and a multi-database harness.
 
 ## License
 

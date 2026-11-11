@@ -29,6 +29,7 @@ jobs:
       - run: pip install -q ruff==0.15.0
       - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp pos_bank_card_program pos_checkout_extras ci
       - run: python -m compileall -q kaitech_mcp pos_bank_card_program pos_checkout_extras
+      - run: python ci/addons.py graph
 
   odoo19-image:
     runs-on: ubuntu-24.04
@@ -87,6 +88,27 @@ jobs:
           name: odoo19-pinned-core-log
           path: odoo-tests.log
           retention-days: 14
+
+  install-orders:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: odoo:19.0
+      options: --user root
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 30
+    env:
+      DB_HOST: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/install-orders.sh
 
   i18n-template:
     runs-on: ubuntu-24.04
