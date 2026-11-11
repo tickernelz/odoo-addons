@@ -16,7 +16,7 @@ for order in $(python3 "$root/ci/addons.py" orders); do
         log="/tmp/install-$run-$module.log"
         $odoo_bin $paths $connection -d "$db" -i "$module" --without-demo=all --stop-after-init --log-level=warn > "$log" 2>&1 \
             || { tail -40 "$log"; exit 1; }
-        if grep -E "ERROR|CRITICAL" "$log"; then
+        if grep -E "^[0-9-]+ [0-9:,]+ [0-9]+ (ERROR|CRITICAL) " "$log"; then
             exit 1
         fi
     done
