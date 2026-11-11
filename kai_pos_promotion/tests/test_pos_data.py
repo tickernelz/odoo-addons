@@ -1,4 +1,5 @@
-from odoo import fields
+from odoo import Command, fields
+from odoo.exceptions import UserError
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.tests import tagged
 
@@ -59,3 +60,18 @@ class TestPromoPosData(TestPoSCommon):
         data = self._load(self.config)
         self.assertFalse(data['kai.pos.promo'])
         self.assertEqual(fields.Date.today() > self.everywhere.date_end, True)
+
+    def test_used_draft_promotion_asks_to_archive_instead_of_delete(self):
+        self.config.open_ui()
+        self.env['pos.order'].create({
+            'session_id': self.config.current_session_id.id,
+            'amount_tax': 0, 'amount_total': 0, 'amount_paid': 0, 'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': self.draft.discount_product_id.id, 'qty': 1, 'price_unit': 0,
+                'price_subtotal': 0, 'price_subtotal_incl': 0, 'kai_promo_id': self.draft.id,
+            })],
+        })
+        with self.assertRaisesRegex(UserError, 'Archive it instead'):
+            self.draft.unlink()
+        self.draft.action_archive()
+        self.assertFalse(self.draft.active)

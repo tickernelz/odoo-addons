@@ -44,6 +44,15 @@ class TestPromoLifecycle(PromoCommon):
         self.seminyak.name = 'Renamed'
         self.assertEqual(self.seminyak.name, 'Renamed')
 
+    def test_dragging_the_list_reorders_only_drafts(self):
+        first = tier_promo(self.env, 'First Draft', [(1000, 'percent', 5)])
+        second = tier_promo(self.env, 'Second Draft', [(1000, 'percent', 6)])
+        activate(self.seminyak)
+        dragged = self.env['kai.pos.promo'].browse([second.id, self.seminyak.id, first.id])
+        rows = dragged.web_resequence({'priority': {}}, 'priority', 1)
+        self.assertEqual([row['priority'] for row in rows], [1, 10, 3])
+        self.assertEqual((second.priority, self.seminyak.priority, first.priority), (1, 10, 3))
+
     def test_only_an_approver_approves(self):
         manager = new_test_user(self.env, 'kai_manager', groups='point_of_sale.group_pos_manager')
         approver = new_test_user(self.env, 'kai_approver', groups='kai_pos_promotion.group_kai_promo_approver')

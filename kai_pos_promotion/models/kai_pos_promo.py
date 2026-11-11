@@ -175,6 +175,20 @@ class KaiPosPromo(models.Model):
         if any(promo.state != 'draft' for promo in self):
             raise UserError(_('Only a draft promotion can be deleted. Stop it instead.'))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_unused(self):
+        used = self.env['pos.order.line'].sudo().search([('kai_promo_id', 'in', self.ids)], limit=1).kai_promo_id
+        if used:
+            raise UserError(_('%s is used on point of sale orders and cannot be deleted. Archive it instead.', used.name))
+
+    def web_resequence(self, specification, field_name='sequence', offset=0):
+        if field_name != 'priority':
+            return super().web_resequence(specification, field_name, offset)
+        for priority, promo in enumerate(self, start=offset):
+            if promo.state == 'draft':
+                promo.write({'priority': priority})
+        return self.web_read(specification)
+
     def action_submit(self):
         for promo in self:
             if promo.state != 'draft':
