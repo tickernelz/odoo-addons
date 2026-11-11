@@ -42,15 +42,6 @@ msgstr ""
 "2001:db8::/32"
 
 #. module: kaitech_mcp_server
-#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
-msgid ""
-"203.0.113.5\n"
-"198.51.100.0/24"
-msgstr ""
-"203.0.113.5\n"
-"198.51.100.0/24"
-
-#. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
 msgid ""
 "<strong>Save this token now.</strong>\n"

@@ -3,6 +3,8 @@ import json
 import logging
 from datetime import timedelta
 
+import psycopg2.errors
+
 from werkzeug.wrappers import Response
 
 from odoo.fields import Datetime
@@ -83,7 +85,11 @@ def validate_token(token: str, env) -> dict | None:
     # Throttle: only update last_used if never set OR stale by > threshold
     threshold = now - timedelta(minutes=_LAST_USED_THROTTLE_MINUTES)
     if not rec.last_used or rec.last_used < threshold:
-        rec.write({"last_used": now})
+        try:
+            with env.cr.savepoint():
+                rec.write({"last_used": now})
+        except psycopg2.errors.SerializationFailure:
+            _logger.debug("MCP token %s: last_used left to a concurrent request", rec.id)
 
     # Full Access means no model or field restriction, even when the token still
     # holds an allowlist or denylist from an earlier configuration.

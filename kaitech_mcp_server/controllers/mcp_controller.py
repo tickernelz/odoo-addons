@@ -433,11 +433,12 @@ def _update_http_session(env, session_db_id: int | None, message_delta: int) -> 
     if not session_db_id:
         return
     try:
-        env.cr.execute(
-            "UPDATE mcp_session SET message_count = message_count + %s, "
-            "last_activity = NOW() AT TIME ZONE 'UTC' WHERE id = %s",
-            (message_delta, session_db_id),
-        )
+        with env.cr.savepoint(flush=False):
+            env.cr.execute(
+                "UPDATE mcp_session SET message_count = message_count + %s, "
+                "last_activity = NOW() AT TIME ZONE 'UTC' WHERE id = %s",
+                (message_delta, session_db_id),
+            )
         env.cr.commit()
     except Exception:
         _logger.debug("Could not update HTTP session stats db_id=%s", session_db_id)

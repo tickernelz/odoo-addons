@@ -216,7 +216,8 @@ def _log_tool_call(env, session_db_id, transport, tool_name, tool_input,
         if response_payload is not None:
             vals["response_payload"] = response_payload
 
-        env["mcp.session.log"].sudo().create(vals)
+        with env.cr.savepoint():
+            env["mcp.session.log"].sudo().create(vals)
     except Exception:
         _logger.debug("Failed to create mcp.session.log", exc_info=True)
 

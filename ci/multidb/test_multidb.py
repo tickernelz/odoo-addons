@@ -48,7 +48,8 @@ def provision(db):
     call = admin_rpc(db)
     groups = [xmlid(call, name) for name in ("base.group_user", "base.group_partner_manager")]
     login = "mcp_%s_%s_%s" % (SCENARIO, db, RUN)
-    user_id = call("res.users", "create", {"name": login, "login": login, "group_ids": [(6, 0, groups)]})
+    user_id = call("res.users", "create", {"name": login, "login": login, "group_ids": [(6, 0, groups)],
+                                           "mcp_rate_limit": 1000000 if SCENARIO == "perf" else 0})
     call("res.partner", "create", {"name": "Marker %s %s" % (db, RUN)})
     raw = secrets.token_urlsafe(32)
     call("mcp.token", "create", {
