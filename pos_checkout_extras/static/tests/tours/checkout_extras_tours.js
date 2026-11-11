@@ -1,7 +1,5 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
-import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -15,11 +13,45 @@ function openRegister() {
 }
 
 function customerDialog() {
-    return Dialog.is({ title: "Customer required" });
+    return {
+        content: "the customer required dialog is open",
+        trigger: ".modal .modal-header:contains(Customer required)",
+    };
+}
+
+function cancelCustomerDialog() {
+    return {
+        content: "cancel the customer required dialog",
+        trigger: ".modal .modal-footer button:contains(Cancel)",
+        run: "click",
+    };
 }
 
 function selectCustomer() {
-    return [Dialog.confirm("Select customer"), PartnerList.clickPartner(CUSTOMER)];
+    return [
+        {
+            content: "choose to select a customer",
+            trigger: ".modal .modal-footer button:contains(Select customer)",
+            run: "click",
+        },
+        {
+            content: "pick the customer",
+            trigger: `.modal .partner-list b:contains(${CUSTOMER})`,
+            run: "click",
+        },
+    ];
+}
+
+function productScreen() {
+    return { content: "product screen is shown", trigger: ".product-screen" };
+}
+
+function paymentScreen() {
+    return { content: "payment screen is shown", trigger: ".payment-screen" };
+}
+
+function receiptScreen() {
+    return { content: "receipt screen is shown", trigger: ".receipt-screen" };
 }
 
 function requiredBadge(scope) {
@@ -37,16 +69,16 @@ registry.category("web_tour.tours").add("pos_checkout_extras_order_mode", {
             requiredBadge(".product-screen"),
             ProductScreen.clickPayButton(false),
             customerDialog(),
-            Dialog.cancel(),
-            ProductScreen.isShown(),
+            cancelCustomerDialog(),
+            productScreen(),
             ProductScreen.clickPayButton(false),
             customerDialog(),
             selectCustomer(),
-            PaymentScreen.isShown(),
+            paymentScreen(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-        ].flat(),
+            receiptScreen(),
+        ].flat(Infinity),
 });
 
 registry.category("web_tour.tours").add("pos_checkout_extras_payment_mode", {
@@ -60,8 +92,8 @@ registry.category("web_tour.tours").add("pos_checkout_extras_payment_mode", {
             PaymentScreen.clickValidate(),
             customerDialog(),
             selectCustomer(),
-            ReceiptScreen.isShown(),
-        ].flat(),
+            receiptScreen(),
+        ].flat(Infinity),
 });
 
 registry.category("web_tour.tours").add("pos_checkout_extras_fast_payment", {
@@ -69,11 +101,15 @@ registry.category("web_tour.tours").add("pos_checkout_extras_fast_payment", {
         [
             ...openRegister(),
             ProductScreen.addOrderline(PRODUCT, "1"),
-            ProductScreen.clickFastPaymentButton("Bank"),
+            {
+                content: "pay with the fast payment button",
+                trigger: ".product-screen .fast-pay-button:contains(Bank)",
+                run: "click",
+            },
             customerDialog(),
             selectCustomer(),
-            ReceiptScreen.isShown(),
-        ].flat(),
+            receiptScreen(),
+        ].flat(Infinity),
 });
 
 registry.category("web_tour.tours").add("pos_checkout_extras_payment_reference", {
@@ -99,12 +135,12 @@ registry.category("web_tour.tours").add("pos_checkout_extras_payment_reference",
             },
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            receiptScreen(),
             {
                 content: "the receipt prints the reference",
                 trigger: ".pos-receipt-payment-reference:contains(TRF-2026-0001)",
             },
-        ].flat(),
+        ].flat(Infinity),
 });
 
 registry.category("web_tour.tours").add("pos_checkout_extras_refund", {
@@ -115,11 +151,11 @@ registry.category("web_tour.tours").add("pos_checkout_extras_refund", {
             TicketScreen.selectOrder("Refundable Order"),
             ProductScreen.clickNumpad("1"),
             TicketScreen.confirmRefund(),
-            PaymentScreen.isShown(),
+            paymentScreen(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-        ].flat(),
+            receiptScreen(),
+        ].flat(Infinity),
 });
 
 registry.category("web_tour.tours").add("pos_checkout_extras_with_bank_card", {
@@ -130,7 +166,7 @@ registry.category("web_tour.tours").add("pos_checkout_extras_with_bank_card", {
             ProductScreen.clickPayButton(false),
             customerDialog(),
             selectCustomer(),
-            PaymentScreen.isShown(),
+            paymentScreen(),
             {
                 content: "add the payment reference",
                 trigger: ".payment-screen .o-payment-reference-button",
@@ -143,7 +179,7 @@ registry.category("web_tour.tours").add("pos_checkout_extras_with_bank_card", {
             },
             Dialog.confirm(),
             PaymentScreen.clickPaymentMethod("Card Bank"),
-            Dialog.is({ title: "Bank Card Programme" }),
+            { content: "card dialog is open", trigger: ".modal .modal-header:contains(Bank Card Programme)" },
             { content: "enter card prefix", trigger: "#bank-card-bin", run: "edit 900150" },
             { content: "enter last four digits", trigger: "#bank-card-last4", run: "edit 1234" },
             { content: "enter approval code", trigger: "#bank-card-approval", run: "edit AP1234" },
@@ -153,11 +189,11 @@ registry.category("web_tour.tours").add("pos_checkout_extras_with_bank_card", {
                 run: "click",
             },
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            receiptScreen(),
             { content: "receipt shows the card block", trigger: ".pos-receipt-bank-card" },
             {
                 content: "receipt shows the payment reference",
                 trigger: ".pos-receipt-payment-reference:contains(EDC-778899)",
             },
-        ].flat(),
+        ].flat(Infinity),
 });
