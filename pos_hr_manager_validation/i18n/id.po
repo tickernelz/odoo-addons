@@ -60,6 +60,11 @@ msgstr ""
 "dihapus."
 
 #. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_employee_form
+msgid "6 to 12 digits"
+msgstr "6 sampai 12 digit"
+
+#. module: pos_hr_manager_validation
 #: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_pos_pos_form
 msgid "<span>Done without manager validation: </span>"
 msgstr "<span>Dilakukan tanpa validasi manajer: </span>"
@@ -81,11 +86,6 @@ msgstr "Aksi"
 #: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__mv_unvalidated_display
 msgid "Actions Without Manager Validation"
 msgstr "Aksi Tanpa Validasi Manajer"
-
-#. module: pos_hr_manager_validation
-#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_employee_form
-msgid "At least 6 digits"
-msgstr "Minimal 6 digit"
 
 #. module: pos_hr_manager_validation
 #: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__origin__backend
@@ -476,13 +476,13 @@ msgstr "Model Res"
 #. module: pos_hr_manager_validation
 #: model:ir.model.fields,help:pos_hr_manager_validation.field_hr_employee__pos_validation_pin
 msgid ""
-"Second PIN, at least six digits, that this employee types to validate "
+"Second PIN of six to twelve digits, that this employee types to validate "
 "sensitive point of sale actions. It is checked on the server only and never "
 "sent to the point of sale."
 msgstr ""
-"PIN kedua, minimal enam digit, yang diketik karyawan ini untuk memvalidasi "
-"aksi sensitif di POS. Diperiksa hanya di server dan tidak pernah dikirim ke "
-"POS."
+"PIN kedua, enam sampai dua belas digit, yang diketik karyawan ini untuk "
+"memvalidasi aksi sensitif di POS. Diperiksa hanya di server dan tidak pernah"
+" dikirim ke POS."
 
 #. module: pos_hr_manager_validation
 #: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.res_config_settings_view_form
@@ -511,8 +511,10 @@ msgstr "PIN validasi POS harus berbeda dari PIN untuk masuk ke POS."
 #. module: pos_hr_manager_validation
 #. odoo-python
 #: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
-msgid "The POS validation PIN must have at least %s digits, digits only."
-msgstr "PIN validasi POS minimal %s digit dan hanya berisi angka."
+msgid ""
+"The POS validation PIN must have %(min)s to %(max)s digits, digits only."
+msgstr ""
+"PIN validasi POS harus %(min)s sampai %(max)s digit dan hanya berisi angka."
 
 #. module: pos_hr_manager_validation
 #. odoo-javascript

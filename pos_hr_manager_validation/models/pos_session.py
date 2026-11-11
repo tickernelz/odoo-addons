@@ -29,12 +29,12 @@ class PosSession(models.Model):
             ]).write({'consumed': True})
         return super().write(vals)
 
-    def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+    def action_pos_session_close(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         Validation = self.env['pos.manager.validation']
         guarded = self.filtered(lambda session: session.config_id._mv_guards('close_session'))
         for session in guarded:
             Validation._mv_require(session.config_id, 'close_session', session._mv_reference(), session=session, consume=False)
-        result = super().action_pos_session_closing_control(
+        result = super().action_pos_session_close(
             balancing_account=balancing_account, amount_to_balance=amount_to_balance,
             bank_payment_method_diffs=bank_payment_method_diffs)
         for session in guarded.filtered(lambda session: session.state == 'closed'):

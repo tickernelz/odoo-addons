@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='pin']" position="after">
-                <field name="pos_validation_pin" password="True" placeholder="At least 6 digits"
+                <field name="pos_validation_pin" password="True" placeholder="6 to 12 digits"
                        groups="hr.group_hr_user"/>
                 <field name="pos_validation_pin_set" groups="hr.group_hr_user"/>
             </xpath>

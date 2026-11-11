@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 MIN_PIN_LENGTH = 6
+MAX_PIN_LENGTH = 12
 PIN_CONTEXT = CryptContext(['pbkdf2_sha512'], pbkdf2_sha512__default_rounds=50000)
 
 
@@ -13,7 +14,7 @@ class HrEmployee(models.Model):
     pos_validation_pin = fields.Char(
         string='POS Validation PIN', compute='_compute_pos_validation_pin', inverse='_inverse_pos_validation_pin',
         groups='hr.group_hr_user', copy=False,
-        help='Second PIN, at least six digits, that this employee types to validate sensitive point of sale actions. '
+        help='Second PIN of six to twelve digits, that this employee types to validate sensitive point of sale actions. '
              'It is checked on the server only and never sent to the point of sale.')
     pos_validation_pin_hash = fields.Char(groups='base.group_system', copy=False)
     pos_validation_pin_set = fields.Boolean(
@@ -38,8 +39,10 @@ class HrEmployee(models.Model):
                         employee.name))
                 employee.sudo().pos_validation_pin_hash = False
                 continue
-            if not pin.isdigit() or len(pin) < MIN_PIN_LENGTH:
-                raise ValidationError(_('The POS validation PIN must have at least %s digits, digits only.', MIN_PIN_LENGTH))
+            if not pin.isdigit() or not MIN_PIN_LENGTH <= len(pin) <= MAX_PIN_LENGTH:
+                raise ValidationError(_(
+                    'The POS validation PIN must have %(min)s to %(max)s digits, digits only.',
+                    min=MIN_PIN_LENGTH, max=MAX_PIN_LENGTH))
             if employee.sudo().pin == pin:
                 raise ValidationError(_('The POS validation PIN must differ from the PIN used to log in to the point of sale.'))
             employee.sudo().pos_validation_pin_hash = PIN_CONTEXT.hash(pin)

@@ -17,6 +17,17 @@ class TestServerGuards(ManagerValidationCommon):
         self.assertEqual(session.state, 'closed')
         self.assertTrue(self.Validation.search([('action', '=', 'close_session')]).consumed)
 
+    def test_every_closing_route_needs_a_validation(self):
+        self.guard('close_session')
+        for method in ('action_pos_session_close', 'action_pos_session_validate', 'close_session_from_ui'):
+            session = self.open_session()
+            with self.assertRaises(UserError):
+                getattr(session.with_user(self.pos_user), method)()
+            self.assertNotEqual(session.state, 'closed', method)
+            self.verify(session, 'close_session', MANAGER_PIN, reference=session._mv_reference())
+            getattr(session.with_user(self.pos_user), method)()
+            self.assertEqual(session.state, 'closed', method)
+
     def test_backend_closing_goes_through_the_wizard(self):
         self.guard('close_session')
         session = self.open_session()
@@ -115,3 +126,23 @@ class TestServerGuards(ManagerValidationCommon):
         self.verify(session, 'delete_order', MANAGER_PIN, reference=order.uuid)
         order.with_user(self.pos_user).action_pos_order_cancel()
         self.assertEqual(order.state, 'cancel')
+
+    def test_every_deletion_route_needs_a_validation(self):
+        self.guard('delete_order')
+        session = self.open_session()
+        draft = dict(state='draft', payment_ids=[], amount_paid=0)
+        routes = {
+            'write': lambda order: order.write({'state': 'cancel'}),
+            'unlink': lambda order: order.unlink(),
+            'remove_from_ui': lambda order: order.remove_from_ui(order.ids),
+        }
+        for name, route in routes.items():
+            data = self.order_data(session)
+            data.update(draft)
+            order = self.sync(session, data)
+            with self.assertRaises(UserError):
+                route(order.with_user(self.pos_user))
+            self.assertEqual(order.state, 'draft', name)
+            self.verify(session, 'delete_order', MANAGER_PIN, reference=order.uuid)
+            route(order.with_user(self.pos_user))
+            self.assertFalse(order.exists() and order.state == 'draft', name)

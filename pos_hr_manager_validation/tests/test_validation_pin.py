@@ -18,9 +18,13 @@ class TestValidationPin(ManagerValidationCommon):
         self.assertFalse(self.manager._pos_validation_pin_matches('482916'))
 
     def test_validation_pin_needs_six_digits(self):
-        for pin in ('12345', '12345a', 'abcdef'):
+        for pin in ('12345', '12345a', 'abcdef', '1234567890123'):
             with self.assertRaises(ValidationError):
                 self.second_manager.pos_validation_pin = pin
+
+    def test_validation_pin_accepts_twelve_digits(self):
+        self.second_manager.pos_validation_pin = '123456789012'
+        self.assertTrue(self.second_manager._pos_validation_pin_matches('123456789012'))
 
     def test_validation_pin_differs_from_login_pin(self):
         self.manager.pin = '565100'

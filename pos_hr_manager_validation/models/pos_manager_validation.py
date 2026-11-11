@@ -127,7 +127,7 @@ class PosManagerValidation(models.Model):
         ], limit=1)
 
     @api.model
-    def _mv_find_grant(self, config, action, references, session=False, include_consumed=False):
+    def _mv_find_grant(self, config, action, references, include_consumed=False):
         domain = [
             ('config_id', '=', config.id),
             ('action', '=', action),
@@ -159,7 +159,7 @@ class PosManagerValidation(models.Model):
                 'consumed': True,
             })
             return True
-        grant = self._mv_find_grant(config, action, [reference], session=session)
+        grant = self._mv_find_grant(config, action, [reference])
         if not grant:
             raise UserError(_('A manager must validate this action with a POS validation PIN first.'))
         if consume:

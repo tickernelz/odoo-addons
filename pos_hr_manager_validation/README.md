@@ -11,7 +11,7 @@ Sensitive point of sale actions wait for a manager validation PIN, set per point
   removing an order line, validating a payment, applying a discount (line or global), changing a price,
   decreasing a quantity, cash in/out, creating a product, changing the fiscal position, changing the pricelist,
   and refunding.
-- The manager types a separate POS validation PIN of at least six digits, set in the HR Settings tab of the
+- The manager types a separate POS validation PIN of six to twelve digits, set in the HR Settings tab of the
   employee. It is not the PIN used to log in to the point of sale and must differ from it. The PIN can be typed
   on the dialog keypad (mouse or touch) or on a physical keyboard; scanned barcodes are ignored while the
   dialog is open.
