@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:51+0000\n"
-"PO-Revision-Date: 2026-11-11 11:51+0000\n"
+"POT-Creation-Date: 2026-11-11 12:23+0000\n"
+"PO-Revision-Date: 2026-11-11 12:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: id\n"
@@ -27,6 +27,11 @@ msgstr "'filters' harus berupa array JSON."
 #: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
 msgid "'widgets' must be a JSON array."
 msgstr "'widgets' harus berupa array JSON."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "/path/to/custom/addons"
+msgstr "/path/to/custom/addons"
 
 #. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
@@ -74,6 +79,18 @@ msgstr "Halaman portal dengan slug ini sudah ada. Pilih slug lain."
 #: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__license__agpl-3
 msgid "AGPL-3"
 msgstr "AGPL-3"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
+msgid ""
+"Absolute filesystem path where the install action extracts generated module "
+"ZIPs. Must be a custom addons path registered in Odoo, writable by the Odoo "
+"process, and must NOT be inside community/ or enterprise/ directories."
+msgstr ""
+"Path filesystem absolut tempat aksi instal mengekstrak ZIP modul yang "
+"dihasilkan. Harus berupa path addons kustom yang terdaftar di Odoo, dapat "
+"ditulis oleh proses Odoo, dan TIDAK boleh berada di dalam direktori "
+"community/ atau enterprise/."
 
 #. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
@@ -839,11 +856,11 @@ msgstr "Path modul yang dibuat %(path)s tidak dapat ditulis oleh proses Odoo."
 #. odoo-python
 #: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
 msgid ""
-"Generated modules path is not configured. The server administrator sets "
-"mcp_generated_modules_path in the Odoo configuration file."
+"Generated modules path is not configured. Go to Settings > MCP Server and "
+"set 'Generated Modules Path' first."
 msgstr ""
-"Path modul yang dibuat belum dikonfigurasi. Administrator server mengatur "
-"mcp_generated_modules_path di file konfigurasi Odoo."
+"Path modul yang dihasilkan belum dikonfigurasi. Buka Settings > MCP Server "
+"dan atur 'Generated Modules Path' terlebih dahulu."
 
 #. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
@@ -1030,6 +1047,11 @@ msgid "Insert"
 msgstr "Sisipkan"
 
 #. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid "Install Allowed on This Server"
+msgstr "Instalasi Diizinkan di Server Ini"
+
+#. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
 msgid "Install on This Instance"
 msgstr "Instal di Instance Ini"
@@ -1054,6 +1076,17 @@ msgstr "Terinstal"
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__installed_at
 msgid "Installed At"
 msgstr "Diinstal Pada"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Installing generated modules is switched off on this server. The server "
+"administrator sets mcp_module_generator = True in the Odoo configuration "
+"file."
+msgstr ""
+"Instalasi modul yang dihasilkan dinonaktifkan di server ini. Administrator "
+"server mengatur mcp_module_generator = True di file konfigurasi Odoo."
 
 #. module: kaitech_mcp_server
 #. odoo-python
@@ -2207,17 +2240,6 @@ msgid "Sessions"
 msgstr "Sesi"
 
 #. module: kaitech_mcp_server
-#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
-msgid ""
-"Set by the server administrator as mcp_generated_modules_path in the Odoo "
-"configuration file. Installing generated modules stays off while it is "
-"empty."
-msgstr ""
-"Ditetapkan oleh administrator server sebagai mcp_generated_modules_path di "
-"file konfigurasi Odoo. Pemasangan modul yang dihasilkan tetap nonaktif "
-"selama nilainya kosong."
-
-#. module: kaitech_mcp_server
 #: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_settings
 #: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_settings
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
@@ -2626,9 +2648,13 @@ msgid "hr_payslip*, account_move_line"
 msgstr "hr_payslip*, account_move_line"
 
 #. module: kaitech_mcp_server
-#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
-msgid "mcp_generated_modules_path in the Odoo configuration file"
-msgstr "mcp_generated_modules_path di file konfigurasi Odoo"
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid ""
+"mcp_module_generator = True in the Odoo configuration file. Without it, "
+"generated modules can be generated and validated but not installed."
+msgstr ""
+"mcp_module_generator = True di file konfigurasi Odoo. Tanpa ini, modul dapat"
+" dihasilkan dan divalidasi, tetapi tidak dapat diinstal."
 
 #. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__duration_ms

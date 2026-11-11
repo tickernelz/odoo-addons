@@ -83,7 +83,12 @@
                                            class="col-lg-4 o_light_label"
                                            string="Generated Modules Path"/>
                                     <field name="mcp_generated_modules_path" class="col-lg-8"
-                                           placeholder="mcp_generated_modules_path in the Odoo configuration file"/>
+                                           placeholder="/path/to/custom/addons"/>
+                                </div>
+                                <div class="row">
+                                    <label for="mcp_module_generator_server"
+                                           class="col-lg-4 o_light_label"/>
+                                    <field name="mcp_module_generator_server" class="col-lg-8" readonly="1"/>
                                 </div>
                             </div>
                         </setting>

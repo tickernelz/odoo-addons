@@ -197,7 +197,8 @@ class McpGeneratedModule(models.Model):
     def action_install(self):
         """Extract ZIP to configured addons path and install via Odoo module manager.
 
-        Requires mcp_generated_modules_path in the Odoo configuration file.
+        Requires mcp_module_generator = True in the Odoo configuration file and
+        ir.config_parameter 'mcp_server.generated_modules_path'.
         Path must exist, be writable, and must NOT be inside community/ or enterprise/.
         """
         self.ensure_one()
@@ -209,11 +210,17 @@ class McpGeneratedModule(models.Model):
         if not self.attachment_id:
             raise UserError(_("No ZIP archive found. Generate the module first."))
 
-        base_path = (config.get("mcp_generated_modules_path") or "").strip()
+        if str(config.get("mcp_module_generator") or "").strip().lower() not in ("1", "true", "yes"):
+            raise UserError(_(
+                "Installing generated modules is switched off on this server. The server administrator "
+                "sets mcp_module_generator = True in the Odoo configuration file."
+            ))
+        base_path = self.env["ir.config_parameter"].sudo().get_param(
+            "mcp_server.generated_modules_path", "").strip()
         if not base_path:
             raise UserError(_(
-                "Generated modules path is not configured. The server administrator sets "
-                "mcp_generated_modules_path in the Odoo configuration file."
+                "Generated modules path is not configured. "
+                "Go to Settings > MCP Server and set 'Generated Modules Path' first."
             ))
 
         base_path = os.path.realpath(base_path)

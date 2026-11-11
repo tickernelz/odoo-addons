@@ -76,9 +76,16 @@ class ResConfigSettings(models.TransientModel):
     )
     mcp_generated_modules_path = fields.Char(
         string="Generated Modules Path",
-        compute="_compute_mcp_generated_modules_path",
-        help="Set by the server administrator as mcp_generated_modules_path in the Odoo configuration file. "
-             "Installing generated modules stays off while it is empty.",
+        config_parameter="mcp_server.generated_modules_path",
+        help="Absolute filesystem path where the install action extracts generated module ZIPs. "
+             "Must be a custom addons path registered in Odoo, writable by the Odoo process, "
+             "and must NOT be inside community/ or enterprise/ directories.",
+    )
+    mcp_module_generator_server = fields.Boolean(
+        string="Install Allowed on This Server",
+        compute="_compute_mcp_module_generator_server",
+        help="mcp_module_generator = True in the Odoo configuration file. Without it, generated modules "
+             "can be generated and validated but not installed.",
     )
 
     mcp_sql_enabled = fields.Boolean(
@@ -106,9 +113,10 @@ class ResConfigSettings(models.TransientModel):
         help="Comma separated column names, or model.column, never readable through SQL.",
     )
 
-    def _compute_mcp_generated_modules_path(self):
+    def _compute_mcp_module_generator_server(self):
+        enabled = str(_odoo_config.get("mcp_module_generator") or "").strip().lower() in ("1", "true", "yes")
         for settings in self:
-            settings.mcp_generated_modules_path = _odoo_config.get("mcp_generated_modules_path") or False
+            settings.mcp_module_generator_server = enabled
 
     # ------------------------------------------------------------------
     # Admin actions

@@ -422,7 +422,8 @@ When the job completes, `odoo_job_status` returns a download URL for the file.
 
 ## 8. AI Module Generator
 
-> **Requires:** admin-scope token + module generator enabled in Settings.
+> **Requires:** admin-scope token + module generator enabled in Settings. Installing also needs
+> `mcp_module_generator = True` in the Odoo configuration file (set by the server administrator).
 
 The module generator lets Claude design a full Odoo module from a description —
 models, views, security rules, and menus — and produce an installable ZIP.

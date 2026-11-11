@@ -110,15 +110,15 @@ class TestOwnedRecords(common.TransactionCase):
         self.assertEqual(seen, [(self.user.id, False)])
         self.assertEqual(job.state, 'done', job.error_message)
 
-    def test_generated_modules_install_only_into_the_server_configured_path(self):
+    def test_installing_a_generated_module_needs_the_server_switch(self):
         module = self.env['mcp.generated.module'].create(
             {'name': 'Sale', 'technical_name': 'sale', 'state': 'generated', 'spec': '{}'})
         module.attachment_id = self.env['ir.attachment'].create({'name': 'sale.zip', 'raw': b'PK'})
-        self.env['ir.config_parameter'].sudo().set_param('mcp_server.generated_modules_path', '/tmp')
-        with patch.object(mcp_generated_module, 'config', {}):
-            with self.assertRaisesRegex(UserError, 'configuration file'):
-                module.action_install()
-        with tempfile.TemporaryDirectory() as folder, \
-                patch.object(mcp_generated_module, 'config', {'mcp_generated_modules_path': folder}):
-            with self.assertRaisesRegex(UserError, 'already exists'):
-                module.action_install()
+        with tempfile.TemporaryDirectory() as folder:
+            self.env['ir.config_parameter'].sudo().set_param('mcp_server.generated_modules_path', folder)
+            with patch.object(mcp_generated_module, 'config', {}):
+                with self.assertRaisesRegex(UserError, 'switched off on this server'):
+                    module.action_install()
+            with patch.object(mcp_generated_module, 'config', {'mcp_module_generator': 'True'}):
+                with self.assertRaisesRegex(UserError, 'already exists'):
+                    module.action_install()

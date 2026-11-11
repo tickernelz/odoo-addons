@@ -72,7 +72,7 @@ status. Background cron processes jobs respecting token scope and restrictions.
 Module generator
 ----------------
 AI generates a JSON spec → validate → ZIP → install. Feature-flagged off
-by default. Installing needs mcp_generated_modules_path in the Odoo configuration file.
+by default. Installing also needs mcp_module_generator = True in the Odoo configuration file.
     """,
     'author': 'kaitech.io',
     'website': 'https://kaitech.io',

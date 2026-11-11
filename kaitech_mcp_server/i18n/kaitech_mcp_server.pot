@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 11:51+0000\n"
-"PO-Revision-Date: 2026-11-11 11:51+0000\n"
+"POT-Creation-Date: 2026-11-11 12:23+0000\n"
+"PO-Revision-Date: 2026-11-11 12:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
 msgid "'widgets' must be a JSON array."
+msgstr ""
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "/path/to/custom/addons"
 msgstr ""
 
 #. module: kaitech_mcp_server
@@ -65,6 +70,14 @@ msgstr ""
 #. module: kaitech_mcp_server
 #: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__license__agpl-3
 msgid "AGPL-3"
+msgstr ""
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
+msgid ""
+"Absolute filesystem path where the install action extracts generated module "
+"ZIPs. Must be a custom addons path registered in Odoo, writable by the Odoo "
+"process, and must NOT be inside community/ or enterprise/ directories."
 msgstr ""
 
 #. module: kaitech_mcp_server
@@ -802,8 +815,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
 msgid ""
-"Generated modules path is not configured. The server administrator sets "
-"mcp_generated_modules_path in the Odoo configuration file."
+"Generated modules path is not configured. Go to Settings > MCP Server and "
+"set 'Generated Modules Path' first."
 msgstr ""
 
 #. module: kaitech_mcp_server
@@ -978,6 +991,11 @@ msgid "Insert"
 msgstr ""
 
 #. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid "Install Allowed on This Server"
+msgstr ""
+
+#. module: kaitech_mcp_server
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
 msgid "Install on This Instance"
 msgstr ""
@@ -999,6 +1017,15 @@ msgstr ""
 #. module: kaitech_mcp_server
 #: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__installed_at
 msgid "Installed At"
+msgstr ""
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Installing generated modules is switched off on this server. The server "
+"administrator sets mcp_module_generator = True in the Odoo configuration "
+"file."
 msgstr ""
 
 #. module: kaitech_mcp_server
@@ -2091,14 +2118,6 @@ msgid "Sessions"
 msgstr ""
 
 #. module: kaitech_mcp_server
-#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
-msgid ""
-"Set by the server administrator as mcp_generated_modules_path in the Odoo "
-"configuration file. Installing generated modules stays off while it is "
-"empty."
-msgstr ""
-
-#. module: kaitech_mcp_server
 #: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_settings
 #: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_settings
 #: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
@@ -2483,8 +2502,10 @@ msgid "hr_payslip*, account_move_line"
 msgstr ""
 
 #. module: kaitech_mcp_server
-#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
-msgid "mcp_generated_modules_path in the Odoo configuration file"
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid ""
+"mcp_module_generator = True in the Odoo configuration file. Without it, "
+"generated modules can be generated and validated but not installed."
 msgstr ""
 
 #. module: kaitech_mcp_server
