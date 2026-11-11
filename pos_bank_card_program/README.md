@@ -2,8 +2,9 @@
 
 Bank card programmes for the Odoo 19 point of sale. A programme defines the
 bank, the validity period, the outlets and payment methods where it applies,
-the BIN ranges that identify eligible cards, the discount (percent, basis,
-minimum, maximum, promotion order, bank share), a shared quota, and a per-card
+the BIN ranges that identify eligible cards, the discount (a percentage with
+a maximum, or a fixed amount per transaction in the company currency; basis,
+minimum, promotion order, bank share), a shared quota, and a per-card
 daily limit. The full card number is never stored: only the BIN, the last four
 digits, and the EDC approval code.
 
@@ -19,7 +20,10 @@ Server API used by the point of sale:
   reason: tier_excluded, below_minimum, quota_exhausted, card_used_today,
   bin_not_registered, offline.
 - pos.bank.card.program.compute_discount(basis_amount) on a programme record
-  returns the discount and the bank and store shares.
+  returns the discount and the bank and store shares. A percentage programme
+  applies its percent and maximum; a fixed amount programme returns the fixed
+  amount, never more than the basis, rounded to the programme currency. The
+  point of sale computes the same amounts locally from the loaded programme.
 - pos.bank.card.program.reserve_quota(program_id, card_bin, card_last4,
   basis_amount, approval_code, config_id, payment_method_id, pos_order_id,
   payment_id) locks the
@@ -116,6 +120,8 @@ Updating the translation catalogue:
 
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
 claims, and point of sale users only read programmes, usage, and quota rows.
+The administrator receives both groups when the module is installed, and
+groups for other users are assigned manually.
 The reservation, release, and confirm calls perform their writes on those
 three models under sudo after the eligibility and locking checks, so a
 cashier cannot adjust quota counters directly through the ORM.
@@ -123,8 +129,10 @@ cashier cannot adjust quota counters directly through the ORM.
 ## Models
 
 - pos.bank.card.program: a bank programme. Bank, validity dates, outlets
-  (pos.config) and payment methods it applies to, mode, discount percent
-  and basis, minimum basis, maximum discount, promotion order, bank share
+  (pos.config) and payment methods it applies to, mode, discount type
+  (percentage or fixed amount), discount percent or fixed discount amount,
+  discount basis, minimum basis, maximum discount (percentage programmes),
+  promotion order, bank share
   percent, excluded products and categories, quota (type, period, limit),
   per-card daily limit, offline setting, and the discount product, discount
   account, claim receivable account, and reclassification journal.
@@ -166,15 +174,23 @@ minimum 500,000, maximum discount 100,000, bank share 100 percent, quota of
 Platinum eligible, BIN 900200-900299 Gold excluded) and Bank B Card
 Programme (10 percent, maximum discount 75,000, bank share 50 percent,
 quota of 1,000,000 in discount amount, one use per card per day; BIN
-900300-900399 Signature eligible). Four confirmed usage rows from the last
-three days, two per bank and outlet, populate the claim wizard and the
-reports on an empty database. Demo card prefixes 900150 and 900350 with any
-last four digits exercise the cashier dialog.
+900300-900399 Signature eligible), and Bank C Card Programme (fixed amount
+1,000 per transaction, bank share 100 percent, quota of 50 transactions per
+month, one use per card per day; BIN 900400-900499 Classic eligible). Four
+confirmed usage rows from the last three days, two per bank and outlet,
+populate the claim wizard and the reports on an empty database. Demo card
+prefixes 900150, 900350, and 900450 with any last four digits exercise the
+cashier dialog.
 
 ## Assumptions
 
-- Programme percentages, minimum, maximum, BIN ranges, and names are data,
-  not code; change them on the programme form without a deployment.
+- Programme percentages, fixed amounts, minimum, maximum, BIN ranges, and
+  names are data, not code; change them on the programme form without a
+  deployment. Amounts follow the company currency and its rounding; no
+  currency is named in code.
+- A shared quota counts every card of the programme together (for example
+  50 transactions per month in total). The only per-card counter is the
+  daily per-card limit; there is no per-card monthly counter.
 - The claim period is one month by default; the wizard accepts any period.
 - POS prices are tax-included for the journal entry math: the discount line
   and the bank share already contain tax.

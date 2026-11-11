@@ -95,3 +95,41 @@ class TestBankCardLanguageTour(BankCardTourBase):
         self.start_tour(
             '/pos/ui/%d' % self.main_pos_config.id,
             'pos_bank_card_program_language_tour', login='pos_admin')
+
+
+@tagged('post_install', '-at_install')
+class TestBankCardFixedTour(BankCardTourBase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.fixed_program = cls.env['pos.bank.card.program'].create({
+            'name': 'Bank C Fixed Tour Programme',
+            'bank_id': cls.bank_a.id,
+            'state': 'active',
+            'discount_type': 'fixed',
+            'discount_fixed_amount': 1000.0,
+            'bank_share_percent': 100.0,
+            'card_daily_limit': 0,
+            'discount_product_id': cls.program.discount_product_id.id,
+        })
+        cls.env['pos.bank.card.bin.range'].create({
+            'program_id': cls.fixed_program.id,
+            'bin_from': '900400',
+            'bin_to': '900499',
+            'network': 'Network A',
+            'card_type': 'credit',
+            'tier': 'Classic',
+            'eligible': True,
+        })
+
+    def test_fixed_amount_cashier_flow(self):
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            '/pos/ui/%d' % self.main_pos_config.id,
+            'pos_bank_card_program_fixed_tour', login='pos_admin')
+        usages = self.env['pos.bank.card.usage'].search([
+            ('program_id', '=', self.fixed_program.id)])
+        confirmed = usages.filtered(lambda usage: usage.state == 'confirmed')
+        self.assertEqual(len(confirmed), 1)
+        self.assertEqual(confirmed.discount_amount, 1000.0)

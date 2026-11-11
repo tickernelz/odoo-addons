@@ -753,6 +753,11 @@ msgid "Discount Product"
 msgstr "Produk Diskon"
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__discount_type
+msgid "Discount Type"
+msgstr "Jenis Diskon"
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__display_name
@@ -836,6 +841,16 @@ msgstr "Ekspor Excel"
 #: model:res.groups,name:pos_bank_card_program.group_bank_card_finance
 msgid "Finance"
 msgstr "Finance"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_type__fixed
+msgid "Fixed Amount"
+msgstr "Nominal Tetap"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__discount_fixed_amount
+msgid "Fixed Discount Amount"
+msgstr "Nominal Diskon"
 
 #. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__message_follower_ids
@@ -1296,6 +1311,11 @@ msgstr "Per Bulan"
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_wizard_form
 msgid "Per Outlet"
 msgstr "Per Outlet"
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_type__percent
+msgid "Percentage"
+msgstr "Persentase"
 
 #. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_search
@@ -1759,6 +1779,12 @@ msgstr ""
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The discount percent must be between 0 and 100."
 msgstr "Persen diskon harus antara 0 dan 100."
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "The fixed discount amount must be greater than zero."
+msgstr "Nominal diskon tetap harus lebih besar dari nol."
 
 #. module: pos_bank_card_program
 #. odoo-javascript

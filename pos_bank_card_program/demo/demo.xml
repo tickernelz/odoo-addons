@@ -66,6 +66,33 @@
         <field name="eligible" eval="True"/>
     </record>
 
+    <record id="partner_bank_c" model="res.partner">
+        <field name="name">Bank C</field>
+        <field name="is_company" eval="True"/>
+    </record>
+    <record id="program_bank_c" model="pos.bank.card.program">
+        <field name="name">Bank C Card Programme</field>
+        <field name="bank_id" ref="partner_bank_c"/>
+        <field name="state">active</field>
+        <field name="discount_type">fixed</field>
+        <field name="discount_fixed_amount" eval="1000.0"/>
+        <field name="discount_basis">subtotal</field>
+        <field name="bank_share_percent" eval="100.0"/>
+        <field name="quota_type">count</field>
+        <field name="quota_period">month</field>
+        <field name="quota_limit_count" eval="50"/>
+        <field name="card_daily_limit" eval="1"/>
+    </record>
+    <record id="bin_bank_c_classic" model="pos.bank.card.bin.range">
+        <field name="program_id" ref="program_bank_c"/>
+        <field name="bin_from">900400</field>
+        <field name="bin_to">900499</field>
+        <field name="network">Network A</field>
+        <field name="card_type">credit</field>
+        <field name="tier">Classic</field>
+        <field name="eligible" eval="True"/>
+    </record>
+
     <record id="payment_method_card_bank" model="pos.payment.method">
         <field name="name">Card Bank</field>
         <field name="bank_card_required" eval="True"/>
