@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_manager_validation_wizard_view_form" model="ir.ui.view">
+        <field name="name">pos.manager.validation.wizard.form</field>
+        <field name="model">pos.manager.validation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Manager Validation">
+                <div class="alert alert-danger" role="alert" invisible="not message">
+                    <field name="message"/>
+                </div>
+                <group>
+                    <field name="config_id"/>
+                    <field name="validation_action" string="Action"/>
+                    <field name="allowed_employee_ids" invisible="1"/>
+                    <field name="employee_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="pin" password="True" required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Validate" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

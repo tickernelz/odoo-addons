@@ -1,0 +1,720 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_hr_manager_validation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 08:39+0000\n"
+"PO-Revision-Date: 2026-11-11 08:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/patches.js:0
+msgid "%(discount)s on %(product)s"
+msgstr "%(discount)s untuk %(product)s"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_config.py:0
+msgid "%(employee)s belongs to another company than %(config)s."
+msgstr "%(employee)s berada di perusahaan lain dari %(config)s."
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/patches.js:0
+msgid "%(product)s: %(from)s to %(to)s"
+msgstr "%(product)s: %(from)s menjadi %(to)s"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/patches.js:0
+msgid "%(product)s: %(price)s"
+msgstr "%(product)s: %(price)s"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_config.py:0
+msgid ""
+"%s has no POS validation PIN. Set it in the HR Settings tab of the employee "
+"first."
+msgstr ""
+"%s belum punya PIN validasi POS. Isi dulu di tab Pengaturan HR karyawan itu."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
+msgid ""
+"%s validates actions on a point of sale, so the POS validation PIN cannot be"
+" removed."
+msgstr ""
+"%s memvalidasi aksi di sebuah POS, jadi PIN validasi POS-nya tidak bisa "
+"dihapus."
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_pos_pos_form
+msgid "<span>Done without manager validation: </span>"
+msgstr "<span>Dilakukan tanpa validasi manajer: </span>"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_manager_validation.py:0
+msgid "A manager must validate this action with a POS validation PIN first."
+msgstr "Aksi ini harus divalidasi manajer dengan PIN validasi POS lebih dulu."
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__action
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_wizard_view_form
+msgid "Action"
+msgstr "Aksi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__mv_unvalidated_display
+msgid "Actions Without Manager Validation"
+msgstr "Aksi Tanpa Validasi Manajer"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_employee_form
+msgid "At least 6 digits"
+msgstr "Minimal 6 digit"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__origin__backend
+msgid "Backend"
+msgstr "Backend"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__cash_move
+msgid "Cash In/Out"
+msgstr "Kas Masuk/Keluar"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__cashier_id
+msgid "Cashier"
+msgstr "Kasir"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__close_session
+msgid "Close Session"
+msgstr "Tutup Sesi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__config_id
+msgid "Config"
+msgstr "Konfigurasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__consumed
+msgid "Consumed"
+msgstr "Terpakai"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__create_uid
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__create_date
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__delete_order
+msgid "Delete Order"
+msgstr "Hapus Order"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__delete_line
+msgid "Delete Order Line"
+msgstr "Hapus Baris Order"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_wizard_view_form
+msgid "Discard"
+msgstr "Batalkan"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__discount
+msgid "Discount"
+msgstr "Diskon"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_make_payment__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_hr_employee
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,help:pos_hr_manager_validation.field_pos_config__mv_employee_ids
+#: model:ir.model.fields,help:pos_hr_manager_validation.field_pos_manager_validation_wizard__allowed_employee_ids
+#: model:ir.model.fields,help:pos_hr_manager_validation.field_res_config_settings__pos_mv_employee_ids
+msgid ""
+"Employees whose POS validation PIN approves the actions ticked below on this"
+" point of sale."
+msgstr ""
+"Karyawan yang PIN validasi POS-nya menyetujui aksi yang dicentang di bawah "
+"pada POS ini."
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.actions.act_window,help:pos_hr_manager_validation.action_pos_manager_validation
+msgid ""
+"Every manager PIN request from the point of sale and the backend is logged "
+"here, without the PIN."
+msgstr ""
+"Setiap permintaan PIN manajer dari POS dan backend dicatat di sini, tanpa "
+"PIN-nya."
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__fiscal_position
+msgid "Fiscal Position"
+msgstr "Posisi Fiskal"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/patches.js:0
+msgid "Global discount of %s"
+msgstr "Diskon global %s"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_hr_employee__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_make_payment__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__write_uid
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__write_date
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__employee_id
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/wizard/pos_manager_validation_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.res_config_settings_view_form
+msgid "Manager Validation"
+msgstr "Validasi Manajer"
+
+#. module: pos_hr_manager_validation
+#: model:ir.actions.act_window,name:pos_hr_manager_validation.action_pos_manager_validation
+#: model:ir.ui.menu,name:pos_hr_manager_validation.menu_pos_manager_validation
+msgid "Manager Validations"
+msgstr "Validasi Manajer"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__presence
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__origin__presence
+msgid "Manager at the Register"
+msgstr "Manajer di Kasir"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_manager_validation.py:0
+msgid "Manager validation is unlocked for %s."
+msgstr "Validasi manajer dibuka kembali untuk %s."
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation needs a connection to the server."
+msgstr "Validasi manajer memerlukan koneksi ke server."
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: apply a discount"
+msgstr "Validasi manajer: beri diskon"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: cash in or out"
+msgstr "Validasi manajer: kas masuk atau keluar"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: change the price"
+msgstr "Validasi manajer: ubah harga"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: change the pricelist"
+msgstr "Validasi manajer: ganti daftar harga"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: change the tax"
+msgstr "Validasi manajer: ganti pajak"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: close the register"
+msgstr "Validasi manajer: tutup kasir"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: create a product"
+msgstr "Validasi manajer: buat produk"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: decrease the quantity"
+msgstr "Validasi manajer: kurangi jumlah"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: delete the order"
+msgstr "Validasi manajer: hapus order"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: refund"
+msgstr "Validasi manajer: refund"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: remove the line"
+msgstr "Validasi manajer: hapus baris"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_validation.js:0
+msgid "Manager validation: validate the payment"
+msgstr "Validasi manajer: validasi pembayaran"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.res_config_settings_view_form
+msgid "Managers"
+msgstr "Manajer"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_pos_pos_form
+msgid "Mark as Checked"
+msgstr "Tandai Sudah Diperiksa"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__message
+msgid "Message"
+msgstr "Pesan"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__method
+msgid "Method"
+msgstr "Metode"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.actions.act_window,help:pos_hr_manager_validation.action_pos_manager_validation
+msgid "No manager validation yet"
+msgstr "Belum ada validasi manajer"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_session.py:0
+msgid "Only point of sale users can request a manager validation."
+msgstr "Hanya pengguna POS yang bisa meminta validasi manajer."
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__order_id
+msgid "Order"
+msgstr "Order"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__origin
+msgid "Origin"
+msgstr "Asal"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_manager_validation_wizard
+msgid "POS Manager Validation"
+msgstr "Validasi Manajer POS"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_hr_employee__pos_validation_pin
+msgid "POS Validation PIN"
+msgstr "PIN Validasi POS"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_hr_employee__pos_validation_pin_set
+msgid "POS Validation PIN Set"
+msgstr "PIN Validasi POS Terisi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__payment
+msgid "Payment"
+msgstr "Pembayaran"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__config_id
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__origin__pos
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+msgid "Point of Sale"
+msgstr "Point of Sale"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Konfigurasi Point of Sale"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_make_payment
+msgid "Point of Sale Make Payment Wizard"
+msgstr "Wizard Pembayaran Point of Sale"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Order Point of Sale"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model,name:pos_hr_manager_validation.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesi Point of Sale"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_hr_employee__pos_validation_pin_hash
+msgid "Pos Validation Pin Hash"
+msgstr "Hash PIN Validasi POS"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__price
+msgid "Price Change"
+msgstr "Ubah Harga"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__pricelist
+msgid "Pricelist"
+msgstr "Daftar Harga"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__create_product
+msgid "Product Creation"
+msgstr "Pembuatan Produk"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__decrease_qty
+msgid "Quantity Decrease"
+msgstr "Pengurangan Jumlah"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__reference
+msgid "Reference"
+msgstr "Referensi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields.selection,name:pos_hr_manager_validation.selection__pos_manager_validation__action__refund
+msgid "Refund"
+msgstr "Refund"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__res_id
+msgid "Res"
+msgstr "Res"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__res_model
+msgid "Res Model"
+msgstr "Model Res"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,help:pos_hr_manager_validation.field_hr_employee__pos_validation_pin
+msgid ""
+"Second PIN, at least six digits, that this employee types to validate "
+"sensitive point of sale actions. It is checked on the server only and never "
+"sent to the point of sale."
+msgstr ""
+"PIN kedua, minimal enam digit, yang diketik karyawan ini untuk memvalidasi "
+"aksi sensitif di POS. Diperiksa hanya di server dan tidak pernah dikirim ke "
+"POS."
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.res_config_settings_view_form
+msgid "Select Employee(s)"
+msgstr "Pilih Karyawan"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__session_id
+msgid "Session"
+msgstr "Sesi"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
+msgid "The PIN used to log in must differ from the POS validation PIN."
+msgstr "PIN untuk masuk harus berbeda dari PIN validasi POS."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
+msgid ""
+"The POS validation PIN must differ from the PIN used to log in to the point "
+"of sale."
+msgstr "PIN validasi POS harus berbeda dari PIN untuk masuk ke POS."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
+msgid "The POS validation PIN must have at least %s digits, digits only."
+msgstr "PIN validasi POS minimal %s digit dan hanya berisi angka."
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.js:0
+msgid "The server cannot be reached. Try again when the connection is back."
+msgstr "Server tidak terjangkau. Coba lagi setelah koneksi kembali."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/wizard/pos_manager_validation_wizard.py:0
+msgid "This action cannot be validated here."
+msgstr "Aksi ini tidak bisa divalidasi di sini."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_manager_validation.py:0
+msgid "This action does not need a manager validation on %s."
+msgstr "Aksi ini tidak memerlukan validasi manajer di %s."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_manager_validation.py:0
+msgid "This employee cannot validate actions on %s."
+msgstr "Karyawan ini tidak bisa memvalidasi aksi di %s."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_session.py:0
+msgid "This session is not open."
+msgstr "Sesi ini tidak terbuka."
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.res_config_settings_view_form
+msgid ""
+"Ticked actions on this point of sale wait for the POS validation PIN of one "
+"of these managers"
+msgstr ""
+"Aksi yang dicentang di POS ini menunggu PIN validasi POS dari salah satu "
+"manajer ini"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_list
+msgid "Time"
+msgstr "Waktu"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+msgid "Today"
+msgstr "Hari Ini"
+
+#. module: pos_hr_manager_validation
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/wizard/pos_manager_validation_wizard.py:0
+msgid "Too many wrong PINs. Manager validation is locked until %s (UTC)."
+msgstr "Terlalu banyak PIN salah. Validasi manajer terkunci sampai %s (UTC)."
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.js:0
+msgid "Too many wrong PINs. Manager validation is locked until %s."
+msgstr "Terlalu banyak PIN salah. Validasi manajer terkunci sampai %s."
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_list
+msgid "Unlock"
+msgstr "Buka Kunci"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__cleared
+msgid "Unlocked"
+msgstr "Kunci Dibuka"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__mv_unvalidated
+msgid "Unvalidated Action Keys"
+msgstr "Kode Aksi Tanpa Validasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_order__mv_flagged
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.view_pos_order_filter
+msgid "Unvalidated Actions"
+msgstr "Aksi Tanpa Validasi"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_list
+msgid "User"
+msgstr "Pengguna"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_wizard_view_form
+msgid "Validate"
+msgstr "Validasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_cash_move
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_cash_move
+msgid "Validate Cash In/Out"
+msgstr "Validasi Kas Masuk/Keluar"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_discount
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_discount
+msgid "Validate Discount"
+msgstr "Validasi Diskon"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_fiscal_position
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_fiscal_position
+msgid "Validate Fiscal Position"
+msgstr "Validasi Posisi Fiskal"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_delete_order
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_delete_order
+msgid "Validate Order Deletion"
+msgstr "Validasi Hapus Order"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_delete_line
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_delete_line
+msgid "Validate Order Line Deletion"
+msgstr "Validasi Hapus Baris Order"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_payment
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_payment
+msgid "Validate Payment"
+msgstr "Validasi Pembayaran"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_price
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_price
+msgid "Validate Price Change"
+msgstr "Validasi Ubah Harga"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_pricelist
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_pricelist
+msgid "Validate Pricelist"
+msgstr "Validasi Daftar Harga"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_create_product
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_create_product
+msgid "Validate Product Creation"
+msgstr "Validasi Pembuatan Produk"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_decrease_qty
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_decrease_qty
+msgid "Validate Quantity Decrease"
+msgstr "Validasi Pengurangan Jumlah"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_refund
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_refund
+msgid "Validate Refund"
+msgstr "Validasi Refund"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_close_session
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_close_session
+msgid "Validate Session Closing"
+msgstr "Validasi Tutup Sesi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation__success
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__validated
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+msgid "Validated"
+msgstr "Tervalidasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_config__mv_employee_ids
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__allowed_employee_ids
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_res_config_settings__pos_mv_employee_ids
+msgid "Validating Managers"
+msgstr "Manajer Validasi"
+
+#. module: pos_hr_manager_validation
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__validation_action
+msgid "Validation Action"
+msgstr "Aksi Validasi"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.xml:0
+#: model:ir.model.fields,field_description:pos_hr_manager_validation.field_pos_manager_validation_wizard__pin
+msgid "Validation PIN"
+msgstr "PIN Validasi"
+
+#. module: pos_hr_manager_validation
+#: model_terms:ir.ui.view,arch_db:pos_hr_manager_validation.pos_manager_validation_view_search
+msgid "Wrong PIN"
+msgstr "PIN Salah"
+
+#. module: pos_hr_manager_validation
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_hr_manager_validation/static/src/app/manager_pin_dialog.js:0
+#: code:addons/pos_hr_manager_validation/wizard/pos_manager_validation_wizard.py:0
+msgid "Wrong PIN. %s attempt(s) left."
+msgstr "PIN salah. Sisa %s percobaan."
