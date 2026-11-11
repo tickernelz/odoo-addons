@@ -21,7 +21,17 @@
                             Journal items of closed POS sessions and their analytic distribution,
                             <span t-field="doc.date_from"/> to <span t-field="doc.date_to"/>.
                         </p>
-                        <table class="table table-sm o_main_table mt-3">
+                        <table class="table table-sm mt-3" style="table-layout: fixed; width: 100%;">
+                            <colgroup>
+                                <col style="width: 17%;"/>
+                                <col style="width: 26%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 9%;"/>
+                                <col style="width: 11%;"/>
+                                <col style="width: 8%;"/>
+                                <col style="width: 13%;"/>
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th class="text-start">Point of Sale</th>
@@ -31,11 +41,11 @@
                                     <th class="text-end">Stamped</th>
                                     <th class="text-end">Missing</th>
                                     <th class="text-end">Other</th>
-                                    <th class="text-end" style="width: 22%;">Coverage</th>
+                                    <th class="text-end">Coverage</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="rows" t-as="row">
+                                <tr t-foreach="rows" t-as="row" style="page-break-inside: avoid;">
                                     <td><strong t-out="row['name']"/></td>
                                     <td>
                                         <span t-if="row['distribution']" t-out="row['distribution']"/>
@@ -48,10 +58,10 @@
                                     <td class="text-end" t-out="row['missing']"/>
                                     <td class="text-end" t-out="row['other']"/>
                                     <td class="text-end">
-                                        <div style="display: inline-block; width: 60%; height: 8px; background-color: #e9ecef; vertical-align: middle;">
-                                            <div t-attf-style="width: {{ row['coverage'] }}%; height: 8px; background-color: {{ '#017e84' if row['coverage'] == 100 else '#e46e10' }};"/>
+                                        <strong t-attf-style="color: {{ '#017e84' if row['coverage'] == 100 else '#c05600' }};"><t t-out="row['coverage']"/>%</strong>
+                                        <div style="height: 6px; background-color: #e9ecef; margin-top: 3px;">
+                                            <div t-attf-style="height: 6px; width: {{ row['coverage'] }}%; background-color: {{ '#017e84' if row['coverage'] == 100 else '#e46e10' }};"/>
                                         </div>
-                                        <span class="ms-2"><t t-out="row['coverage']"/>%</span>
                                     </td>
                                 </tr>
                                 <tr class="fw-bold border-top">
