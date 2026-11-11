@@ -11,7 +11,9 @@
                 <field name="mode"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="discount_percent"/>
+                <field name="discount_type"/>
+                <field name="discount_percent" optional="show"/>
+                <field name="discount_fixed_amount" optional="show"/>
                 <field name="bank_share_percent"/>
                 <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
                 <field name="state" widget="badge"
@@ -84,11 +86,13 @@
                         <page name="benefit" string="Benefit">
                             <group>
                                 <group string="Discount">
-                                    <field name="discount_percent"/>
+                                    <field name="discount_type"/>
+                                    <field name="discount_percent" invisible="discount_type != 'percent'"/>
+                                    <field name="discount_fixed_amount" invisible="discount_type != 'fixed'"/>
                                     <field name="discount_basis"/>
                                     <field name="promo_order"/>
                                     <field name="min_amount"/>
-                                    <field name="max_discount"/>
+                                    <field name="max_discount" invisible="discount_type != 'percent'"/>
                                     <field name="bank_share_percent"/>
                                     <field name="discount_product_id"/>
                                 </group>

@@ -182,3 +182,48 @@ registry.category("web_tour.tours").add("pos_bank_card_program_language_tour", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("pos_bank_card_program_fixed_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Outlet Tour Product", "1", "1000000"),
+            ProductScreen.totalAmountIs("1,000,000.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Card Bank"),
+            Dialog.is({ title: "Bank Card Programme" }),
+            {
+                content: "enter fixed programme card prefix",
+                trigger: "#bank-card-bin",
+                run: "edit 900450",
+            },
+            {
+                content: "detection chip shows the fixed programme",
+                trigger: ".o-bank-card-chip:contains(Bank C Fixed Tour Programme)",
+            },
+            {
+                content: "dialog shows the fixed amount in the active currency",
+                trigger: ".o-bank-card-dialog .fw-bold:contains(1,000.00)",
+            },
+            {
+                content: "enter last four digits",
+                trigger: "#bank-card-last4",
+                run: "edit 1234",
+            },
+            {
+                content: "enter approval code",
+                trigger: "#bank-card-approval",
+                run: "edit AP1234",
+            },
+            {
+                content: "apply the fixed discount",
+                trigger: ".o_dialog button:contains(Apply Discount):not([disabled])",
+                run: "click",
+            },
+            PaymentScreen.totalIs("999,000.00"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});

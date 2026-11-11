@@ -42,7 +42,12 @@ class PosBankCardProgram(models.Model):
     bin_range_ids = fields.One2many('pos.bank.card.bin.range', 'program_id', string='BIN Ranges')
     usage_ids = fields.One2many('pos.bank.card.usage', 'program_id', string='Usage')
     quota_ids = fields.One2many('pos.bank.card.quota', 'program_id', string='Quota Buckets')
+    discount_type = fields.Selection(
+        selection=[('percent', 'Percentage'), ('fixed', 'Fixed Amount')],
+        string='Discount Type', default='percent', required=True)
     discount_percent = fields.Float(string='Discount %', default=0.0)
+    discount_fixed_amount = fields.Monetary(
+        string='Fixed Discount Amount', currency_field='currency_id', default=0.0)
     discount_basis = fields.Selection(
         selection=[
             ('subtotal', 'Order Subtotal'),
@@ -120,10 +125,14 @@ class PosBankCardProgram(models.Model):
             if program.date_from and program.date_to and program.date_to < program.date_from:
                 raise ValidationError(self.env._('The end date must not be before the start date.'))
 
-    @api.constrains('discount_percent', 'bank_share_percent')
+    @api.constrains('discount_type', 'discount_percent', 'discount_fixed_amount', 'bank_share_percent')
     def _check_percents(self):
         for program in self:
-            if not 0.0 <= program.discount_percent <= 100.0:
+            if program.discount_type == 'fixed':
+                if program.discount_fixed_amount <= 0.0:
+                    raise ValidationError(
+                        self.env._('The fixed discount amount must be greater than zero.'))
+            elif not 0.0 <= program.discount_percent <= 100.0:
                 raise ValidationError(self.env._('The discount percent must be between 0 and 100.'))
             if not 0.0 <= program.bank_share_percent <= 100.0:
                 raise ValidationError(self.env._('The bank share percent must be between 0 and 100.'))
@@ -149,9 +158,13 @@ class PosBankCardProgram(models.Model):
 
     def compute_discount(self, basis_amount):
         self.ensure_one()
-        discount = (basis_amount or 0.0) * self.discount_percent / 100.0
-        if self.max_discount:
-            discount = min(discount, self.max_discount)
+        basis = basis_amount or 0.0
+        if self.discount_type == 'fixed':
+            discount = min(self.discount_fixed_amount, basis)
+        else:
+            discount = basis * self.discount_percent / 100.0
+            if self.max_discount:
+                discount = min(discount, self.max_discount)
         discount = max(discount, 0.0)
         if self.currency_id:
             discount = self.currency_id.round(discount)
@@ -535,7 +548,8 @@ class PosBankCardProgram(models.Model):
     def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'bank_id', 'mode', 'date_from', 'date_to',
-            'discount_percent', 'discount_basis', 'promo_order', 'min_amount',
+            'discount_type', 'discount_percent', 'discount_fixed_amount',
+            'discount_basis', 'promo_order', 'min_amount',
             'max_discount', 'bank_share_percent', 'discount_product_id',
             'excluded_product_ids', 'excluded_categ_ids', 'quota_type',
             'card_daily_limit', 'offline_allowed', 'offline_allowance',

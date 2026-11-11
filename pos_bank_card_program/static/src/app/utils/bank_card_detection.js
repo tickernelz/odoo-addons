@@ -15,9 +15,14 @@ export function maskedCard(cardBin, cardLast4) {
 }
 
 export function computeDiscount(program, basisAmount, currency) {
-    let discount = ((basisAmount || 0) * (program.discount_percent || 0)) / 100;
-    if (program.max_discount) {
-        discount = Math.min(discount, program.max_discount);
+    let discount;
+    if (program.discount_type === "fixed") {
+        discount = Math.min(program.discount_fixed_amount || 0, basisAmount || 0);
+    } else {
+        discount = ((basisAmount || 0) * (program.discount_percent || 0)) / 100;
+        if (program.max_discount) {
+            discount = Math.min(discount, program.max_discount);
+        }
     }
     discount = Math.max(discount, 0);
     if (currency) {
