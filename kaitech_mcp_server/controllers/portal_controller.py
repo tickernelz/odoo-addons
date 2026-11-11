@@ -20,6 +20,7 @@ restricting data access to what the page owner can see. This prevents a
 public page from leaking data the viewing user should not see.
 """
 
+import hmac
 import json
 import logging
 
@@ -53,11 +54,11 @@ class McpPortalController(http.Controller):
         if page is None:
             return request.not_found()
 
-        auth_result = self._check_auth(page, kwargs.get("token", ""))
-        if auth_result is not None:
-            return auth_result
+        viewer, refusal = self._viewer(page, kwargs.get("token", ""))
+        if refusal is not None:
+            return refusal
 
-        widget_data = self._render_widgets(page, kwargs)
+        widget_data = self._render_widgets(page, kwargs, viewer)
         spec = self._parse_spec_safe(page)
         page.sudo().write({
             "view_count": page.view_count + 1,
@@ -88,11 +89,11 @@ class McpPortalController(http.Controller):
         if page is None:
             return request.not_found()
 
-        auth_result = self._check_auth(page, kwargs.get("token", ""))
-        if auth_result is not None:
-            return auth_result
+        viewer, refusal = self._viewer(page, kwargs.get("token", ""))
+        if refusal is not None:
+            return refusal
 
-        widget_data = self._render_widgets(page, kwargs)
+        widget_data = self._render_widgets(page, kwargs, viewer)
         spec = self._parse_spec_safe(page)
 
         qcontext = self._build_qcontext(page, spec, widget_data, kwargs.get("token", ""), embed=True)
@@ -119,11 +120,11 @@ class McpPortalController(http.Controller):
         if page is None:
             return _json_error("not_found", "Page not found.", 404)
 
-        auth_result = self._check_auth(page, kwargs.get("token", ""))
-        if auth_result is not None:
+        viewer, refusal = self._viewer(page, kwargs.get("token", ""))
+        if refusal is not None:
             return _json_error("unauthorized", "Authentication required.", 401)
 
-        widget_data = self._render_widgets(page, kwargs)
+        widget_data = self._render_widgets(page, kwargs, viewer)
         payload = json.dumps(
             {"slug": slug, "widgets": widget_data},
             default=_json_default,
@@ -147,21 +148,18 @@ class McpPortalController(http.Controller):
         )
         return page or None
 
-    def _check_auth(self, page, token: str):
-        """Return a redirect/error response if access is denied, else None."""
-        if page.is_public:
-            return None
-        if token and token == page.access_token:
-            return None
-        if request.session and request.session.uid:
-            return None
-        # Redirect to login, preserving return URL
-        login_url = f"/web/login?redirect=/mcp-page/{page.slug}"
-        if token:
-            login_url += f"?token={token}"
-        return request.redirect(login_url, code=302)
+    def _viewer(self, page, token: str):
+        """(user whose access rights compute the widgets, None) or (None, refusal): owner via public/token, else the reader."""
+        if page.is_public or (token and page.access_token and hmac.compare_digest(token, page.access_token)):
+            return page.created_by.id, None
+        uid = request.session.uid if request.session else None
+        if not uid:
+            return None, request.redirect(f"/web/login?redirect=/mcp-page/{page.slug}", code=302)
+        if not request.env["mcp.portal.page"].with_user(uid).search_count([("id", "=", page.id)]):
+            return None, request.not_found()
+        return uid, None
 
-    def _render_widgets(self, page, filter_values: dict) -> list:
+    def _render_widgets(self, page, filter_values: dict, viewer: int) -> list:
         """Compute render data for every widget in the page spec."""
         spec = self._parse_spec_safe(page)
         widgets_spec = spec.get("widgets") or []
@@ -173,12 +171,11 @@ class McpPortalController(http.Controller):
             default = f.get("default", "")
             resolved_filters[name] = filter_values.get(name, default)
 
-        # Run as created_by user — governance boundary
-        env_as_owner = request.env["mcp.portal.page"].with_user(page.created_by.id).env
+        env_as_viewer = request.env["mcp.portal.page"].with_user(viewer).env
 
         result = []
         for ws in widgets_spec:
-            data = compute_widget(env_as_owner, ws, resolved_filters)
+            data = compute_widget(env_as_viewer, ws, resolved_filters)
             result.append(data)
         return result
 

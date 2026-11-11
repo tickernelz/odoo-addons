@@ -144,5 +144,33 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
+        <record id="rule_mcp_html_artifact_user_own" model="ir.rule">
+            <field name="name">MCP HTML Artifact: users see own artifacts only</field>
+            <field name="model_id" ref="model_mcp_html_artifact"/>
+            <field name="domain_force">[('created_by', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_mcp_html_artifact_admin_all" model="ir.rule">
+            <field name="name">MCP HTML Artifact: admin sees all</field>
+            <field name="model_id" ref="model_mcp_html_artifact"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
+        <record id="rule_mcp_token_sql_table_user_own" model="ir.rule">
+            <field name="name">MCP Token SQL Table: users see the tables of their own tokens</field>
+            <field name="model_id" ref="model_mcp_token_sql_table"/>
+            <field name="domain_force">[('token_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="rule_mcp_token_sql_table_admin_all" model="ir.rule">
+            <field name="name">MCP Token SQL Table: admin sees all</field>
+            <field name="model_id" ref="model_mcp_token_sql_table"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
     </data>
 </odoo>

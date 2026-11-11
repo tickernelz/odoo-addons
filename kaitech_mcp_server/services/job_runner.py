@@ -11,7 +11,6 @@ Per-record errors are accumulated rather than aborting the whole batch.
 """
 import csv
 import io
-import json
 import logging
 
 from odoo import fields
@@ -70,8 +69,8 @@ def run_bulk_update(env, args: dict, job) -> dict:
     for i in range(0, total, batch_size):
         batch = records[i: i + batch_size]
         try:
-            # Savepoint: batch gagal tidak boleh meninggalkan tulisan separuh,
-            # karena _update_progress meng-commit sesudahnya.
+            # Savepoint: a failed batch must not leave half its writes behind,
+            # because _update_progress commits afterwards.
             with env.cr.savepoint():
                 batch.write(values)
         except Exception as exc:
@@ -354,24 +353,8 @@ def run_custom(env, args: dict, job) -> dict:
     if model_name not in env.registry:
         raise ValueError(f"Model {model_name!r} not found in Odoo registry")
 
-    # Honour the same denylist as the synchronous tool
-    _DENYLIST = frozenset({
-        "sudo", "with_user", "with_company", "with_context", "with_env",
-        "execute", "execute_kw",
-        "search", "search_read", "search_count", "read", "create", "write", "unlink",
-        "read_group", "_read_group", "name_search", "name_get", "default_get",
-        "browse", "exists", "ensure_one", "mapped", "filtered", "sorted",
-        "invalidate_recordset",
-    })
-    full_access = env.context.get("mcp_scope") == "admin"
-    if method_name.startswith("_") and not full_access:
-        raise ValueError(f"Method {method_name!r} is private and cannot be called via MCP.")
-    if method_name in _DENYLIST and not full_access:
-        raise ValueError(f"Method {method_name!r} is blocked.")
-
-    model = env[model_name]
-    if not hasattr(model, method_name):
-        raise ValueError(f"Method {method_name!r} not found on model {model_name!r}")
+    from .tool_executor import check_callable
+    model = check_callable(env, model_name, method_name)
 
     target = model.browse(ids) if ids else model
     result = getattr(target, method_name)(*method_args, **method_kwargs)

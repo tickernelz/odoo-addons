@@ -23,7 +23,7 @@ class McpSession(models.Model):
     ip_address = fields.Char(string='IP Address', readonly=True)
     message_count = fields.Integer(string='Messages', default=0, readonly=True)
     last_activity = fields.Datetime(string='Last Activity', readonly=True)
-    log_ids = fields.One2many('mcp.session.log', 'session_id', string='Tool Calls', readonly=True)
+    log_ids = fields.One2many('mcp.session.log', 'session_id', string='Tool Call Log', readonly=True)
     tool_call_count = fields.Integer(
         string='Tool Calls', compute='_compute_tool_call_count', store=True,
     )

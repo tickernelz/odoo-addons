@@ -152,6 +152,27 @@
                                        colspan="2"/>
                             </group>
                         </page>
+                        <page string="SQL and Code" name="sql_explore" groups="base.group_system">
+                            <group>
+                                <field name="allow_explore"/>
+                                <field name="allow_sql"/>
+                            </group>
+                            <div class="text-muted mb-2" invisible="not allow_sql">
+                                SQL bypasses Odoo access rights, record rules, constraints and tracking.
+                                It also needs SQL switched on in MCP Server settings.
+                                Password, token and secret columns, binary columns and system tables are never readable.
+                            </div>
+                            <field name="sql_table_ids" invisible="not allow_sql">
+                                <list editable="bottom">
+                                    <field name="model_id" options="{'no_create': True}"/>
+                                    <field name="name"/>
+                                    <field name="can_select"/>
+                                    <field name="can_insert"/>
+                                    <field name="can_update"/>
+                                    <field name="can_delete"/>
+                                </list>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
                 <chatter/>

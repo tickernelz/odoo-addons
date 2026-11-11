@@ -40,8 +40,7 @@ class SseSessionManager:
 
     def __init__(self):
         self._sessions: dict[str, McpServerSession] = {}
-        # HTTP session cache: token_id (int) → mcp.session.id (int)
-        self._http_cache: dict[int, int] = {}
+        self._http_cache: dict[tuple[str, int], int] = {}
         self._lock = threading.Lock()
 
     # ------------------------------------------------------------------
@@ -70,20 +69,15 @@ class SseSessionManager:
     # HTTP session DB-id cache
     # ------------------------------------------------------------------
 
-    def get_http_session_db_id(self, token_id: int) -> int | None:
-        """Return cached mcp.session DB id for this token, or None if not cached."""
+    def get_http_session_db_id(self, db: str, token_id: int) -> int | None:
+        """Return cached mcp.session DB id for this token of database db, or None if not cached."""
         with self._lock:
-            return self._http_cache.get(token_id)
+            return self._http_cache.get((db, token_id))
 
-    def set_http_session_db_id(self, token_id: int, session_db_id: int) -> None:
-        """Cache the mcp.session DB id for this token."""
+    def set_http_session_db_id(self, db: str, token_id: int, session_db_id: int) -> None:
+        """Cache the mcp.session DB id for this token of database db."""
         with self._lock:
-            self._http_cache[token_id] = session_db_id
-
-    def invalidate_http_session(self, token_id: int) -> None:
-        """Remove a token from the HTTP session cache (e.g. on token revoke)."""
-        with self._lock:
-            self._http_cache.pop(token_id, None)
+            self._http_cache[(db, token_id)] = session_db_id
 
 
 # Module-level singleton shared across all requests in this worker

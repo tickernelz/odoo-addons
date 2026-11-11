@@ -2,6 +2,7 @@ import logging
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import config as _odoo_config
 
 from ..services import schema_cache
 
@@ -75,11 +76,39 @@ class ResConfigSettings(models.TransientModel):
     )
     mcp_generated_modules_path = fields.Char(
         string="Generated Modules Path",
-        config_parameter="mcp_server.generated_modules_path",
-        help="Absolute filesystem path where the install action extracts generated module ZIPs. "
-             "Must be a custom addons path registered in Odoo, writable by the Odoo process, "
-             "and must NOT be inside community/ or enterprise/ directories.",
+        compute="_compute_mcp_generated_modules_path",
+        help="Set by the server administrator as mcp_generated_modules_path in the Odoo configuration file. "
+             "Installing generated modules stays off while it is empty.",
     )
+
+    mcp_sql_enabled = fields.Boolean(
+        string="Enable SQL",
+        config_parameter="mcp_server.sql_enabled",
+        help="Tokens with SQL switched on may use the SQL tools on the tables listed on the token.",
+    )
+    mcp_sql_delete_enabled = fields.Boolean(
+        string="Allow SQL Delete",
+        config_parameter="mcp_server.sql_delete_enabled",
+    )
+    mcp_sql_statement_timeout_ms = fields.Integer(
+        string="SQL Statement Timeout (ms)",
+        config_parameter="mcp_server.sql_statement_timeout_ms",
+        default=5000,
+    )
+    mcp_sql_forbidden_tables = fields.Char(
+        string="Extra Forbidden Tables",
+        config_parameter="mcp_server.sql_forbidden_tables",
+        help="Comma separated table name patterns no token may use, on top of the system tables.",
+    )
+    mcp_sql_forbidden_fields = fields.Char(
+        string="Extra Forbidden Columns",
+        config_parameter="mcp_server.sql_forbidden_fields",
+        help="Comma separated column names, or model.column, never readable through SQL.",
+    )
+
+    def _compute_mcp_generated_modules_path(self):
+        for settings in self:
+            settings.mcp_generated_modules_path = _odoo_config.get("mcp_generated_modules_path") or False
 
     # ------------------------------------------------------------------
     # Admin actions

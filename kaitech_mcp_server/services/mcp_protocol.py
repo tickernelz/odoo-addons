@@ -10,7 +10,7 @@ from .redaction import redact
 _logger = logging.getLogger(__name__)
 
 MCP_PROTOCOL_VERSION = "2025-03-26"
-SERVER_INFO = {"name": "Odoo MCP Server", "version": "11.0.0"}
+SERVER_INFO = {"name": "Odoo MCP Server", "version": "19.0.2.0.0"}
 
 _PAYLOAD_MAX_CHARS = 4000
 
@@ -19,7 +19,8 @@ def process_message(env, msg: dict, session_db_id: int | None = None,
                     transport: str = "http",
                     scope: str = "write",
                     restrictions: dict | None = None,
-                    capture_payloads: bool = False) -> dict | None:
+                    capture_payloads: bool = False,
+                    token_id: int | None = None) -> dict | None:
     """
     Process one JSON-RPC 2.0 MCP message and return the response dict,
     or None for notifications that require no reply.
@@ -41,13 +42,13 @@ def process_message(env, msg: dict, session_db_id: int | None = None,
 
     # Inject governance context so all downstream calls (tool_executor, etc.)
     # can read it without carrying extra parameters through every call stack.
-    ctx_updates = {"mcp_scope": scope}
+    ctx_updates = {"mcp_scope": scope, "mcp_token_id": token_id}
     if restrictions:
         ctx_updates["mcp_restrictions"] = restrictions
     env = env(context={**env.context, **ctx_updates})
-    # Full Access milik admin Settings berjalan sebagai superuser: ACL, record
-    # rule, dan field groups= tidak lagi membatasi. Pemilik token non-admin tetap
-    # tunduk pada hak akses Odoo-nya sendiri.
+    # Full Access of a Settings administrator runs as superuser: access rights,
+    # record rules and field groups= no longer apply. Other token owners keep
+    # their own Odoo access rights.
     if scope == "admin" and env.user._is_system():
         env = env(su=True)
 
@@ -77,7 +78,8 @@ def process_message(env, msg: dict, session_db_id: int | None = None,
     # Tools
     # ------------------------------------------------------------------
     if method == "tools/list":
-        return _ok(msg_id, {"tools": env["mcp.tool.registry"].get_tools()})
+        tools = tool_executor.visible_tools(env, env["mcp.tool.registry"].get_tools())
+        return _ok(msg_id, {"tools": tools})
 
     if method == "tools/call":
         return _handle_tool_call(
@@ -125,10 +127,9 @@ def _handle_tool_call(env, msg_id, params: dict,
     tool_input = params.get("arguments") or {}
     t0 = time.monotonic()
     try:
-        # Savepoint: tool yang gagal (mis. ValidationError dari constraint) harus
-        # tidak meninggalkan jejak. Tanpa ini INSERT/UPDATE yang sudah terjadi
-        # sebelum exception ikut ter-commit bersama log sesi, sehingga record yang
-        # "ditolak" tetap tersimpan (temuan #5 E2E Pengadaan 5 Oktober 2026).
+        # Savepoint: a failed tool (for example a ValidationError from a constraint)
+        # must leave no trace; otherwise the INSERT/UPDATE run before the exception
+        # is committed with the session log and the refused record stays stored.
         with env.cr.savepoint():
             result = tool_executor.execute_tool(env, tool_name, tool_input)
         duration_ms = int((time.monotonic() - t0) * 1000)
@@ -182,7 +183,7 @@ def _log_tool_call(env, session_db_id, transport, tool_name, tool_input,
                    request_payload=None, response_payload=None):
     """Create mcp.session.log record. Non-critical — silently ignored on failure."""
     try:
-        odoo_model = tool_input.get("model") or ""
+        odoo_model = tool_input.get("model") or tool_input.get("table") or ""
         record_count = 0
         if not is_error and isinstance(result, dict):
             record_count = (
@@ -190,6 +191,8 @@ def _log_tool_call(env, session_db_id, transport, tool_name, tool_input,
                 or result.get("count")
                 or result.get("updated")
                 or result.get("deleted")
+                or result.get("inserted")
+                or result.get("returned")
                 or (1 if "id" in result else 0)
             )
 
@@ -204,6 +207,10 @@ def _log_tool_call(env, session_db_id, transport, tool_name, tool_input,
             "error_message": (error_message[:255] if error_message else False),
             "transport": transport,
         }
+        if not is_error and isinstance(result, dict):
+            if isinstance(result.get("statement"), str):
+                vals["statement"] = result["statement"][:4000]
+            vals["dry_run"] = result.get("dry_run") is True
         if request_payload is not None:
             vals["request_payload"] = request_payload
         if response_payload is not None:

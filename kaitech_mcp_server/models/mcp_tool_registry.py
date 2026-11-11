@@ -5,6 +5,8 @@ from ..services.job_tools import TOOL_DEFINITIONS as _JOB_TOOL_DEFINITIONS
 from ..services.module_tools import TOOL_DEFINITIONS as _MODULE_TOOL_DEFINITIONS
 from ..services.portal_tools import TOOL_DEFINITIONS as _PORTAL_TOOL_DEFINITIONS
 from ..services.artifact_tools import TOOL_DEFINITIONS as _ARTIFACT_TOOL_DEFINITIONS
+from ..services.sql_tools import TOOL_DEFINITIONS as _SQL_TOOL_DEFINITIONS
+from ..services.explore_tools import TOOL_DEFINITIONS as _EXPLORE_TOOL_DEFINITIONS
 
 # ---------------------------------------------------------------------------
 # Static MCP tool definitions (schema advertised to AI clients via tools/list)
@@ -157,6 +159,12 @@ _TOOL_DEFINITIONS = [
                 },
                 "args": {"type": "array", "default": []},
                 "kwargs": {"type": "object", "default": {}},
+                "dry_run": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "Run the method and roll the database back. Email, HTTP calls or "
+                                   "other connections the method uses are not undone.",
+                },
             },
             "required": ["model", "method"],
         },
@@ -435,6 +443,8 @@ def get_tool_definitions() -> list:
         + _PORTAL_TOOL_DEFINITIONS
         + _ARTIFACT_TOOL_DEFINITIONS
         + _MODULE_TOOL_DEFINITIONS
+        + _SQL_TOOL_DEFINITIONS
+        + _EXPLORE_TOOL_DEFINITIONS
     )
 
 

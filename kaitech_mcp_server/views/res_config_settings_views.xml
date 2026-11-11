@@ -83,9 +83,28 @@
                                            class="col-lg-4 o_light_label"
                                            string="Generated Modules Path"/>
                                     <field name="mcp_generated_modules_path" class="col-lg-8"
-                                           placeholder="/path/to/custom/addons"/>
+                                           placeholder="mcp_generated_modules_path in the Odoo configuration file"/>
                                 </div>
                             </div>
+                        </setting>
+                    </block>
+
+                    <block title="SQL" name="mcp_sql">
+                        <setting string="Enable SQL"
+                                 help="Tokens with SQL switched on may use the SQL tools on the tables listed on the token. SQL bypasses Odoo access rights and record rules.">
+                            <field name="mcp_sql_enabled"/>
+                        </setting>
+                        <setting string="Allow SQL Delete" invisible="not mcp_sql_enabled">
+                            <field name="mcp_sql_delete_enabled"/>
+                        </setting>
+                        <setting string="Statement Timeout (ms)" invisible="not mcp_sql_enabled">
+                            <field name="mcp_sql_statement_timeout_ms"/>
+                        </setting>
+                        <setting string="Extra Forbidden Tables" invisible="not mcp_sql_enabled">
+                            <field name="mcp_sql_forbidden_tables" placeholder="hr_payslip*, account_move_line"/>
+                        </setting>
+                        <setting string="Extra Forbidden Columns" invisible="not mcp_sql_enabled">
+                            <field name="mcp_sql_forbidden_fields" placeholder="vat, hr.employee.identification_id"/>
                         </setting>
                     </block>
 

@@ -13,7 +13,7 @@ from odoo.tools import config as _odoo_config
 from ..services import mcp_protocol
 from ..services.rate_limiter import get_rate_limiter
 from ..services.sse_manager import session_manager
-from ..services.token_service import extract_bearer, validate_token, unauthorized
+from ..services.token_service import extract_token, validate_token, unauthorized
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +29,9 @@ if _workers > 1:
 _CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, Mcp-Session-Id",
+    "Access-Control-Allow-Headers": (
+        "Content-Type, Authorization, X-API-Key, X-Auth-Token, Mcp-Session-Id, Mcp-Protocol-Version"
+    ),
 }
 
 # N2: HTTPS enforcement — set mcp_require_https = true in odoo.conf to enable.
@@ -89,9 +91,10 @@ class McpController(http.Controller):
     # OPTIONS — CORS preflight for all MCP endpoints
     # ------------------------------------------------------------------
 
-    @http.route(["/mcp", "/mcp/sse", "/mcp/messages"], type="http", auth="public",
-                methods=["OPTIONS"], csrf=False)
-    def mcp_cors(self, **_kwargs):
+    @http.route(["/mcp", "/mcp/sse", "/mcp/messages", "/mcp/<string:database>",
+                 "/mcp/<string:database>/sse", "/mcp/<string:database>/messages"],
+                type="http", auth="public", methods=["OPTIONS"], csrf=False)
+    def mcp_cors(self, database=None, **_kwargs):
         return Response("", status=200, headers=_CORS_HEADERS)
 
     # ------------------------------------------------------------------
@@ -100,17 +103,18 @@ class McpController(http.Controller):
     # modern MCP clients. Stateless: no SSE session needed.
     # ------------------------------------------------------------------
 
-    @http.route("/mcp", type="http", auth="public", methods=["POST"], csrf=False)
-    def mcp_http(self, **_kwargs):
-        return self._handle_streamable_http()
+    @http.route(["/mcp", "/mcp/<string:database>"], type="http", auth="public", methods=["POST"], csrf=False)
+    def mcp_http(self, database=None, **_kwargs):
+        return _other_database(database) or self._handle_streamable_http()
 
     # ------------------------------------------------------------------
     # POST /mcp/sse  – Streamable HTTP transport (legacy URL alias)
     # ------------------------------------------------------------------
 
-    @http.route("/mcp/sse", type="http", auth="public", methods=["POST"], csrf=False)
-    def mcp_streamable(self, **_kwargs):
-        return self._handle_streamable_http()
+    @http.route(["/mcp/sse", "/mcp/<string:database>/sse"], type="http", auth="public", methods=["POST"],
+                csrf=False)
+    def mcp_streamable(self, database=None, **_kwargs):
+        return _other_database(database) or self._handle_streamable_http()
 
     def _handle_streamable_http(self):
         """Stateless JSON-RPC over HTTP POST. Finds or creates a persistent HTTP
@@ -119,7 +123,7 @@ class McpController(http.Controller):
         if guard:
             return guard
 
-        token = extract_bearer(request)
+        token = extract_token(request)
         if not token:
             return unauthorized(_base_url())
 
@@ -181,6 +185,7 @@ class McpController(http.Controller):
                         scope=scope,
                         restrictions=restrictions,
                         capture_payloads=capture_payloads,
+                        token_id=token_id,
                     )
                     for msg in body
                 ]
@@ -197,6 +202,7 @@ class McpController(http.Controller):
                     scope=scope,
                     restrictions=restrictions,
                     capture_payloads=capture_payloads,
+                    token_id=token_id,
                 )
                 _update_http_session(request.env, session_db_id, 1)
                 if response is None:
@@ -214,13 +220,14 @@ class McpController(http.Controller):
     # GET /mcp/sse  – Legacy SSE transport (MCP spec pre-2025-03-26)
     # ------------------------------------------------------------------
 
-    @http.route("/mcp/sse", type="http", auth="public", methods=["GET"], csrf=False)
-    def mcp_sse(self, **_kwargs):
-        guard = _https_guard()
+    @http.route(["/mcp/sse", "/mcp/<string:database>/sse"], type="http", auth="public", methods=["GET"],
+                csrf=False)
+    def mcp_sse(self, database=None, **_kwargs):
+        guard = _other_database(database) or _https_guard()
         if guard:
             return guard
 
-        token = extract_bearer(request)
+        token = extract_token(request)
         if not token:
             return unauthorized(_base_url())
 
@@ -259,6 +266,7 @@ class McpController(http.Controller):
         mcp_session.scope = scope
         mcp_session.restrictions = restrictions
         mcp_session.capture_payloads = capture_payloads
+        mcp_session.token_id = token_id
 
         _logger.info(
             "MCP SSE: new connection uid=%s scope=%s session=%s ip=%s",
@@ -280,7 +288,7 @@ class McpController(http.Controller):
         except Exception:
             _logger.warning("Could not create mcp.session audit record")
 
-        messages_url = f"{_base_url()}/mcp/messages?session_id={session_id}"
+        messages_url = f"{_base_url()}{_mcp_prefix()}/messages?session_id={session_id}"
 
         def _generate():
             try:
@@ -314,10 +322,14 @@ class McpController(http.Controller):
     # POST /mcp/messages  – Legacy SSE message channel
     # ------------------------------------------------------------------
 
-    @http.route("/mcp/messages", type="http", auth="public", methods=["POST"], csrf=False)
-    def mcp_messages(self, session_id=None, **_kwargs):
+    @http.route(["/mcp/messages", "/mcp/<string:database>/messages"], type="http", auth="public",
+                methods=["POST"], csrf=False)
+    def mcp_messages(self, session_id=None, database=None, **_kwargs):
+        wrong = _other_database(database)
+        if wrong:
+            return wrong
         mcp_session = session_manager.get(session_id)
-        if not mcp_session:
+        if not mcp_session or mcp_session.db != request.db:
             _logger.warning("MCP messages: session not found: %s", session_id)
             return _json_resp({"error": "Session not found or expired"}, 404)
 
@@ -346,6 +358,7 @@ class McpController(http.Controller):
                 scope=scope,
                 restrictions=restrictions,
                 capture_payloads=capture_payloads,
+                token_id=getattr(mcp_session, "token_id", None),
             )
             if response is not None:
                 mcp_session.put(response)
@@ -384,7 +397,7 @@ def _get_or_create_http_session(env, uid: int, token_id: int, ip: str) -> int | 
     Falls back to DB search + create only on first request per token per worker.
     """
     # Fast path: in-memory cache hit
-    cached = session_manager.get_http_session_db_id(token_id)
+    cached = session_manager.get_http_session_db_id(env.cr.dbname, token_id)
     if cached:
         return cached
 
@@ -396,7 +409,7 @@ def _get_or_create_http_session(env, uid: int, token_id: int, ip: str) -> int | 
             limit=1,
         )
         if existing:
-            session_manager.set_http_session_db_id(token_id, existing.id)
+            session_manager.set_http_session_db_id(env.cr.dbname, token_id, existing.id)
             return existing.id
 
         rec = env_sudo.create({
@@ -408,7 +421,7 @@ def _get_or_create_http_session(env, uid: int, token_id: int, ip: str) -> int | 
             "state": "active",
         })
         env.cr.commit()
-        session_manager.set_http_session_db_id(token_id, rec.id)
+        session_manager.set_http_session_db_id(env.cr.dbname, token_id, rec.id)
         return rec.id
     except Exception:
         _logger.debug("Could not find/create HTTP session record")
@@ -433,6 +446,19 @@ def _update_http_session(env, session_db_id: int | None, message_delta: int) -> 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _other_database(database: str | None) -> Response | None:
+    """404 when the URL names a database other than the one serving the request."""
+    if database is None or database == request.db:
+        return None
+    return _json_resp({"error": "not_found", "error_description": "No MCP endpoint here."}, 404)
+
+
+def _mcp_prefix() -> str:
+    """/mcp, or /mcp/<database> when the client reached the endpoint through its database path."""
+    path = request.httprequest.path.rstrip("/")
+    return path[:-len("/sse")] if path.endswith("/sse") else "/mcp"
+
 
 def _base_url() -> str:
     req = request.httprequest

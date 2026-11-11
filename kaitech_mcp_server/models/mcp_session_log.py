@@ -18,6 +18,8 @@ class McpSessionLog(models.Model):
     duration_ms = fields.Integer(string='ms', readonly=True, default=0)
     is_error = fields.Boolean(string='Error', readonly=True, default=False)
     error_message = fields.Char(string='Error Detail', readonly=True)
+    statement = fields.Text(string='SQL Statement', readonly=True)
+    dry_run = fields.Boolean(string='Dry Run', readonly=True)
     transport = fields.Selection(
         [('sse', 'SSE'), ('http', 'HTTP')],
         string='Transport', readonly=True,

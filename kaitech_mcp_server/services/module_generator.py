@@ -642,7 +642,6 @@ def _gen_security_groups(spec: dict, tech: str) -> str:
 
 
 def _gen_access_csv(spec: dict) -> str:
-    tech = spec["technical_name"]
     security = spec.get("security") or {}
     if isinstance(security, list):
         security = {}
@@ -813,7 +812,6 @@ def _gen_view(model_spec: dict, spec: dict) -> str:
 
 def _gen_demo_data(spec: dict) -> str:
     """Generate a stub demo.xml — actual records must be filled in post-generation."""
-    tech = spec["technical_name"]
     lines = [
         '<?xml version="1.0" encoding="utf-8"?>',
         "<odoo>",

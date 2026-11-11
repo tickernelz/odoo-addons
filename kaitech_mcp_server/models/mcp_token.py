@@ -11,6 +11,10 @@ from odoo.exceptions import AccessError
 _logger = logging.getLogger(__name__)
 
 TOKEN_TTL_DAYS = 30
+_ADMIN_FIELDS = frozenset({
+    "token", "user_id", "token_type", "expires_at", "last_used", "refresh_token", "refresh_token_expires_at",
+    "allow_sql", "sql_table_ids", "allow_explore",
+})
 REFRESH_TOKEN_TTL_DAYS = 90
 
 
@@ -85,7 +89,6 @@ class McpToken(models.Model):
         string="Allowed Models",
         help="Restrict this token to specific Odoo models. "
              "Leave empty to allow access to all models.",
-        tracking=True,
     )
     denied_model_ids = fields.Many2many(
         "ir.model",
@@ -95,7 +98,6 @@ class McpToken(models.Model):
         string="Denied Models",
         help="Block this token from specific Odoo models. "
              "Denylist is evaluated before allowlist.",
-        tracking=True,
     )
     field_restrictions = fields.Text(
         string="Field Restrictions (JSON)",
@@ -118,30 +120,57 @@ class McpToken(models.Model):
         tracking=True,
     )
 
-    # ------------------------------------------------------------------
-    # Full Access hanya boleh diberikan admin Settings — di sisi server
-    # scope ini menjalankan tool sebagai superuser.
-    # ------------------------------------------------------------------
+    allow_sql = fields.Boolean(
+        string="SQL",
+        tracking=True,
+        help="Lets this token use the SQL tools on the tables listed below. SQL bypasses Odoo access rights, "
+             "record rules and constraints. SQL must also be switched on in MCP Server settings.",
+    )
+    sql_table_ids = fields.One2many("mcp.token.sql.table", "token_id", string="SQL Tables")
+    allow_explore = fields.Boolean(
+        string="Explore Code",
+        tracking=True,
+        help="Lets this token read the code of the installed modules: models, methods, source files, "
+             "views and actions.",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not self._privileged():
+            for vals in vals_list:
+                self._check_owner_fields(vals)
         if any(vals.get("scope") == "admin" for vals in vals_list):
             self._check_can_grant_full_access()
         return super().create(vals_list)
 
     def write(self, vals):
+        if not self._privileged():
+            self._check_owner_fields(vals)
         if vals.get("scope") == "admin":
             self._check_can_grant_full_access()
         return super().write(vals)
 
+    def _privileged(self):
+        return self.env.su or self.env.user._is_system()
+
+    def _check_owner_fields(self, vals):
+        """A token owner may rename, restrict or revoke a token, never re-own, re-key, revive or widen it."""
+        protected = sorted(name for name in vals if name in _ADMIN_FIELDS)
+        if protected:
+            raise AccessError(_("Only Settings administrators can change %(fields)s on an MCP token.",
+                                fields=", ".join(protected)))
+        if "state" in vals and vals["state"] != "revoked":
+            raise AccessError(_("An MCP token can only be revoked here."))
+
     def _check_can_grant_full_access(self):
-        if not self.env.su and not self.env.user._is_system():
+        if not self._privileged():
             raise AccessError(_("Only Settings administrators can grant Full Access to an MCP token."))
 
     # ------------------------------------------------------------------
     # Token issuance
     # ------------------------------------------------------------------
 
+    @api.private
     @api.model
     def issue(self, uid: int, client_name: str = "MCP Client",
               token_type: str = "oauth", scope: str | None = None) -> str:
@@ -150,6 +179,7 @@ class McpToken(models.Model):
         raw, _refresh = self._issue_pair(uid, client_name, token_type, scope=scope)
         return raw
 
+    @api.private
     @api.model
     def issue_oauth(self, uid: int, client_name: str = "MCP Client") -> tuple[str, str]:
         """Issue access + refresh token pair for OAuth flows.
@@ -177,10 +207,11 @@ class McpToken(models.Model):
             vals["refresh_token"] = _hash_token(raw_refresh)
             vals["refresh_token_expires_at"] = now + timedelta(days=REFRESH_TOKEN_TTL_DAYS)
 
-        rec = self.with_user(uid).create(vals)
+        rec = self.with_user(uid).sudo().create(vals)
         rec.message_post(body=f"MCP Bearer Token issued — client: {client_name}")
         return raw_access, raw_refresh
 
+    @api.private
     @api.model
     def refresh(self, raw_refresh_token: str) -> tuple[str, str] | None:
         """Exchange a refresh token for a new access + refresh token pair (rotation).
@@ -209,6 +240,7 @@ class McpToken(models.Model):
             "token_type": rec.token_type,
             "expires_at": now + timedelta(days=TOKEN_TTL_DAYS),
             "refresh_token_expires_at": now + timedelta(days=REFRESH_TOKEN_TTL_DAYS),
+            **rec._governance_values(),
         })
         # Expire the used token (rotation — prevent reuse)
         rec.write({"state": "expired"})
@@ -218,14 +250,29 @@ class McpToken(models.Model):
     # Actions
     # ------------------------------------------------------------------
 
+    def _governance_values(self):
+        """Scope and restrictions a rotated token keeps."""
+        self.ensure_one()
+        return {
+            "scope": self.scope,
+            "ip_allowlist": self.ip_allowlist,
+            "ip_denylist": self.ip_denylist,
+            "allowed_model_ids": [(6, 0, self.allowed_model_ids.ids)],
+            "denied_model_ids": [(6, 0, self.denied_model_ids.ids)],
+            "field_restrictions": self.field_restrictions,
+            "capture_payloads": self.capture_payloads,
+            "allow_sql": self.allow_sql,
+            "allow_explore": self.allow_explore,
+            "sql_table_ids": [(0, 0, row._copy_values()) for row in self.sql_table_ids],
+        }
+
     def action_revoke(self):
         self.write({"state": "revoked"})
 
     def action_generate_pat(self):
         """Issue a PAT for the current user and open one-time display wizard.
 
-        PAT milik admin Settings langsung Full Access (tanpa batasan); user lain
-        tetap Read + Write."""
+        A Settings administrator's PAT gets Full Access; other users get Read + Write."""
         raw = self.issue(
             self.env.uid,
             client_name=f"PAT — {self.env.user.name}",

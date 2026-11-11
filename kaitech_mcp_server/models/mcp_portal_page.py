@@ -71,7 +71,7 @@ import re
 import secrets
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -209,11 +209,23 @@ class McpPortalPage(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            self._check_created_by(vals)
             if not vals.get("slug") and vals.get("name"):
                 vals["slug"] = self._unique_slug(vals["name"])
             if not vals.get("access_token"):
                 vals["access_token"] = secrets.token_urlsafe(24)
         return super().create(vals_list)
+
+    def write(self, vals):
+        self._check_created_by(vals)
+        return super().write(vals)
+
+    def _check_created_by(self, vals):
+        """Pages render with their owner's access rights: only Settings administrators may hand one to someone else."""
+        if "created_by" in vals and vals["created_by"] != self.env.uid \
+                and not (self.env.su or self.env.user._is_system()):
+            raise AccessError(_("Only Settings administrators can change the owner of %(model)s.",
+                                model=self._description))
 
     # ------------------------------------------------------------------
     # Computed field implementations

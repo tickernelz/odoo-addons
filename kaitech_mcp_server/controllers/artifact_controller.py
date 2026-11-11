@@ -16,6 +16,7 @@ to limit script-src / style-src to a small set of trusted CDNs and to block
 ``connect-src``.
 """
 
+import hmac
 import html as html_lib
 import logging
 
@@ -157,14 +158,15 @@ class McpArtifactController(http.Controller):
         return art or None
 
     def _check_auth(self, art, token: str):
-        if art.is_public:
+        """None when the artifact may be shown: public, a valid token, or readable to the logged-in user."""
+        if art.is_public or (token and art.access_token and hmac.compare_digest(token, art.access_token)):
             return None
-        if token and token == art.access_token:
-            return None
-        if request.session and request.session.uid:
-            return None
-        login_url = f"/web/login?redirect=/mcp-artifact/{art.slug}"
-        return request.redirect(login_url, code=302)
+        uid = request.session.uid if request.session else None
+        if not uid:
+            return request.redirect(f"/web/login?redirect=/mcp-artifact/{art.slug}", code=302)
+        if not request.env["mcp.html.artifact"].with_user(uid).search_count([("id", "=", art.id)]):
+            return request.not_found()
+        return None
 
     def _bump_view_counter(self, art):
         from odoo import fields

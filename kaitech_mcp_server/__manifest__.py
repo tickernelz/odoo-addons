@@ -3,7 +3,7 @@
 # Part of kaitech.io. See LICENSE file for full copyright and licensing details.
 {
     'name': 'MCP Server Odoo',
-    'version': '19.0.1.1.0',
+    'version': '19.0.2.0.0',
     'summary': 'MCP Server, AI Integration, Claude, ChatGPT, Gemini, Grok, Cursor, n8n, LangChain, OAuth 2.0, PKCE, Bearer Token, Personal Access Token, REST API, Streamable HTTP, SSE, Async Jobs, Background Queue, BI Reporting, Pivot Table, Time Series, Cohort Analysis, Funnel, Top N, Export CSV, Export XLSX, Portal Pages, Public Dashboard, KPI Tiles, Module Generator, AI Code Generation, LLM, Automation, Audit Log, Rate Limiting, Redis, Schema Cache, Scoped Tokens, Field Allowlist, IP Allowlist, Odoo API, Odoo Connector, AI Assistant, Chatbot, Natural Language, Bulk Update, Bulk Create, Bulk Delete',
     'description': """
 MCP Server Odoo
@@ -17,8 +17,9 @@ Core capabilities
 -----------------
 * OAuth 2.0 Authorization Code Flow with PKCE (S256), dynamic client registration
 * Personal Access Tokens (PAT) — self-service
-* Bearer token auth, SHA-256 hashed, 30-day expiry, refresh token rotation
+* Token in Authorization: Bearer, X-API-Key or X-Auth-Token; SHA-256 hashed, 30-day expiry, refresh token rotation
 * Streamable HTTP transport (MCP 2025-03-26) + legacy SSE transport
+* Several databases on one server: /mcp/<database>, the X-Odoo-Database header, or dbfilter
 * Auto-discovery via /.well-known/oauth-authorization-server
 
 Governance & audit
@@ -36,7 +37,7 @@ Performance
 * Redis-backed distributed rate limiting (in-memory fallback)
 * LRU eviction, automatic invalidation on schema change
 
-Tools (24+)
+Tools (50+)
 -----------
 * CRUD: get_models, fields_get, search_read, create, write, unlink, call_method
 * Workflow: message_post, default_get, onchange, get_views, print_report, create_attachment
@@ -46,6 +47,9 @@ Tools (24+)
 * Async jobs: submit_job, job_status, job_list, job_cancel
 * Portal pages: create_portal_page, list_portal_pages, update_portal_page
 * Module builder: generate_module, validate_module_spec, list_generated_modules, install_generated_module
+* SQL per token and table: sql_list_tables, sql_select, sql_query (checked SELECT), sql_insert, sql_update, sql_delete (dry_run)
+* Explore code: describe_model, search_methods, describe_method, get_method_source, search_code, read_source,
+  list_modules, describe_module, get_view, list_actions, search_xmlids
 
 Resources
 ---------
@@ -68,7 +72,7 @@ status. Background cron processes jobs respecting token scope and restrictions.
 Module generator
 ----------------
 AI generates a JSON spec → validate → ZIP → install. Feature-flagged off
-by default. Sandboxed to configured addons path.
+by default. Installing needs mcp_generated_modules_path in the Odoo configuration file.
     """,
     'author': 'kaitech.io',
     'website': 'https://kaitech.io',
@@ -93,6 +97,7 @@ by default. Sandboxed to configured addons path.
     'external_dependencies': {
         'python': [],
     },
+    'post_load': 'post_load',
     'installable': True,
     'application': True,
     'auto_install': False,

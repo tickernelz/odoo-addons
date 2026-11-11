@@ -8,6 +8,8 @@ import zipfile
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.modules.module import get_module_path
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +25,7 @@ class McpGeneratedModule(models.Model):
     # ------------------------------------------------------------------
 
     name = fields.Char(
-        string="Display Name",
+        string="Module Title",
         required=True,
         tracking=True,
     )
@@ -195,7 +197,7 @@ class McpGeneratedModule(models.Model):
     def action_install(self):
         """Extract ZIP to configured addons path and install via Odoo module manager.
 
-        Requires ir.config_parameter 'mcp_server.generated_modules_path' to be set.
+        Requires mcp_generated_modules_path in the Odoo configuration file.
         Path must exist, be writable, and must NOT be inside community/ or enterprise/.
         """
         self.ensure_one()
@@ -207,18 +209,24 @@ class McpGeneratedModule(models.Model):
         if not self.attachment_id:
             raise UserError(_("No ZIP archive found. Generate the module first."))
 
-        IrParam = self.env["ir.config_parameter"].sudo()
-        base_path = IrParam.get_param("mcp_server.generated_modules_path", "").strip()
+        base_path = (config.get("mcp_generated_modules_path") or "").strip()
         if not base_path:
             raise UserError(_(
-                "Generated modules path is not configured. "
-                "Go to Settings > MCP Server and set 'Generated Modules Path' first."
+                "Generated modules path is not configured. The server administrator sets "
+                "mcp_generated_modules_path in the Odoo configuration file."
             ))
 
-        base_path = os.path.abspath(base_path)
+        base_path = os.path.realpath(base_path)
         self._validate_install_path(base_path)
 
         target_dir = os.path.join(base_path, self.technical_name)
+        existing = get_module_path(self.technical_name, display_warning=False)
+        if existing and os.path.dirname(os.path.realpath(existing)) != base_path:
+            raise UserError(_(
+                "A module named %(name)s already exists at %(path)s. Choose another technical name.",
+                name=self.technical_name,
+                path=existing,
+            ))
 
         # Fetch ZIP bytes
         att = self.attachment_id.sudo()

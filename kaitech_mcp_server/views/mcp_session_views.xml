@@ -107,10 +107,14 @@
                             <field name="is_error" string="Error" readonly="1"/>
                             <field name="error_message" string="Error Detail" readonly="1"
                                    invisible="not is_error"/>
+                            <field name="dry_run" readonly="1" invisible="not dry_run"/>
                         </group>
                     </group>
 
                     <notebook>
+                        <page string="SQL Statement" name="statement" invisible="not statement">
+                            <field name="statement" readonly="1" nolabel="1" widget="code"/>
+                        </page>
                         <page string="Request Payload" name="request_payload">
                             <div class="text-muted mb-2">
                                 Tool arguments (PII redacted). Only captured when the token

@@ -1,10 +1,48 @@
 # MCP Server for Odoo — User Guide
 
-> **Version:** 19.0.1.0.0 · **License:** OPL-1 · **Author:** kaitech.io
+> **Version:** 19.0.2.0.0 · **License:** OPL-1 · **Author:** kaitech.io
 
 Turn Odoo into an AI-ready tool server. Connect Claude, ChatGPT, Gemini, Cursor, n8n, LangChain, and any MCP-capable client to live Odoo data — with OAuth 2.0 governance, audit logs, BI tools, portal pages, async jobs, and AI-driven module generation.
 
-> **For installation and connection instructions, see [docs/index.rst](docs/index.rst).**
+> **For installation and connection instructions, see [doc/index.rst](doc/index.rst).**
+
+## Several databases on one server
+
+Without a dbfilter, Odoo picks the database of a request from one of:
+
+- the `X-Odoo-Database: <database>` header on `POST /mcp` (no setting needed);
+- `POST /mcp/<database>` when the module is listed in `server_wide_modules` (`--load=base,web,kaitech_mcp_server`);
+  an unknown database, one without the module, or one the dbfilter refuses all answer the same 404;
+- the host, with `dbfilter = ^%d$`.
+
+`/mcp/<database>`, `/mcp/<database>/sse` and `/mcp/<database>/messages` also work whenever the database is already
+selected and the name matches. Odoo refuses to uninstall a module listed in `server_wide_modules`: remove it from
+that list and restart before uninstalling.
+
+The token may come as `Authorization: Bearer <token>`, `X-API-Key: <token>` or `X-Auth-Token: <token>`.
+
+## SQL and Explore code
+
+A Settings administrator opens these per token, on the **SQL and Code** tab of the token:
+
+- **Explore code**: `describe_model`, `search_methods`, `describe_method`, `get_method_source`, `search_code`,
+  `read_source`, `list_modules`, `describe_module`, `get_view`, `list_actions`, `search_xmlids`.
+- **SQL** (also switched on in Settings > MCP Server > SQL): `sql_list_tables`, `sql_select`, `sql_query`
+  (one checked SELECT), `sql_insert`, `sql_update`, `sql_delete` (`dry_run` on update and delete), on the tables
+  listed on the token with select, insert, update and delete per table. System tables (`ir_*`, `res_users*`,
+  `res_groups*`, `mcp_*`, ...) and password, token, secret and binary columns are never reachable, also through
+  aliases in a query. Delete needs its own switch in Settings. Read-scope tokens only select.
+
+`odoo_call_method` refuses mail gateway methods and `@api.private` methods for every token, and takes `dry_run`.
+
+## Moving from kaitech_mcp
+
+`kaitech_mcp` keys do not carry over. On each database: note the keys and their permissions, uninstall
+`kaitech_mcp` (remove it from `server_wide_modules` and restart first), install `kaitech_mcp_server`, then issue a
+token per client (Generate PAT, or a token an administrator creates) and set its scope, model lists, SQL tables and
+Explore code to match the old key. Clients keep the `/mcp/<database>` URL when the module is server-wide; the tool
+names of the record tools change to `odoo_*` (`search_records` becomes `odoo_search_read`), the SQL and Explore
+tool names stay the same.
 
 ---
 

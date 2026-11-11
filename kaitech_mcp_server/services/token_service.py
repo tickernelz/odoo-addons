@@ -19,11 +19,22 @@ def _hash_token(raw: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def extract_bearer(request) -> str | None:
-    """Extract Bearer token from Authorization header."""
-    auth = request.httprequest.headers.get("Authorization", "")
-    if auth.startswith("Bearer "):
-        return auth[7:].strip()
+KEY_HEADERS = ("Authorization", "X-API-Key", "X-Auth-Token")
+
+
+def extract_token(request) -> str | None:
+    """The token of the first key header that carries one: a Bearer Authorization, or X-API-Key / X-Auth-Token
+    with or without the Bearer prefix."""
+    headers = request.httprequest.headers
+    for name in KEY_HEADERS:
+        value = (headers.get(name) or "").strip()
+        scheme, _space, rest = value.partition(" ")
+        if scheme.lower() == "bearer":
+            value = rest.strip()
+        elif name == "Authorization":
+            value = ""
+        if value:
+            return value
     return None
 
 
@@ -74,8 +85,8 @@ def validate_token(token: str, env) -> dict | None:
     if not rec.last_used or rec.last_used < threshold:
         rec.write({"last_used": now})
 
-    # Full Access berarti tanpa batasan model/field, walau token masih menyimpan
-    # allowlist/denylist dari konfigurasi sebelumnya.
+    # Full Access means no model or field restriction, even when the token still
+    # holds an allowlist or denylist from an earlier configuration.
     full_access = rec.scope == "admin"
 
     # Build model restrictions set — load once here so tool_executor never re-queries

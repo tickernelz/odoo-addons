@@ -1,6 +1,7 @@
 from . import mcp_session
 from . import mcp_session_log
 from . import mcp_token
+from . import mcp_token_sql_table
 from . import mcp_pat_wizard
 from . import mcp_auth_code
 from . import mcp_tool_registry

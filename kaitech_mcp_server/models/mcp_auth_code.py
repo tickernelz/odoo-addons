@@ -29,6 +29,7 @@ class McpAuthCode(models.Model):
     expires_at = fields.Datetime(readonly=True)
     used = fields.Boolean(default=False, readonly=True)
 
+    @api.private
     @api.model
     def create_code(
         self,
@@ -53,6 +54,7 @@ class McpAuthCode(models.Model):
         )
         return raw
 
+    @api.private
     @api.model
     def exchange(self, code: str, code_verifier: str, redirect_uri: str):
         """

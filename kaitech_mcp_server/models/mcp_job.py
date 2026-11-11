@@ -1,11 +1,15 @@
 import json
 import logging
-from datetime import datetime
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
+
+
+_GOVERNANCE_FIELDS = frozenset({
+    "operation", "user_id", "token_id", "session_id", "payload", "mcp_scope", "mcp_restrictions",
+})
 
 
 class McpJob(models.Model):
@@ -108,9 +112,19 @@ class McpJob(models.Model):
         help="Snapshot of the token restrictions at job submission time.",
     )
 
-    # ------------------------------------------------------------------
-    # Compute
-    # ------------------------------------------------------------------
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self._privileged():
+            raise AccessError(_("MCP jobs are submitted through the odoo_submit_job tool."))
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if not self._privileged() and _GOVERNANCE_FIELDS & set(vals):
+            raise AccessError(_("The owner, operation, payload and scope of an MCP job cannot be changed."))
+        return super().write(vals)
+
+    def _privileged(self):
+        return self.env.su or self.env.user._is_system()
 
     @api.depends("operation")
     def _compute_name(self):
@@ -239,7 +253,10 @@ class McpJob(models.Model):
             except (json.JSONDecodeError, TypeError):
                 pass
 
-        job_env = self.env(context={**self.env.context, **ctx_updates})
+        owner = self.user_id
+        job_env = self.with_user(owner).env(context={**self.env.context, **ctx_updates})
+        if ctx_updates["mcp_scope"] == "admin" and owner._is_system():
+            job_env = job_env(su=True)
 
         from ..services import job_runner
 

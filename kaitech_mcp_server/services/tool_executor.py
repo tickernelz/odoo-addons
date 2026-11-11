@@ -10,6 +10,10 @@ from . import job_tools
 from . import portal_tools
 from . import artifact_tools
 from . import module_tools
+from . import sql_tools
+from . import explore_tools
+from .explore import MAIL_GATEWAY_METHODS, callable_by_tool
+from .grants import Grant
 from .json_utils import odoo_json_default  # noqa: F401 — re-exported for callers
 
 _logger = logging.getLogger(__name__)
@@ -47,7 +51,7 @@ _READ_ONLY_TOOLS = frozenset({
     "odoo_list_generated_modules",
     # Context tool (available to all scopes)
     "odoo_get_context",
-})
+}) | sql_tools.READ_ONLY_TOOL_NAMES | explore_tools.TOOL_NAMES
 
 # Tools blocked for 'write' scope (admin required)
 _WRITE_SCOPE_BLOCKED_TOOLS = frozenset({
@@ -64,7 +68,17 @@ _EXTERNAL_HANDLERS = {
     **job_tools.TOOL_HANDLERS,
     **portal_tools.TOOL_HANDLERS,
     **artifact_tools.TOOL_HANDLERS,
+    **sql_tools.TOOL_HANDLERS,
+    **explore_tools.TOOL_HANDLERS,
 }
+_GATED_TOOL_NAMES = frozenset(sql_tools.TOOL_HANDLERS) | explore_tools.TOOL_NAMES
+
+
+def visible_tools(env, tools: list) -> list:
+    """Drop the SQL and Explore tools this token cannot use from a tools/list answer."""
+    grant = Grant.of(env)
+    usable = sql_tools.visible(env, grant) | explore_tools.visible(env, grant)
+    return [tool for tool in tools if tool["name"] not in _GATED_TOOL_NAMES or tool["name"] in usable]
 
 _MODULE_TOOL_NAMES = frozenset(t["name"] for t in module_tools.TOOL_DEFINITIONS)
 
@@ -157,9 +171,8 @@ def _enforce_scope(env, tool_name: str) -> None:
 
 
 def _is_full_access(env) -> bool:
-    """Token 'admin' (Full Access) tidak kena denylist method, larangan method
-    privat, maupun batas jumlah id per panggilan."""
-    return env.context.get("mcp_scope") == "admin"
+    """Full Access of a Settings administrator, running as superuser: no method denylist, private methods or id cap."""
+    return env.context.get("mcp_scope") == "admin" and env.su
 
 
 def _enforce_model_access(env, tool_name: str, args: dict) -> None:
@@ -397,6 +410,33 @@ def _call_method(env, args: dict):
     method_args = args.get("args") or []
     method_kwargs = args.get("kwargs") or {}
 
+    dry_run = args.get("dry_run", False)
+    if not isinstance(method_name, str) or not method_name:
+        raise ValueError("'method' must be a method name.")
+    if not isinstance(dry_run, bool):
+        raise ValueError("'dry_run' must be true or false.")
+
+    model = check_callable(env, model_name, method_name)
+    target = model.browse(ids) if ids else model
+    if not dry_run:
+        return {"result": getattr(target, method_name)(*method_args, **method_kwargs)}
+
+    cr = env.cr
+    cr.execute("SAVEPOINT mcp_call_method_dry_run")
+    cr.commit = _refuse_commit
+    try:
+        result = getattr(target, method_name)(*method_args, **method_kwargs)
+        env.flush_all()
+        result = json.loads(json.dumps(result, default=odoo_json_default))
+    finally:
+        del cr.commit
+        cr.execute("ROLLBACK TO SAVEPOINT mcp_call_method_dry_run")
+        env.invalidate_all()
+    return {"result": result, "dry_run": True}
+
+
+def check_callable(env, model_name: str, method_name: str):
+    """The model when method_name of model_name may run through MCP, else raise."""
     full_access = _is_full_access(env)
     if method_name.startswith("_") and not full_access:
         raise ValueError(
@@ -407,14 +447,30 @@ def _call_method(env, args: dict):
             f"Method {method_name!r} is blocked. Use the dedicated MCP tool instead "
             f"(odoo_search_read, odoo_create, odoo_write, odoo_unlink, etc.)."
         )
-
     model = _resolve_model(env, model_name)
-    if not hasattr(model, method_name):
+    if not callable(getattr(type(model), method_name, None)):
         raise ValueError(f"Method {method_name!r} not found on model {model_name!r}")
+    refusal = _call_refusal(env, model_name, method_name, full_access)
+    if refusal:
+        raise PermissionError(f"{model_name}.{method_name} cannot be called through MCP: {refusal}.")
+    return model
 
-    target = model.browse(ids) if ids else model
-    result = getattr(target, method_name)(*method_args, **method_kwargs)
-    return {"result": result}
+
+def _call_refusal(env, model_name: str, method_name: str, full_access: bool) -> str | None:
+    """Why method_name may not run through MCP, or None. Full Access skips only the private and ORM checks."""
+    if not full_access:
+        allowed, reason = callable_by_tool(env, model_name, method_name)
+        return None if allowed else reason
+    if method_name in MAIL_GATEWAY_METHODS:
+        return "mail gateway method, it creates records on any model as the user the mail names (sudo)"
+    for klass in type(env[model_name]).__mro__:
+        if getattr(vars(klass).get(method_name), "_api_private", False):
+            return "marked @api.private"
+    return None
+
+
+def _refuse_commit():
+    raise PermissionError("This method commits by itself, so dry_run cannot undo it: nothing was changed.")
 
 
 _MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024  # 10 MB
