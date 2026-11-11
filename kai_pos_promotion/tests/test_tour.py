@@ -65,7 +65,12 @@ class TestPromoTours(PromoTourBase):
         self.assertLess(returned.price_subtotal_incl * product_line.price_subtotal_incl, 0)
         self.assertEqual(refund.amount_total, -416000)
 
+    def _untaxed(self, *names):
+        for name in names:
+            self.products[name].taxes_id = [Command.clear()]
+
     def test_exclusive_group_with_a_native_programme(self):
+        self._untaxed('Promo Gift Box')
         activate(tier_promo(self.env, 'National Tier', [(400000, 'percent', 12), (800000, 'amount', 120000)], priority=20))
         self.env['loyalty.program'].create({
             'name': 'Native Order 25%', 'program_type': 'promotion', 'trigger': 'auto', 'applies_on': 'current',
@@ -83,6 +88,7 @@ class TestPromoTours(PromoTourBase):
         self.assertFalse(order.lines.filtered('is_reward_line'))
 
     def test_happy_hour_on_a_native_programme(self):
+        self._untaxed('Promo Coffee')
         coffee = self.products['Promo Coffee']
         self.env['loyalty.program'].create({
             'name': 'Coffee Happy Hour', 'program_type': 'promotion', 'trigger': 'auto', 'applies_on': 'current',
