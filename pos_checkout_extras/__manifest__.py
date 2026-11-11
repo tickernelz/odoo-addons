@@ -27,6 +27,7 @@
             'pos_checkout_extras/static/tests/tours/**/*',
         ],
     },
+    'pre_init_hook': 'pre_init_hook',
     'installable': True,
     'application': False,
 }

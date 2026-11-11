@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from .common import CheckoutExtrasCommon
@@ -93,5 +94,5 @@ class TestSessionAnalytic(CheckoutExtrasCommon):
             'business_domain': 'general',
             'applicability': 'mandatory',
         })]})
-        with self.assertRaisesRegex(Exception, '100%'):
+        with self.assertRaisesRegex(ValidationError, '100%'):
             self.config.analytic_distribution = {str(self.ubud.id): 50.0}
