@@ -116,6 +116,8 @@ Updating the translation catalogue:
 
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
 claims, and point of sale users only read programmes, usage, and quota rows.
+The administrator receives both groups when the module is installed, and
+groups for other users are assigned manually.
 The reservation, release, and confirm calls perform their writes on those
 three models under sudo after the eligibility and locking checks, so a
 cashier cannot adjust quota counters directly through the ORM.
