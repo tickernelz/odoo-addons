@@ -8,7 +8,7 @@ if [ -n "${ADDONS_PATH:-}" ]; then
 fi
 root=$(cd "$(dirname "$0")/.." && pwd)
 run=0
-for order in $(python3 "$root/ci/addons.py" orders); do
+for order in $(python3 "$root/ci/install_orders.py"); do
     run=$((run + 1))
     db="${TEST_DB_PREFIX:-install_order}_$run"
     echo "order $run: $order"

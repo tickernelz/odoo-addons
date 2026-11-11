@@ -1,0 +1,34 @@
+<section style="max-width: 980px; margin: 0 auto; padding: 24px 16px; font-family: Roboto, 'Noto Sans', Arial, sans-serif;">
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 8px;">
+        <img src="icon.png" alt="" style="width: 72px; height: 72px;"/>
+        <div>
+            <h1 style="margin: 0; font-size: 30px;">POS Manager Validation</h1>
+            <p style="margin: 4px 0 0; font-size: 16px; opacity: .8;">Sensitive point of sale actions wait for a manager PIN, checked on the server, set per point of sale.</p>
+        </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px;">
+        <div style="flex: 1 1 280px; border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 18px;">
+            <h3 style="margin-top: 0; padding-left: 10px; border-left: 4px solid #714b67;">Per point of sale</h3>
+            <p>In <b>Point of Sale &gt; Configuration &gt; Settings</b>, under <b>Manager Validation</b>, pick the validating managers and tick the actions they approve. Everything is off by default.</p>
+            <p>Needs <b>Log in with Employees</b>.</p>
+        </div>
+        <div style="flex: 1 1 280px; border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 18px;">
+            <h3 style="margin-top: 0; padding-left: 10px; border-left: 4px solid #1ab5a6;">Twelve actions</h3>
+            <ul style="padding-left: 18px;">
+                <li>Close the session, delete an order, remove a line</li>
+                <li>Validate a payment, discount, change a price, decrease a quantity</li>
+                <li>Cash in/out, create a product, fiscal position, pricelist, refund</li>
+            </ul>
+        </div>
+        <div style="flex: 1 1 280px; border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 18px;">
+            <h3 style="margin-top: 0; padding-left: 10px; border-left: 4px solid #f2a81d;">A PIN that stays on the server</h3>
+            <p>Each manager gets a separate <b>POS Validation PIN</b> of six to twelve digits in the HR Settings tab. It is stored hashed and never sent to the point of sale.</p>
+            <p>Five wrong PINs in fifteen minutes lock validation for that manager and that session. Every request is logged, without the PIN.</p>
+        </div>
+    </div>
+    <div style="margin-top: 24px; border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 18px;">
+        <h3 style="margin-top: 0;">Also checked on the server</h3>
+        <p>Closing a session, cash in/out, cancelling an order with lines, and refunds or payments from the backend need a validation. Synced orders with an unvalidated discount, pricelist, fiscal position, payment or refund are kept and marked for review.</p>
+        <p>Keypad, touch and physical keyboard all work; barcode scans are ignored while the PIN dialog is open.</p>
+    </div>
+</section>
