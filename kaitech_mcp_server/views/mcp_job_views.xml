@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         List view
+    ================================================================ -->
+    <record id="mcp_job_list_view" model="ir.ui.view">
+        <field name="name">mcp.job.list</field>
+        <field name="model">mcp.job</field>
+        <field name="arch" type="xml">
+            <list string="MCP Async Jobs" default_order="id desc"
+                  decoration-success="state == 'done'"
+                  decoration-warning="state == 'running'"
+                  decoration-danger="state == 'failed'"
+                  decoration-muted="state in ('cancelled',)">
+                <field name="name" optional="show"/>
+                <field name="user_id" optional="show"/>
+                <field name="operation" optional="show"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'running'"
+                       decoration-danger="state == 'failed'"
+                       decoration-info="state == 'pending'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="progress" string="Progress (%)" optional="show"/>
+                <field name="total_records" optional="show"/>
+                <field name="processed_records" optional="show"/>
+                <field name="duration_ms" string="Duration (ms)" optional="show"/>
+                <field name="create_date" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Form view
+    ================================================================ -->
+    <record id="mcp_job_form_view" model="ir.ui.view">
+        <field name="name">mcp.job.form</field>
+        <field name="model">mcp.job</field>
+        <field name="arch" type="xml">
+            <form string="MCP Async Job">
+                <header>
+                    <button name="action_run"
+                            string="Run Now"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'pending'"/>
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            invisible="state != 'pending'"/>
+                    <button name="action_retry"
+                            string="Retry"
+                            type="object"
+                            invisible="state != 'failed'"/>
+                    <button name="action_open_attachment"
+                            string="Download Export"
+                            type="object"
+                            invisible="not attachment_id"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="pending,running,done,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Job Info">
+                            <field name="operation" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="token_id" readonly="1"/>
+                            <field name="session_id" readonly="1"/>
+                            <field name="mcp_scope" readonly="1"/>
+                        </group>
+                        <group string="Progress">
+                            <field name="progress" widget="progressbar" readonly="1"/>
+                            <field name="total_records" readonly="1"/>
+                            <field name="processed_records" readonly="1"/>
+                            <field name="started_at" readonly="1"/>
+                            <field name="finished_at" readonly="1"/>
+                            <field name="duration_ms" readonly="1"/>
+                            <field name="attachment_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General">
+                            <group>
+                                <field name="error_message" readonly="1"
+                                       invisible="not error_message"
+                                       widget="text"/>
+                            </group>
+                        </page>
+                        <page string="Payload">
+                            <field name="payload" readonly="1" widget="code"
+                                   options="{'mode': 'javascript'}"/>
+                        </page>
+                        <page string="Result">
+                            <field name="result" readonly="1" widget="code"
+                                   options="{'mode': 'javascript'}"/>
+                            <field name="mcp_restrictions" readonly="1" widget="code"
+                                   options="{'mode': 'javascript'}" string="Restrictions Snapshot"/>
+                        </page>
+                        <page string="Log">
+                            <field name="message_ids" widget="mail_thread" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Search view
+    ================================================================ -->
+    <record id="mcp_job_search_view" model="ir.ui.view">
+        <field name="name">mcp.job.search</field>
+        <field name="model">mcp.job</field>
+        <field name="arch" type="xml">
+            <search string="Search Jobs">
+                <field name="name"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter name="filter_pending"
+                        string="Pending"
+                        domain="[('state','=','pending')]"/>
+                <filter name="filter_running"
+                        string="Running"
+                        domain="[('state','=','running')]"/>
+                <filter name="filter_done"
+                        string="Done"
+                        domain="[('state','=','done')]"/>
+                <filter name="filter_failed"
+                        string="Failed"
+                        domain="[('state','=','failed')]"/>
+                <filter name="filter_cancelled"
+                        string="Cancelled"
+                        domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter name="filter_my_jobs"
+                        string="My Jobs"
+                        domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter name="filter_bulk_update"
+                        string="Bulk Update"
+                        domain="[('operation','=','bulk_update')]"/>
+                <filter name="filter_export"
+                        string="Exports"
+                        domain="[('operation','in',['export_csv','export_xlsx'])]"/>
+                <group>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_operation" string="Operation" context="{'group_by': 'operation'}"/>
+                    <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Action
+    ================================================================ -->
+    <record id="mcp_job_action" model="ir.actions.act_window">
+        <field name="name">Async Jobs</field>
+        <field name="res_model">mcp.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mcp_job_search_view"/>
+        <field name="context">{'search_default_filter_my_jobs': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No async jobs yet
+            </p>
+            <p>
+                Submit heavy operations via the MCP protocol using
+                <b>odoo_submit_job</b> and track them here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

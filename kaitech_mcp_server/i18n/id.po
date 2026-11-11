@@ -1,0 +1,2683 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* kaitech_mcp_server
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 12:23+0000\n"
+"PO-Revision-Date: 2026-11-11 12:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "'filters' must be a JSON array."
+msgstr "'filters' harus berupa array JSON."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "'widgets' must be a JSON array."
+msgstr "'widgets' harus berupa array JSON."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "/path/to/custom/addons"
+msgstr "/path/to/custom/addons"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid ""
+"192.168.1.0/24\n"
+"10.0.0.1\n"
+"# office network\n"
+"2001:db8::/32"
+msgstr ""
+"192.168.1.0/24\n"
+"10.0.0.1\n"
+"# jaringan kantor\n"
+"2001:db8::/32"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid ""
+"<strong>Save this token now.</strong>\n"
+"                        It is shown <strong>only once</strong> and cannot be retrieved later.\n"
+"                        Store it securely — treat it like a password."
+msgstr ""
+"<strong>Simpan token ini sekarang.</strong>\n"
+"                        Token ini ditampilkan <strong>hanya sekali</strong> dan tidak dapat diambil kembali.\n"
+"                        Simpan dengan aman — perlakukan seperti kata sandi."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"A module named %(name)s already exists at %(path)s. Choose another technical"
+" name."
+msgstr "Modul bernama %(name)s sudah ada di %(path)s. Pilih nama teknis lain."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.constraint,message:kaitech_mcp_server.constraint_mcp_generated_module_technical_name_unique
+msgid "A module with this technical name already exists."
+msgstr "Modul dengan nama teknis ini sudah ada."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.constraint,message:kaitech_mcp_server.constraint_mcp_portal_page_slug_unique
+msgid "A portal page with this slug already exists. Choose a different slug."
+msgstr "Halaman portal dengan slug ini sudah ada. Pilih slug lain."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__license__agpl-3
+msgid "AGPL-3"
+msgstr "AGPL-3"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
+msgid ""
+"Absolute filesystem path where the install action extracts generated module "
+"ZIPs. Must be a custom addons path registered in Odoo, writable by the Odoo "
+"process, and must NOT be inside community/ or enterprise/ directories."
+msgstr ""
+"Path filesystem absolut tempat aksi instal mengekstrak ZIP modul yang "
+"dihasilkan. Harus berupa path addons kustom yang terdaftar di Odoo, dapat "
+"ditulis oleh proses Odoo, dan TIDAK boleh berada di dalam direktori "
+"community/ atau enterprise/."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Access & Statistics"
+msgstr "Akses & Statistik"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_needaction
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_needaction
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_needaction
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_needaction
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session__state__active
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__state__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Activity"
+msgstr "Aktivitas"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid ""
+"Add to your MCP client config as:\n"
+"                        <code>Authorization: Bearer &lt;token&gt;</code>"
+msgstr ""
+"Tambahkan ke konfigurasi klien MCP Anda sebagai:\n"
+"                        <code>Authorization: Bearer &lt;token&gt;</code>"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_sql_delete_enabled
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Allow SQL Delete"
+msgstr "Izinkan SQL Delete"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"Allow admin-scoped MCP tokens to generate installable Odoo modules via the "
+"odoo_generate_module tool. Disabled by default. Enable only on trusted "
+"environments."
+msgstr ""
+"Izinkan token MCP dengan cakupan admin membuat modul Odoo yang dapat "
+"diinstal melalui tool odoo_generate_module. Nonaktif secara default. "
+"Aktifkan hanya di lingkungan tepercaya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__allowed_model_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Allowed Models"
+msgstr "Model yang Diizinkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.constraint,message:kaitech_mcp_server.constraint_mcp_html_artifact_slug_unique
+msgid ""
+"An HTML artifact with this slug already exists. Choose a different slug."
+msgstr "Artefak HTML dengan slug ini sudah ada. Pilih slug lain."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token.py:0
+msgid "An MCP token can only be revoked here."
+msgstr "Token MCP hanya dapat dicabut di sini."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__access_token
+msgid ""
+"Append ?token=<value> to the artifact URL to grant read access without a "
+"login."
+msgstr ""
+"Tambahkan ?token=<value> ke URL artefak untuk memberi akses baca tanpa "
+"login."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__access_token
+msgid ""
+"Append ?token=<value> to the page URL to grant read access without a login. "
+"Regenerate to invalidate all existing embed links."
+msgstr ""
+"Tambahkan ?token=<value> ke URL halaman untuk memberi akses baca tanpa "
+"login. Buat ulang untuk membatalkan semua tautan embed yang ada."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Are you sure? The connected client will lose access immediately."
+msgstr ""
+"Apakah Anda yakin? Klien yang terhubung akan langsung kehilangan akses."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "Artifact Title"
+msgstr "Judul Artefak"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__artifact_url
+msgid "Artifact URL"
+msgstr "URL Artefak"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_job_action
+msgid "Async Jobs"
+msgstr "Job Asinkron"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_attachment_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_attachment_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_attachment_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_attachment_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_attachment_count
+msgid "Attachment Count"
+msgstr "Jumlah Lampiran"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Audit Log Retention"
+msgstr "Retensi Log Audit"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__author
+msgid "Author"
+msgstr "Penulis"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_html_artifact__theme__auto
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_portal_page__theme__auto
+msgid "Auto"
+msgstr "Otomatis"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__denied_model_ids
+msgid ""
+"Block this token from specific Odoo models. Denylist is evaluated before "
+"allowlist."
+msgstr ""
+"Blokir token ini dari model Odoo tertentu. Denylist dievaluasi sebelum "
+"allowlist."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__bulk_create
+msgid "Bulk Create"
+msgstr "Buat Massal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__bulk_unlink
+msgid "Bulk Delete"
+msgstr "Hapus Massal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__bulk_update
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Bulk Update"
+msgstr "Perbarui Massal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__css
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "CSS"
+msgstr "CSS"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"Cache Odoo model/field metadata in memory to avoid repeated ORM "
+"introspection on every odoo_fields_get call."
+msgstr ""
+"Simpan metadata model/field Odoo di cache memori untuk menghindari "
+"introspeksi ORM berulang pada setiap panggilan odoo_fields_get."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Cache TTL (seconds)"
+msgstr "TTL Cache (detik)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Call Info"
+msgstr "Info Panggilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__call_method
+msgid "Call Method"
+msgstr "Metode Panggilan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__state__cancelled
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid "Cannot cancel job %s: only pending jobs can be cancelled."
+msgstr ""
+"Tidak dapat membatalkan job %s: hanya job yang tertunda yang bisa "
+"dibatalkan."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Cannot reset module %(name)s: current state is %(state)s."
+msgstr "Tidak dapat mereset modul %(name)s: status saat ini adalah %(state)s."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid "Cannot retry job %s: only failed jobs can be retried."
+msgstr "Tidak dapat mengulang job %s: hanya job yang gagal yang bisa diulang."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid "Cannot run job %s: current state is '%s' (must be 'pending')."
+msgstr ""
+"Tidak dapat menjalankan job %s: status saat ini adalah '%s' (harus "
+"'pending')."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__capture_payloads
+msgid "Capture Payloads"
+msgstr "Rekam Payload"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__category
+msgid "Category"
+msgstr "Kategori"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Chart widget #%d: 'chart_type' must be one of %s."
+msgstr "Widget grafik #%d: 'chart_type' harus salah satu dari %s."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Clear Schema Cache"
+msgstr "Hapus Cache Skema"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__client_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__name
+msgid "Client"
+msgstr "Klien"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__client_name
+msgid "Client Name"
+msgstr "Nama Klien"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Close Session"
+msgstr "Tutup Sesi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session__state__closed
+msgid "Closed"
+msgstr "Ditutup"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__code_challenge
+msgid "Code Challenge"
+msgstr "Code Challenge"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__code
+msgid "Code Hash (SHA-256)"
+msgstr "Hash Kode (SHA-256)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_sql_forbidden_fields
+msgid ""
+"Comma separated column names, or model.column, never readable through SQL."
+msgstr ""
+"Nama kolom dipisahkan koma, atau model.column, yang tidak pernah dapat "
+"dibaca lewat SQL."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_sql_forbidden_tables
+msgid ""
+"Comma separated table name patterns no token may use, on top of the system "
+"tables."
+msgstr ""
+"Pola nama tabel dipisahkan koma yang tidak boleh digunakan token mana pun, "
+"selain tabel sistem."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__depends
+msgid "Comma-separated list of Odoo module technical names."
+msgstr "Daftar nama teknis modul Odoo, dipisahkan koma."
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_configuration
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_list
+msgid "Connected At"
+msgstr "Terhubung Pada"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid ""
+"Could not connect to Redis at %s. Check the URL and that redis-py is "
+"installed."
+msgstr ""
+"Tidak dapat terhubung ke Redis di %s. Periksa URL dan pastikan redis-py "
+"sudah terpasang."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_html_artifact_action
+msgid "Create your first HTML artifact"
+msgstr "Buat artefak HTML pertama Anda"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_portal_page_action
+msgid "Create your first portal page"
+msgstr "Buat halaman portal pertama Anda"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__created_by
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__created_by
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__created_by
+msgid "Created By"
+msgstr "Dibuat Oleh"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_list_view
+msgid "Created On"
+msgstr "Dibuat Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__create_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__create_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__custom
+msgid "Custom"
+msgstr "Kustom"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_users__mcp_rate_limit
+msgid ""
+"Custom MCP requests-per-minute limit for this user. 0 = use global default "
+"from odoo.conf (mcp_rate_limit)."
+msgstr ""
+"Batas permintaan MCP per menit khusus untuk user ini. 0 = gunakan default "
+"global dari odoo.conf (mcp_rate_limit)."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_html_artifact__theme__dark
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_portal_page__theme__dark
+msgid "Dark"
+msgstr "Gelap"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token_sql_table__name
+msgid "Database table in the public schema, for example res_partner."
+msgstr "Tabel database di skema public, misalnya res_partner."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__can_delete
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token_sql_table.py:0
+msgid "Deleting through MCP is switched off in MCP Server settings."
+msgstr "Penghapusan lewat MCP dinonaktifkan di pengaturan MCP Server."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__denied_model_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Denied Models"
+msgstr "Model Terlarang"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__depends
+msgid "Depends"
+msgstr "Dependensi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__description
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__description
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__description
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Detail"
+msgstr "Detail"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Disabled"
+msgstr "Nonaktif"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_ir_model__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_tool_registry__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"Distribute rate limit counters via Redis so all Odoo workers share the same "
+"window. Requires a running Redis instance and the redis-py package."
+msgstr ""
+"Distribusikan penghitung batas laju lewat Redis agar semua worker Odoo "
+"berbagi jendela yang sama. Memerlukan instance Redis yang berjalan dan paket"
+" redis-py."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__state__done
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Done"
+msgstr "Selesai"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Download Export"
+msgstr "Unduh Ekspor"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Download ZIP"
+msgstr "Unduh ZIP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__state__draft
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_search_view
+msgid "Draft"
+msgstr "Draf"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__dry_run
+msgid "Dry Run"
+msgstr "Uji Coba"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__duration_ms
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Duration (ms)"
+msgstr "Durasi (ms)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Duration of the rate limit window in seconds."
+msgstr "Durasi jendela batas laju dalam detik."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.constraint,message:kaitech_mcp_server.constraint_mcp_token_sql_table_token_table_unique
+msgid "Each table can be listed only once per token."
+msgstr "Setiap tabel hanya boleh dicantumkan sekali per token."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__access_token
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__access_token
+msgid "Embed Token"
+msgstr "Token Sematan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__embed_url
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__embed_url
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Embed URL"
+msgstr "URL Sematan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Empty = all models allowed"
+msgstr "Kosong = semua model diizinkan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Empty = no models blocked"
+msgstr "Kosong = tidak ada model yang diblokir"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_enable_module_generator
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Enable Module Generator"
+msgstr "Aktifkan Generator Modul"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_sql_enabled
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Enable SQL"
+msgstr "Aktifkan SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_enable_schema_cache
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Enable Schema Cache"
+msgstr "Aktifkan Cache Skema"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__enabled
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__enabled
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Enabled"
+msgstr "Aktif"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__is_error
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Error"
+msgstr "Kesalahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__error_message
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Error Detail"
+msgstr "Detail Kesalahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__error_message
+msgid "Error Message"
+msgstr "Pesan Kesalahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__state__expired
+msgid "Expired"
+msgstr "Kedaluwarsa"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__expires_at
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__expires_at
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__expires_at
+msgid "Expires At"
+msgstr "Kedaluwarsa Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__allow_explore
+msgid "Explore Code"
+msgstr "Jelajahi Kode"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__export_csv
+msgid "Export CSV"
+msgstr "Ekspor CSV"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__attachment_id
+msgid "Export File"
+msgstr "File Ekspor"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__operation__export_xlsx
+msgid "Export XLSX"
+msgstr "Ekspor XLSX"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Exports"
+msgstr "Ekspor"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_sql_forbidden_fields
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Extra Forbidden Columns"
+msgstr "Kolom Terlarang Tambahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_sql_forbidden_tables
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Extra Forbidden Tables"
+msgstr "Tabel Terlarang Tambahan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__state__failed
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__state__failed
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Failed"
+msgstr "Gagal"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Failed to extract ZIP archive: %(error)s"
+msgstr "Gagal mengekstrak arsip ZIP: %(error)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Failed to update module list after extraction: %(error)s"
+msgstr "Gagal memperbarui daftar modul setelah ekstraksi: %(error)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_html_artifact.py:0
+msgid "Field %s exceeds the maximum size of %d KiB."
+msgstr "Field %s melebihi ukuran maksimum %d KiB."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__field_restrictions
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Field Restrictions (JSON)"
+msgstr "Pembatasan Field (JSON)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_ir_model_fields
+msgid "Fields"
+msgstr "Field"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__finished_at
+msgid "Finished At"
+msgstr "Selesai Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_follower_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_follower_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_follower_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_follower_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_partner_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_partner_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_partner_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_partner_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Partner)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__model_id
+msgid "From Model"
+msgstr "Dari Model"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__scope__admin
+msgid "Full Access"
+msgstr "Akses Penuh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__spec
+msgid "Full JSON spec used to generate this module."
+msgstr "Spesifikasi JSON lengkap yang digunakan untuk membuat modul ini."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "General"
+msgstr "Umum"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_list
+msgid "Generate PAT"
+msgstr "Buat PAT"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Generate ZIP"
+msgstr "Buat ZIP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__state__generated
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_search_view
+msgid "Generated"
+msgstr "Dibuat"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_generated_module_action
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_generated_modules
+msgid "Generated Modules"
+msgstr "Modul yang Dibuat"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_generated_modules_path
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Generated Modules Path"
+msgstr "Path Modul yang Dibuat"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Generated modules path %(path)s does not exist or is not a directory."
+msgstr "Path modul yang dibuat %(path)s tidak ada atau bukan direktori."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Generated modules path %(path)s is not writable by the Odoo process."
+msgstr "Path modul yang dibuat %(path)s tidak dapat ditulis oleh proses Odoo."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Generated modules path is not configured. Go to Settings > MCP Server and "
+"set 'Generated Modules Path' first."
+msgstr ""
+"Path modul yang dihasilkan belum dikonfigurasi. Buka Settings > MCP Server "
+"dan atur 'Generated Modules Path' terlebih dahulu."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Generation Info"
+msgstr "Info Pembuatan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__generation_log
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Generation Log"
+msgstr "Log Pembuatan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Governance"
+msgstr "Tata Kelola"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "HTML"
+msgstr "HTML"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "HTML Artifact"
+msgstr "Artefak HTML"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_html_artifact_action
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_html_artifacts
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_list_view
+msgid "HTML Artifacts"
+msgstr "Artefak HTML"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__html
+msgid "HTML Body"
+msgstr "Isi HTML"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_html_artifact_action
+msgid ""
+"HTML artifacts are interactive AI-generated mini-apps rendered inside a\n"
+"                strictly sandboxed iframe. AI clients can create artifacts automatically\n"
+"                via the MCP tool <code>odoo_create_html_artifact</code>."
+msgstr ""
+"Artefak HTML adalah mini-aplikasi interaktif buatan AI yang ditampilkan di dalam\n"
+"                iframe dengan sandbox ketat. Klien AI dapat membuat artefak secara otomatis\n"
+"                lewat tool MCP <code>odoo_create_html_artifact</code>."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__html
+msgid ""
+"HTML markup placed inside the <body> of the sandboxed document. May contain "
+"inline <style> and <script> tags."
+msgstr ""
+"Markup HTML yang ditempatkan di dalam <body> dokumen sandbox. Boleh berisi "
+"tag <style> dan <script> inline."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session__transport__http
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session_log__transport__http
+msgid "HTTP"
+msgstr "HTTP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__has_message
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__has_message
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__has_message
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__has_message
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__has_message
+msgid "Has Message"
+msgstr "Ada Pesan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"How long to keep MCP session records before the cleanup cron removes them."
+msgstr ""
+"Berapa lama catatan sesi MCP disimpan sebelum cron pembersihan menghapusnya."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"How long to keep MCP tool call log records before the cleanup cron removes "
+"them."
+msgstr ""
+"Berapa lama catatan log panggilan tool MCP disimpan sebelum cron pembersihan"
+" menghapusnya."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid "I have saved the token"
+msgstr "Saya sudah menyimpan token"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_ir_model__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_tool_registry__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__ip_address
+msgid "IP Address"
+msgstr "Alamat IP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__ip_allowlist
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "IP Allowlist"
+msgstr "Daftar IP Diizinkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__ip_denylist
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "IP Denylist"
+msgstr "Daftar IP Ditolak"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "IP Restrictions"
+msgstr "Pembatasan IP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__message_needaction
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__message_needaction
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__message_needaction
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__message_needaction
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__message_has_error
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__message_has_error
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__message_has_error
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__message_has_error
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mengalami kesalahan pengiriman."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__is_public
+msgid ""
+"If enabled, anyone can view the artifact without logging in. Otherwise an "
+"active Odoo session or a valid ?token= parameter is required."
+msgstr ""
+"Jika diaktifkan, siapa pun dapat melihat artefak tanpa login. Jika tidak, "
+"diperlukan sesi Odoo aktif atau parameter ?token= yang valid."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__is_public
+msgid ""
+"If enabled, anyone can view this page without logging in. Otherwise an "
+"active Odoo session or a valid ?token= parameter is required."
+msgstr ""
+"Jika diaktifkan, siapa pun dapat melihat halaman ini tanpa login. Jika "
+"tidak, diperlukan sesi Odoo aktif atau parameter ?token= yang valid."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__payload
+msgid ""
+"Input arguments for the job, including mcp_scope and mcp_restrictions "
+"snapshots."
+msgstr ""
+"Argumen input untuk job, termasuk snapshot mcp_scope dan mcp_restrictions."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__can_insert
+msgid "Insert"
+msgstr "Sisipkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid "Install Allowed on This Server"
+msgstr "Instalasi Diizinkan di Server Ini"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Install on This Instance"
+msgstr "Instal di Instance Ini"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Installation path %(path)s appears to be inside the Odoo %(seg)s directory. "
+"Choose a custom addons path instead."
+msgstr ""
+"Path instalasi %(path)s tampaknya berada di dalam direktori %(seg)s Odoo. "
+"Pilih path addons kustom."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__state__installed
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_search_view
+msgid "Installed"
+msgstr "Terinstal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__installed_at
+msgid "Installed At"
+msgstr "Diinstal Pada"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Installing generated modules is switched off on this server. The server "
+"administrator sets mcp_module_generator = True in the Odoo configuration "
+"file."
+msgstr ""
+"Instalasi modul yang dihasilkan dinonaktifkan di server ini. Administrator "
+"server mengatur mcp_module_generator = True di file konfigurasi Odoo."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Invalid JSON in page spec: %s"
+msgstr "JSON tidak valid pada spesifikasi halaman: %s"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_is_follower
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_is_follower
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_is_follower
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_is_follower
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Pengikut"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_list
+msgid "Issued At"
+msgstr "Diterbitkan Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__field_restrictions
+msgid ""
+"JSON object mapping model names to allowed field lists. Example:\n"
+"{\"sale.order\": [\"name\", \"partner_id\", \"amount_total\"],\n"
+" \"res.partner\": [\"name\", \"email\"]}\n"
+"\n"
+"Omitting a model means all its fields are allowed. Applied to both read (silently drops disallowed fields) and write (raises error if disallowed field is written)."
+msgstr ""
+"Objek JSON yang memetakan nama model ke daftar field yang diizinkan. Contoh:\n"
+"{\"sale.order\": [\"name\", \"partner_id\", \"amount_total\"],\n"
+" \"res.partner\": [\"name\", \"email\"]}\n"
+"\n"
+"Jika model tidak dicantumkan, semua field-nya diizinkan. Berlaku untuk baca (field yang tidak diizinkan dibuang tanpa pemberitahuan) dan tulis (memunculkan error jika field yang tidak diizinkan ditulis)."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid ""
+"JSON object: model name → list of allowed field names.\n"
+"                                    For read operations, fields outside the list are silently dropped.\n"
+"                                    For write operations, fields outside the list raise a permission error.\n"
+"                                    Example: {\"sale.order\": [\"name\", \"partner_id\", \"amount_total\"]}"
+msgstr ""
+"Objek JSON: nama model → daftar nama field yang diizinkan.\n"
+"                                    Untuk operasi baca, field di luar daftar dibuang tanpa pemberitahuan.\n"
+"                                    Untuk operasi tulis, field di luar daftar memunculkan error izin.\n"
+"                                    Contoh: {\"sale.order\": [\"name\", \"partner_id\", \"amount_total\"]}"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__spec
+msgid ""
+"JSON specification that defines the layout, filters, and widgets. See module"
+" docstring for full format reference."
+msgstr ""
+"Spesifikasi JSON yang menentukan tata letak, filter, dan widget. Lihat "
+"docstring modul untuk referensi format lengkap."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_session_log__request_payload
+msgid ""
+"JSON-encoded tool arguments (PII redacted, truncated to 4000 chars). Only "
+"captured when the token has \"Capture Payloads\" enabled."
+msgstr ""
+"Argumen tool dalam format JSON (PII disamarkan, dipotong hingga 4000 "
+"karakter). Hanya direkam jika token mengaktifkan \"Capture Payloads\"."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_session_log__response_payload
+msgid ""
+"JSON-encoded tool result (PII redacted, truncated to 4000 chars). Only "
+"captured when the token has \"Capture Payloads\" enabled."
+msgstr ""
+"Hasil tool dalam format JSON (PII disamarkan, dipotong hingga 4000 "
+"karakter). Hanya direkam jika token mengaktifkan \"Capture Payloads\"."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__js
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "JavaScript"
+msgstr "JavaScript"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Job Info"
+msgstr "Info Job"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__result
+msgid "Job output or summary (PII redacted)."
+msgstr "Output atau ringkasan job (PII disamarkan)."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_jobs
+msgid "Jobs"
+msgstr "Job"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "KPI widget #%d: 'aggregate' must be one of %s."
+msgstr "Widget KPI #%d: 'aggregate' harus salah satu dari %s."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "KPI widget #%d: 'field' is required."
+msgstr "Widget KPI #%d: 'field' wajib diisi."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "KPI widget #%d: 'format' must be one of %s."
+msgstr "Widget KPI #%d: 'format' harus salah satu dari %s."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__license__lgpl-3
+msgid "LGPL-3"
+msgstr "LGPL-3"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__last_activity
+msgid "Last Activity"
+msgstr "Aktivitas Terakhir"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__write_uid
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__write_date
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__last_used
+msgid "Last Used"
+msgstr "Terakhir Digunakan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__last_viewed
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__last_viewed
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+msgid "Last Viewed"
+msgstr "Terakhir Dilihat"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "Last updated:"
+msgstr "Terakhir diperbarui:"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid ""
+"Leave both lists empty to allow access to all models.\n"
+"                                    Denied models are evaluated before allowed models."
+msgstr ""
+"Kosongkan kedua daftar untuk mengizinkan akses ke semua model.\n"
+"                                    Model yang ditolak dievaluasi sebelum model yang diizinkan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__allow_explore
+msgid ""
+"Lets this token read the code of the installed modules: models, methods, "
+"source files, views and actions."
+msgstr ""
+"Mengizinkan token ini membaca kode modul yang terpasang: model, method, file"
+" sumber, view, dan action."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__allow_sql
+msgid ""
+"Lets this token use the SQL tools on the tables listed below. SQL bypasses "
+"Odoo access rights, record rules and constraints. SQL must also be switched "
+"on in MCP Server settings."
+msgstr ""
+"Mengizinkan token ini menggunakan tool SQL pada tabel yang tercantum di "
+"bawah. SQL melewati hak akses, record rule, dan constraint Odoo. SQL juga "
+"harus diaktifkan di pengaturan MCP Server."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__license
+msgid "License"
+msgstr "Lisensi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_html_artifact__theme__light
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_portal_page__theme__light
+msgid "Light"
+msgstr "Terang"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Log"
+msgstr "Log"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_log_retention_days
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Log Retention (days)"
+msgstr "Retensi Log (hari)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Log output will appear here after generation."
+msgstr "Output log akan muncul di sini setelah pembuatan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_job
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "MCP Async Job"
+msgstr "Job Async MCP"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_list_view
+msgid "MCP Async Jobs"
+msgstr "Job Async MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_token
+msgid "MCP Bearer Token"
+msgstr "Bearer Token MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_generated_module
+msgid "MCP Generated Module"
+msgstr "Modul yang Dibuat MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_html_artifact
+msgid "MCP HTML Artifact"
+msgstr "Artefak HTML MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_auth_code
+msgid "MCP OAuth Authorization Code"
+msgstr "Kode Otorisasi OAuth MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_pat_wizard
+msgid "MCP PAT — One-Time Display"
+msgstr "PAT MCP — Tampilan Sekali"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_portal_page
+msgid "MCP Portal Page"
+msgstr "Halaman Portal MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_users__mcp_rate_limit
+msgid "MCP Rate Limit"
+msgstr "Batas Laju MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__mcp_restrictions
+msgid "MCP Restrictions (JSON)"
+msgstr "Pembatasan MCP (JSON)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__mcp_scope
+msgid "MCP Scope"
+msgstr "Cakupan MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_root
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.view_users_form_mcp
+msgid "MCP Server"
+msgstr "Server MCP"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "MCP Server for Odoo"
+msgstr "Server MCP untuk Odoo"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_session
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "MCP Session"
+msgstr "Sesi MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_session_action
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_list
+msgid "MCP Sessions"
+msgstr "Sesi MCP"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "MCP Token"
+msgstr "Token MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_token_sql_table
+msgid "MCP Token SQL Table"
+msgstr "Tabel SQL Token MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_token_action
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_list
+msgid "MCP Tokens"
+msgstr "Token MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_session_log
+msgid "MCP Tool Call Log"
+msgstr "Log Panggilan Tool MCP"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_mcp_tool_registry
+msgid "MCP Tool Registry"
+msgstr "Registri Tool MCP"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid "MCP jobs are submitted through the odoo_submit_job tool."
+msgstr "Job MCP dikirim melalui tool odoo_submit_job."
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.server,name:kaitech_mcp_server.ir_cron_vacuum_auth_codes_ir_actions_server
+msgid "MCP: Cleanup Expired Auth Codes"
+msgstr "MCP: Bersihkan Kode Otorisasi Kedaluwarsa"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.server,name:kaitech_mcp_server.ir_cron_vacuum_sessions_ir_actions_server
+msgid "MCP: Cleanup Old Sessions"
+msgstr "MCP: Bersihkan Sesi Lama"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.server,name:kaitech_mcp_server.ir_cron_process_mcp_jobs_ir_actions_server
+msgid "MCP: Process Pending Jobs"
+msgstr "MCP: Proses Job Tertunda"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_management
+msgid "Management"
+msgstr "Manajemen"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Max Requests per Window"
+msgstr "Maks. Permintaan per Jendela Waktu"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"Maximum number of MCP requests allowed per time window. Individual tokens "
+"can override this value."
+msgstr ""
+"Jumlah maksimum permintaan MCP yang diizinkan per jendela waktu. Setiap "
+"token dapat menimpa nilai ini."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_has_error
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_has_error
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_has_error
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_has_error
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan pengiriman pesan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_ids
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__message_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__odoo_model
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Model"
+msgstr "Model"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Model Access"
+msgstr "Akses Model"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_ir_model
+msgid "Models"
+msgstr "Model"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Module %(name)s not found in the module list after update_list. Check that "
+"the addons path is registered in Odoo configuration."
+msgstr ""
+"Modul %(name)s tidak ditemukan dalam daftar modul setelah update_list. "
+"Periksa apakah path addons sudah terdaftar di konfigurasi Odoo."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Module Display Name"
+msgstr "Nama Tampilan Modul"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Module Generator"
+msgstr "Generator Modul"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Module Metadata"
+msgstr "Metadata Modul"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__name
+msgid "Module Title"
+msgstr "Judul Modul"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Module ZIP generated successfully. %(warning_count)s warning(s). Attachment:"
+" %(filename)s"
+msgstr ""
+"ZIP modul berhasil dibuat. %(warning_count)s peringatan. Lampiran: "
+"%(filename)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Module generation failed with unexpected error:\n"
+"%(error)s"
+msgstr ""
+"Pembuatan modul gagal karena kesalahan tak terduga:\n"
+"%(error)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Module generation failed:\n"
+"%(error)s"
+msgstr ""
+"Pembuatan modul gagal:\n"
+"%(error)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Module installation failed: %(error)s"
+msgstr "Instalasi modul gagal: %(error)s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Module installed successfully at %(path)s."
+msgstr "Modul berhasil diinstal di %(path)s."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid ""
+"Module must be in 'Generated' state before installing. Current state: "
+"%(state)s"
+msgstr ""
+"Modul harus berstatus 'Generated' sebelum diinstal. Status saat ini: "
+"%(state)s"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+msgid "My Artifacts"
+msgstr "Artefak Saya"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "My Dashboard"
+msgstr "Dasbor Saya"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "My Interactive Artifact"
+msgstr "Artefak Interaktif Saya"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "My Jobs"
+msgstr "Job Saya"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_search_view
+msgid "My Modules"
+msgstr "Modul Saya"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "My Pages"
+msgstr "Halaman Saya"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "No ZIP archive available. Generate the module first."
+msgstr "Arsip ZIP belum tersedia. Buat modul terlebih dahulu."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "No ZIP archive found. Generate the module first."
+msgstr "Arsip ZIP tidak ditemukan. Buat modul terlebih dahulu."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_job_action
+msgid "No async jobs yet"
+msgstr "Belum ada job asinkron"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid "No attachment available for this job."
+msgstr "Tidak ada lampiran untuk job ini."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "No data available."
+msgstr "Tidak ada data."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_generated_module_action
+msgid "No generated modules yet."
+msgstr "Belum ada modul yang dibuat."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "No payload captured for this call."
+msgstr "Tidak ada payload yang terekam untuk panggilan ini."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_needaction_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_needaction_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_needaction_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_needaction_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__message_has_error_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__message_has_error_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__message_has_error_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__message_has_error_counter
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah error"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__message_needaction_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__message_needaction_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__message_needaction_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__message_needaction_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__message_has_error_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__message_has_error_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__message_has_error_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__message_has_error_counter
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan error pengiriman"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__token_type__oauth
+msgid "OAuth 2.0"
+msgstr "OAuth 2.0"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_generated_module__license__opl-1
+msgid "OPL-1"
+msgstr "OPL-1"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__ip_allowlist
+msgid ""
+"One CIDR range or IP address per line. Leave blank to allow all IPs. "
+"Supports IPv4, IPv6, and CIDR notation (e.g. 192.168.1.0/24). Lines starting"
+" with # are treated as comments."
+msgstr ""
+"Satu rentang CIDR atau alamat IP per baris. Kosongkan untuk mengizinkan "
+"semua IP. Mendukung IPv4, IPv6, dan notasi CIDR (mis. 192.168.1.0/24). Baris"
+" yang diawali # dianggap komentar."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__ip_denylist
+msgid ""
+"One CIDR range or IP address per line. Leave blank to deny none. Denylist is"
+" evaluated before allowlist. Lines starting with # are treated as comments."
+msgstr ""
+"Satu rentang CIDR atau alamat IP per baris. Kosongkan agar tidak ada yang "
+"ditolak. Denylist dievaluasi sebelum allowlist. Baris yang diawali # "
+"dianggap komentar."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid ""
+"One IP address or CIDR range per line. Supports IPv4, IPv6.\n"
+"                                    Lines starting with # are ignored. Leave blank to allow/deny nothing.\n"
+"                                    Denylist is evaluated before allowlist."
+msgstr ""
+"Satu alamat IP atau rentang CIDR per baris. Mendukung IPv4, IPv6.\n"
+"                                    Baris yang diawali # diabaikan. Kosongkan agar tidak ada yang diizinkan/ditolak.\n"
+"                                    Denylist dievaluasi sebelum allowlist."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token.py:0
+msgid "Only Settings administrators can change %(fields)s on an MCP token."
+msgstr ""
+"Hanya administrator Settings yang dapat mengubah %(fields)s pada token MCP."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_html_artifact.py:0
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Only Settings administrators can change the owner of %(model)s."
+msgstr "Hanya administrator Settings yang dapat mengubah pemilik %(model)s."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token.py:0
+msgid "Only Settings administrators can grant Full Access to an MCP token."
+msgstr ""
+"Hanya administrator Settings yang dapat memberikan Akses Penuh ke token MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__operation
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Operation"
+msgstr "Operasi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__css
+msgid "Optional CSS inserted into a <style> tag in <head>."
+msgstr "CSS opsional yang disisipkan ke tag <style> di <head>."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__js
+msgid ""
+"Optional JS inserted into a <script> tag at the end of <body>. Runs inside "
+"the sandbox; no access to parent window."
+msgstr ""
+"JS opsional yang disisipkan ke tag <script> di akhir <body>. Berjalan di "
+"dalam sandbox; tanpa akses ke jendela induk."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Outcome"
+msgstr "Hasil"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Owner"
+msgstr "Pemilik"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_auth_code__code_challenge
+msgid "PKCE S256 code challenge"
+msgstr "Code challenge PKCE S256"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__spec
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Page Spec (JSON)"
+msgstr "Spesifikasi Halaman (JSON)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Page Title"
+msgstr "Judul Halaman"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__page_url
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Page URL"
+msgstr "URL Halaman"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Page spec cannot be empty."
+msgstr "Spesifikasi halaman tidak boleh kosong."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Page spec must be a JSON object (dict), not a list or scalar."
+msgstr ""
+"Spesifikasi halaman harus berupa objek JSON (dict), bukan list atau skalar."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Payload"
+msgstr "Payload"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__payload
+msgid "Payload (JSON)"
+msgstr "Payload (JSON)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__state__pending
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Pending"
+msgstr "Tertunda"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__raw_token
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__token_type__pat
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid "Personal Access Token"
+msgstr "Personal Access Token"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token_sql_table__model_id
+msgid "Pick a model to fill in its table, or type the table name directly."
+msgstr ""
+"Pilih model untuk mengisi tabelnya, atau ketik nama tabel secara langsung."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Portal Page"
+msgstr "Halaman Portal"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.mcp_portal_page_action
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_portal_pages
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+msgid "Portal Pages"
+msgstr "Halaman Portal"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_portal_page_action
+msgid ""
+"Portal pages display live Odoo data as KPI tiles, charts, and tables.\n"
+"                AI clients can create pages automatically via the MCP tools\n"
+"                <code>odoo_create_portal_page</code>."
+msgstr ""
+"Halaman portal menampilkan data Odoo secara langsung sebagai tile KPI, grafik, dan tabel.\n"
+"                Klien AI dapat membuat halaman secara otomatis lewat tool MCP\n"
+"                <code>odoo_create_portal_page</code>."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "Powered by"
+msgstr "Didukung oleh"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+msgid "Preview Artifact"
+msgstr "Pratinjau Artefak"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Preview Page"
+msgstr "Pratinjau Halaman"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Private"
+msgstr "Privat"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__processed_records
+msgid "Processed Records"
+msgstr "Record yang Diproses"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Progress"
+msgstr "Progres"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__progress
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_list_view
+msgid "Progress (%)"
+msgstr "Progres (%)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__is_public
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__is_public
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Public"
+msgstr "Publik"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__page_url
+msgid "Public URL for this portal page."
+msgstr "URL publik untuk halaman portal ini."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__technical_name
+msgid "Python/folder name of the module (snake_case)."
+msgstr "Nama Python/folder modul (snake_case)."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_rate_limit_per_minute
+msgid "Rate Limit (requests/min)"
+msgstr "Batas Laju (permintaan/menit)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_rate_limit_window_seconds
+msgid "Rate Limit Window (seconds)"
+msgstr "Jendela Batas Laju (detik)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.view_users_form_mcp
+msgid "Rate Limiting"
+msgstr "Pembatasan Laju"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__scope__write
+msgid "Read + Write"
+msgstr "Baca + Tulis"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__scope__read
+msgid "Read Only"
+msgstr "Hanya Baca"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__record_count
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Records"
+msgstr "Record"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__redirect_uri
+msgid "Redirect Uri"
+msgstr "Redirect Uri"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Redis Connection OK"
+msgstr "Koneksi Redis OK"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_redis_url
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Redis URL"
+msgstr "URL Redis"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Redis URL is not configured."
+msgstr "URL Redis belum dikonfigurasi."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_redis_url
+msgid ""
+"Redis connection URL, e.g. redis://localhost:6379/0. Only used when 'Use "
+"Redis for Rate Limiting' is enabled."
+msgstr ""
+"URL koneksi Redis, mis. redis://localhost:6379/0. Hanya digunakan jika 'Use "
+"Redis for Rate Limiting' diaktifkan."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Redis connection test failed: %s"
+msgstr "Uji koneksi Redis gagal: %s"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Redis ping failed for %s. The server may be down."
+msgstr "Ping Redis gagal untuk %s. Server mungkin sedang mati."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Redis rate limiting is not enabled. Enable it first."
+msgstr "Pembatasan laju Redis belum diaktifkan. Aktifkan terlebih dahulu."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__refresh_token_expires_at
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Refresh Expires At"
+msgstr "Refresh Kedaluwarsa Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__refresh_token
+msgid "Refresh Token Hash"
+msgstr "Hash Refresh Token"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Regenerate Embed Token"
+msgstr "Buat Ulang Token Embed"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid ""
+"Regenerating the token will invalidate all existing embed links. Continue?"
+msgstr ""
+"Membuat ulang token akan membatalkan semua tautan embed yang ada. Lanjutkan?"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Removed %(count)d cache entries. Previous hit rate: %(rate)s%%."
+msgstr "%(count)d entri cache dihapus. Rasio hit sebelumnya: %(rate)s%%."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__request_payload
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Request Payload"
+msgstr "Payload Permintaan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_list
+msgid "Requests"
+msgstr "Permintaan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Requests (total)"
+msgstr "Permintaan (total)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.view_users_form_mcp
+msgid ""
+"Requests per minute for this user via MCP. 0 = use global default "
+"(mcp_rate_limit in odoo.conf)."
+msgstr ""
+"Permintaan per menit untuk user ini lewat MCP. 0 = gunakan default global "
+"(mcp_rate_limit di odoo.conf)."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Reset to Draft"
+msgstr "Kembalikan ke Draf"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__response_payload
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Response Payload"
+msgstr "Payload Respons"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__allowed_model_ids
+msgid ""
+"Restrict this token to specific Odoo models. Leave empty to allow access to "
+"all models."
+msgstr ""
+"Batasi token ini ke model Odoo tertentu. Kosongkan untuk mengizinkan akses "
+"ke semua model."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Restrictions Snapshot"
+msgstr "Snapshot Pembatasan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Result"
+msgstr "Hasil"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__result
+msgid "Result (JSON)"
+msgstr "Hasil (JSON)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Retry"
+msgstr "Coba Lagi"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Revoke Token"
+msgstr "Cabut Token"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_token__state__revoked
+msgid "Revoked"
+msgstr "Dicabut"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_form_view
+msgid "Run Now"
+msgstr "Jalankan Sekarang"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_job__state__running
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Running"
+msgstr "Berjalan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__allow_sql
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "SQL"
+msgstr "SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__statement
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "SQL Statement"
+msgstr "Pernyataan SQL"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_sql_statement_timeout_ms
+msgid "SQL Statement Timeout (ms)"
+msgstr "Batas Waktu Pernyataan SQL (ms)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__sql_table_ids
+msgid "SQL Tables"
+msgstr "Tabel SQL"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "SQL and Code"
+msgstr "SQL dan Kode"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid ""
+"SQL bypasses Odoo access rights, record rules, constraints and tracking.\n"
+"                                It also needs SQL switched on in MCP Server settings.\n"
+"                                Password, token and secret columns, binary columns and system tables are never readable."
+msgstr ""
+"SQL melewati hak akses, aturan record, batasan, dan pelacakan Odoo.\n"
+"                                SQL juga harus diaktifkan di pengaturan MCP Server.\n"
+"                                Kolom kata sandi, token, dan rahasia, kolom biner, serta tabel sistem tidak pernah dapat dibaca."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session__transport__sse
+#: model:ir.model.fields.selection,name:kaitech_mcp_server.selection__mcp_session_log__transport__sse
+msgid "SSE"
+msgstr "SSE"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Schema Cache"
+msgstr "Cache Skema"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Schema Cache Cleared"
+msgstr "Cache Skema Dibersihkan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_schema_cache_ttl_seconds
+msgid "Schema Cache TTL (seconds)"
+msgstr "TTL Cache Skema (detik)"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__scope
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Scope"
+msgstr "Cakupan"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+msgid "Search HTML Artifacts"
+msgstr "Cari Artefak HTML"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "Search Jobs"
+msgstr "Cari Job"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Search Portal Pages"
+msgstr "Cari Halaman Portal"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__can_select
+msgid "Select"
+msgstr "Pilih"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__session_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__session_id
+msgid "Session"
+msgstr "Sesi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__session_id
+msgid "Session ID"
+msgstr "ID Sesi"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Session Info"
+msgstr "Info Sesi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_session_retention_days
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Session Retention (days)"
+msgstr "Retensi Sesi (hari)"
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_sessions
+msgid "Sessions"
+msgstr "Sesi"
+
+#. module: kaitech_mcp_server
+#: model:ir.actions.act_window,name:kaitech_mcp_server.action_mcp_settings
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_settings
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_form_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__slug
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__slug
+msgid "Slug"
+msgstr "Slug"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__mcp_restrictions
+msgid "Snapshot of the token restrictions at job submission time."
+msgstr "Cuplikan batasan token saat job diajukan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_job__mcp_scope
+msgid "Snapshot of the token scope at job submission time."
+msgstr "Cuplikan cakupan token saat job diajukan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__spec
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "Spec (JSON)"
+msgstr "Spesifikasi (JSON)"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_generated_module.py:0
+msgid "Spec field contains invalid JSON: %(error)s"
+msgstr "Field spesifikasi berisi JSON tidak valid: %(error)s"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__started_at
+msgid "Started At"
+msgstr "Dimulai Pada"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__state
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__state
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__state
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__state
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "State"
+msgstr "Status"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Statement Timeout (ms)"
+msgstr "Batas Waktu Pernyataan (ms)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_job_action
+msgid ""
+"Submit heavy operations via the MCP protocol using\n"
+"                <b>odoo_submit_job</b> and track them here."
+msgstr ""
+"Ajukan operasi berat melalui protokol MCP menggunakan\n"
+"                <b>odoo_submit_job</b> dan pantau di sini."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/res_config_settings.py:0
+msgid "Successfully connected to Redis at %s."
+msgstr "Berhasil terhubung ke Redis di %s."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__summary
+msgid "Summary"
+msgstr "Ringkasan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__name
+msgid "Table"
+msgstr "Tabel"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token_sql_table.py:0
+msgid "Table %s can never be used through MCP."
+msgstr "Tabel %s tidak pernah dapat digunakan melalui MCP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__technical_name
+msgid "Technical Name"
+msgstr "Nama Teknis"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Test Redis Connection"
+msgstr "Uji Koneksi Redis"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_html_artifact.py:0
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid ""
+"The embed token has been regenerated. Previous embed links are now invalid."
+msgstr ""
+"Token embed telah dibuat ulang. Tautan embed sebelumnya kini tidak berlaku."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_job.py:0
+msgid ""
+"The owner, operation, payload and scope of an MCP job cannot be changed."
+msgstr "Pemilik, operasi, payload, dan cakupan job MCP tidak dapat diubah."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__theme
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__theme
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Theme"
+msgstr "Tema"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_token_sql_table.py:0
+msgid "There is no table %s in this database."
+msgstr "Tidak ada tabel %s di database ini."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid ""
+"This will extract the module ZIP to the configured addons path and install "
+"it. The Odoo registry will be restarted. Proceed?"
+msgstr ""
+"Tindakan ini akan mengekstrak ZIP modul ke path addons yang dikonfigurasi "
+"lalu menginstalnya. Registry Odoo akan dimulai ulang. Lanjutkan?"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "Time"
+msgstr "Waktu"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__name
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__name
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_search_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_search_view
+msgid "Title"
+msgstr "Judul"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__token_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__token_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__token_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__token_id
+msgid "Token"
+msgstr "Token"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid "Token Details"
+msgstr "Detail Token"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__token
+msgid "Token Hash (SHA-256)"
+msgstr "Hash Token (SHA-256)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Token Info"
+msgstr "Info Token"
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_html_artifact.py:0
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Token Regenerated"
+msgstr "Token Dibuat Ulang"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__embed_url
+msgid "Token-authenticated URL for embedding without login."
+msgstr "URL dengan autentikasi token untuk penyematan tanpa login."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_tokens
+msgid "Tokens"
+msgstr "Token"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_sql_enabled
+msgid ""
+"Tokens with SQL switched on may use the SQL tools on the tables listed on "
+"the token."
+msgstr ""
+"Token dengan SQL aktif boleh memakai tool SQL pada tabel yang tercantum di "
+"token."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid ""
+"Tokens with SQL switched on may use the SQL tools on the tables listed on "
+"the token. SQL bypasses Odoo access rights and record rules."
+msgstr ""
+"Token dengan SQL aktif boleh memakai tool SQL pada tabel yang tercantum di "
+"token. SQL melewati hak akses dan aturan record Odoo."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__tool_name
+msgid "Tool"
+msgstr "Tool"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__log_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid "Tool Call Log"
+msgstr "Log Panggilan Tool"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__tool_call_count
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_list
+msgid "Tool Calls"
+msgstr "Panggilan Tool"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid ""
+"Tool arguments (PII redacted). Only captured when the token\n"
+"                                has \"Capture Payloads\" enabled."
+msgstr ""
+"Argumen tool (PII disamarkan). Hanya direkam jika token\n"
+"                                mengaktifkan \"Capture Payloads\"."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_log_view_form
+msgid ""
+"Tool result (PII redacted). Only captured when the token\n"
+"                                has \"Capture Payloads\" enabled."
+msgstr ""
+"Hasil tool (PII disamarkan). Hanya direkam jika token\n"
+"                                mengaktifkan \"Capture Payloads\"."
+
+#. module: kaitech_mcp_server
+#: model:ir.ui.menu,name:kaitech_mcp_server.mcp_menu_tools
+msgid "Tools"
+msgstr "Tool"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__total_records
+msgid "Total Records"
+msgstr "Total Record"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__transport
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__transport
+msgid "Transport"
+msgstr "Transport"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__token_type
+msgid "Type"
+msgstr "Tipe"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_html_artifact__slug
+msgid ""
+"URL path component: /mcp-artifact/<slug>. Auto-generated from title on "
+"creation."
+msgstr ""
+"Komponen path URL: /mcp-artifact/<slug>. Dibuat otomatis dari judul saat "
+"pembuatan."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_portal_page__slug
+msgid ""
+"URL path component: /mcp-page/<slug>. Auto-generated from title on creation."
+msgstr ""
+"Komponen path URL: /mcp-page/<slug>. Dibuat otomatis dari judul saat "
+"pembuatan."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_form_view
+msgid "URL slug — read-only after creation."
+msgstr "Slug URL — hanya-baca setelah dibuat."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.portal_page
+msgid "Unsupported widget type:"
+msgstr "Tipe widget tidak didukung:"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token_sql_table__can_update
+msgid "Update"
+msgstr "Perbarui"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_res_config_settings__mcp_enable_redis_rate_limit
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Use Redis for Rate Limiting"
+msgstr "Gunakan Redis untuk Pembatasan Laju"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.actions.act_window,help:kaitech_mcp_server.mcp_generated_module_action
+msgid ""
+"Use the <b>odoo_generate_module</b> MCP tool (admin scope required)\n"
+"                to generate an installable Odoo module from a JSON specification."
+msgstr ""
+"Gunakan tool MCP <b>odoo_generate_module</b> (memerlukan scope admin)\n"
+"                untuk membuat modul Odoo yang dapat diinstal dari spesifikasi JSON."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__used
+msgid "Used"
+msgstr "Digunakan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model,name:kaitech_mcp_server.model_res_users
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_auth_code__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_job__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_pat_wizard__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__user_id
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_token__user_id
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_job_search_view
+msgid "User"
+msgstr "User"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "Validity"
+msgstr "Masa Berlaku"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__version
+msgid "Version"
+msgstr "Versi"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_html_artifact__view_count
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_portal_page__view_count
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_html_artifact_list_view
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_portal_page_list_view
+msgid "Views"
+msgstr "Tampilan"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_generated_module__generation_log
+msgid "Warnings and errors captured during ZIP generation."
+msgstr "Peringatan dan error yang direkam saat pembuatan ZIP."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_enable_module_generator
+msgid ""
+"When enabled, the odoo_generate_module MCP tool is available to admin-scoped"
+" tokens. Disabled by default — enable only on trusted environments."
+msgstr ""
+"Jika diaktifkan, tool MCP odoo_generate_module tersedia untuk token ber-"
+"scope admin. Nonaktif secara default — aktifkan hanya di lingkungan "
+"tepercaya."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_mcp_token__capture_payloads
+msgid ""
+"When enabled, tool call arguments and responses are stored in the audit log "
+"(after PII redaction). Disabled by default for performance."
+msgstr ""
+"Jika diaktifkan, argumen dan respons panggilan tool disimpan di log audit "
+"(setelah PII disamarkan). Nonaktif secara default demi performa."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Widget #%d must be a JSON object."
+msgstr "Widget #%d harus berupa objek JSON."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Widget #%d: 'model' is required."
+msgstr "Widget #%d: 'model' wajib diisi."
+
+#. module: kaitech_mcp_server
+#. odoo-python
+#: code:addons/kaitech_mcp_server/models/mcp_portal_page.py:0
+msgid "Widget #%d: 'type' must be one of %s, got %r."
+msgstr "Widget #%d: 'type' harus salah satu dari %s, diterima %r."
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "Window (seconds)"
+msgstr "Jendela (detik)"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_pat_wizard_view_form
+msgid "Your Personal Access Token"
+msgstr "Personal Access Token Anda"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_generated_module__attachment_id
+msgid "ZIP Archive"
+msgstr "Arsip ZIP"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "hr_payslip*, account_move_line"
+msgstr "hr_payslip*, account_move_line"
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,help:kaitech_mcp_server.field_res_config_settings__mcp_module_generator_server
+msgid ""
+"mcp_module_generator = True in the Odoo configuration file. Without it, "
+"generated modules can be generated and validated but not installed."
+msgstr ""
+"mcp_module_generator = True di file konfigurasi Odoo. Tanpa ini, modul dapat"
+" dihasilkan dan divalidasi, tetapi tidak dapat diinstal."
+
+#. module: kaitech_mcp_server
+#: model:ir.model.fields,field_description:kaitech_mcp_server.field_mcp_session_log__duration_ms
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_session_view_form
+msgid "ms"
+msgstr "ms"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "redis://localhost:6379/0"
+msgstr "redis://localhost:6379/0"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_generated_module_form_view
+msgid "technical_name"
+msgstr "technical_name"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.res_config_settings_view_mcp
+msgid "vat, hr.employee.identification_id"
+msgstr "vat, hr.employee.identification_id"
+
+#. module: kaitech_mcp_server
+#: model_terms:ir.ui.view,arch_db:kaitech_mcp_server.mcp_token_view_form
+msgid "{\"sale.order\": [\"name\", \"partner_id\"], \"res.partner\": [\"name\", \"email\"]}"
+msgstr "{\"sale.order\": [\"name\", \"partner_id\"], \"res.partner\": [\"name\", \"email\"]}"

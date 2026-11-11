@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         Public host template (renders the sandboxed iframe)
+    ================================================================ -->
+    <template id="artifact_page" name="MCP HTML Artifact">
+        <html t-att-lang="artifact.created_by.lang or 'en'">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title t-out="artifact.name"/>
+                <style>
+                    html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+                    body.theme-light{background:#f5f7fa;color:#111;}
+                    body.theme-dark{background:#0f172a;color:#f1f5f9;}
+                    body.theme-auto{background:Canvas;color:CanvasText;}
+                    .mcp-art-host{display:flex;flex-direction:column;min-height:100vh;}
+                    .mcp-art-header{padding:14px 20px;border-bottom:1px solid rgba(127,127,127,.2);
+                        display:flex;align-items:center;justify-content:space-between;gap:12px;}
+                    .mcp-art-title{font-size:1.1rem;font-weight:600;margin:0;}
+                    .mcp-art-meta{font-size:.85rem;opacity:.7;}
+                    .mcp-art-frame-wrap{flex:1;padding:16px;}
+                    .mcp-art-frame{width:100%;height:100%;min-height:80vh;border:0;border-radius:8px;
+                        background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+                    .mcp-art-embed .mcp-art-header{display:none;}
+                    .mcp-art-embed .mcp-art-frame-wrap{padding:0;}
+                    .mcp-art-embed .mcp-art-frame{border-radius:0;min-height:100vh;box-shadow:none;}
+                </style>
+            </head>
+            <body t-attf-class="theme-#{artifact.theme} #{'mcp-art-embed' if embed else ''}">
+                <div class="mcp-art-host">
+                    <header class="mcp-art-header" t-if="not embed">
+                        <h1 class="mcp-art-title"><t t-out="artifact.name"/></h1>
+                        <span class="mcp-art-meta" t-if="artifact.description"><t t-out="artifact.description"/></span>
+                    </header>
+                    <div class="mcp-art-frame-wrap">
+                        <iframe class="mcp-art-frame"
+                                sandbox="allow-scripts"
+                                referrerpolicy="no-referrer"
+                                t-att-srcdoc="srcdoc"
+                                t-att-title="artifact.name"/>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <!-- ================================================================
+         Backend list view
+    ================================================================ -->
+    <record id="mcp_html_artifact_list_view" model="ir.ui.view">
+        <field name="name">mcp.html.artifact.list</field>
+        <field name="model">mcp.html.artifact</field>
+        <field name="arch" type="xml">
+            <list string="HTML Artifacts" decoration-muted="not enabled">
+                <field name="name"/>
+                <field name="slug"/>
+                <field name="is_public" widget="boolean_toggle"/>
+                <field name="theme"/>
+                <field name="view_count" string="Views"/>
+                <field name="last_viewed"/>
+                <field name="created_by" string="Owner"/>
+                <field name="enabled" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Backend form view
+    ================================================================ -->
+    <record id="mcp_html_artifact_form_view" model="ir.ui.view">
+        <field name="name">mcp.html.artifact.form</field>
+        <field name="model">mcp.html.artifact</field>
+        <field name="arch" type="xml">
+            <form string="HTML Artifact">
+                <header>
+                    <button name="action_preview"
+                            string="Preview Artifact"
+                            type="object"
+                            icon="fa-external-link"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Artifact Title"/>
+                        <h1><field name="name" placeholder="My Interactive Artifact"/></h1>
+                    </div>
+                    <group>
+                        <group string="Settings">
+                            <field name="slug" readonly="id"/>
+                            <field name="description"/>
+                            <field name="theme"/>
+                            <field name="is_public"/>
+                            <field name="enabled"/>
+                        </group>
+                        <group string="Access &amp; Statistics">
+                            <field name="created_by" readonly="1"/>
+                            <field name="view_count" readonly="1"/>
+                            <field name="last_viewed" readonly="1"/>
+                            <field name="artifact_url" readonly="1" widget="url"/>
+                            <field name="embed_url" readonly="1" widget="url"/>
+                            <div colspan="2">
+                                <field name="access_token" readonly="1" class="o_field_copy"/>
+                                <button name="action_regenerate_token"
+                                        string="Regenerate Embed Token"
+                                        type="object"
+                                        class="btn btn-secondary btn-sm mt-1"
+                                        confirm="Regenerating the token will invalidate all existing embed links. Continue?"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="HTML" name="html">
+                            <field name="html"
+                                   widget="ace"
+                                   options="{'mode': 'html'}"
+                                   nolabel="1"
+                                   style="min-height: 320px;"/>
+                        </page>
+                        <page string="CSS" name="css">
+                            <field name="css"
+                                   widget="ace"
+                                   options="{'mode': 'css'}"
+                                   nolabel="1"
+                                   style="min-height: 320px;"/>
+                        </page>
+                        <page string="JavaScript" name="js">
+                            <field name="js"
+                                   widget="ace"
+                                   options="{'mode': 'javascript'}"
+                                   nolabel="1"
+                                   style="min-height: 320px;"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Search view
+    ================================================================ -->
+    <record id="mcp_html_artifact_search_view" model="ir.ui.view">
+        <field name="name">mcp.html.artifact.search</field>
+        <field name="model">mcp.html.artifact</field>
+        <field name="arch" type="xml">
+            <search string="Search HTML Artifacts">
+                <field name="name" string="Title"/>
+                <field name="slug"/>
+                <field name="created_by"/>
+                <separator/>
+                <filter string="Enabled" name="enabled" domain="[('enabled','=',True)]"/>
+                <filter string="Disabled" name="disabled" domain="[('enabled','=',False)]"/>
+                <separator/>
+                <filter string="Public" name="public" domain="[('is_public','=',True)]"/>
+                <filter string="Private" name="private" domain="[('is_public','=',False)]"/>
+                <separator/>
+                <filter string="My Artifacts" name="my_artifacts" domain="[('created_by','=',uid)]"/>
+                <group>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'created_by'}"/>
+                    <filter string="Theme" name="group_theme" context="{'group_by': 'theme'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Window action
+    ================================================================ -->
+    <record id="mcp_html_artifact_action" model="ir.actions.act_window">
+        <field name="name">HTML Artifacts</field>
+        <field name="res_model">mcp.html.artifact</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mcp_html_artifact_search_view"/>
+        <field name="context">{'search_default_my_artifacts': 1, 'search_default_enabled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first HTML artifact
+            </p>
+            <p>
+                HTML artifacts are interactive AI-generated mini-apps rendered inside a
+                strictly sandboxed iframe. AI clients can create artifacts automatically
+                via the MCP tool <code>odoo_create_html_artifact</code>.
+            </p>
+        </field>
+    </record>
+
+</odoo>

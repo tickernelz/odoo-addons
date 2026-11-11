@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         List view
+    ================================================================ -->
+    <record id="mcp_portal_page_list_view" model="ir.ui.view">
+        <field name="name">mcp.portal.page.list</field>
+        <field name="model">mcp.portal.page</field>
+        <field name="arch" type="xml">
+            <list string="Portal Pages" decoration-muted="not enabled">
+                <field name="name"/>
+                <field name="slug"/>
+                <field name="is_public" string="Public" widget="boolean_toggle"/>
+                <field name="theme"/>
+                <field name="view_count" string="Views"/>
+                <field name="last_viewed" string="Last Viewed"/>
+                <field name="created_by" string="Owner"/>
+                <field name="enabled" string="Enabled" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Form view
+    ================================================================ -->
+    <record id="mcp_portal_page_form_view" model="ir.ui.view">
+        <field name="name">mcp.portal.page.form</field>
+        <field name="model">mcp.portal.page</field>
+        <field name="arch" type="xml">
+            <form string="Portal Page">
+                <header>
+                    <button name="action_preview"
+                            string="Preview Page"
+                            type="object"
+                            icon="fa-external-link"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Page Title"/>
+                        <h1>
+                            <field name="name" placeholder="My Dashboard"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <!-- Left column: identity + access -->
+                        <group string="Settings">
+                            <field name="slug"
+                                   readonly="id"
+                                   help="URL slug — read-only after creation."/>
+                            <field name="description"/>
+                            <field name="theme"/>
+                            <field name="is_public"/>
+                            <field name="enabled"/>
+                        </group>
+                        <!-- Right column: stats + embed -->
+                        <group string="Access &amp; Statistics">
+                            <field name="created_by" readonly="1"/>
+                            <field name="view_count" readonly="1"/>
+                            <field name="last_viewed" readonly="1"/>
+                            <field name="page_url" readonly="1" string="Page URL" widget="url"/>
+                            <field name="embed_url" readonly="1" string="Embed URL" widget="url"/>
+                            <div colspan="2">
+                                <field name="access_token" readonly="1" class="o_field_copy"/>
+                                <button name="action_regenerate_token"
+                                        string="Regenerate Embed Token"
+                                        type="object"
+                                        class="btn btn-secondary btn-sm mt-1"
+                                        confirm="Regenerating the token will invalidate all existing embed links. Continue?"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Full-width spec editor -->
+                    <group string="Page Spec (JSON)">
+                        <field name="spec"
+                               widget="ace"
+                               options="{'mode': 'javascript'}"
+                               nolabel="1"
+                               style="min-height: 400px;"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Search view
+    ================================================================ -->
+    <record id="mcp_portal_page_search_view" model="ir.ui.view">
+        <field name="name">mcp.portal.page.search</field>
+        <field name="model">mcp.portal.page</field>
+        <field name="arch" type="xml">
+            <search string="Search Portal Pages">
+                <field name="name" string="Title"/>
+                <field name="slug"/>
+                <field name="created_by"/>
+                <separator/>
+                <filter string="Enabled" name="enabled" domain="[('enabled','=',True)]"/>
+                <filter string="Disabled" name="disabled" domain="[('enabled','=',False)]"/>
+                <separator/>
+                <filter string="Public" name="public" domain="[('is_public','=',True)]"/>
+                <filter string="Private" name="private" domain="[('is_public','=',False)]"/>
+                <separator/>
+                <filter string="My Pages" name="my_pages" domain="[('created_by','=',uid)]"/>
+                <group>
+                    <filter string="Owner" name="group_owner" context="{'group_by': 'created_by'}"/>
+                    <filter string="Theme" name="group_theme" context="{'group_by': 'theme'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Window action
+    ================================================================ -->
+    <record id="mcp_portal_page_action" model="ir.actions.act_window">
+        <field name="name">Portal Pages</field>
+        <field name="res_model">mcp.portal.page</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mcp_portal_page_search_view"/>
+        <field name="context">{'search_default_my_pages': 1, 'search_default_enabled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first portal page
+            </p>
+            <p>
+                Portal pages display live Odoo data as KPI tiles, charts, and tables.
+                AI clients can create pages automatically via the MCP tools
+                <code>odoo_create_portal_page</code>.
+            </p>
+        </field>
+    </record>
+
+</odoo>

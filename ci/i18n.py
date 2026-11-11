@@ -9,7 +9,7 @@ import sys
 import polib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODULES = ("kaitech_mcp", "pos_bank_card_program", "pos_checkout_extras", "pos_hr_manager_validation", "kai_pos_promotion")
+MODULES = ("kaitech_mcp_server", "pos_bank_card_program", "pos_checkout_extras", "pos_hr_manager_validation", "kai_pos_promotion")
 INDONESIAN = ("yang", "tidak", "belum", "kunci", "hapus", "simpan", "batal", "pengaturan", "dengan", "untuk",
               "sudah", "bisa", "harus", "panggilan", "dicabut", "kedaluwarsa")
 PLACEHOLDER = re.compile(r"%(?:\([a-z_]+\))?[sdr]")
@@ -70,7 +70,7 @@ def compare():
     if os.path.isdir(target):
         fresh = dict((module, os.path.join(target, module + ".pot")) for module in MODULES)
     else:
-        fresh = {"kaitech_mcp": target}
+        fresh = {"kaitech_mcp_server": target}
     for module, fresh_path in fresh.items():
         pot_path, _po_path = catalogue_paths(module)
         fresh_ids = set(entry.msgid for entry in polib.pofile(fresh_path))

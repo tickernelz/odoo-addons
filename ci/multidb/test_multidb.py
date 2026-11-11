@@ -1,7 +1,9 @@
 """One Odoo 19 process, three databases (db_a and db_b with the module, db_c without), real HTTP."""
 import asyncio
+import hashlib
 import json
 import os
+import secrets
 import statistics
 import time
 import uuid
@@ -17,7 +19,7 @@ from mcp.client.streamable_http import streamable_http_client
 URL = os.environ.get("ODOO_URL", "http://odoo:8069")
 SCENARIO = os.environ.get("SCENARIO", "open")
 RUN = uuid.uuid4().hex[:6]
-MODERN = "2026-07-28"
+SERVER_PROTOCOL = "2025-03-26"
 
 
 def host_for(db):
@@ -42,23 +44,19 @@ def xmlid(call, name):
 
 
 def provision(db):
-    """A dedicated user, a marker partner, and a key made through the key wizard; return the key."""
+    """A dedicated user, a marker partner, and a token an administrator issued for that user; return the raw token."""
     call = admin_rpc(db)
     groups = [xmlid(call, name) for name in ("base.group_user", "base.group_partner_manager")]
     login = "mcp_%s_%s_%s" % (SCENARIO, db, RUN)
-    user_id = call("res.users", "create", {"name": login, "login": login, "group_ids": [(6, 0, groups)]})
+    user_id = call("res.users", "create", {"name": login, "login": login, "group_ids": [(6, 0, groups)],
+                                           "mcp_rate_limit": 1000000})
     call("res.partner", "create", {"name": "Marker %s %s" % (db, RUN)})
-    model_id = call("ir.model", "search", [("model", "=", "res.partner")])[0]
-    wizard = call("kaitech.mcp.key.wizard", "create", {"name": "harness %s" % db, "user_id": user_id})
-    call("kaitech.mcp.key.wizard", "action_next", [wizard])
-    call("kaitech.mcp.key.wizard", "write", [wizard], {"line_ids": [(0, 0, {"model_id": model_id, "can_read": True})]})
-    call("kaitech.mcp.key.wizard", "action_create", [wizard])
-    found = call("kaitech.mcp.key.wizard", "read", [wizard], ["token", "key_id"])[0]
-    token = found["token"]
-    assert token.startswith("o19mcp_")
-    if SCENARIO == "perf":
-        call("kaitech.mcp.key", "write", [found["key_id"][0]], {"rate_per_minute": 100000})
-    return token
+    raw = secrets.token_urlsafe(32)
+    call("mcp.token", "create", {
+        "name": "harness %s" % db, "user_id": user_id, "token_type": "pat", "scope": "write",
+        "token": hashlib.sha256(raw.encode()).hexdigest(),
+    })
+    return raw
 
 
 @pytest.fixture(scope="session")
@@ -66,52 +64,52 @@ def tokens():
     return {"db_a": provision("db_a"), "db_b": provision("db_b")}
 
 
-def post(db, body, token=None, headers=None, cookies=None):
+def post(db, body, token=None, headers=None, cookies=None, path=None):
     sent = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
     if token:
         sent["Authorization"] = "Bearer %s" % token
     if host_for(db):
         sent["Host"] = host_for(db)
     sent.update(headers or {})
-    return requests.post("%s/mcp/%s" % (URL, db), data=json.dumps(body), headers=sent, cookies=cookies, timeout=60)
+    return requests.post(URL + (path or "/mcp/%s" % db), data=json.dumps(body), headers=sent, cookies=cookies,
+                         timeout=60)
 
 
-def modern(db, method, params=None, token=None, headers=None, cookies=None):
-    params = dict(params or {})
-    params["_meta"] = {"io.modelcontextprotocol/protocolVersion": MODERN,
-                       "io.modelcontextprotocol/clientCapabilities": {}}
-    sent = {"Mcp-Protocol-Version": MODERN, "Mcp-Method": method}
-    if method == "tools/call":
-        sent["Mcp-Name"] = params["name"]
-    sent.update(headers or {})
-    return post(db, {"jsonrpc": "2.0", "id": 1, "method": method, "params": params}, token, sent, cookies)
+def rpc(db, method, params=None, token=None, **options):
+    return post(db, {"jsonrpc": "2.0", "id": 1, "method": method, "params": params or {}}, token, **options)
+
+
+def tool(db, token, name, arguments):
+    response = rpc(db, "tools/call", {"name": name, "arguments": arguments}, token=token)
+    assert response.status_code == 200, response.text
+    result = response.json()["result"]
+    return result["isError"], json.loads(result["content"][0]["text"]) if not result["isError"] else result
 
 
 def search_markers(db, token, cookies=None):
-    response = modern(db, "tools/call", {"name": "search_records", "arguments": {
+    response = rpc(db, "tools/call", {"name": "odoo_search_read", "arguments": {
         "model": "res.partner", "domain": [["name", "like", "Marker %"]], "fields": ["name"], "limit": 200}},
         token=token, cookies=cookies)
     assert response.status_code == 200, response.text
     result = response.json()["result"]
     assert result["isError"] is False, result
-    return [row["name"] for row in result["structuredContent"]["records"]]
+    return [row["name"] for row in json.loads(result["content"][0]["text"])["records"]]
 
 
 @pytest.mark.open
 @pytest.mark.dbfilter
 @pytest.mark.list_db_off
-def test_each_key_opens_only_its_own_database(tokens):
-    assert modern("db_a", "tools/list", token=tokens["db_a"]).status_code == 200
-    assert modern("db_b", "tools/list", token=tokens["db_b"]).status_code == 200
-    assert modern("db_b", "tools/list", token=tokens["db_a"]).status_code == 401
-    assert modern("db_a", "tools/list", token=tokens["db_b"]).status_code == 401
+def test_each_token_opens_only_its_own_database(tokens):
+    assert rpc("db_a", "tools/list", token=tokens["db_a"]).status_code == 200
+    assert rpc("db_b", "tools/list", token=tokens["db_b"]).status_code == 200
+    assert rpc("db_b", "tools/list", token=tokens["db_a"]).status_code == 401
+    assert rpc("db_a", "tools/list", token=tokens["db_b"]).status_code == 401
 
 
 @pytest.mark.open
-@pytest.mark.dbfilter
 @pytest.mark.list_db_off
 def test_absent_databases_answer_one_identical_404(tokens):
-    answers = [modern(db, "server/discover", token=tokens["db_a"]) for db in ("db_c", "nope_%s" % RUN, "postgres")]
+    answers = [rpc(db, "tools/list", token=tokens["db_a"]) for db in ("db_c", "nope_%s" % RUN, "postgres")]
     assert [answer.status_code for answer in answers] == [404, 404, 404]
     assert len(set(answer.content for answer in answers)) == 1
 
@@ -141,8 +139,8 @@ def test_mcp_calls_store_no_sessions(tokens):
     sessions = "/odoo-data/sessions"
     before = len(os.listdir(sessions)) if os.path.isdir(sessions) else 0
     for _ in range(20):
-        assert modern("db_a", "tools/list", token=tokens["db_a"]).status_code == 200
-        assert modern("db_c", "tools/list", token=tokens["db_a"]).status_code == 404
+        assert rpc("db_a", "tools/list", token=tokens["db_a"]).status_code == 200
+        assert rpc("db_c", "tools/list", token=tokens["db_a"]).status_code == 404
     after = len(os.listdir(sessions)) if os.path.isdir(sessions) else 0
     assert after == before
 
@@ -150,20 +148,26 @@ def test_mcp_calls_store_no_sessions(tokens):
 @pytest.mark.dbfilter
 def test_dbfilter_follows_the_host(tokens):
     other_host = {"Host": "db_a.example.test"}
-    assert modern("db_b", "tools/list", token=tokens["db_b"], headers=other_host).status_code == 404
-    assert modern("db_a", "tools/list", token=tokens["db_a"], headers=other_host).status_code == 200
+    assert rpc("db_b", "tools/list", token=tokens["db_b"], headers=other_host).status_code == 404
+    assert rpc("db_a", "tools/list", token=tokens["db_a"], headers=other_host).status_code == 200
 
 
 @pytest.mark.not_server_wide
-def test_negative_control_without_server_wide_every_endpoint_is_404(tokens):
+def test_without_server_wide_the_database_header_selects_the_database(tokens):
     for db in ("db_a", "db_b"):
-        assert modern(db, "tools/list", token=tokens[db]).status_code == 404
+        assert rpc(db, "tools/list", token=tokens[db]).status_code == 404
+        answer = rpc(db, "tools/list", token=tokens[db], path="/mcp", headers={"X-Odoo-Database": db})
+        assert answer.status_code == 200, answer.text
+        names = search_markers_by_header(db, tokens[db])
+        assert names and all(name.startswith("Marker %s " % db) for name in names)
 
 
-def tool(db, token, name, arguments):
-    response = modern(db, "tools/call", {"name": name, "arguments": arguments}, token=token)
+def search_markers_by_header(db, token):
+    response = rpc(db, "tools/call", {"name": "odoo_search_read", "arguments": {
+        "model": "res.partner", "domain": [["name", "like", "Marker %"]], "fields": ["name"]}},
+        token=token, path="/mcp", headers={"X-Odoo-Database": db})
     assert response.status_code == 200, response.text
-    return response.json()["result"]
+    return [row["name"] for row in json.loads(response.json()["result"]["content"][0]["text"])["records"]]
 
 
 @pytest.mark.open
@@ -178,25 +182,24 @@ def test_explore_and_call_method_answer_per_database(tokens):
 def switch_tools(on):
     for db in ("db_a", "db_b"):
         call = admin_rpc(db)
-        key_id = call("kaitech.mcp.key", "search", [("name", "=", "harness %s" % db)], order="id desc", limit=1)[0]
-        permission = call("kaitech.mcp.permission", "search", [("key_id", "=", key_id)])
-        call("kaitech.mcp.key", "write", [key_id], {"allow_explore": on, "allow_call": on})
-        call("kaitech.mcp.permission", "write", permission, {"can_call": on})
+        token_id = call("mcp.token", "search", [("name", "=", "harness %s" % db)], order="id desc", limit=1)[0]
+        call("mcp.token", "write", [token_id], {"allow_explore": on, "scope": "admin" if on else "write"})
 
 
 def explore_and_call_each_database(tokens):
     for db in ("db_a", "db_b"):
-        module = tool(db, tokens[db], "describe_module", {"module": "kaitech_mcp"})
-        assert module["isError"] is False, module
-        assert "kaitech.mcp.key" in module["structuredContent"]["models_defined"]
-        partner = tool(db, tokens[db], "search_records", {
+        failed, module = tool(db, tokens[db], "describe_module", {"module": "kaitech_mcp_server"})
+        assert failed is False, module
+        assert "mcp.token" in module["models_defined"]
+        failed, partner = tool(db, tokens[db], "odoo_search_read", {
             "model": "res.partner", "domain": [["name", "=", "Marker %s %s" % (db, RUN)]], "fields": ["name"]})
-        partner_id = partner["structuredContent"]["records"][0]["id"]
-        found = tool(db, tokens[db], "call_method", {
-            "model": "res.partner", "method": "address_get", "ids": [partner_id], "args": [["contact"]], "dry_run": True})
-        assert found["isError"] is False, found
-        assert found["structuredContent"]["result"] == {"contact": partner_id}
-    other = modern("db_b", "tools/call", {"name": "describe_module", "arguments": {"module": "base"}}, token=tokens["db_a"])
+        partner_id = partner["records"][0]["id"]
+        failed, found = tool(db, tokens[db], "odoo_call_method", {
+            "model": "res.partner", "method": "address_get", "ids": [partner_id], "args": [["contact"]],
+            "dry_run": True})
+        assert failed is False, found
+        assert found == {"result": {"contact": partner_id}, "dry_run": True}
+    other = rpc("db_b", "tools/call", {"name": "describe_module", "arguments": {"module": "base"}}, token=tokens["db_a"])
     assert other.status_code == 401
 
 
@@ -205,7 +208,7 @@ async def sdk_session(db, token, mode):
     transport = streamable_http_client("%s/mcp/%s" % (URL, db), http_client=client)
     async with Client(transport, mode=mode) as session:
         tools = await session.list_tools()
-        result = await session.call_tool("search_records", {
+        result = await session.call_tool("odoo_search_read", {
             "model": "res.partner", "domain": [["name", "like", "Marker %"]], "fields": ["name"]})
         return session.protocol_version, [tool.name for tool in tools.tools], result
 
@@ -214,10 +217,10 @@ async def sdk_session(db, token, mode):
 @pytest.mark.parametrize("mode", ["auto", "legacy"])
 def test_official_sdk_client_in_both_protocol_eras(tokens, mode):
     version, names, result = asyncio.run(sdk_session("db_a", tokens["db_a"], mode))
-    assert version == (MODERN if mode == "auto" else "2025-11-25")
-    assert names == ["list_models", "get_model_fields", "search_records", "count_records", "read_records"]
+    assert version == SERVER_PROTOCOL
+    assert "odoo_search_read" in names and "sql_select" not in names and "describe_model" not in names
     assert result.is_error is False
-    rows = result.structured_content["records"]
+    rows = json.loads(result.content[0].text)["records"]
     assert rows and all(row["name"].startswith("Marker db_a ") for row in rows)
 
 
@@ -239,11 +242,12 @@ def test_latency_against_plain_xmlrpc(tokens):
         mcp_times, rpc_times = [], []
         for _ in range(60):
             started = time.perf_counter()
-            answer = modern("db_a", "tools/call", {"name": "search_records", "arguments": {
+            answer = rpc("db_a", "tools/call", {"name": "odoo_search_read", "arguments": {
                 "model": "res.partner", "domain": domain, "fields": ["name", "phone", "email"], "limit": size}},
                 token=tokens["db_a"])
             mcp_times.append((time.perf_counter() - started) * 1000)
-            assert answer.status_code == 200 and len(answer.json()["result"]["structuredContent"]["records"]) == size
+            assert answer.status_code == 200
+            assert len(json.loads(answer.json()["result"]["content"][0]["text"])["records"]) == size
             started = time.perf_counter()
             rows = models.execute_kw("db_a", xmlrpc_uid, "admin", "res.partner", "search_read", [domain],
                                      {"fields": ["name", "phone", "email"], "limit": size})
