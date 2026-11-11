@@ -23,17 +23,17 @@
                         </p>
                         <table class="table table-sm mt-3" style="table-layout: fixed; width: 100%;">
                             <colgroup>
-                                <col style="width: 17%;"/>
-                                <col style="width: 26%;"/>
+                                <col style="width: 16%;"/>
+                                <col style="width: 24%;"/>
+                                <col style="width: 10%;"/>
                                 <col style="width: 8%;"/>
+                                <col style="width: 10%;"/>
+                                <col style="width: 10%;"/>
                                 <col style="width: 8%;"/>
-                                <col style="width: 9%;"/>
-                                <col style="width: 11%;"/>
-                                <col style="width: 8%;"/>
-                                <col style="width: 13%;"/>
+                                <col style="width: 14%;"/>
                             </colgroup>
                             <thead>
-                                <tr>
+                                <tr class="text-nowrap" style="font-size: 0.9em;">
                                     <th class="text-start">Point of Sale</th>
                                     <th class="text-start">Distribution</th>
                                     <th class="text-end">Sessions</th>
