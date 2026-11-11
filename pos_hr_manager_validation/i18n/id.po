@@ -51,6 +51,16 @@ msgstr ""
 
 #. module: pos_hr_manager_validation
 #. odoo-python
+#: code:addons/pos_hr_manager_validation/models/pos_config.py:0
+msgid ""
+"%s is a self-order kiosk: customers cancel their own orders there, so order "
+"deletion cannot wait for a manager validation."
+msgstr ""
+"%s adalah kios self-order: pelanggan membatalkan ordernya sendiri di sana, "
+"jadi hapus order tidak bisa menunggu validasi manajer."
+
+#. module: pos_hr_manager_validation
+#. odoo-python
 #: code:addons/pos_hr_manager_validation/models/hr_employee.py:0
 msgid ""
 "%s validates actions on a point of sale, so the POS validation PIN cannot be"

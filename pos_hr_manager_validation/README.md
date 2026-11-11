@@ -64,6 +64,8 @@ with a price as manual too.
 - The server knows one cashier per session: when two devices share a session, the cashier set last decides
   whether the manager-at-the-register shortcut applies to calls made outside the point of sale screen. The screen
   itself still asks for the PIN.
+- A self-order kiosk cannot guard order deletion: its customers cancel their own orders, so the setting is refused
+  on a point of sale in kiosk mode.
 - A self-order kiosk with session closing validated is closed from the backend session form, which asks for the PIN.
 - With "Restrict Price Modifications to Managers" also on, a cashier without price rights is still refused after the PIN.
 

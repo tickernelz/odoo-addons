@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("pos_mv_with_required_customer_tour", {
             { content: "customer is asked first", trigger: ".modal .modal-header:contains(Customer required)" },
             { content: "no PIN dialog yet", trigger: negate(".o_mv_dialog") },
             { content: "select a customer", trigger: ".modal .modal-footer button:contains(Select customer)", run: "click" },
-            { content: "pick the customer", trigger: ".modal .partner-list b:contains(Deco Addict)", run: "click" },
+            { content: "pick the customer", trigger: ".modal .partner-list b:contains(MV Tour Customer)", run: "click" },
             pinDialogIs("validate the payment"),
             chooseManager("MV Manager"),
             clickPin("482915"),

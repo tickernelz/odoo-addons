@@ -44,6 +44,27 @@ class PosConfig(models.Model):
                         '%s has no POS validation PIN. Set it in the HR Settings tab of the employee first.',
                         employee.name))
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        configs = super().create(vals_list)
+        configs._check_mv_kiosk()
+        return configs
+
+    def write(self, vals):
+        result = super().write(vals)
+        if 'mv_delete_order' in vals or 'self_ordering_mode' in vals:
+            self._check_mv_kiosk()
+        return result
+
+    def _check_mv_kiosk(self):
+        if 'self_ordering_mode' not in self._fields:
+            return
+        for config in self:
+            if config.mv_delete_order and config.self_ordering_mode == 'kiosk':
+                raise ValidationError(_(
+                    '%s is a self-order kiosk: customers cancel their own orders there, so order deletion '
+                    'cannot wait for a manager validation.', config.name))
+
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         if read_records:

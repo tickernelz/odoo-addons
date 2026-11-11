@@ -1,4 +1,4 @@
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
 from .common import MANAGER_PIN, ManagerValidationCommon
@@ -126,6 +126,25 @@ class TestServerGuards(ManagerValidationCommon):
         self.verify(session, 'delete_order', MANAGER_PIN, reference=order.uuid)
         order.with_user(self.pos_user).action_pos_order_cancel()
         self.assertEqual(order.state, 'cancel')
+
+    def test_a_kiosk_cannot_guard_order_deletion(self):
+        if 'self_ordering_mode' not in self.main_pos_config._fields:
+            self.skipTest('pos_self_order is not installed')
+        kiosk = self.env['pos.config'].create({
+            'name': 'MV Kiosk',
+            'module_pos_hr': True,
+            'payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+        })
+        kiosk.self_ordering_mode = 'kiosk'
+        with self.assertRaises(ValidationError):
+            self.guard('delete_order', config=kiosk)
+        self.guard('payment', config=kiosk)
+        with self.assertRaises(ValidationError):
+            kiosk.mv_delete_order = True
+        kiosk.self_ordering_mode = 'nothing'
+        kiosk.mv_delete_order = True
+        with self.assertRaises(ValidationError):
+            kiosk.self_ordering_mode = 'kiosk'
 
     def test_every_deletion_route_needs_a_validation(self):
         self.guard('delete_order')
