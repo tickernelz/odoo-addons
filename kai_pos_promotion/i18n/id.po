@@ -17,6 +17,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "%(promotion)s cannot go from %(old)s to %(new)s."
+msgstr "%(promotion)s tidak bisa berpindah dari %(old)s ke %(new)s."
+
+#. module: kai_pos_promotion
 #: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
 msgid "<span>-</span>"
 msgstr "<span>-</span>"
@@ -42,6 +48,12 @@ msgstr ""
 #: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
 msgid "A happy hour window needs at least one day."
 msgstr "Jendela happy hour butuh minimal satu hari."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A new promotion always starts as a draft."
+msgstr "Promo baru selalu dimulai sebagai draf."
 
 #. module: kai_pos_promotion
 #. odoo-python

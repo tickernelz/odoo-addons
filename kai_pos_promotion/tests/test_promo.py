@@ -44,11 +44,30 @@ class TestPromoLifecycle(PromoCommon):
         self.seminyak.name = 'Renamed'
         self.assertEqual(self.seminyak.name, 'Renamed')
 
-    def test_a_cashier_cannot_approve(self):
+    def test_only_an_approver_approves(self):
         manager = new_test_user(self.env, 'kai_manager', groups='point_of_sale.group_pos_manager')
-        self.seminyak.action_submit()
+        approver = new_test_user(self.env, 'kai_approver', groups='kai_pos_promotion.group_kai_promo_approver')
+        promo = self.seminyak.with_user(manager)
+        with self.assertRaises(UserError):
+            self.env['kai.pos.promo'].with_user(manager).create({
+                'name': 'Born Active', 'state': 'active', 'date_end': fields.Date.today()})
+        with self.assertRaises(UserError):
+            promo.write({'state': 'active'})
+        promo.action_submit()
         with self.assertRaises(AccessError):
-            self.seminyak.with_user(manager).action_approve()
+            promo.action_approve()
+        with self.assertRaises(UserError):
+            promo.write({'state': 'active'})
+        with self.assertRaises(AccessError):
+            promo.write({'state': 'approved'})
+        self.assertEqual(self.seminyak.state, 'to_approve')
+        self.seminyak.with_user(approver).action_approve()
+        self.assertEqual(self.seminyak.state, 'active')
+        with self.assertRaises(UserError):
+            promo.write({'state': 'draft'})
+        promo.action_stop()
+        promo.action_reset_draft()
+        self.assertEqual(self.seminyak.state, 'draft')
 
     def test_submit_needs_tiers_and_windows(self):
         empty = self.env['kai.pos.promo'].create({'name': 'Empty', 'date_end': fields.Date.today()})
@@ -99,6 +118,18 @@ class TestPromoRules(PromoCommon):
         with self.assertRaises(ValidationError):
             Window.create({'hour_from': 10, 'hour_to': 12})
 
+    def test_other_company_sees_no_tier_or_window(self):
+        Window = self.env['kai.pos.promo.schedule']
+        Window.create({'promo_id': self.seminyak.id, 'hour_from': 10, 'hour_to': 12})
+        other = self.env['res.company'].create({'name': 'Other Promo Company'})
+        user = new_test_user(self.env, 'kai_other_cashier', groups='point_of_sale.group_pos_user',
+                             company_id=other.id, company_ids=[(6, 0, other.ids)])
+        self.assertFalse(self.env['kai.pos.promo'].with_user(user).search([('id', '=', self.seminyak.id)]))
+        self.assertFalse(self.env['kai.pos.promo.tier'].with_user(user).search([('promo_id', '=', self.seminyak.id)]))
+        self.assertFalse(Window.with_user(user).search([('promo_id', '=', self.seminyak.id)]))
+        own = self.env['kai.pos.promo.tier'].with_user(user).search([])
+        self.assertFalse(own & self.seminyak.tier_ids)
+
     def test_conflict_warning_lists_the_group(self):
         national = tier_promo(self.env, 'National Tier', [(400000, 'percent', 12)])
         activate(national)
@@ -110,14 +141,3 @@ class TestPromoRules(PromoCommon):
         alone = tier_promo(self.env, 'Alone', [(1000, 'percent', 5)], exclusive_group='SOLO')
         self.assertFalse(alone.conflict_html)
 
-
-@tagged('post_install', '-at_install')
-class TestRefundLine(PromoCommon):
-
-    def test_refund_line_keeps_its_promotion(self):
-        Line = self.env['pos.order.line']
-        original = Line.new({'kai_promo_id': self.seminyak.id})
-        values = [{'kai_promo_refund_of_id': 0}]
-        Line._fields['kai_promo_refund_of_id']
-        self.assertTrue(original.kai_promo_id)
-        self.assertEqual(values[0]['kai_promo_refund_of_id'], 0)

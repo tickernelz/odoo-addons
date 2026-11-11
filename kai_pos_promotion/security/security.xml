@@ -11,14 +11,28 @@
         <field name="privilege_id" ref="res_groups_privilege_kai_promo"/>
         <field name="implied_ids" eval="[(4, ref('point_of_sale.group_pos_manager'))]"/>
     </record>
-    <record id="base.user_admin" model="res.users">
-        <field name="group_ids" eval="[(4, ref('group_kai_promo_approver'))]"/>
-    </record>
-
     <record id="rule_kai_pos_promo_company" model="ir.rule">
         <field name="name">POS Promotion: company</field>
         <field name="model_id" ref="model_kai_pos_promo"/>
         <field name="global" eval="True"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_kai_pos_promo_tier_company" model="ir.rule">
+        <field name="name">POS Promotion Tier: company</field>
+        <field name="model_id" ref="model_kai_pos_promo_tier"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('promo_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_kai_pos_promo_schedule_company" model="ir.rule">
+        <field name="name">Happy Hour Window: company</field>
+        <field name="model_id" ref="model_kai_pos_promo_schedule"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['&amp;', '|', ('promo_id', '=', False), ('promo_id.company_id', 'in', company_ids), '|', ('program_id', '=', False), '|', ('program_id.company_id', '=', False), ('program_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <data noupdate="1">
+        <record id="base.user_admin" model="res.users">
+            <field name="group_ids" eval="[(4, ref('group_kai_promo_approver'))]"/>
+        </record>
+    </data>
 </odoo>

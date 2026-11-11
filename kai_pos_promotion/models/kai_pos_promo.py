@@ -10,6 +10,15 @@ DRAFT_ONLY_FIELDS = {
     'excluded_product_ids', 'excluded_categ_ids', 'exclusive_group', 'priority', 'discount_product_id',
     'max_discount', 'rounding', 'happy_hour', 'tier_ids', 'schedule_ids',
 }
+TRANSITIONS = {
+    'draft': {'to_approve'},
+    'to_approve': {'approved', 'draft', 'stopped'},
+    'approved': {'active', 'done', 'stopped'},
+    'active': {'done', 'stopped'},
+    'stopped': {'draft'},
+    'done': set(),
+}
+APPROVED_STATES = {'approved', 'active'}
 MAX_TIERS = 10
 MAX_SCHEDULES = 4
 
@@ -133,10 +142,29 @@ class KaiPosPromo(models.Model):
                 _('Only the largest discount of the group applies to an order; on equal discounts the lower priority number wins.'),
             )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not self.env.is_superuser() and any(vals.get('state', 'draft') != 'draft' for vals in vals_list):
+            raise UserError(_('A new promotion always starts as a draft.'))
+        return super().create(vals_list)
+
     def write(self, vals):
+        if 'state' in vals:
+            self._check_transition(vals['state'])
         if DRAFT_ONLY_FIELDS.intersection(vals):
             self._check_draft_children()
         return super().write(vals)
+
+    def _check_transition(self, target):
+        if self.env.is_superuser():
+            return
+        labels = dict(self._fields['state']._description_selection(self.env))
+        for promo in self:
+            if target != promo.state and target not in TRANSITIONS[promo.state]:
+                raise UserError(_('%(promotion)s cannot go from %(old)s to %(new)s.',
+                                  promotion=promo.name, old=labels[promo.state], new=labels.get(target, target)))
+        if target in APPROVED_STATES and not self.env.user.has_group('kai_pos_promotion.group_kai_promo_approver'):
+            raise AccessError(_('Only a promotion approver can approve a promotion.'))
 
     def _check_draft_children(self):
         if any(promo.state != 'draft' for promo in self):
@@ -158,8 +186,6 @@ class KaiPosPromo(models.Model):
         self.state = 'to_approve'
 
     def action_approve(self):
-        if not self.env.is_superuser() and not self.env.user.has_group('kai_pos_promotion.group_kai_promo_approver'):
-            raise AccessError(_('Only a promotion approver can approve a promotion.'))
         if any(promo.state != 'to_approve' for promo in self):
             raise UserError(_('Only a promotion waiting for approval can be approved.'))
         self.state = 'approved'
