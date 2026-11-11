@@ -7,16 +7,16 @@
             <list string="Bank Card Claims" decoration-muted="state in ('cancelled', 'rejected')">
                 <field name="name"/>
                 <field name="bank_id"/>
-                <field name="program_id" optional="show"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="usage_count" sum="Usage Lines"/>
+                <field name="program_id" optional="hide"/>
+                <field name="date_from" width="100px"/>
+                <field name="date_to" width="100px"/>
+                <field name="usage_count" sum="Usage Lines" width="100px"/>
                 <field name="total_discount_amount" sum="Discount"/>
                 <field name="total_amount" sum="Bank Share"/>
                 <field name="invoice_id"/>
                 <field name="state" widget="badge"
-                       decoration-warning="state == 'draft'"
-                       decoration-info="state == 'sent'"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'sent'"
                        decoration-success="state == 'paid'"
                        decoration-danger="state == 'rejected'"
                        decoration-muted="state == 'cancelled'"/>
@@ -69,7 +69,7 @@
                     <group>
                         <group string="Claim">
                             <field name="bank_id" readonly="state != 'draft'"/>
-                            <field name="program_id" readonly="state != 'draft'"/>
+                            <field name="program_id" readonly="state != 'draft'" placeholder="All programmes of this bank"/>
                             <field name="date_from" readonly="state != 'draft'"/>
                             <field name="date_to" readonly="state != 'draft'"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
@@ -87,16 +87,16 @@
                         <page name="usages" string="Claimed Usage">
                             <field name="usage_ids" readonly="1">
                                 <list>
-                                    <field name="date"/>
-                                    <field name="program_id"/>
+                                    <field name="date" options="{'numeric': true, 'show_time': false}"/>
+                                    <field name="program_id" optional="hide"/>
                                     <field name="config_id" string="Outlet"/>
-                                    <field name="masked_card"/>
-                                    <field name="approval_code"/>
+                                    <field name="masked_card" width="140px"/>
+                                    <field name="approval_code" width="110px"/>
                                     <field name="basis_amount" sum="Basis"/>
                                     <field name="discount_amount" sum="Discount"/>
                                     <field name="bank_share_amount" sum="Bank Share"/>
-                                    <field name="state" widget="badge"/>
-                                    <field name="claim_state" widget="badge"/>
+                                    <field name="state" widget="badge" optional="hide"/>
+                                    <field name="claim_state" widget="badge" optional="hide"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>
                             </field>

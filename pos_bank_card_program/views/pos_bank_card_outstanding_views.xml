@@ -6,11 +6,11 @@
         <field name="arch" type="xml">
             <list string="Outstanding per Bank" create="0" edit="0" delete="0">
                 <field name="bank_id"/>
-                <field name="usage_count" sum="Usage Lines"/>
-                <field name="amount_0_30" sum="0-30 Days"/>
-                <field name="amount_31_60" sum="31-60 Days"
+                <field name="usage_count" sum="Usage Lines" width="100px"/>
+                <field name="amount_0_30" sum="0-30 Days" width="110px"/>
+                <field name="amount_31_60" sum="31-60 Days" width="110px"
                        decoration-warning="amount_31_60"/>
-                <field name="amount_over_60" sum="Over 60 Days"
+                <field name="amount_over_60" sum="Over 60 Days" width="110px"
                        decoration-danger="amount_over_60"/>
                 <field name="total_amount" sum="Outstanding"/>
                 <field name="company_id" groups="base.group_multi_company"/>

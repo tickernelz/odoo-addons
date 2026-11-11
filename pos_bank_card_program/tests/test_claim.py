@@ -2,6 +2,7 @@ import base64
 import io
 from datetime import datetime
 
+from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
@@ -301,14 +302,9 @@ class TestClaim(BankCardCommon):
         [row] = usage.with_user(user).web_read({'config_id': {'fields': {'display_name': {}}}})
         self.assertEqual(row['config_id'], {'id': self.outlet_1.id, 'display_name': 'Outlet 1'})
         visible = self.env['ir.ui.menu'].with_user(user)._visible_menu_ids()
-        self.assertIn(
-            self.env.ref('pos_bank_card_program.menu_pos_bank_card_claim_accounting').id, visible)
-        self.assertIn(
-            self.env.ref('pos_bank_card_program.menu_pos_bank_card_claim_wizard_accounting').id,
-            visible)
-        self.assertIn(
-            self.env.ref('pos_bank_card_program.menu_pos_bank_card_outstanding_accounting').id,
-            visible)
+        for xmlid in ('menu_bank_card_root', 'menu_bank_card_claim', 'menu_bank_card_claim_wizard',
+                      'menu_bank_card_outstanding', 'menu_bank_card_dashboard'):
+            self.assertIn(self.env.ref('pos_bank_card_program.%s' % xmlid).id, visible, xmlid)
         wizard = self.make_wizard().with_user(user)
         wizard.action_preview()
         self.assertEqual(wizard.usage_count, 1)
@@ -322,6 +318,16 @@ class TestClaim(BankCardCommon):
         claim.action_reconcile()
         self.assertEqual(claim.state, 'paid')
         self.assertEqual(usage.claim_state, 'paid')
+
+    def test_wizard_period_starts_at_oldest_unclaimed_usage_of_the_bank(self):
+        self.make_usage(date='2026-01-15 10:00:00')
+        self.make_usage(date='2026-01-20 10:00:00')
+        self.make_usage(date='2025-11-03 10:00:00', claim_state='paid')
+        self.make_usage(program=self.program_half, card_bin='900350', date='2025-06-01 10:00:00')
+        wizard = self.env['pos.bank.card.claim.wizard'].with_user(self.finance).new({'bank_id': self.bank_a.id})
+        wizard._onchange_period()
+        self.assertEqual(str(wizard.date_from), '2026-01-15')
+        self.assertEqual(wizard.date_to, fields.Date.context_today(wizard))
 
     def test_claim_access_by_role(self):
         self.make_usage()

@@ -4,6 +4,7 @@ import psycopg2
 
 from odoo import api, fields, models
 from odoo.exceptions import ConcurrencyError, ValidationError
+from odoo.tools import format_amount, format_date
 
 
 def bin_interval(value_from, value_to):
@@ -101,6 +102,76 @@ class PosBankCardProgram(models.Model):
     claim_column_ids = fields.One2many(
         'pos.bank.card.claim.column', 'program_id', string='Claim Columns',
         default=lambda self: self._default_claim_columns())
+    validity_label = fields.Char(string='Validity', compute='_compute_validity_label')
+    usage_count = fields.Integer(string='Confirmed Usage', compute='_compute_usage_count')
+    claim_count = fields.Integer(string='Claims', compute='_compute_claim_count')
+    quota_left_label = fields.Char(string='Quota Left', compute='_compute_quota_left_label')
+
+    @api.depends('date_from', 'date_to')
+    def _compute_validity_label(self):
+        for program in self:
+            start = program.date_from and format_date(self.env, program.date_from)
+            end = program.date_to and format_date(self.env, program.date_to)
+            if start and end:
+                program.validity_label = '%s - %s' % (start, end)
+            elif start:
+                program.validity_label = self.env._('From %s', start)
+            elif end:
+                program.validity_label = self.env._('Until %s', end)
+            else:
+                program.validity_label = self.env._('No limit')
+
+    def _compute_usage_count(self):
+        counts = dict(self.env['pos.bank.card.usage']._read_group(
+            [('program_id', 'in', self.ids), ('state', '=', 'confirmed')],
+            ['program_id'], ['__count']))
+        for program in self:
+            program.usage_count = counts.get(program, 0)
+
+    def _program_claims(self):
+        self.ensure_one()
+        groups = self.env['pos.bank.card.usage']._read_group(
+            [('program_id', '=', self.id), ('claim_id', '!=', False)], ['claim_id'])
+        return self.env['pos.bank.card.claim'].browse([claim.id for [claim] in groups])
+
+    def _compute_claim_count(self):
+        counts = {}
+        if self.env['pos.bank.card.claim'].has_access('read'):
+            counts = dict(self.env['pos.bank.card.usage']._read_group(
+                [('program_id', 'in', self.ids), ('claim_id', '!=', False)],
+                ['program_id'], ['claim_id:count_distinct']))
+        for program in self:
+            program.claim_count = counts.get(program, 0)
+
+    def action_open_claims(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('pos_bank_card_program.action_pos_bank_card_claim')
+        action['domain'] = [('id', 'in', self._program_claims().ids)]
+        return action
+
+    @api.depends('quota_type', 'quota_limit_count', 'quota_limit_amount', 'quota_period')
+    def _compute_quota_left_label(self):
+        today = fields.Date.context_today(self)
+        for program in self:
+            if program.quota_type == 'none' or not program.id:
+                program.quota_left_label = self.env._('No quota')
+                continue
+            remaining = program._quota_remaining(today)
+            if program.quota_type == 'count':
+                program.quota_left_label = self.env._(
+                    '%(left)s of %(limit)s', left=remaining, limit=program.quota_limit_count)
+            else:
+                program.quota_left_label = self.env._(
+                    '%(left)s of %(limit)s',
+                    left=format_amount(self.env, remaining, program.currency_id),
+                    limit=format_amount(self.env, program.quota_limit_amount, program.currency_id))
+
+    def action_open_usages(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('pos_bank_card_program.action_pos_bank_card_usage')
+        action['domain'] = [('program_id', '=', self.id)]
+        action['context'] = {'search_default_confirmed': 1}
+        return action
 
     @api.model
     def _default_claim_columns(self):

@@ -1,7 +1,7 @@
 {
     'name': 'POS Bank Card Programmes',
     'summary': 'Bank card programmes in the point of sale: BIN detection, discount, shared quota, bank claims',
-    'version': '19.0.1.6.0',
+    'version': '19.0.1.6.1',
     'category': 'Point of Sale',
     'author': 'tickernelz',
     'license': 'LGPL-3',
@@ -22,6 +22,10 @@
         'views/res_users_views.xml',
     ],
     'assets': {
+        'web.assets_backend': [
+            'pos_bank_card_program/static/src/dashboard/bank_card_dashboard.js',
+            'pos_bank_card_program/static/src/dashboard/bank_card_dashboard.xml',
+        ],
         'point_of_sale._assets_pos': [
             'pos_bank_card_program/static/src/app/utils/bank_card_detection.js',
             'pos_bank_card_program/static/src/app/models/bank_card_models.js',
@@ -41,6 +45,7 @@
         ],
         'web.assets_tests': [
             'pos_bank_card_program/static/tests/tours/bank_card_tour.js',
+            'pos_bank_card_program/static/tests/tours/backend_tours.js',
         ],
     },
     'demo': [

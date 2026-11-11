@@ -8,7 +8,8 @@
             <xpath expr="//group[@name='Payment methods']" position="after">
                 <group string="Bank Card Programmes">
                     <field name="bank_card_required"/>
-                    <field name="bank_card_program_id" invisible="not bank_card_required"/>
+                    <field name="bank_card_program_id" invisible="not bank_card_required"
+                           placeholder="Detected from the card prefix"/>
                 </group>
             </xpath>
         </field>

@@ -9,11 +9,12 @@
                 <field name="name"/>
                 <field name="bank_id"/>
                 <field name="mode"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="discount_type"/>
+                <field name="validity_label"/>
+                <field name="date_from" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="discount_type" width="90px"/>
                 <field name="discount_percent" optional="show"/>
-                <field name="discount_fixed_amount" optional="show"/>
+                <field name="discount_fixed_amount" optional="show" width="145px"/>
                 <field name="bank_share_percent"/>
                 <field name="company_id" groups="base.group_multi_company" column_invisible="1"/>
                 <field name="state" widget="badge"
@@ -39,6 +40,21 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,closed"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_usages" type="object" class="oe_stat_button" icon="fa-credit-card">
+                            <field name="usage_count" widget="statinfo" string="Usage"/>
+                        </button>
+                        <button name="action_open_claims" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                groups="pos_bank_card_program.group_bank_card_finance,pos_bank_card_program.group_bank_card_manager">
+                            <field name="claim_count" widget="statinfo" string="Claims"/>
+                        </button>
+                        <div class="oe_stat_button" invisible="quota_type == 'none'">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="quota_left_label"/></span>
+                                <span class="o_stat_text">Quota Left</span>
+                            </div>
+                        </div>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -51,8 +67,8 @@
                             <field name="active"/>
                         </group>
                         <group name="validity" string="Validity">
-                            <field name="date_from"/>
-                            <field name="date_to"/>
+                            <field name="date_from" placeholder="No start limit"/>
+                            <field name="date_to" placeholder="No end limit"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -61,8 +77,8 @@
                         <page name="summary" string="Summary">
                             <group>
                                 <group string="Where It Applies">
-                                    <field name="config_ids" widget="many2many_tags"/>
-                                    <field name="payment_method_ids" widget="many2many_tags"/>
+                                    <field name="config_ids" widget="many2many_tags" placeholder="All outlets"/>
+                                    <field name="payment_method_ids" widget="many2many_tags" placeholder="All payment methods"/>
                                 </group>
                                 <group string="Cashier Requirements">
                                     <field name="require_approval_code"/>
@@ -72,14 +88,14 @@
                         <page name="bin_ranges" string="BIN Ranges">
                             <field name="bin_range_ids">
                                 <list editable="bottom" string="BIN Ranges">
-                                    <field name="bin_from"/>
-                                    <field name="bin_to"/>
-                                    <field name="bin_length" readonly="1"/>
+                                    <field name="bin_from" width="90px"/>
+                                    <field name="bin_to" width="90px"/>
+                                    <field name="bin_length" readonly="1" width="80px" optional="hide"/>
                                     <field name="network"/>
-                                    <field name="card_type"/>
-                                    <field name="tier"/>
-                                    <field name="eligible"/>
-                                    <field name="ineligible_reason" column_invisible="0"/>
+                                    <field name="card_type" width="80px"/>
+                                    <field name="tier" width="80px"/>
+                                    <field name="eligible" width="110px"/>
+                                    <field name="ineligible_reason"/>
                                 </list>
                             </field>
                         </page>
@@ -89,17 +105,19 @@
                                     <field name="discount_type"/>
                                     <field name="discount_percent" invisible="discount_type != 'percent'"/>
                                     <field name="discount_fixed_amount" invisible="discount_type != 'fixed'"/>
-                                    <field name="discount_basis"/>
-                                    <field name="promo_order"/>
-                                    <field name="min_amount"/>
                                     <field name="max_discount" invisible="discount_type != 'percent'"/>
+                                    <field name="min_amount"/>
+                                    <field name="discount_basis"/>
+                                </group>
+                                <group string="Sharing and Posting">
                                     <field name="bank_share_percent"/>
+                                    <field name="promo_order"/>
                                     <field name="discount_product_id"/>
                                 </group>
-                                <group string="Exclusions">
-                                    <field name="excluded_product_ids" widget="many2many_tags"/>
-                                    <field name="excluded_categ_ids" widget="many2many_tags"/>
-                                </group>
+                            </group>
+                            <group string="Exclusions">
+                                <field name="excluded_product_ids" widget="many2many_tags" placeholder="No excluded products"/>
+                                <field name="excluded_categ_ids" widget="many2many_tags" placeholder="No excluded categories"/>
                             </group>
                         </page>
                         <page name="quota" string="Quota">
@@ -169,6 +187,7 @@
         <field name="search_view_id" ref="view_pos_bank_card_program_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create a bank card programme</p>
+            <p>A programme sets the bank, the eligible card ranges, the discount and the shared quota.</p>
         </field>
     </record>
 </odoo>

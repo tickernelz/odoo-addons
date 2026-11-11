@@ -39,13 +39,21 @@ class PosBankCardClaimWizard(models.TransientModel):
 
     @api.model
     def _default_date_from(self):
-        today = fields.Date.context_today(self)
-        return (today.replace(day=1) - timedelta(days=1)).replace(day=1)
+        return self._oldest_unclaimed_day([('company_id', '=', self.env.company.id)])
 
     @api.model
     def _default_date_to(self):
+        return fields.Date.context_today(self)
+
+    @api.model
+    def _oldest_unclaimed_day(self, domain):
         today = fields.Date.context_today(self)
-        return today.replace(day=1) - timedelta(days=1)
+        oldest = self.env['pos.bank.card.usage'].search(
+            domain + [('state', '=', 'confirmed'), ('claim_state', '=', 'not_claimed')],
+            order='date, id', limit=1)
+        if not oldest:
+            return today.replace(day=1)
+        return min(fields.Date.context_today(self, oldest.date), today)
 
     @api.depends(
         'line_ids.usage_count', 'line_ids.basis_amount',
@@ -61,6 +69,16 @@ class PosBankCardClaimWizard(models.TransientModel):
     def _onchange_bank_id(self):
         if self.program_id and self.program_id.bank_id != self.bank_id:
             self.program_id = False
+
+    @api.onchange('bank_id', 'program_id', 'company_id')
+    def _onchange_period(self):
+        if not self.bank_id or self.state != 'select':
+            return
+        domain = [('bank_id', '=', self.bank_id.id), ('company_id', '=', self.company_id.id)]
+        if self.program_id:
+            domain.append(('program_id', '=', self.program_id.id))
+        self.date_from = self._oldest_unclaimed_day(domain)
+        self.date_to = fields.Date.context_today(self)
 
     def _period_bounds_utc(self):
         tz = pytz.timezone(self.env.user.tz or 'UTC')
