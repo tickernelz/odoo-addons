@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_analytic_coverage_wizard_view_form" model="ir.ui.view">
+        <field name="name">pos.analytic.coverage.wizard.form</field>
+        <field name="model">pos.analytic.coverage.wizard</field>
+        <field name="arch" type="xml">
+            <form string="POS Analytic Coverage">
+                <group>
+                    <label for="date_from" string="Period"/>
+                    <div class="o_row">
+                        <field name="date_from"/>
+                        <span>to</span>
+                        <field name="date_to"/>
+                    </div>
+                    <field name="config_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="All points of sale"/>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Print" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_analytic_coverage_wizard" model="ir.actions.act_window">
+        <field name="name">POS Analytic Coverage</field>
+        <field name="res_model">pos.analytic.coverage.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_pos_analytic_coverage"
+        name="POS Analytic Coverage"
+        parent="point_of_sale.menu_point_rep"
+        action="action_pos_analytic_coverage_wizard"
+        groups="point_of_sale.group_pos_manager"
+        sequence="90"/>
+</odoo>

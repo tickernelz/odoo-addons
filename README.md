@@ -6,6 +6,8 @@ Each addon sits at the root of the branch, so the checkout itself is an addons p
 | Addon | What it does |
 |---|---|
 | [`kaitech_mcp`](kaitech_mcp/README.md) | One MCP (Model Context Protocol) endpoint per database at `POST /mcp/<database>`: per-key access to records, read-only SQL, code exploration and method calls, with a call log. |
+| [`pos_bank_card_program`](pos_bank_card_program/README.md) | Bank card programmes in the point of sale: BIN detection, discount, shared quota and bank claims. |
+| [`pos_checkout_extras`](pos_checkout_extras/README.md) | Point of sale checkout: required customer per counter, a payment reference on orders and payments, and one analytic distribution per counter stamped on its journal items. |
 
 ## Use
 

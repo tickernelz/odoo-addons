@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_checkout_extras.SelectPartnerButton" t-inherit="point_of_sale.SelectPartnerButton" t-inherit-mode="extension">
+        <xpath expr="//button" position="inside">
+            <span t-if="!props.partner and pos.getOrder()?.customerRequiredByConfig" class="badge text-bg-danger ms-2 align-middle o-customer-required-badge">Required</span>
+        </xpath>
+    </t>
+    <t t-name="pos_checkout_extras.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('partner-name')]" position="after">
+            <span t-if="currentOrder.customerRequiredByConfig" class="badge text-bg-danger ms-2 align-middle o-customer-required-badge">Required</span>
+        </xpath>
+    </t>
+    <t t-name="pos_checkout_extras.PaymentReferenceButton" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('payment-buttons')]" position="inside">
+            <button t-if="pos.config.allow_payment_reference"
+                    class="button btn btn-secondary btn-lg lh-lg w-100 text-truncate o-payment-reference-button"
+                    t-att-class="{ 'highlight text-action': currentOrder.payment_reference }"
+                    t-on-click="editPaymentReference">
+                <i class="fa fa-hashtag me-2" role="img" title="Payment Reference"/>
+                <t t-if="currentOrder.payment_reference" t-esc="currentOrder.payment_reference"/>
+                <t t-else="">Add Payment Reference</t>
+            </button>
+        </xpath>
+    </t>
+    <t t-name="pos_checkout_extras.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('receipt-change')]" position="before">
+            <div t-if="order.payment_reference" class="pos-receipt-payment-reference text-start">
+                Payment Ref.
+                <span class="pos-receipt-right-align font-monospace" t-esc="order.payment_reference"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
