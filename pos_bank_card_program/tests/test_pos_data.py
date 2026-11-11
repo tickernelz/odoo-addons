@@ -25,8 +25,20 @@ class TestPosData(BankCardCommon):
         loaded_ids = [row['id'] for row in rows]
         self.assertIn(self.program.id, loaded_ids)
         self.assertNotIn(draft.id, loaded_ids)
+        fixed = self.env['pos.bank.card.program'].create({
+            'name': 'Fixed Programme',
+            'bank_id': self.bank_b.id,
+            'state': 'active',
+            'discount_type': 'fixed',
+            'discount_fixed_amount': 1000.0,
+        })
+        rows = self.env['pos.bank.card.program']._load_pos_data_search_read({}, self.config)
         programme_row = [row for row in rows if row['id'] == self.program.id][0]
         self.assertEqual(programme_row['discount_percent'], 15.0)
+        self.assertEqual(programme_row['discount_type'], 'percent')
+        fixed_row = [row for row in rows if row['id'] == fixed.id][0]
+        self.assertEqual(fixed_row['discount_type'], 'fixed')
+        self.assertEqual(fixed_row['discount_fixed_amount'], 1000.0)
         range_rows = self.env['pos.bank.card.bin.range']._load_pos_data_search_read({}, self.config)
         loaded_bins = [row['bin_from'] for row in range_rows]
         self.assertIn('900100', loaded_bins)

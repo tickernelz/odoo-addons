@@ -723,6 +723,11 @@ msgid "Discount Product"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__discount_type
+msgid "Discount Type"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_bin_range__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_cardlimit__display_name
 #: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_claim__display_name
@@ -805,6 +810,16 @@ msgstr ""
 #. module: pos_bank_card_program
 #: model:res.groups,name:pos_bank_card_program.group_bank_card_finance
 msgid "Finance"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_type__fixed
+msgid "Fixed Amount"
+msgstr ""
+
+#. module: pos_bank_card_program
+#: model:ir.model.fields,field_description:pos_bank_card_program.field_pos_bank_card_program__discount_fixed_amount
+msgid "Fixed Discount Amount"
 msgstr ""
 
 #. module: pos_bank_card_program
@@ -1257,6 +1272,11 @@ msgid "Per Outlet"
 msgstr ""
 
 #. module: pos_bank_card_program
+#: model:ir.model.fields.selection,name:pos_bank_card_program.selection__pos_bank_card_program__discount_type__percent
+msgid "Percentage"
+msgstr ""
+
+#. module: pos_bank_card_program
 #: model_terms:ir.ui.view,arch_db:pos_bank_card_program.view_pos_bank_card_claim_search
 msgid "Period"
 msgstr ""
@@ -1684,6 +1704,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
 msgid "The discount percent must be between 0 and 100."
+msgstr ""
+
+#. module: pos_bank_card_program
+#. odoo-python
+#: code:addons/pos_bank_card_program/models/pos_bank_card_program.py:0
+msgid "The fixed discount amount must be greater than zero."
 msgstr ""
 
 #. module: pos_bank_card_program
