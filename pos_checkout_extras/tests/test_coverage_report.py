@@ -1,5 +1,5 @@
 from odoo import fields
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from .common import CheckoutExtrasCommon
 
@@ -42,5 +42,14 @@ class TestCoverageReport(CheckoutExtrasCommon):
         html = report._render_qweb_html(report.id, wizard.ids)[0].decode()
         self.assertIn('POS Analytic Coverage', html)
         self.assertIn('Ubud 100.0% / Retail 100.0%', html)
+
+
+@tagged('post_install', '-at_install')
+class TestCoveragePdf(HttpCase):
+
+    def test_coverage_report_renders_a_pdf(self):
+        today = fields.Date.context_today(self.env.user)
+        wizard = self.env['pos.analytic.coverage.wizard'].create({'date_from': today, 'date_to': today})
+        report = self.env.ref('pos_checkout_extras.action_report_pos_analytic_coverage')
         pdf = report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id, wizard.ids)[0]
         self.assertTrue(pdf.startswith(b'%PDF'))
