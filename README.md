@@ -5,6 +5,7 @@ Each addon sits at the root of the branch, so the checkout itself is an addons p
 
 | Addon | What it does |
 |---|---|
+| [`kai_pos_promotion`](kai_pos_promotion/README.md) | Point of sale promotions on top of Discount & Loyalty: tiered promotions, exclusive groups with priority, happy hours per point of sale timezone, an upsell banner and promotion approval. |
 | [`kaitech_mcp`](kaitech_mcp/README.md) | One MCP (Model Context Protocol) endpoint per database at `POST /mcp/<database>`: per-key access to records, read-only SQL, code exploration and method calls, with a call log. |
 
 ## Use

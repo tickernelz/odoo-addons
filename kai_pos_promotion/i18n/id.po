@@ -1,0 +1,862 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* kai_pos_promotion
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 09:20+0000\n"
+"PO-Revision-Date: 2026-11-11 09:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "<span>-</span>"
+msgstr "<span>-</span>"
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A happy hour window belongs to exactly one promotion or programme."
+msgstr "Satu jendela happy hour milik tepat satu promo atau program."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid ""
+"A happy hour window must end after it starts on the same day. Split a window"
+" that crosses midnight into two rows."
+msgstr ""
+"Jendela happy hour harus selesai setelah mulai pada hari yang sama. Pecah "
+"jendela yang melewati tengah malam menjadi dua baris."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A happy hour window needs at least one day."
+msgstr "Jendela happy hour butuh minimal satu hari."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A percentage tier must be above 0 and at most 100."
+msgstr "Tier persen harus di atas 0 dan paling besar 100."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A promotion has at most %s tiers."
+msgstr "Satu promo paling banyak %s tier."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "A tier threshold must be positive."
+msgstr "Ambang tier harus positif."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_needaction
+msgid "Action Needed"
+msgstr "Perlu Tindakan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__active
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__active
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Active"
+msgstr "Aktif"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/pos_store.js:0
+msgid "Add %(amount)s more for %(discount)s off"
+msgstr "Tambah %(amount)s lagi untuk diskon %(discount)s"
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Add at least one happy hour window to %s before submitting it."
+msgstr "Tambahkan minimal satu jendela happy hour ke %s sebelum diajukan."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Add at least one tier to %s before submitting it."
+msgstr "Tambahkan minimal satu tier ke %s sebelum diajukan."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "All points of sale"
+msgstr "Semua POS"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "All products"
+msgstr "Semua produk"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo_tier__discount_type__amount
+msgid "Amount per Order"
+msgstr "Nominal per Order"
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "An amount tier must be above 0 and below its threshold."
+msgstr "Tier nominal harus di atas 0 dan di bawah ambangnya."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Another promotion named %s runs in an overlapping period."
+msgstr "Promo lain bernama %s berjalan pada periode yang tumpang tindih."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Approve"
+msgstr "Setujui"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__approved
+msgid "Approved"
+msgstr "Disetujui"
+
+#. module: kai_pos_promotion
+#: model:res.groups,name:kai_pos_promotion.group_kai_promo_approver
+msgid "Approver"
+msgstr "Penyetuju"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "At most %s happy hour windows are allowed."
+msgstr "Paling banyak %s jendela happy hour."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_attachment_count
+msgid "Attachment Count"
+msgstr "Jumlah Lampiran"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Back to Draft"
+msgstr "Kembali ke Draf"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__max_discount
+msgid "Cap for every tier. Zero means no cap."
+msgstr "Batas untuk setiap tier. Nol berarti tanpa batas."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__conflict_html
+msgid "Conflict Html"
+msgstr "HTML Bentrok"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/pos_store.js:0
+msgid "Congratulations! The customer gets %(promotion)s – %(discount)s"
+msgstr "Selamat! Pelanggan mendapat %(promotion)s – %(discount)s"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Counted"
+msgstr "Dihitung"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.actions.act_window,help:kai_pos_promotion.kai_pos_promo_action
+msgid "Create a tiered promotion"
+msgstr "Buat promo bertingkat"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__create_uid
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__create_uid
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__create_date
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__create_date
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__currency_id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__currency_id
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__discount_product_id
+msgid "Discount Product"
+msgstr "Produk Diskon"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__rounding
+msgid "Discount Rounding"
+msgstr "Pembulatan Diskon"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__discount_type
+msgid "Discount Type"
+msgstr "Jenis Diskon"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_config__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_session__display_name
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__draft
+msgid "Draft"
+msgstr "Draf"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__date_end
+msgid "End Date"
+msgstr "Tanggal Selesai"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__done
+msgid "Ended"
+msgstr "Selesai"
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Every tier of %s needs its own spending threshold."
+msgstr "Setiap tier %s butuh ambang belanja sendiri."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Excluded"
+msgstr "Dikecualikan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__excluded_categ_ids
+msgid "Excluded Categories"
+msgstr "Kategori Dikecualikan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__excluded_product_ids
+msgid "Excluded Products"
+msgstr "Produk Dikecualikan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__exclusive_group
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__kai_exclusive_group
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Exclusive Group"
+msgstr "Grup Eksklusif"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_follower_ids
+msgid "Followers"
+msgstr "Pengikut"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pengikut (Rekanan)"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_fri
+msgid "Fri"
+msgstr "Jum"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__hour_from
+msgid "From"
+msgstr "Mulai"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__kai_priority
+msgid "Group Priority"
+msgstr "Prioritas Grup"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__happy_hour
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__kai_happy_hour
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Happy Hour"
+msgstr "Happy Hour"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.loyalty_program_view_form
+msgid "Happy Hour & Group"
+msgstr "Happy Hour & Grup"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_kai_pos_promo_schedule
+msgid "Happy Hour Window"
+msgstr "Jendela Happy Hour"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__schedule_ids
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__kai_schedule_ids
+msgid "Happy Hour Windows"
+msgstr "Jendela Happy Hour"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/pos_store.js:0
+msgid "Happy Hour · %(hours)sh %(minutes)sm left"
+msgstr "Happy Hour · sisa %(hours)s j %(minutes)s m"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/pos_store.js:0
+msgid "Happy hour %(promotion)s ended at %(time)s. Prices were recalculated."
+msgstr ""
+"Happy hour %(promotion)s berakhir pukul %(time)s. Harga dihitung ulang."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Happy hour windows of the same day cannot overlap."
+msgstr "Jendela happy hour di hari yang sama tidak boleh tumpang tindih."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_pos_config__kai_timezone
+#: model:ir.model.fields,help:kai_pos_promotion.field_res_config_settings__pos_kai_timezone
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.res_config_settings_view_form
+msgid ""
+"Happy hours of this point of sale follow this timezone, not the timezone of "
+"the cashier."
+msgstr "Happy hour POS ini mengikuti zona waktu ini, bukan zona waktu kasir."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__has_message
+msgid "Has Message"
+msgstr "Ada Pesan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_loyalty_program__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_config__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_order_line__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_session__id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__message_has_error
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan gagal terkirim."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_is_follower
+msgid "Is Follower"
+msgstr "Pengikut"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__write_uid
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__write_uid
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__write_date
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__write_date
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__config_ids
+msgid "Leave empty to run the promotion in every point of sale."
+msgstr "Kosongkan agar promo berjalan di semua POS."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__product_ids
+msgid "Leave products and categories empty to count every product."
+msgstr "Kosongkan produk dan kategori agar semua produk dihitung."
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_loyalty_program
+msgid "Loyalty Program"
+msgstr "Program Loyalitas"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__max_discount
+msgid "Maximum Discount"
+msgstr "Maksimal Diskon"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_mon
+msgid "Mon"
+msgstr "Sen"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Tindakan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan yang gagal terkirim"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_loyalty_program__kai_priority
+msgid "On equal discounts the lower number wins."
+msgstr "Bila diskon sama, angka yang lebih kecil menang."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a draft promotion can be changed. Set it back to draft first."
+msgstr "Hanya promo draf yang bisa diubah. Kembalikan ke draf dulu."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a draft promotion can be deleted. Stop it instead."
+msgstr "Hanya promo draf yang bisa dihapus. Hentikan saja."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a draft promotion can be submitted."
+msgstr "Hanya promo draf yang bisa diajukan."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a promotion approver can approve a promotion."
+msgstr "Hanya penyetuju promo yang bisa menyetujui promo."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a promotion waiting for approval can be approved."
+msgstr "Hanya promo yang menunggu approval yang bisa disetujui."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a promotion waiting for approval or stopped can go back to draft."
+msgstr ""
+"Hanya promo yang menunggu approval atau dihentikan yang bisa kembali ke "
+"draf."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Only a submitted, approved or active promotion can be stopped."
+msgstr ""
+"Hanya promo yang diajukan, disetujui, atau aktif yang bisa dihentikan."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_loyalty_program__kai_happy_hour
+msgid ""
+"Only apply the programme inside the windows below, in the timezone of the "
+"point of sale."
+msgstr ""
+"Program hanya berlaku di dalam jendela di bawah, menurut zona waktu POS."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid ""
+"Only the largest discount of the group applies to an order; on equal "
+"discounts the lower priority number wins."
+msgstr ""
+"Hanya diskon terbesar dalam grup yang berlaku per order; bila sama, angka "
+"prioritas lebih kecil yang menang."
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_kai_pos_promo
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_order_line__kai_promo_id
+msgid "POS Promotion"
+msgstr "Promo POS"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_kai_pos_promo_tier
+msgid "POS Promotion Tier"
+msgstr "Tier Promo POS"
+
+#. module: kai_pos_promotion
+#: model:ir.actions.act_window,name:kai_pos_promotion.kai_pos_promo_action
+#: model:ir.ui.menu,name:kai_pos_promotion.kai_pos_promo_menu
+#: model:res.groups.privilege,name:kai_pos_promotion.res_groups_privilege_kai_promo
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.res_config_settings_view_form
+msgid "POS Promotions"
+msgstr "Promo POS"
+
+#. module: kai_pos_promotion
+#: model:ir.actions.server,name:kai_pos_promotion.ir_cron_kai_pos_promo_sync_states_ir_actions_server
+msgid "POS Promotions: start and end by date"
+msgstr "Promo POS: mulai dan selesai sesuai tanggal"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo_tier__discount_type__percent
+msgid "Percent"
+msgstr "Persen"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Period"
+msgstr "Periode"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Konfigurasi POS"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Baris Order POS"
+
+#. module: kai_pos_promotion
+#: model:ir.model,name:kai_pos_promotion.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesi POS"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__config_ids
+msgid "Points of Sale"
+msgstr "POS"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__priority
+msgid "Priority"
+msgstr "Prioritas"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__categ_ids
+msgid "Product Categories"
+msgstr "Kategori Produk"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__discount_product_id
+msgid ""
+"Product of the discount line; its income account receives the discount."
+msgstr "Produk baris diskon; akun pendapatannya menerima diskon."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__product_ids
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Products"
+msgstr "Produk"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__program_id
+msgid "Program"
+msgstr "Program"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__promo_id
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__promo_id
+msgid "Promo"
+msgstr "Promo"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_order_line__kai_promo_shares
+msgid "Promotion Basis"
+msgstr "Basis Promo"
+
+#. module: kai_pos_promotion
+#: model:product.template,name:kai_pos_promotion.product_kai_promo_discount_product_template
+msgid "Promotion Discount"
+msgstr "Diskon Promo"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_config__kai_timezone
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_res_config_settings__pos_kai_timezone
+msgid "Promotion Timezone"
+msgstr "Zona Waktu Promo"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/promo_ui.js:0
+msgid "Promotion line"
+msgstr "Baris promo"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/promo_ui.js:0
+msgid "Promotion lines are calculated automatically."
+msgstr "Baris promo dihitung otomatis."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.res_config_settings_view_form
+msgid "Promotion timezone"
+msgstr "Zona waktu promo"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.res_config_settings_view_form
+msgid "Promotions"
+msgstr "Promo"
+
+#. module: kai_pos_promotion
+#. odoo-javascript
+#: code:addons/kai_pos_promotion/static/src/app/promo_ui.js:0
+msgid ""
+"Refund the products instead: their share of the promotion is returned "
+"automatically."
+msgstr "Refund produknya saja: bagian promonya dikembalikan otomatis."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_pos_order_line__kai_promo_refund_of_id
+msgid "Refunded Promotion Line"
+msgstr "Baris Promo yang Direfund"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_sat
+msgid "Sat"
+msgstr "Sab"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_pos_order_line__kai_promo_shares
+msgid ""
+"Share of each counted line in the promotion basis, used to refund the "
+"discount proportionally."
+msgstr ""
+"Bagian setiap baris dalam basis promo, dipakai untuk refund diskon secara "
+"proporsional."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "Shares group %(group)s with %(count)s other promotion(s):"
+msgstr "Berbagi grup %(group)s dengan %(count)s promo lain:"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__threshold
+msgid "Spend at Least"
+msgstr "Ambang Belanja"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__date_start
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__state
+msgid "State"
+msgstr "Status"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Stop"
+msgstr "Hentikan"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid ""
+"Stop this promotion? Points of sale stop applying it when they next load "
+"their data."
+msgstr ""
+"Hentikan promo ini? POS berhenti menerapkannya saat memuat data berikutnya."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__stopped
+msgid "Stopped"
+msgstr "Dihentikan"
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Submit for Approval"
+msgstr "Ajukan Approval"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_sun
+msgid "Sun"
+msgstr "Min"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__rounding
+msgid ""
+"The discount is rounded half up to a multiple of this amount, once per "
+"promotion and order."
+msgstr ""
+"Diskon dibulatkan ke atas mulai setengah ke kelipatan nilai ini, sekali per "
+"promo per order."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "The discount rounding of %s must be positive."
+msgstr "Pembulatan diskon %s harus positif."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "The end date of %s is before its start date."
+msgstr "Tanggal selesai %s sebelum tanggal mulainya."
+
+#. module: kai_pos_promotion
+#. odoo-python
+#: code:addons/kai_pos_promotion/models/kai_pos_promo.py:0
+msgid "The maximum discount of %s cannot be negative."
+msgstr "Maksimal diskon %s tidak boleh negatif."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.actions.act_window,help:kai_pos_promotion.kai_pos_promo_action
+msgid ""
+"The point of sale picks the highest tier reached and writes one discount "
+"line per promotion."
+msgstr ""
+"POS memilih tier tertinggi yang tercapai dan menulis satu baris diskon per "
+"promo."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_thu
+msgid "Thu"
+msgstr "Kam"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__promo_type__tier
+msgid "Tiered"
+msgstr "Bertingkat"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__tier_ids
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "Tiers"
+msgstr "Tier"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__hour_to
+msgid "To"
+msgstr "Selesai"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_tue
+msgid "Tue"
+msgstr "Sel"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__promo_type
+msgid "Type"
+msgstr "Tipe"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_tier__value
+msgid "Value"
+msgstr "Nilai"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields.selection,name:kai_pos_promotion.selection__kai_pos_promo__state__to_approve
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_search
+msgid "Waiting Approval"
+msgstr "Menunggu Approval"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan Situs Web"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__website_message_ids
+msgid "Website communication history"
+msgstr "Riwayat komunikasi situs web"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,field_description:kai_pos_promotion.field_kai_pos_promo_schedule__day_wed
+msgid "Wed"
+msgstr "Rab"
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_loyalty_program__kai_exclusive_group
+msgid ""
+"Within one group only the largest discount applies to an order, POS "
+"promotions included."
+msgstr ""
+"Dalam satu grup hanya diskon terbesar yang berlaku per order, termasuk promo"
+" POS."
+
+#. module: kai_pos_promotion
+#: model:ir.model.fields,help:kai_pos_promotion.field_kai_pos_promo__exclusive_group
+msgid ""
+"Within one group only the largest discount applies to an order; on equal "
+"discounts the lower priority number wins. Discount & Loyalty programmes can "
+"join the same group."
+msgstr ""
+"Dalam satu grup hanya diskon terbesar yang berlaku per order; bila sama, "
+"angka prioritas lebih kecil yang menang. Program Diskon & Loyalitas bisa "
+"masuk grup yang sama."
+
+#. module: kai_pos_promotion
+#: model_terms:ir.ui.view,arch_db:kai_pos_promotion.kai_pos_promo_view_form
+msgid "e.g. Seminyak Tiered Promotion"
+msgstr "mis. Promo Bertingkat Seminyak"

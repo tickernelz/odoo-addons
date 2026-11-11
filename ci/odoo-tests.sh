@@ -16,7 +16,7 @@ for _ in $(seq 1 60); do
     sleep 1
 done
 started=$(date +%s)
-$odoo_bin $paths $connection -d "$db" -i kaitech_mcp,pos_bank_card_program --test-enable --test-tags /kaitech_mcp,/pos_bank_card_program --without-demo=all \
+$odoo_bin $paths $connection -d "$db" -i kaitech_mcp,pos_bank_card_program,kai_pos_promotion --test-enable --test-tags /kaitech_mcp,/pos_bank_card_program,/kai_pos_promotion --without-demo=all \
     --stop-after-init --load=base,web,kaitech_mcp > "$log" 2>&1 || true
 finished=$(date +%s)
 python3 - "$log" <<'EOF'
