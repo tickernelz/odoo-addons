@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kai_pos_promo_view_list" model="ir.ui.view">
+        <field name="name">kai.pos.promo.list</field>
+        <field name="model">kai.pos.promo</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="priority" widget="handle"/>
+                <field name="name"/>
+                <field name="promo_type"/>
+                <field name="exclusive_group"/>
+                <field name="config_ids" widget="many2many_tags" optional="show"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="happy_hour" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge" decoration-muted="state in ('draft', 'done')" decoration-warning="state == 'to_approve'" decoration-info="state == 'approved'" decoration-success="state == 'active'" decoration-danger="state == 'stopped'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="kai_pos_promo_view_form" model="ir.ui.view">
+        <field name="name">kai.pos.promo.form</field>
+        <field name="model">kai.pos.promo</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit for Approval" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'to_approve'" groups="kai_pos_promotion.group_kai_promo_approver"/>
+                    <button name="action_stop" type="object" string="Stop" invisible="state not in ('to_approve', 'approved', 'active')" confirm="Stop this promotion? Points of sale stop applying it when they next load their data."/>
+                    <button name="action_reset_draft" type="object" string="Back to Draft" invisible="state not in ('to_approve', 'stopped')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,approved,active,done"/>
+                </header>
+                <sheet>
+                    <field name="conflict_html" nolabel="1" invisible="not conflict_html"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Seminyak Tiered Promotion" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="promo_type" readonly="state != 'draft'"/>
+                            <label for="date_start" string="Period"/>
+                            <div class="o_row">
+                                <field name="date_start" nolabel="1" readonly="state != 'draft'"/>
+                                <span>-</span>
+                                <field name="date_end" nolabel="1" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="config_ids" widget="many2many_tags" placeholder="All points of sale" readonly="state != 'draft'"/>
+                            <field name="happy_hour" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="exclusive_group" readonly="state != 'draft'"/>
+                            <field name="priority" readonly="state != 'draft'"/>
+                            <field name="max_discount" readonly="state != 'draft'"/>
+                            <field name="rounding" readonly="state != 'draft'"/>
+                            <field name="discount_product_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tiers" name="tiers">
+                            <field name="tier_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="threshold"/>
+                                    <field name="discount_type"/>
+                                    <field name="value"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Products" name="products">
+                            <group>
+                                <group string="Counted">
+                                    <field name="product_ids" widget="many2many_tags" placeholder="All products" readonly="state != 'draft'"/>
+                                    <field name="categ_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                                </group>
+                                <group string="Excluded">
+                                    <field name="excluded_product_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                                    <field name="excluded_categ_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Happy Hour" name="happy_hour" invisible="not happy_hour">
+                            <field name="schedule_ids" readonly="state != 'draft'">
+                <list editable="bottom">
+                    <field name="day_mon" widget="boolean_toggle"/>
+                    <field name="day_tue" widget="boolean_toggle"/>
+                    <field name="day_wed" widget="boolean_toggle"/>
+                    <field name="day_thu" widget="boolean_toggle"/>
+                    <field name="day_fri" widget="boolean_toggle"/>
+                    <field name="day_sat" widget="boolean_toggle"/>
+                    <field name="day_sun" widget="boolean_toggle"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
+                </list>
+            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="kai_pos_promo_view_search" model="ir.ui.view">
+        <field name="name">kai.pos.promo.search</field>
+        <field name="model">kai.pos.promo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="exclusive_group"/>
+                <field name="config_ids"/>
+                <filter name="filter_running" string="Active" domain="[('state', '=', 'active')]"/>
+                <filter name="filter_to_approve" string="Waiting Approval" domain="[('state', '=', 'to_approve')]"/>
+                <filter name="filter_happy_hour" string="Happy Hour" domain="[('happy_hour', '=', True)]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                <filter name="group_exclusive_group" string="Exclusive Group" context="{'group_by': 'exclusive_group'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="kai_pos_promo_action" model="ir.actions.act_window">
+        <field name="name">POS Promotions</field>
+        <field name="res_model">kai.pos.promo</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a tiered promotion</p>
+            <p>The point of sale picks the highest tier reached and writes one discount line per promotion.</p>
+        </field>
+    </record>
+
+    <menuitem id="kai_pos_promo_menu" action="kai_pos_promo_action" name="POS Promotions"
+        parent="point_of_sale.pos_config_menu_catalog" groups="point_of_sale.group_pos_manager" sequence="93"/>
+</odoo>

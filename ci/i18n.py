@@ -9,7 +9,7 @@ import sys
 import polib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODULES = ("kaitech_mcp", "pos_bank_card_program", "pos_checkout_extras", "pos_hr_manager_validation")
+MODULES = ("kaitech_mcp", "pos_bank_card_program", "pos_checkout_extras", "pos_hr_manager_validation", "kai_pos_promotion")
 INDONESIAN = ("yang", "tidak", "belum", "kunci", "hapus", "simpan", "batal", "pengaturan", "dengan", "untuk",
               "sudah", "bisa", "harus", "panggilan", "dicabut", "kedaluwarsa")
 PLACEHOLDER = re.compile(r"%(?:\([a-z_]+\))?[sdr]")

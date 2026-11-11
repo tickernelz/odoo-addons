@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_program_view_form" model="ir.ui.view">
+        <field name="name">loyalty.program.form.kai_pos_promotion</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Happy Hour &amp; Group" name="kai_happy_hour" invisible="program_type in ('gift_card', 'ewallet') or not pos_ok">
+                    <group>
+                        <group>
+                            <field name="kai_exclusive_group"/>
+                            <field name="kai_priority"/>
+                            <field name="kai_happy_hour"/>
+                        </group>
+                    </group>
+                    <field name="kai_schedule_ids" invisible="not kai_happy_hour">
+                <list editable="bottom">
+                    <field name="day_mon" widget="boolean_toggle"/>
+                    <field name="day_tue" widget="boolean_toggle"/>
+                    <field name="day_wed" widget="boolean_toggle"/>
+                    <field name="day_thu" widget="boolean_toggle"/>
+                    <field name="day_fri" widget="boolean_toggle"/>
+                    <field name="day_sat" widget="boolean_toggle"/>
+                    <field name="day_sun" widget="boolean_toggle"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
+                </list>
+            </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
