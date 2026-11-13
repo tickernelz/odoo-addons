@@ -30,9 +30,20 @@ order in the backend updates its payments. The reference is searchable and group
 and Payments (pivot and graph views added) and is a field of the POS analysis
 (`report.pos.order`). It does not reach accounting (`account.payment`, journal items).
 
-## Analytic distribution per counter
+## Analytic accounts per counter
 
-Each point of sale has one analytic distribution (several plans allowed) and an **Apply to** choice:
+Each point of sale picks its **Analytic Accounts** (`analytic_account_ids`, many to many: one
+counter can use several accounts and one account several counters; the account form lists them in
+`pos_config_ids`). The accounts make the counter's analytic distribution:
+
+- accounts in different plans each take 100%;
+- accounts in the same plan share 100%, evenly by default; **Split** adjusts the percentages.
+
+Adding or removing an account of a plan splits that plan evenly again; the split of other plans is
+kept. Upgrading from 19.0.1.0.0 picks the accounts of each existing distribution and leaves the
+distribution and the journal items already written untouched.
+
+Each counter also has an **Apply to** choice:
 
 - **Profit and loss lines** (default): journal items on income and expense accounts.
 - **All lines**: every journal item of the session.
@@ -46,7 +57,7 @@ The distribution is written when a session closes, on:
 - the product lines of invoices of the session's orders.
 
 A distribution must cover every mandatory plan of the `general` business domain at 100%.
-Changing it is logged and only affects sessions closed afterwards.
+Changing the accounts or the split is logged and only affects sessions closed afterwards.
 
 ### Synchronise
 

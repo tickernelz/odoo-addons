@@ -1,7 +1,7 @@
 {
     'name': 'POS Checkout Extras',
-    'summary': 'Point of sale checkout: required customer, payment reference, analytic distribution per counter',
-    'version': '19.0.1.0.0',
+    'summary': 'Point of sale checkout: required customer, payment reference, analytic accounts per counter',
+    'version': '19.0.1.1.0',
     'category': 'Point of Sale',
     'author': 'tickernelz',
     'website': 'https://github.com/tickernelz/odoo-addons',
