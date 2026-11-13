@@ -43,9 +43,13 @@ class AccountAnalyticAccount(models.Model):
         configs._settle_account_change(old_distributions)
         return result
 
-    def _pos_configs_named(self, commands):
+    def _pos_configs_named(self, value):
+        if isinstance(value, models.BaseModel):
+            value = [Command.set(value._origin.ids)]
+        elif isinstance(value, tuple) or (isinstance(value, list) and value and not isinstance(value[0], (tuple, list))):
+            value = [Command.set(list(value))]
         ids = set()
-        for command in commands:
+        for command in value or ():
             if command[0] in (Command.LINK, Command.UNLINK):
                 ids.add(command[1])
             elif command[0] == Command.SET:

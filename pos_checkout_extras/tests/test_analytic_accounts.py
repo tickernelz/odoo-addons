@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import load_script
 from odoo.tests import Form, tagged
@@ -79,6 +79,23 @@ class TestAnalyticAccounts(CheckoutExtrasCommon):
             [('config_id', '=', self.config.id), ('kind', '=', 'distribution')], limit=1)
         self.assertEqual(log.old_distribution, self.ubud_retail)
         self.assertEqual(log.new_distribution, self.config.analytic_distribution)
+
+    def test_every_way_of_naming_counters_from_the_account_is_logged(self):
+        logs = self.env['pos.analytic.sync.log']
+        other = self.config.copy({'name': 'Second counter'})
+        for value in ([self.config.id], (other.id,), False, self.config | other, None):
+            before = logs.search_count([('kind', '=', 'distribution')])
+            self.ubud.write({'pos_config_ids': value})
+            expected = self.env['pos.config'].browse(
+                value.ids if isinstance(value, models.BaseModel) else list(value or ()))
+            self.assertEqual(self.ubud.pos_config_ids, expected)
+            for config in self.config | other:
+                linked = config in expected
+                self.assertEqual(config.analytic_distribution, {str(self.ubud.id): 100.0} if linked else False)
+            self.assertGreater(logs.search_count([('kind', '=', 'distribution')]), before)
+        created = self.env['account.analytic.account'].create({
+            'name': 'Created linked', 'plan_id': self.channel_plan.id, 'pos_config_ids': self.config | other})
+        self.assertEqual(other.analytic_distribution, {str(created.id): 100.0})
 
     def test_an_account_of_another_company_cannot_link_a_counter(self):
         foreign = self.env['account.analytic.account'].create({
