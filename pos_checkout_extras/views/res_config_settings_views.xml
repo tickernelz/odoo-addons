@@ -17,7 +17,7 @@
                     <setting id="pos_analytic_distribution" string="Analytic Accounts" help="Added to the journal items created when a session of this point of sale is closed. Accounts in different plans each take the whole amount; accounts in the same plan share it." groups="analytic.group_analytic_accounting">
                         <field name="analytic_precision" invisible="1"/>
                         <div class="content-group mt-2">
-                            <field name="pos_analytic_account_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Pick analytic accounts"/>
+                            <field name="pos_analytic_account_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]" placeholder="Pick analytic accounts"/>
                             <div class="row mt-2" invisible="not pos_analytic_account_ids">
                                 <label string="Split" for="pos_analytic_distribution" class="col-lg-3 o_light_label"/>
                                 <field name="pos_analytic_distribution" widget="analytic_distribution" options="{'business_domain': 'general'}" class="col-lg-9"/>

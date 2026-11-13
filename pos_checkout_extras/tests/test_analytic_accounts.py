@@ -15,6 +15,7 @@ class TestAnalyticAccounts(CheckoutExtrasCommon):
         super().setUpClass()
         cls.kuta = cls.env['account.analytic.account'].create({'name': 'Kuta', 'plan_id': cls.branch_plan.id})
         cls.env.user.group_ids |= cls.env.ref('analytic.group_analytic_accounting')
+        cls.other_company = cls.setup_other_company()['company']
 
     def branch_shares(self):
         branch = (self.ubud | self.seminyak | self.kuta).ids
@@ -62,6 +63,66 @@ class TestAnalyticAccounts(CheckoutExtrasCommon):
         self.config.write({'analytic_account_ids': [Command.link(self.seminyak.id)]})
         self.assertEqual(self.branch_shares(), [50.0, 50.0])
 
+    def test_duplicating_an_account_leaves_its_counters_alone(self):
+        self.config.analytic_account_ids = self.ubud | self.retail
+        copy = self.ubud.copy()
+        self.assertFalse(copy.pos_config_ids)
+        self.assertEqual(self.config.analytic_account_ids, self.ubud | self.retail)
+        self.assertEqual(self.config.analytic_distribution, self.ubud_retail)
+
+    def test_linking_from_the_account_splits_and_logs(self):
+        self.config.analytic_account_ids = self.ubud | self.retail
+        self.seminyak.pos_config_ids = self.config
+        self.assertEqual(self.config.analytic_distribution, dict(self.ubud_retail, **{
+            str(self.ubud.id): 50.0, str(self.seminyak.id): 50.0}))
+        log = self.env['pos.analytic.sync.log'].search(
+            [('config_id', '=', self.config.id), ('kind', '=', 'distribution')], limit=1)
+        self.assertEqual(log.old_distribution, self.ubud_retail)
+        self.assertEqual(log.new_distribution, self.config.analytic_distribution)
+
+    def test_an_account_of_another_company_cannot_link_a_counter(self):
+        foreign = self.env['account.analytic.account'].create({
+            'name': 'Foreign', 'plan_id': self.branch_plan.id, 'company_id': self.other_company.id})
+        with self.assertRaises(UserError):
+            foreign.pos_config_ids = self.config
+        with self.assertRaises(UserError):
+            self.env['account.analytic.account'].create({
+                'name': 'Foreign too', 'plan_id': self.branch_plan.id, 'company_id': self.other_company.id,
+                'pos_config_ids': [Command.link(self.config.id)]})
+        self.assertFalse(self.config.analytic_account_ids)
+
+    def test_linking_from_the_account_respects_a_mandatory_plan(self):
+        self.config.analytic_account_ids = self.ubud | self.retail
+        self.branch_plan.write({'applicability_ids': [(0, 0, {
+            'business_domain': 'general',
+            'applicability': 'mandatory',
+        })]})
+        with self.assertRaisesRegex(ValidationError, '100%'):
+            self.ubud.pos_config_ids = False
+
+    def test_deleting_an_account_splits_its_plan_again(self):
+        self.config.analytic_distribution = {str(self.ubud.id): 60.0, str(self.kuta.id): 40.0}
+        self.kuta.unlink()
+        self.assertEqual(self.config.analytic_account_ids, self.ubud)
+        self.assertEqual(self.config.analytic_distribution, {str(self.ubud.id): 100.0})
+
+    def test_a_split_naming_a_deleted_account_is_redone_on_change(self):
+        gone = self.env['account.analytic.account'].create({'name': 'Gone', 'plan_id': self.branch_plan.id})
+        gone_id = gone.id
+        self.config.analytic_distribution = {str(self.ubud.id): 60.0, str(gone_id): 40.0}
+        self.env.flush_all()
+        self.env.cr.execute("DELETE FROM pos_config_analytic_account_rel WHERE account_id = %s", [gone_id])
+        self.env.cr.execute("DELETE FROM account_analytic_account WHERE id = %s", [gone_id])
+        self.env.invalidate_all()
+        self.config.write({'analytic_account_ids': [Command.link(self.retail.id)]})
+        self.assertEqual(self.config.analytic_distribution, self.ubud_retail)
+
+    def test_writing_a_split_leaves_the_callers_values_alone(self):
+        vals = {'analytic_distribution': self.seminyak_only}
+        self.config.write(vals)
+        self.assertEqual(vals, {'analytic_distribution': self.seminyak_only})
+        self.assertEqual(self.config.analytic_account_ids, self.seminyak)
+
     def test_removing_every_account_clears_the_distribution(self):
         self.config.analytic_account_ids = self.ubud | self.retail
         self.config.analytic_account_ids = False
@@ -83,9 +144,8 @@ class TestAnalyticAccounts(CheckoutExtrasCommon):
             })
 
     def test_an_account_of_another_company_is_refused(self):
-        other_company = self.setup_other_company()['company']
         foreign = self.env['account.analytic.account'].create({
-            'name': 'Foreign', 'plan_id': self.branch_plan.id, 'company_id': other_company.id})
+            'name': 'Foreign', 'plan_id': self.branch_plan.id, 'company_id': self.other_company.id})
         with self.assertRaises(UserError):
             self.config.analytic_account_ids = foreign
 

@@ -55,15 +55,14 @@ class PosConfig(models.Model):
         for vals in vals_list:
             if vals.get("customer_required_mode", "off") != "off":
                 vals["customer_required_since"] = now
-            self._follow_distribution_accounts(vals)
-        return super().create(vals_list)
+        return super().create([self._follow_distribution_accounts(vals) for vals in vals_list])
 
     def write(self, vals):
         if vals.get("customer_required_mode", "off") != "off":
             switched_on = self.filtered(lambda config: config.customer_required_mode == "off")
             if switched_on:
                 super(PosConfig, switched_on).write({"customer_required_since": fields.Datetime.now()})
-        self._follow_distribution_accounts(vals)
+        vals = self._follow_distribution_accounts(vals)
         if "analytic_distribution" in vals or "analytic_account_ids" in vals:
             old_distributions = {config.id: config.analytic_distribution for config in self}
             result = super().write(vals)
@@ -83,10 +82,16 @@ class PosConfig(models.Model):
             for config in changed
         ])
 
+    def _settle_account_change(self, old_distributions):
+        self._log_distribution_change(old_distributions)
+        self._check_analytic_distribution()
+
     @api.model
     def _follow_distribution_accounts(self, vals):
         if "analytic_distribution" in vals and "analytic_account_ids" not in vals:
-            vals["analytic_account_ids"] = [Command.set(self._distribution_accounts(vals["analytic_distribution"]).ids)]
+            accounts = self._distribution_accounts(vals["analytic_distribution"])
+            return dict(vals, analytic_account_ids=[Command.set(accounts.ids)])
+        return vals
 
     @api.model
     def _distribution_shares(self, distribution):
@@ -110,7 +115,8 @@ class PosConfig(models.Model):
         if set(shares) == set(accounts.ids):
             return distribution or False
         precision = self.env["decimal.precision"].precision_get("Percentage Analytic")
-        previous = self._distribution_accounts(distribution).grouped("root_plan_id")
+        previous = self._distribution_accounts(distribution)
+        previous = previous.grouped("root_plan_id") if set(previous.ids) == set(shares) else {}
         result = {}
         for plan, plan_accounts in accounts.grouped("root_plan_id").items():
             if previous.get(plan) == plan_accounts:
