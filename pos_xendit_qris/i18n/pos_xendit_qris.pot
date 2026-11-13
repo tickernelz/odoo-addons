@@ -1,0 +1,487 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_xendit_qris
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-13 06:02+0000\n"
+"PO-Revision-Date: 2026-11-13 06:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "%(method)s is not a Xendit QRIS payment method."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.constraint,message:pos_xendit_qris.constraint_pos_xendit_qris_request_reference_unique
+msgid "A QRIS reference must be unique."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.constraint,message:pos_xendit_qris.constraint_pos_xendit_qris_request_payment_request_unique
+msgid "A Xendit payment request is recorded once."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__amount
+msgid "Amount"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__attention
+msgid "Attention"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Cancel payment"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Check status"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__company_id
+msgid "Company"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__create_statement_memo
+msgid "Create Statement Memo"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid ""
+"Create Statement Memo on %(method)s needs Identify Customer: without it the "
+"session books one combined payment, not one per order."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_list
+msgid "Created"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__statement_memo_partner_id
+msgid "Default Customer"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__expired
+msgid "Expired"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__expires_at
+msgid "Expires At"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__failed
+msgid "Failed"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Needs attention"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.js:0
+msgid "Not paid yet. Ask the customer to finish the payment in their app."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Only point of sale users can take QRIS payments."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__order_reference
+msgid "Order Reference"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_order_uuid
+msgid "Order UUID"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_payment_id
+msgid "POS Payment"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__paid
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Paid"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__paid_at
+msgid "Paid At"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid ""
+"Paid at Xendit (%(payment)s) after the QRIS was %(state)s; settle it by "
+"hand."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_payment_uuid
+msgid "Payment Line UUID"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_method_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_account_payment
+msgid "Payments"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__config_id
+msgid "Point of Sale"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_session
+msgid "Point of Sale Session"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_expiry_minutes
+msgid "QR Validity (minutes)"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QR validity must be between 1 and 2880 minutes."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "QRIS"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__qr_string
+msgid "QRIS String"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+#: model:ir.actions.act_window,name:pos_xendit_qris.action_pos_xendit_qris_request
+#: model:ir.ui.menu,name:pos_xendit_qris.menu_pos_xendit_qris_request
+msgid "QRIS Xendit"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "QRIS Xendit takes payments only. Refund with another payment method."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS only takes IDR; this session uses %(currency)s."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS takes at most %(limit)s per payment."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS takes whole rupiah amounts of at least 1."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__reference_id
+msgid "Reference"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__session_id
+msgid "Session"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_payment_method__statement_memo_partner_id
+msgid ""
+"Set on the order when the cashier has not chosen a customer, so Identify "
+"Customer does not block the sale."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_xendit_qris_request__attention
+msgid ""
+"Set when Xendit reported something the cashier could not settle, such as a "
+"payment after the QRIS was cancelled."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__state
+msgid "State"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Status"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment.py:0
+msgid ""
+"The %(method)s payment of %(amount)s in %(order)s has no matching QRIS paid "
+"at Xendit."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS expired before it was paid."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS was cancelled."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS was not paid."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "The Xendit secret key of %(method)s is not set."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The customer has already paid this QRIS."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "The point of sale session is not open for %(method)s."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The server could not be reached. Check the connection and try again."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "This QRIS request does not exist."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "This payment line belongs to another session."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_list
+msgid "Total"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Valid until"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__pending
+msgid "Waiting for payment"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_payment_method__create_statement_memo
+msgid ""
+"Write the memo of each customer payment as: method, customer, order date, "
+"order reference, order time, and for Xendit QRIS the Xendit reference after "
+"\" - \". Needs Identify Customer."
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_id
+msgid "Xendit Payment"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_request_id
+msgid "Xendit Payment Request"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_xendit_qris_request
+msgid "Xendit QRIS Request"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_secret_key
+msgid "Xendit Secret Key"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_webhook_url
+msgid "Xendit Webhook URL"
+msgstr ""
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_webhook_token
+msgid "Xendit Webhook Verification Token"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not be reached: %(reason)s"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not cancel the QRIS: %(reason)s"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not create the QRIS: %(reason)s"
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "Xendit reported %(currency)s %(amount)s for %(expected)s."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "Xendit reported a second payment %(payment)s."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "Xendit reported the QRIS payment as failed."
+msgstr ""
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "the answer carries no QRIS"
+msgstr ""

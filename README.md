@@ -6,6 +6,7 @@ Each addon sits at the root of the branch, so the checkout itself is an addons p
 | Addon | What it does |
 |---|---|
 | [`kai_pos_promotion`](kai_pos_promotion/README.md) | Point of sale promotions on top of Discount & Loyalty: tiered promotions, exclusive groups with priority, happy hours per point of sale timezone, an upsell banner and promotion approval. |
+| [`pos_xendit_qris`](pos_xendit_qris/README.md) | Dynamic QRIS through Xendit at the point of sale, confirmed by a verified Xendit webhook, and a statement memo per customer payment carrying the Xendit reference for bank reconciliation. |
 | [`kaitech_mcp_server`](kaitech_mcp_server/README.md) | MCP (Model Context Protocol) server: OAuth 2.0 and personal tokens with scopes, model, field and IP limits, record, BI, export, job, portal page and SQL tools, code exploration, one endpoint per database at `POST /mcp/<database>`, and a call log. |
 | [`pos_bank_card_program`](pos_bank_card_program/README.md) | Bank card programmes in the point of sale: BIN detection, discount, shared quota and bank claims. |
 | [`pos_checkout_extras`](pos_checkout_extras/README.md) | Point of sale checkout: required customer per counter, a payment reference on orders and payments, and one analytic distribution per counter stamped on its journal items. |

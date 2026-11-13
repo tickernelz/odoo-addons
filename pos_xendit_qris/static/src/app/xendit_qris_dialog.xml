@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_xendit_qris.XenditQrisDialog">
+        <Dialog title.translate="QRIS Xendit" size="'md'">
+            <div class="o_xendit_qris d-flex flex-column align-items-center gap-2 text-center">
+                <img class="o_xendit_qris_code" t-att-src="props.request.qr_image" alt="QRIS" style="width: 280px; height: 280px;"/>
+                <div class="fs-2 fw-bold" t-esc="props.amount"/>
+                <div class="text-muted">Reference <span class="o_xendit_qris_reference" t-esc="props.request.reference"/></div>
+                <div class="text-muted">Valid until <t t-esc="validUntil"/></div>
+                <div t-if="state.notice" class="alert alert-info mb-0 o_xendit_qris_notice" t-esc="state.notice"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o_xendit_qris_check" t-att-disabled="state.busy" t-on-click="onCheck">Check status</button>
+                <button class="btn btn-secondary o_xendit_qris_cancel" t-att-disabled="state.busy" t-on-click="onCancel">Cancel payment</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
