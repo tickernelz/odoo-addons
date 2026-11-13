@@ -1,6 +1,6 @@
 import pytz
 
-from odoo import _, api, models
+from odoo import _, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
 
@@ -11,21 +11,8 @@ MEMO_TIME_FORMAT = '%H:%M'
 class PosPayment(models.Model):
     _inherit = 'pos.payment'
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        payments = super().create(vals_list)
-        payments._fill_statement_memo_partner()
-        payments._bind_xendit_qris_requests()
-        return payments
-
-    def _fill_statement_memo_partner(self):
-        for payment in self:
-            method = payment.payment_method_id
-            order = payment.pos_order_id
-            if method.split_transactions and method.statement_memo_partner_id and not order.partner_id:
-                order.partner_id = method.statement_memo_partner_id
-
     def _bind_xendit_qris_requests(self):
+        """Tie each positive Xendit QRIS payment to its paid request, refusing one Xendit has not paid."""
         payments = self.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'xendit_qris'
                                  and p.currency_id.compare_amounts(p.amount, 0) > 0)
         if not payments:

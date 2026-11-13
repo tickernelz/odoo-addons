@@ -15,6 +15,30 @@ _logger = logging.getLogger(__name__)
 CLOSED_STATES = {'EXPIRED': 'expired', 'CANCELED': 'cancelled', 'FAILED': 'failed'}
 
 
+def _is_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def webhook_shape_problem(event, data):
+    """Return why a Xendit webhook body cannot be applied, or None when its fields have the expected types."""
+    if not isinstance(data.get('payment_request_id'), str) or not data['payment_request_id']:
+        return 'payment_request_id missing'
+    if event != 'payment.capture':
+        return None
+    if not isinstance(data.get('payment_id'), str) or not data['payment_id']:
+        return 'payment_id missing'
+    if not isinstance(data.get('currency'), str) or not isinstance(data.get('status'), str):
+        return 'currency or status missing'
+    captures = data.get('captures')
+    if captures:
+        if not isinstance(captures, list) or not all(
+                isinstance(capture, dict) and _is_number(capture.get('capture_amount')) for capture in captures):
+            return 'captures malformed'
+    elif not _is_number(data.get('request_amount')):
+        return 'amount missing'
+    return None
+
+
 class PosXenditQrisRequest(models.Model):
     _name = 'pos.xendit.qris.request'
     _description = 'Xendit QRIS Request'
@@ -177,13 +201,12 @@ class PosXenditQrisRequest(models.Model):
         """Apply a verified Xendit webhook to this request."""
         self.ensure_one()
         self._lock()
-        if data.get('payment_request_id') and self.payment_request_id != data.get('payment_request_id'):
+        if self.payment_request_id != data.get('payment_request_id'):
             _logger.warning('Xendit webhook for %s names another payment request', self.reference_id)
             return 'request_mismatch'
         if event == 'payment.capture' and data.get('status') == 'SUCCEEDED':
             captures = data.get('captures') or []
-            amount = sum(float(capture.get('capture_amount') or 0) for capture in captures) if captures \
-                else data.get('request_amount')
+            amount = sum(capture['capture_amount'] for capture in captures) if captures else data['request_amount']
             return self._record_capture(data.get('payment_id'), amount, data.get('currency'))
         if event == 'payment.failure':
             return self._record_closed('failed')

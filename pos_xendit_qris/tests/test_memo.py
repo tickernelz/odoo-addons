@@ -34,6 +34,26 @@ class TestStatementMemo(XenditQrisCase):
         with self.assertRaisesRegex(ValidationError, 'no matching QRIS'):
             self.sync(self.order_data('line-unpaid', partner=self.customer))
 
+    def test_draft_order_with_unpaid_qris_line_syncs_and_is_paid_once_xendit_pays(self):
+        base = self.order_data('line-draft', partner=self.customer, reference='2610-1-0130')
+
+        def payload(state, payment_status):
+            line = dict(base['lines'][0][2], uuid='line-draft-product')
+            payment = dict(base['payment_ids'][0][2], payment_status=payment_status)
+            return dict(base, state=state, lines=[[0, 0, line]], payment_ids=[[0, 0, payment]])
+
+        order = self.sync(payload('draft', 'retry'))
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(order.payment_ids.transaction_id)
+        with self.assertRaisesRegex(ValidationError, 'no matching QRIS'), self.env.cr.savepoint():
+            self.sync(payload('paid', 'done'))
+        request = self.paid_qris('line-draft', reference='2610-1-0130')
+        order = self.sync(payload('paid', 'done'))
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(len(order.payment_ids), 1)
+        self.assertEqual(order.payment_ids.transaction_id, request.reference_id)
+        self.assertEqual(request.pos_payment_id, order.payment_ids)
+
     def test_one_paid_qris_cannot_pay_two_orders(self):
         self.paid_qris('line-twice')
         self.sync(self.order_data('line-twice', partner=self.customer, reference='2610-1-0002'))

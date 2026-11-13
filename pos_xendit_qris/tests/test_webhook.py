@@ -49,6 +49,28 @@ class TestXenditQrisWebhook(XenditQrisCase):
     def test_malformed_body_is_refused(self):
         self.assertEqual(self.post_webhook(None, raw='{not json').status_code, 400)
 
+    def test_malformed_fields_are_refused_without_a_server_error(self):
+        cases = {
+            'captures not objects': lambda data: data.update(captures=['oops']),
+            'capture amount text': lambda data: data.update(captures=[{'capture_amount': 'abc'}]),
+            'captures not a list': lambda data: data.update(captures={'capture_amount': 50000}),
+            'no payment request': lambda data: data.pop('payment_request_id'),
+            'no payment id': lambda data: data.pop('payment_id'),
+            'amount missing': lambda data: data.update(captures=[], request_amount=None),
+        }
+        for name, spoil in cases.items():
+            payload = capture_payload(self.request)
+            spoil(payload['data'])
+            with self.subTest(name):
+                self.assertEqual(self.post_webhook(payload).status_code, 400)
+                self.assertStays('pending')
+
+    def test_expiry_without_payment_request_is_refused(self):
+        payload = capture_payload(self.request, event='payment_request.expiry', status='EXPIRED')
+        payload['data'].pop('payment_request_id')
+        self.assertEqual(self.post_webhook(payload).status_code, 400)
+        self.assertStays('pending')
+
     def test_other_amount_does_not_mark_paid(self):
         self.assertEqual(self.post_webhook(capture_payload(self.request, amount=500)).status_code, 200)
         self.assertStays('pending')

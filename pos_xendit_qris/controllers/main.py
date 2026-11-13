@@ -5,6 +5,8 @@ import logging
 from odoo import http
 from odoo.http import Response, request
 
+from ..models.pos_xendit_qris_request import webhook_shape_problem
+
 _logger = logging.getLogger(__name__)
 
 
@@ -27,6 +29,10 @@ class XenditQrisWebhook(http.Controller):
         data = payload.get('data') if isinstance(payload, dict) else None
         reference = data.get('reference_id') if isinstance(data, dict) else None
         if not isinstance(reference, str) or not reference:
+            return Response(status=400)
+        problem = webhook_shape_problem(payload.get('event'), data)
+        if problem:
+            _logger.warning('Xendit QRIS webhook for %s refused: %s', reference, problem)
             return Response(status=400)
         qris = request.env['pos.xendit.qris.request'].sudo().search([('reference_id', '=', reference)], limit=1)
         if not qris:
