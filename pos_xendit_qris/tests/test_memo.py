@@ -37,18 +37,21 @@ class TestStatementMemo(XenditQrisCase):
     def test_draft_order_with_unpaid_qris_line_syncs_and_is_paid_once_xendit_pays(self):
         base = self.order_data('line-draft', partner=self.customer, reference='2610-1-0130')
 
-        def payload(state, payment_status):
+        def payload(state, payment_status, order=None):
             line = dict(base['lines'][0][2], uuid='line-draft-product')
             payment = dict(base['payment_ids'][0][2], payment_status=payment_status)
+            if order:
+                return dict(base, state=state, access_token=order.access_token,
+                            lines=[[1, order.lines.id, line]], payment_ids=[[1, order.payment_ids.id, payment]])
             return dict(base, state=state, lines=[[0, 0, line]], payment_ids=[[0, 0, payment]])
 
         order = self.sync(payload('draft', 'retry'))
         self.assertEqual(order.state, 'draft')
         self.assertFalse(order.payment_ids.transaction_id)
         with self.assertRaisesRegex(ValidationError, 'no matching QRIS'), self.env.cr.savepoint():
-            self.sync(payload('paid', 'done'))
+            self.sync(payload('paid', 'done', order))
         request = self.paid_qris('line-draft', reference='2610-1-0130')
-        order = self.sync(payload('paid', 'done'))
+        order = self.sync(payload('paid', 'done', order))
         self.assertEqual(order.state, 'paid')
         self.assertEqual(len(order.payment_ids), 1)
         self.assertEqual(order.payment_ids.transaction_id, request.reference_id)

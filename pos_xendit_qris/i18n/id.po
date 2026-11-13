@@ -106,6 +106,7 @@ msgstr "Pelanggan Bawaan"
 
 #. module: pos_xendit_qris
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__display_name
@@ -130,6 +131,7 @@ msgstr "Gagal"
 
 #. module: pos_xendit_qris
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__id
@@ -220,6 +222,11 @@ msgstr "Pembayaran"
 #: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__config_id
 msgid "Point of Sale"
 msgstr "Point of Sale"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Order Point of Sale"
 
 #. module: pos_xendit_qris
 #: model:ir.model,name:pos_xendit_qris.model_pos_payment_method
