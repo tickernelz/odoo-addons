@@ -1,0 +1,497 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_xendit_qris
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-13 03:27+0000\n"
+"PO-Revision-Date: 2026-11-13 03:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "%(method)s is not a Xendit QRIS payment method."
+msgstr "%(method)s bukan metode pembayaran QRIS Xendit."
+
+#. module: pos_xendit_qris
+#: model:ir.model.constraint,message:pos_xendit_qris.constraint_pos_xendit_qris_request_reference_unique
+msgid "A QRIS reference must be unique."
+msgstr "Referensi QRIS harus unik."
+
+#. module: pos_xendit_qris
+#: model:ir.model.constraint,message:pos_xendit_qris.constraint_pos_xendit_qris_request_payment_request_unique
+msgid "A Xendit payment request is recorded once."
+msgstr "Satu payment request Xendit hanya dicatat sekali."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__amount
+msgid "Amount"
+msgstr "Jumlah"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__attention
+msgid "Attention"
+msgstr "Perlu Tindakan"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Cancel payment"
+msgstr "Batalkan pembayaran"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__cancelled
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Check status"
+msgstr "Cek status"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__create_statement_memo
+msgid "Create Statement Memo"
+msgstr "Buat Memo Statement"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid ""
+"Create Statement Memo on %(method)s needs Identify Customer: without it the "
+"session books one combined payment, not one per order."
+msgstr ""
+"Buat Memo Statement pada %(method)s membutuhkan Identifikasi Pelanggan: "
+"tanpa itu sesi membukukan satu pembayaran gabungan, bukan satu per order."
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_list
+msgid "Created"
+msgstr "Dibuat"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__currency_id
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__statement_memo_partner_id
+msgid "Default Customer"
+msgstr "Pelanggan Bawaan"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__expired
+msgid "Expired"
+msgstr "Kedaluwarsa"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__expires_at
+msgid "Expires At"
+msgstr "Berlaku Hingga"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__failed
+msgid "Failed"
+msgstr "Gagal"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Needs attention"
+msgstr "Perlu tindakan"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.js:0
+msgid "Not paid yet. Ask the customer to finish the payment in their app."
+msgstr ""
+"Belum dibayar. Minta pelanggan menyelesaikan pembayaran di aplikasinya."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Only point of sale users can take QRIS payments."
+msgstr "Hanya pengguna point of sale yang bisa menerima pembayaran QRIS."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__order_reference
+msgid "Order Reference"
+msgstr "Referensi Order"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_order_uuid
+msgid "Order UUID"
+msgstr "UUID Order"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_payment_id
+msgid "POS Payment"
+msgstr "Pembayaran POS"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__paid
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Paid"
+msgstr "Lunas"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__paid_at
+msgid "Paid At"
+msgstr "Lunas Pada"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid ""
+"Paid at Xendit (%(payment)s) after the QRIS was %(state)s; settle it by "
+"hand."
+msgstr ""
+"Dibayar di Xendit (%(payment)s) setelah QRIS berstatus %(state)s; selesaikan"
+" secara manual."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__pos_payment_uuid
+msgid "Payment Line UUID"
+msgstr "UUID Baris Pembayaran"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_method_id
+msgid "Payment Method"
+msgstr "Metode Pembayaran"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_account_payment
+msgid "Payments"
+msgstr "Pembayaran"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__config_id
+msgid "Point of Sale"
+msgstr "Point of Sale"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metode Pembayaran Point of Sale"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Pembayaran Point of Sale"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesi Point of Sale"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_expiry_minutes
+msgid "QR Validity (minutes)"
+msgstr "Masa Berlaku QR (menit)"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QR validity must be between 1 and 2880 minutes."
+msgstr "Masa berlaku QR harus antara 1 dan 2880 menit."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "QRIS"
+msgstr "QRIS"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__qr_string
+msgid "QRIS String"
+msgstr "String QRIS"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+#: model:ir.actions.act_window,name:pos_xendit_qris.action_pos_xendit_qris_request
+#: model:ir.ui.menu,name:pos_xendit_qris.menu_pos_xendit_qris_request
+msgid "QRIS Xendit"
+msgstr "QRIS Xendit"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "QRIS Xendit takes payments only. Refund with another payment method."
+msgstr ""
+"QRIS Xendit hanya untuk pembayaran. Lakukan refund dengan metode pembayaran "
+"lain."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS only takes IDR; this session uses %(currency)s."
+msgstr "QRIS hanya menerima IDR; sesi ini memakai %(currency)s."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS takes at most %(limit)s per payment."
+msgstr "QRIS menerima paling banyak %(limit)s per pembayaran."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "QRIS takes whole rupiah amounts of at least 1."
+msgstr "QRIS hanya menerima jumlah rupiah bulat, paling sedikit 1."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__reference_id
+msgid "Reference"
+msgstr "Referensi"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__session_id
+msgid "Session"
+msgstr "Sesi"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_payment_method__statement_memo_partner_id
+msgid ""
+"Set on the order when the cashier has not chosen a customer, so Identify "
+"Customer does not block the sale."
+msgstr ""
+"Dipasang pada order bila kasir belum memilih pelanggan, agar Identifikasi "
+"Pelanggan tidak menghentikan penjualan."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_xendit_qris_request__attention
+msgid ""
+"Set when Xendit reported something the cashier could not settle, such as a "
+"payment after the QRIS was cancelled."
+msgstr ""
+"Diisi bila Xendit melaporkan hal yang tidak bisa diselesaikan kasir, "
+"misalnya pembayaran setelah QRIS dibatalkan."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__state
+msgid "State"
+msgstr "Status"
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment.py:0
+msgid ""
+"The %(method)s payment of %(amount)s in %(order)s has no matching QRIS paid "
+"at Xendit."
+msgstr ""
+"Pembayaran %(method)s sebesar %(amount)s pada %(order)s tidak punya QRIS "
+"yang lunas di Xendit."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS expired before it was paid."
+msgstr "QRIS kedaluwarsa sebelum dibayar."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS was cancelled."
+msgstr "QRIS dibatalkan."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The QRIS was not paid."
+msgstr "QRIS tidak dibayar."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "The Xendit secret key of %(method)s is not set."
+msgstr "Secret key Xendit pada %(method)s belum diisi."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The customer has already paid this QRIS."
+msgstr "Pelanggan sudah membayar QRIS ini."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "The point of sale session is not open for %(method)s."
+msgstr "Sesi point of sale tidak terbuka untuk %(method)s."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "The server could not be reached. Check the connection and try again."
+msgstr "Server tidak bisa dihubungi. Periksa koneksi lalu coba lagi."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "This QRIS request does not exist."
+msgstr "Permintaan QRIS ini tidak ada."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "This payment line belongs to another session."
+msgstr "Baris pembayaran ini milik sesi lain."
+
+#. module: pos_xendit_qris
+#: model_terms:ir.ui.view,arch_db:pos_xendit_qris.pos_xendit_qris_request_view_list
+msgid "Total"
+msgstr "Total"
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/xendit_qris_dialog.xml:0
+msgid "Valid until"
+msgstr "Berlaku hingga"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields.selection,name:pos_xendit_qris.selection__pos_xendit_qris_request__state__pending
+msgid "Waiting for payment"
+msgstr "Menunggu pembayaran"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,help:pos_xendit_qris.field_pos_payment_method__create_statement_memo
+msgid ""
+"Write the memo of each customer payment as: method, customer, order date, "
+"order reference, order time, and for Xendit QRIS the Xendit reference after "
+"\" - \". Needs Identify Customer."
+msgstr ""
+"Menulis memo tiap customer payment sebagai: metode, pelanggan, tanggal "
+"order, referensi order, jam order, dan untuk QRIS Xendit referensi Xendit "
+"setelah \" - \". Membutuhkan Identifikasi Pelanggan."
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_id
+msgid "Xendit Payment"
+msgstr "Pembayaran Xendit"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_xendit_qris_request__payment_request_id
+msgid "Xendit Payment Request"
+msgstr "Payment Request Xendit"
+
+#. module: pos_xendit_qris
+#: model:ir.model,name:pos_xendit_qris.model_pos_xendit_qris_request
+msgid "Xendit QRIS Request"
+msgstr "Permintaan QRIS Xendit"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_secret_key
+msgid "Xendit Secret Key"
+msgstr "Secret Key Xendit"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_webhook_url
+msgid "Xendit Webhook URL"
+msgstr "URL Webhook Xendit"
+
+#. module: pos_xendit_qris
+#: model:ir.model.fields,field_description:pos_xendit_qris.field_pos_payment_method__xendit_qris_webhook_token
+msgid "Xendit Webhook Verification Token"
+msgstr "Token Verifikasi Webhook Xendit"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not be reached: %(reason)s"
+msgstr "Xendit tidak bisa dihubungi: %(reason)s"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not cancel the QRIS: %(reason)s"
+msgstr "Xendit tidak bisa membatalkan QRIS: %(reason)s"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_payment_method.py:0
+msgid "Xendit could not create the QRIS: %(reason)s"
+msgstr "Xendit tidak bisa membuat QRIS: %(reason)s"
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "Xendit reported %(currency)s %(amount)s for %(expected)s."
+msgstr "Xendit melaporkan %(currency)s %(amount)s untuk %(expected)s."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "Xendit reported a second payment %(payment)s."
+msgstr "Xendit melaporkan pembayaran kedua %(payment)s."
+
+#. module: pos_xendit_qris
+#. odoo-javascript
+#: code:addons/pos_xendit_qris/static/src/app/payment_xendit_qris.js:0
+msgid "Xendit reported the QRIS payment as failed."
+msgstr "Xendit melaporkan pembayaran QRIS gagal."
+
+#. module: pos_xendit_qris
+#. odoo-python
+#: code:addons/pos_xendit_qris/models/pos_xendit_qris_request.py:0
+msgid "the answer carries no QRIS"
+msgstr "jawaban tidak memuat QRIS"

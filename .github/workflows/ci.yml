@@ -27,8 +27,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -q ruff==0.15.0
-      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion ci
-      - run: python -m compileall -q kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion
+      - run: ruff check --select F,E9 --per-file-ignores '__init__.py:F401' kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion pos_xendit_qris ci
+      - run: python -m compileall -q kaitech_mcp_server pos_bank_card_program pos_checkout_extras pos_hr_manager_validation kai_pos_promotion pos_xendit_qris
       - run: python ci/manifest_graph.py
 
   odoo19-image:
@@ -134,6 +134,7 @@ jobs:
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_checkout_extras > fresh/pos_checkout_extras.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_hr_manager_validation > fresh/pos_hr_manager_validation.pot
       - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n kai_pos_promotion > fresh/kai_pos_promotion.pot
+      - run: ADDONS_PATH="$GITHUB_WORKSPACE,/usr/lib/python3/dist-packages/odoo/addons" sh ci/export-pot.sh i18n pos_xendit_qris > fresh/pos_xendit_qris.pot
       - uses: actions/upload-artifact@v4
         with:
           name: fresh-pot
@@ -162,6 +163,7 @@ jobs:
       - run: msgfmt --check --statistics -o /dev/null pos_checkout_extras/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null pos_hr_manager_validation/i18n/id.po
       - run: msgfmt --check --statistics -o /dev/null kai_pos_promotion/i18n/id.po
+      - run: msgfmt --check --statistics -o /dev/null pos_xendit_qris/i18n/id.po
 
   multi-db:
     runs-on: ubuntu-24.04
