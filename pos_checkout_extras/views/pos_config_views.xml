@@ -19,10 +19,14 @@
                         <setting id="pos_checkout_extras_reference" string="Payment Reference" help="Let the cashier add a reference to an order from the payment screen.">
                             <field name="allow_payment_reference"/>
                         </setting>
-                        <setting id="pos_checkout_extras_analytic" string="Analytic Distribution" help="Added to the journal items created when a session of this point of sale is closed." groups="analytic.group_analytic_accounting">
+                        <setting id="pos_checkout_extras_analytic" string="Analytic Accounts" help="Added to the journal items created when a session of this point of sale is closed. Accounts in different plans each take the whole amount; accounts in the same plan share it." groups="analytic.group_analytic_accounting">
                             <field name="analytic_precision" invisible="1"/>
                             <div class="content-group mt-2">
-                                <field name="analytic_distribution" widget="analytic_distribution" options="{'business_domain': 'general'}"/>
+                                <field name="analytic_account_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]" placeholder="Pick analytic accounts"/>
+                                <div class="row mt-2" invisible="not analytic_account_ids">
+                                    <label string="Split" for="analytic_distribution" class="col-lg-3 o_light_label"/>
+                                    <field name="analytic_distribution" widget="analytic_distribution" options="{'business_domain': 'general'}" class="col-lg-9"/>
+                                </div>
                                 <div class="row mt-2">
                                     <label string="Apply to" for="analytic_scope" class="col-lg-3 o_light_label"/>
                                     <field name="analytic_scope" class="col-lg-9"/>

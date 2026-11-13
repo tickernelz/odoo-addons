@@ -1,8 +1,10 @@
 import json
+from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, fields, models
-from odoo.tools import SQL
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import SQL, float_round
 
 PROFIT_AND_LOSS_GROUPS = ("income", "expense")
 NON_ACCOUNTING_LINES = ("line_section", "line_subsection", "line_note")
@@ -35,6 +37,17 @@ class PosConfig(models.Model):
         default="pnl",
         required=True,
     )
+    analytic_account_ids = fields.Many2many(
+        "account.analytic.account",
+        "pos_config_analytic_account_rel",
+        "config_id",
+        "account_id",
+        string="Analytic Accounts",
+        check_company=True,
+        context={"active_test": False},
+        help="Accounts in different plans each take the whole amount. Accounts in the same plan share it, "
+        "evenly unless the split is adjusted.",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,14 +55,15 @@ class PosConfig(models.Model):
         for vals in vals_list:
             if vals.get("customer_required_mode", "off") != "off":
                 vals["customer_required_since"] = now
-        return super().create(vals_list)
+        return super().create([self._follow_distribution_accounts(vals) for vals in vals_list])
 
     def write(self, vals):
         if vals.get("customer_required_mode", "off") != "off":
             switched_on = self.filtered(lambda config: config.customer_required_mode == "off")
             if switched_on:
                 super(PosConfig, switched_on).write({"customer_required_since": fields.Datetime.now()})
-        if "analytic_distribution" in vals:
+        vals = self._follow_distribution_accounts(vals)
+        if "analytic_distribution" in vals or "analytic_account_ids" in vals:
             old_distributions = {config.id: config.analytic_distribution for config in self}
             result = super().write(vals)
             self._log_distribution_change(old_distributions)
@@ -68,13 +82,74 @@ class PosConfig(models.Model):
             for config in changed
         ])
 
-    @api.constrains("analytic_distribution", "company_id")
+    def _settle_account_change(self, old_distributions):
+        self._log_distribution_change(old_distributions)
+        self._check_analytic_distribution()
+
+    @api.model
+    def _follow_distribution_accounts(self, vals):
+        if "analytic_distribution" in vals and "analytic_account_ids" not in vals:
+            accounts = self._distribution_accounts(vals["analytic_distribution"])
+            return dict(vals, analytic_account_ids=[Command.set(accounts.ids)])
+        return vals
+
+    @api.model
+    def _distribution_shares(self, distribution):
+        shares = defaultdict(float)
+        for key, percent in (distribution or {}).items():
+            if key == "__update__":
+                continue
+            for account_id in key.split(","):
+                if account_id.isdigit():
+                    shares[int(account_id)] += percent
+        return shares
+
+    @api.model
+    def _distribution_accounts(self, distribution):
+        return self.env["account.analytic.account"].browse(self._distribution_shares(distribution)).exists()
+
+    @api.model
+    def _distribution_for_accounts(self, accounts, distribution):
+        accounts = accounts._origin
+        shares = self._distribution_shares(distribution)
+        if set(shares) == set(accounts.ids):
+            return distribution or False
+        precision = self.env["decimal.precision"].precision_get("Percentage Analytic")
+        previous = self._distribution_accounts(distribution)
+        previous = previous.grouped("root_plan_id") if set(previous.ids) == set(shares) else {}
+        result = {}
+        for plan, plan_accounts in accounts.grouped("root_plan_id").items():
+            if previous.get(plan) == plan_accounts:
+                result.update((str(account.id), shares[account.id]) for account in plan_accounts)
+                continue
+            even = float_round(100.0 / len(plan_accounts), precision_digits=precision)
+            for account in plan_accounts[:-1]:
+                result[str(account.id)] = even
+            result[str(plan_accounts[-1].id)] = float_round(100.0 - even * (len(plan_accounts) - 1), precision_digits=precision)
+        return result or False
+
+    @api.depends("analytic_account_ids")
+    def _compute_analytic_distribution(self):
+        for config in self:
+            config.analytic_distribution = self._distribution_for_accounts(
+                config.analytic_account_ids, config.analytic_distribution)
+
+    @api.onchange("analytic_distribution")
+    def _onchange_analytic_distribution_accounts(self):
+        for config in self:
+            config.analytic_account_ids = self._distribution_accounts(config.analytic_distribution)
+
+    @api.constrains("analytic_distribution", "analytic_account_ids", "company_id")
     def _check_analytic_distribution(self):
-        for config in self.filtered("analytic_distribution"):
-            config.with_context(validate_analytic=True)._validate_distribution(
-                company_id=config.company_id.id,
-                business_domain="general",
-            )
+        for config in self:
+            if self._distribution_accounts(config.analytic_distribution) != config.analytic_account_ids:
+                raise ValidationError(_(
+                    "The analytic split of %(pos)s must use exactly its analytic accounts.", pos=config.name))
+            if config.analytic_distribution:
+                config.with_context(validate_analytic=True)._validate_distribution(
+                    company_id=config.company_id.id,
+                    business_domain="general",
+                )
 
     def _analytic_applies_to_account(self, account):
         self.ensure_one()

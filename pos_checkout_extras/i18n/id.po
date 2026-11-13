@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 07:49+0000\n"
+"POT-Creation-Date: 2026-11-13 10:48+0000\n"
 "PO-Revision-Date: 2026-11-11 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,6 +28,16 @@ msgid "<span>to</span>"
 msgstr "<span>s.d.</span>"
 
 #. module: pos_checkout_extras
+#: model:ir.model.fields,help:pos_checkout_extras.field_pos_config__analytic_account_ids
+#: model:ir.model.fields,help:pos_checkout_extras.field_res_config_settings__pos_analytic_account_ids
+msgid ""
+"Accounts in different plans each take the whole amount. Accounts in the same "
+"plan share it, evenly unless the split is adjusted."
+msgstr ""
+"Akun di plan berbeda masing-masing mendapat seluruh jumlah. Akun di plan "
+"yang sama membaginya, rata kecuali pembagiannya diatur."
+
+#. module: pos_checkout_extras
 #. odoo-javascript
 #: code:addons/pos_checkout_extras/static/src/app/customer_required.xml:0
 msgid "Add Payment Reference"
@@ -38,9 +48,12 @@ msgstr "Tambah Referensi Pembayaran"
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
 msgid ""
 "Added to the journal items created when a session of this point of sale is "
-"closed."
+"closed. Accounts in different plans each take the whole amount; accounts in "
+"the same plan share it."
 msgstr ""
-"Ditambahkan ke item jurnal yang dibuat saat sesi point of sale ini ditutup."
+"Ditambahkan ke item jurnal yang dibuat saat sesi point of sale ini ditutup. "
+"Akun di plan berbeda masing-masing mendapat seluruh jumlah; akun di plan "
+"yang sama membaginya."
 
 #. module: pos_checkout_extras
 #: model:ir.model.fields.selection,name:pos_checkout_extras.selection__pos_config__analytic_scope__all
@@ -59,10 +72,21 @@ msgid "Already stamped"
 msgstr "Sudah tercap"
 
 #. module: pos_checkout_extras
-#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_distribution
-#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_analytic_distribution
+#: model:ir.model,name:pos_checkout_extras.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Akun Analitik"
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_account_ids
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_analytic_account_ids
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Analytic Accounts"
+msgstr "Akun Analitik"
+
+#. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_config__analytic_distribution
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_res_config_settings__pos_analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Distribusi Analitik"
 
@@ -105,11 +129,11 @@ msgstr "Batal"
 #. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
 msgid ""
-"Changing the distribution only affects sessions closed afterwards. Use "
+"Changing the accounts only affects sessions closed afterwards. Use "
 "Synchronise to update journal items that already exist."
 msgstr ""
-"Mengubah distribusi hanya berpengaruh pada sesi yang ditutup sesudahnya. "
-"Gunakan Sinkronkan untuk memperbarui item jurnal yang sudah ada."
+"Mengubah akun hanya berpengaruh pada sesi yang ditutup sesudahnya. Gunakan "
+"Sinkronkan untuk memperbarui item jurnal yang sudah ada."
 
 #. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
@@ -176,6 +200,7 @@ msgid "Date"
 msgstr "Tanggal"
 
 #. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__display_name
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__display_name
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__display_name
@@ -229,6 +254,7 @@ msgid "From"
 msgstr "Dari"
 
 #. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__id
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__id
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__id
@@ -439,6 +465,12 @@ msgid "Period"
 msgstr "Periode"
 
 #. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Pick analytic accounts"
+msgstr "Pilih akun analitik"
+
+#. module: pos_checkout_extras
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_log__config_id
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__config_id
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
@@ -471,6 +503,7 @@ msgid "Point of Sale Session"
 msgstr "Sesi Point of Sale"
 
 #. module: pos_checkout_extras
+#: model:ir.model.fields,field_description:pos_checkout_extras.field_account_analytic_account__pos_config_ids
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_coverage_wizard__config_ids
 msgid "Points of Sale"
 msgstr "Point of Sale"
@@ -560,6 +593,12 @@ msgid "Skipped"
 msgstr "Dilewati"
 
 #. module: pos_checkout_extras
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
+msgid "Split"
+msgstr "Pembagian"
+
+#. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
 msgid "Stamped"
 msgstr "Tercap"
@@ -567,13 +606,21 @@ msgstr "Tercap"
 #. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.report_pos_analytic_coverage
 msgid ""
-"Stamped: the journal item carries exactly the distribution set on the point of sale today.\n"
-"                            Missing: no distribution, usually items created before the distribution was set; use Synchronise in the point of sale settings.\n"
-"                            Other: a different distribution, for example one entered by hand or an older distribution of the counter."
+"Stamped: the journal item carries exactly the distribution set on the point "
+"of sale today.\n"
+"                            Missing: no distribution, usually items created "
+"before the distribution was set; use Synchronise in the point of sale "
+"settings.\n"
+"                            Other: a different distribution, for example one "
+"entered by hand or an older distribution of the counter."
 msgstr ""
-"Tercap: item jurnal membawa persis distribusi yang terpasang di point of sale saat ini.\n"
-"                            Kosong: tanpa distribusi, biasanya item yang dibuat sebelum distribusi diisi; gunakan Sinkronkan di pengaturan point of sale.\n"
-"                            Lain: distribusi berbeda, misalnya diisi manual atau distribusi lama counter ini."
+"Tercap: item jurnal membawa persis distribusi yang terpasang di point of "
+"sale saat ini.\n"
+"                            Kosong: tanpa distribusi, biasanya item yang "
+"dibuat sebelum distribusi diisi; gunakan Sinkronkan di pengaturan point of "
+"sale.\n"
+"                            Lain: distribusi berbeda, misalnya diisi manual "
+"atau distribusi lama counter ini."
 
 #. module: pos_checkout_extras
 #: model:ir.model.fields,field_description:pos_checkout_extras.field_pos_analytic_sync_wizard__state
@@ -613,11 +660,18 @@ msgid "Synchronise this counter"
 msgstr "Sinkronkan counter ini"
 
 #. module: pos_checkout_extras
+#. odoo-python
+#: code:addons/pos_checkout_extras/models/pos_config.py:0
+msgid "The analytic split of %(pos)s must use exactly its analytic accounts."
+msgstr ""
+"Pembagian analitik %(pos)s harus memakai persis akun analitiknya."
+
+#. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.res_config_settings_view_form
 msgid ""
-"The cashier cannot finish an order of this point of sale until a customer is"
-" set."
+"The cashier cannot finish an order of this point of sale until a customer is "
+"set."
 msgstr ""
 "Kasir tidak bisa menyelesaikan order di point of sale ini sebelum pelanggan "
 "diisi."
@@ -694,8 +748,7 @@ msgstr "sesi tertutup cocok dengan pilihan ini."
 
 #. module: pos_checkout_extras
 #: model_terms:ir.ui.view,arch_db:pos_checkout_extras.pos_analytic_sync_wizard_view_form
-msgid ""
-"journal items carry another analytic distribution and will be replaced."
+msgid "journal items carry another analytic distribution and will be replaced."
 msgstr "item jurnal membawa distribusi analitik lain dan akan diganti."
 
 #. module: pos_checkout_extras
