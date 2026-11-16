@@ -1689,6 +1689,12 @@ msgid "Only the owner configures the personal mailbox %(box)s."
 msgstr ""
 
 #. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "A message stays in a folder of its own mailbox."
+msgstr ""
+
+#. module: kaitech_email_client
 #: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
 msgid "common"
 msgstr ""

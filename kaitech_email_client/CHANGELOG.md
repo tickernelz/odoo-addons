@@ -6,6 +6,8 @@
   Administrators no longer read every mailbox: they configure team mailboxes and archive or delete any mailbox,
   but see no folder, conversation, message, attachment or record link of a mailbox they do not own or belong to.
 - Members left on a mailbox switched back to personal lose access.
+- Member rows, folders, signatures, conversations, messages and record links can no longer be moved into a
+  mailbox the writer may not configure or read.
 
 ## 1.5.0 (Kaitech) - 2026-11-16
 

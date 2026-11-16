@@ -402,7 +402,11 @@ class UmcMailboxMember(models.Model):
 
     def write(self, vals):
         self.mailbox_id._check_configure()
-        return super().write(vals)
+        res = super().write(vals)
+        if "mailbox_id" in vals:
+            self.mailbox_id._check_configure()
+            self.mailbox_id.filtered(lambda b: b.mailbox_type != "team").sudo().mailbox_type = "team"
+        return res
 
     def unlink(self):
         self.mailbox_id._check_configure()

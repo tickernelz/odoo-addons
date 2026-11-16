@@ -127,3 +127,52 @@ class TestMailboxPrivacy(TransactionCase):
         self.env.flush_all()
         self.assertEqual(self._content_seen_by(self.colleague, self.personal)["umc.message"], 0)
         self.assertNotIn(self.personal.id, self._inbox_of(self.colleague))
+
+    def test_member_row_cannot_be_moved_into_another_mailbox(self):
+        own = make_mailbox(self.env, self.colleague, "Own team", "own@lab0.test", mailbox_type="team")
+        row = self.env["umc.mailbox.member"].with_user(self.colleague).create(
+            {"mailbox_id": own.id, "user_id": self.admin.id, "role": "read"})
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            row.write({"mailbox_id": self.team.id, "role": "manage"})
+        self.env.flush_all()
+        self.assertEqual(row.mailbox_id, own)
+        self.assertEqual(self._content_seen_by(self.admin, self.team)["umc.message"], 0)
+        self.assertFalse(self.team.with_user(self.admin).my_role)
+
+    def test_folder_cannot_be_moved_into_another_mailbox(self):
+        own = make_mailbox(self.env, self.colleague, "Own", "own@lab0.test")
+        folder = self.env["umc.folder"].create({"mailbox_id": own.id, "name": "Planted", "path": "Planted"})
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            folder.with_user(self.colleague).write({"mailbox_id": self.personal.id})
+        self.assertEqual(folder.mailbox_id, own)
+
+    def test_admin_cannot_move_content_into_another_mailbox(self):
+        own = make_mailbox(self.env, self.admin, "Admin", "admin@lab0.test")
+        mine = fill_mailbox(self.env, own, "Planted", "<a1@client.test>")
+        mine.uid = "planted"
+        thread, link = mine.thread_id.with_user(self.admin), mine.thread_id.link_ids.with_user(self.admin)
+        message = mine.with_user(self.admin)
+        foreign_thread, foreign_folder = self.message.thread_id, self.message.folder_id
+        attempts = [(thread, {"mailbox_id": self.personal.id}), (message, {"thread_id": foreign_thread.id}),
+                    (message, {"folder_id": foreign_folder.id}), (link, {"thread_id": foreign_thread.id})]
+        for record, vals in attempts:
+            with self.subTest(model=record._name, vals=vals), self.assertRaises(AccessError), self.cr.savepoint():
+                record.write(vals)
+                self.env.flush_all()
+        self.env.flush_all()
+        self.assertEqual(self.env["umc.message"].search_count([("mailbox_id", "=", self.personal.id)]), 1)
+        self.assertEqual(self.env["umc.thread"].search_count([("mailbox_id", "=", self.personal.id)]), 1)
+
+    def test_signature_cannot_be_attached_to_another_mailbox(self):
+        Signature = self.env["umc.signature"].with_user(self.colleague)
+        mine = Signature.create({"name": "Me", "body": "<p>x</p>"})
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            mine.write({"mailbox_id": self.personal.id})
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            Signature.create({"name": "Planted", "body": "<p>x</p>", "mailbox_id": self.personal.id})
+        own = make_mailbox(self.env, self.colleague, "Own", "own@lab0.test")
+        shared = Signature.create({"name": "Shared", "body": "<p>x</p>", "owner_id": False, "mailbox_id": own.id})
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            shared.write({"mailbox_id": self.team.id})
+        mine.write({"mailbox_id": self.team.id})
+        self.assertEqual(mine.mailbox_id, self.team)

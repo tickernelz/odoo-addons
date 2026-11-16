@@ -90,9 +90,13 @@ class UmcFolder(models.Model):
         return {"inbox": 1, "sent": 2, "drafts": 3, "archive": 4, "spam": 5, "trash": 6}.get(role, 50)
 
     def write(self, vals):
-        if not self.env.su:
+        if self.env.su:
+            return super().write(vals)
+        self.mailbox_id._check_role("manage")
+        res = super().write(vals)
+        if "mailbox_id" in vals:
             self.mailbox_id._check_role("manage")
-        return super().write(vals)
+        return res
 
     def _refresh_counters(self):
         if not self:
