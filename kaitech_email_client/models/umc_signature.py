@@ -33,6 +33,11 @@ class UmcSignature(models.Model):
                 return found
         return self.browse()
 
+    def write(self, vals):
+        res = super().write(vals)
+        self.check_access("write")
+        return res
+
 
 def signature_block(body):
     if not body:

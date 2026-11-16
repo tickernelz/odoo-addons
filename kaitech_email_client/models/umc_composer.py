@@ -253,7 +253,7 @@ class UmcComposer(models.TransientModel):
         if not record or record._name not in LINK_MODELS:
             return
         thread = message.thread_id
-        thread._check_link_model(record._name)
+        self.env["umc.thread"]._check_link_model(record._name)
         record.check_access("write")
         Link = self.env["umc.record.link"].sudo()
         if not Link.search_count([("thread_id", "=", thread.id), ("res_model", "=", record._name),
