@@ -1,0 +1,1693 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* kaitech_email_client
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-16 07:27+0000\n"
+"PO-Revision-Date: 2026-11-16 07:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid ""
+"%(box)s: the provider refused the session (%(err)s). Use 'Connect' again."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "%s new messages"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "%s new messages."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_res_config_settings__umc_microsoft_tenant
+msgid ""
+"'common' for any account, 'organizations' for work accounts only, or your "
+"tenant ID."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "(deleted)"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "(no subject)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"<b>Read</b>: sees the conversations. <b>Read and reply</b>: also sends from this mailbox.\n"
+"                                <b>Manage</b>: also edits the settings and the members. The owner always manages."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "<span class=\"text-muted small ms-1\">Cc/Bcc</span>"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.constraint,message:kaitech_email_client.constraint_umc_tag_name_uniq
+msgid "A tag with this name already exists."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__access_token
+msgid "Access Token"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__account_type
+msgid "Account"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__active
+msgid "Active"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Add at least one recipient."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Add tag"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__signature
+msgid "Added to every message sent from this mailbox."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "All"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "All inboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "All mailboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__allowed_mailbox_ids
+msgid "Allowed Mailbox"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid ""
+"App registration with IMAP.AccessAsUser.All and SMTP.Send (Office 365 "
+"Exchange Online)."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Archive"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__archive
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Attach files"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__attachment_ids
+msgid "Attachment"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__attachment_ids
+msgid "Attachments"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__bcc_emails
+msgid "Bcc"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__body
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__body
+msgid "Body"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__body_html
+msgid "Body Html"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__cc_emails
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__cc
+msgid "Cc"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__show_cc
+msgid "Cc / Bcc"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Cc:"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Choose the project of the task."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__color
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__color
+msgid "Color"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_composer__to_emails
+msgid "Comma separated"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__company_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__company_id
+msgid "Company"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_config
+msgid "Configuration"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid ""
+"Configure the %s application first: Settings > Email Client > Gmail and "
+"Microsoft 365."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Connect"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_mailbox
+msgid "Connect your first mailbox"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__connected
+msgid "Connected"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__connection_state
+msgid "Connection State"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Connection failed"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_res_partner
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__partner_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__partner_id
+msgid "Contact"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Contact:"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Conversations cannot be linked to %s."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__auto_create_contacts
+msgid "Create a contact for senders that are not in Odoo yet."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_signature
+msgid "Create a signature"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__auto_create_contacts
+msgid "Create missing contacts"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__date
+msgid "Date"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__is_default
+msgid "Default"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Delete"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__direction
+msgid "Direction"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Discard"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__name
+msgid "Display name"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__drafts
+msgid "Drafts"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Edit tags"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_root
+msgid "Email"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Email Client"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_record_link
+msgid "Email Client - conversation linked to an Odoo record"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_signature
+msgid "Email Client - signature"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_tag
+msgid "Email Client - tag"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_composer
+msgid "Email Client for Odoo Full - composer"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_thread
+msgid "Email Client for Odoo Full - conversation"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_folder
+msgid "Email Client for Odoo Full - folder"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox
+msgid "Email Client for Odoo Full - mailbox"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox_secret
+msgid "Email Client for Odoo Full - mailbox credentials"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_message
+msgid "Email Client for Odoo Full - message"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox_member
+msgid "Email Client for Odoo Full - team mailbox member"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.actions.server,name:kaitech_email_client.cron_umc_sync_ir_actions_server
+msgid "Email Client: synchronize mailboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__email
+msgid "Email address"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/res_partner.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__umc_thread_count
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_users__umc_thread_count
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_partner_view_form_umc
+msgid "Emails"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__owner_id
+msgid "Empty for a signature shared on the mailbox."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Enable desktop notifications"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__error
+msgid "Error"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_thread__participants
+msgid "Every address seen in the conversation, comma separated"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Everything is up to date"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__initial_days
+msgid ""
+"First synchronization: messages of the last N days (max 300 per folder)."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__flags_pending
+msgid "Flags Pending"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__folder_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__folder_ids
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__other
+msgid "Folder"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__folder_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Folders"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"Folders are read from the server on every synchronization.\n"
+"                                Inbox and Sent are synchronized by default; tick others to see them in Odoo."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__forward
+msgid "Forward"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Forwarded message"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__mailbox_id
+msgid "From"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__from_email
+msgid "From Email"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__from_name
+msgid "From Name"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__google
+msgid "Gmail / Google Workspace"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Gmail and Microsoft 365 (OAuth2)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Google Workspace / Gmail"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_google_client_id
+msgid "Google client ID"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_google_client_secret
+msgid "Google client secret"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__has_attachments
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__has_attachments
+msgid "Has Attachments"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__has_password
+msgid "Has Password"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__last_uid
+msgid "Highest UID already imported"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__id
+msgid "ID"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__imap
+msgid "IMAP / SMTP"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__uid
+msgid "IMAP UID"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "IMAP and SMTP OK. %s unread in INBOX."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_port
+msgid "IMAP port"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_security
+msgid "IMAP security"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_host
+msgid "IMAP server"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_mailbox
+msgid ""
+"IMAP/SMTP, Gmail or Microsoft 365. Share it with your team to answer from "
+"Odoo."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__initial_days
+msgid "Import the last (days)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__in_reply_to
+msgid "In Reply To"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__parent_id
+msgid "In reply to"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.actions.client,name:kaitech_email_client.action_umc_inbox
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__inbox
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_inbox
+msgid "Inbox"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Incoming"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Incoming (IMAP)"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Invalid OAuth state."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Invalid address: %s"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__is_read
+msgid "Is Read"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__is_starred
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__is_starred
+msgid "Is Starred"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__last_date
+msgid "Last Date"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__last_error
+msgid "Last Error"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__last_from
+msgid "Last From"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__last_sync
+msgid "Last Sync"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__last_uid
+msgid "Last Uid"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Lead created: %s"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__link_model
+msgid "Link Model"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Link to record"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__link_ids
+msgid "Linked records"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Linked:"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Load more"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Loading..."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__link_ref
+msgid "Log on record"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__recipients
+msgid "Lower-case addresses of To and Cc, comma separated"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__mailbox_id
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Mailbox"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Mailbox %s is not signed in. Use 'Connect' again."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_mailbox
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_mailboxes
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_list
+msgid "Mailboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Make primary"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__manage
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__manage
+msgid "Manage"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Manage mailboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Mark unread"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__message_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Message"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__message_count
+msgid "Message Count"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__message_id
+msgid "Message-ID"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__microsoft
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Microsoft 365 / Outlook"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_client_id
+msgid "Microsoft application (client) ID"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_client_secret
+msgid "Microsoft client secret"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_tenant
+msgid "Microsoft tenant"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__mode
+msgid "Mode"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__res_model
+msgid "Model"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__my_role
+msgid "My access"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "My mailboxes"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__name
+msgid "Name"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__new
+msgid "New"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New lead"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New message"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New tag"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New task"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_sync.py:0
+msgid "No %s folder on the server."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No conversations here."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No mailbox yet."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No record found."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No tag yet."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__none
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__none
+msgid "None"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__normalized_subject
+msgid "Normalized Subject"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__draft
+msgid "Not connected"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Not synchronized yet"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "OAuth client of type 'Web application' with the Gmail API enabled."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "On %(date)s, %(who)s wrote:"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__mailbox_id
+msgid "Only offered when writing from this mailbox. Empty: every mailbox."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Options"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Outgoing"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Outgoing (SMTP)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__owner_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__owner_id
+msgid "Owner"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__user_ids
+msgid "Owner + team members. Drives record rules, counters and notifications."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__participants
+msgid "Participants"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__password
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__password
+msgid "Password"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Password saved"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__path
+msgid "Path"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__mailbox_type__personal
+msgid "Personal"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_signature
+msgid ""
+"Personal signatures belong to you. Clear the owner and pick a mailbox to "
+"share one with its team."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__is_primary
+msgid "Primary"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Project of the new task:"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__special_flags
+msgid "RFC 6154 flags reported by the server (\\All, \\Archive...)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__path
+msgid "Raw IMAP name (modified UTF-7)"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__read
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__read
+msgid "Read"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__reply
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__reply
+msgid "Read and reply"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__flags_pending
+msgid "Read/unread changed in Odoo, not yet written to the server"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_message__direction__in
+msgid "Received"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__recipients
+msgid "Recipients"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Reconnect"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__res_id
+msgid "Record"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Records of %s cannot be created from an email."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_oauth_redirect_uri
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Redirect URI"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__references
+msgid "References"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__refresh_token
+msgid "Refresh Token"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid ""
+"Register this exact URL in Google Cloud Console and in Microsoft Entra."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_res_config_settings__umc_oauth_redirect_uri
+msgid "Register this exact URL in Google Cloud and in Microsoft Entra."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_record_link__is_primary
+msgid "Replies sent from the inbox are logged on this record."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__reply
+msgid "Reply"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__reply_to
+msgid "Reply To"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__reply_all
+msgid "Reply all"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__role
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__role
+msgid "Role"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_port
+msgid "SMTP port"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_security
+msgid "SMTP security"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_host
+msgid "SMTP server"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__ssl
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__ssl
+msgid "SSL/TLS"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__starttls
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__starttls
+msgid "STARTTLS"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__body_html
+msgid "Sanitized when the message is imported"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Search"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Search mail"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Select a conversation"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__selectable
+msgid "Selectable"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Send"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__sent
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_message__direction__out
+msgid "Sent"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__sequence
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Servers"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_settings
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_settings
+msgid "Settings"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Show all mail"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__name
+msgid "Shown in the unified inbox, e.g. 'Sales'"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Sign-in"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"Sign-in with the provider through <i>Connect</i>. No password is stored."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__signature_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__signature
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_signature_view_form
+msgid "Signature"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_signature
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_signatures
+msgid "Signatures"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__oauth_email
+msgid "Signed in as"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__snippet
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__snippet
+msgid "Snippet"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__spam
+msgid "Spam"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__special_flags
+msgid "Special Flags"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Star"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Starred"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__password
+msgid "Stored apart, never sent back to the browser."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__subject
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__subject
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__subject
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Subject"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Sync"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Sync now"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Synchronization failed"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__sync
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__sync_enabled
+msgid "Synchronize"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Synchronized"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Syncing..."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_tag
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__tag_ids
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_tags
+msgid "Tags"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Task created: %s"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__mailbox_type__team
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "Team"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__member_ids
+msgid "Team members"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__template_id
+msgid "Template"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Template not applied"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Test connection"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "That record no longer exists."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_composer__link_ref
+msgid "The sent message is also logged in the chatter of this record."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_sync.py:0
+msgid "The server refused the operation: %s"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "The sign-in link expired. Start again from the mailbox."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.constraint,message:kaitech_email_client.constraint_umc_record_link_record_uniq
+msgid "This conversation is already linked to that record."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "This conversation no longer exists."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid ""
+"This template fills in data from a %s; choose one under 'Log on record' "
+"first."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__thread_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__thread_id
+msgid "Thread"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__to_emails
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__to
+msgid "To"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "To:"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__token_expires_at
+msgid "Token Expires At"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__total_count
+msgid "Total Count"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__trash
+msgid "Trash"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__mailbox_type
+msgid "Type"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Type to set or replace"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__uidvalidity
+msgid "Uidvalidity"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox_secret__token_expires_at
+msgid "Unix time"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "Unknown action."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "Unknown filter."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Unlink"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__unread_count
+msgid "Unread"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__unread_count
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__unread_count
+msgid "Unread Count"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Unstar"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__is_default
+msgid "Used when the composer opens."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__user_id
+msgid "User"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__login
+msgid "Username"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__user_ids
+msgid "Users with access"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__login
+msgid "Usually the email address"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "With errors"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "You are not allowed to create this record."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "You need '%(role)s' access on mailbox %(box)s."
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "common"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_signature_view_form
+msgid "e.g. Formal"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "e.g. Sales"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "name@company.com, other@company.com"
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "nothing"
+msgstr ""
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "ventas@company.com"
+msgstr ""

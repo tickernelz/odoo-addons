@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_umc_mailbox_user,umc.mailbox user,model_umc_mailbox,base.group_user,1,1,1,1
+access_umc_mailbox_admin,umc.mailbox admin,model_umc_mailbox,base.group_system,1,1,1,1
+access_umc_mailbox_member_user,umc.mailbox.member user,model_umc_mailbox_member,base.group_user,1,1,1,1
+access_umc_mailbox_member_admin,umc.mailbox.member admin,model_umc_mailbox_member,base.group_system,1,1,1,1
+access_umc_mailbox_secret_admin,umc.mailbox.secret admin,model_umc_mailbox_secret,base.group_system,1,1,1,1
+access_umc_folder_user,umc.folder user,model_umc_folder,base.group_user,1,1,0,0
+access_umc_folder_admin,umc.folder admin,model_umc_folder,base.group_system,1,1,1,1
+access_umc_thread_user,umc.thread user,model_umc_thread,base.group_user,1,0,0,0
+access_umc_thread_admin,umc.thread admin,model_umc_thread,base.group_system,1,1,1,1
+access_umc_message_user,umc.message user,model_umc_message,base.group_user,1,0,0,0
+access_umc_message_admin,umc.message admin,model_umc_message,base.group_system,1,1,1,1
+access_umc_composer_user,umc.composer user,model_umc_composer,base.group_user,1,1,1,1
+access_umc_tag_user,umc.tag user,model_umc_tag,base.group_user,1,1,1,0
+access_umc_tag_admin,umc.tag admin,model_umc_tag,base.group_system,1,1,1,1
+access_umc_signature_user,umc.signature user,model_umc_signature,base.group_user,1,1,1,1
+access_umc_record_link_user,umc.record.link user,model_umc_record_link,base.group_user,1,0,0,0
+access_umc_record_link_admin,umc.record.link admin,model_umc_record_link,base.group_system,1,1,1,1

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="umc_mailbox_view_list" model="ir.ui.view">
+        <field name="name">umc.mailbox.list</field>
+        <field name="model">umc.mailbox</field>
+        <field name="arch" type="xml">
+            <list string="Mailboxes">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="account_type"/>
+                <field name="mailbox_type"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
+                <field name="unread_count"/>
+                <field name="connection_state" widget="badge"
+                       decoration-success="connection_state == 'connected'"
+                       decoration-danger="connection_state == 'error'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="umc_mailbox_view_form" model="ir.ui.view">
+        <field name="name">umc.mailbox.form</field>
+        <field name="model">umc.mailbox</field>
+        <field name="arch" type="xml">
+            <form string="Mailbox">
+                <header>
+                    <button name="action_connect_oauth" type="object" string="Connect" class="btn-primary"
+                            invisible="account_type == 'imap' or my_role != 'manage' or connection_state == 'connected'"/>
+                    <button name="action_connect_oauth" type="object" string="Reconnect"
+                            invisible="account_type == 'imap' or my_role != 'manage' or connection_state != 'connected'"/>
+                    <button name="action_test_connection" type="object" string="Test connection"
+                            invisible="my_role != 'manage'"/>
+                    <button name="action_sync_now" type="object" string="Sync now"
+                            invisible="connection_state == 'draft'"/>
+                    <field name="connection_state" widget="statusbar" statusbar_visible="draft,connected"/>
+                </header>
+                <sheet>
+                    <field name="my_role" invisible="1"/> <!-- decides which parts of the form are shown -->
+                    <div class="alert alert-danger" role="alert" invisible="connection_state != 'error'">
+                        <field name="last_error" readonly="1"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Sales"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email" widget="email" placeholder="ventas@company.com"/>
+                            <field name="account_type" widget="radio"/>
+                            <field name="oauth_email" invisible="account_type == 'imap' or not oauth_email"/>
+                        </group>
+                        <group>
+                            <field name="mailbox_type" widget="radio"/>
+                            <field name="owner_id" widget="many2one_avatar_user"/>
+                            <field name="my_role" readonly="1"/>
+                            <field name="unread_count"/>
+                            <field name="last_sync"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/> <!-- needed by the archive ribbon and actions -->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Team" name="team" invisible="mailbox_type != 'team'">
+                            <p class="text-muted">
+                                <b>Read</b>: sees the conversations. <b>Read and reply</b>: also sends from this mailbox.
+                                <b>Manage</b>: also edits the settings and the members. The owner always manages.
+                            </p>
+                            <field name="member_ids" readonly="my_role != 'manage'">
+                                <list editable="bottom">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="role"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Servers" name="servers">
+                            <group>
+                                <group string="Incoming (IMAP)">
+                                    <field name="imap_host" required="1"/>
+                                    <field name="imap_port" required="1"/>
+                                    <field name="imap_security" required="1"/>
+                                </group>
+                                <group string="Outgoing (SMTP)">
+                                    <field name="smtp_host" required="1"/>
+                                    <field name="smtp_port" required="1"/>
+                                    <field name="smtp_security" required="1"/>
+                                </group>
+                                <group string="Sign-in" invisible="account_type != 'imap'">
+                                    <field name="login"/>
+                                    <field name="password" password="True" placeholder="Type to set or replace"/>
+                                    <field name="has_password" string="Password saved" readonly="1"/>
+                                </group>
+                                <group string="Sign-in" invisible="account_type == 'imap'">
+                                    <div colspan="2" class="text-muted">
+                                        Sign-in with the provider through <i>Connect</i>. No password is stored.
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Folders" name="folders">
+                            <p class="text-muted">Folders are read from the server on every synchronization.
+                                Inbox and Sent are synchronized by default; tick others to see them in Odoo.</p>
+                            <field name="folder_ids" readonly="my_role != 'manage'">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="name" readonly="1"/>
+                                    <field name="role"/>
+                                    <field name="sync" widget="boolean_toggle"/>
+                                    <field name="unread_count"/>
+                                    <field name="total_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Signature" name="signature">
+                            <field name="signature" options="{'codeview': true}"/>
+                        </page>
+                        <page string="Options" name="options">
+                            <group>
+                                <group>
+                                    <field name="sync_enabled"/>
+                                    <field name="initial_days"/>
+                                    <field name="auto_create_contacts"/>
+                                </group>
+                                <group>
+                                    <field name="color" widget="color_picker"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="umc_mailbox_view_search" model="ir.ui.view">
+        <field name="name">umc.mailbox.search</field>
+        <field name="model">umc.mailbox</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="user_ids"/>
+                <filter name="mine" string="My mailboxes" domain="[('user_ids', 'in', uid)]"/>
+                <filter name="team" string="Team" domain="[('mailbox_type', '=', 'team')]"/>
+                <filter name="error" string="With errors" domain="[('connection_state', '=', 'error')]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_umc_mailbox" model="ir.actions.act_window">
+        <field name="name">Mailboxes</field>
+        <field name="res_model">umc.mailbox</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect your first mailbox</p>
+            <p>IMAP/SMTP, Gmail or Microsoft 365. Share it with your team to answer from Odoo.</p>
+        </field>
+    </record>
+</odoo>
