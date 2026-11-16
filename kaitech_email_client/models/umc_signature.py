@@ -33,10 +33,22 @@ class UmcSignature(models.Model):
                 return found
         return self.browse()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        signatures = super().create(vals_list)
+        signatures._check_mailbox_reach()
+        return signatures
+
     def write(self, vals):
         res = super().write(vals)
         self.check_access("write")
+        if "mailbox_id" in vals:
+            self._check_mailbox_reach()
         return res
+
+    def _check_mailbox_reach(self):
+        if not self.env.su:
+            self.mailbox_id._check_role("read")
 
 
 def signature_block(body):

@@ -24,6 +24,13 @@ class UmcRecordLink(models.Model):
     _record_uniq = models.Constraint("UNIQUE(thread_id, res_model, res_id)",
                                      "This conversation is already linked to that record.")
 
+    def write(self, vals):
+        res = super().write(vals)
+        if not self.env.su:
+            self.flush_recordset()
+            self.check_access("write")
+        return res
+
     def _card(self):
         record = self.env[self.res_model].browse(self.res_id).exists()
         return {

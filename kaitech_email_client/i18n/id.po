@@ -947,6 +947,11 @@ msgid "My access"
 msgstr "Akses saya"
 
 #. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__can_configure
+msgid "Can Configure"
+msgstr "Boleh mengatur"
+
+#. module: kaitech_email_client
 #: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
 msgid "My mailboxes"
 msgstr "Kotak surat saya"
@@ -1684,6 +1689,24 @@ msgstr "Anda tidak diizinkan membuat record ini."
 #: code:addons/kaitech_email_client/models/umc_mailbox.py:0
 msgid "You need '%(role)s' access on mailbox %(box)s."
 msgstr "Anda memerlukan akses '%(role)s' pada kotak surat %(box)s."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "You need 'Manage' access on mailbox %(box)s."
+msgstr "Anda memerlukan akses 'Kelola' pada kotak surat %(box)s."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Only the owner configures the personal mailbox %(box)s."
+msgstr "Hanya pemilik yang dapat mengatur kotak surat pribadi %(box)s."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "A message stays in a folder of its own mailbox."
+msgstr "Pesan tetap berada di folder kotak suratnya sendiri."
 
 #. module: kaitech_email_client
 #: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc

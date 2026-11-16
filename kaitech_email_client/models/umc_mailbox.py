@@ -33,7 +33,9 @@ class UmcMailbox(models.Model):
       * read    -> see the mailbox and its conversations
       * reply   -> also send from it
       * manage  -> also edit settings, credentials and members
-    The owner and administrators always have ``manage``. Credentials live in
+    Only the owner and, on a team mailbox, its members have a role. Administrators
+    configure team mailboxes and retire any mailbox, but read no conversation of a
+    mailbox they do not own and are not a member of. Credentials live in
     ``umc.mailbox.secret`` and never leave the server.
     """
 
@@ -61,6 +63,7 @@ class UmcMailbox(models.Model):
         compute="_compute_user_ids", store=True,
         help="Owner + team members. Drives record rules, counters and notifications.")
     my_role = fields.Selection(ROLES, "My access", compute="_compute_my_role")
+    can_configure = fields.Boolean(compute="_compute_my_role")
 
     # ---- Servers ----------------------------------------------------------
     imap_host = fields.Char("IMAP server")
@@ -94,16 +97,18 @@ class UmcMailbox(models.Model):
         """)
 
     # ------------------------------------------------------------------ computes
-    @api.depends("owner_id", "member_ids.user_id")
+    @api.depends("owner_id", "mailbox_type", "member_ids.user_id")
     def _compute_user_ids(self):
         for box in self:
-            box.user_ids = box.owner_id | box.member_ids.user_id
+            members = box.member_ids.user_id if box.mailbox_type == "team" else self.env["res.users"]
+            box.user_ids = box.owner_id | members
 
     @api.depends_context("uid")
-    @api.depends("owner_id", "member_ids.role", "member_ids.user_id")
+    @api.depends("owner_id", "mailbox_type", "member_ids.role", "member_ids.user_id")
     def _compute_my_role(self):
         for box in self:
             box.my_role = box._role_of(self.env.user)
+            box.can_configure = box._may_configure(self.env.user)
 
     def _compute_password(self):
         secrets = self._secrets()
@@ -128,10 +133,20 @@ class UmcMailbox(models.Model):
     # ------------------------------------------------------------------ permissions
     def _role_of(self, user):
         self.ensure_one()
-        if user == self.owner_id or user.has_group("base.group_system"):
+        if user == self.owner_id:
             return "manage"
+        if self.mailbox_type != "team":
+            return False
         member = self.member_ids.filtered(lambda m: m.user_id == user)
         return member[:1].role or False
+
+    def _may_configure(self, user, retiring=False):
+        self.ensure_one()
+        if self._role_of(user) == "manage":
+            return True
+        if not user.has_group("base.group_system"):
+            return False
+        return self.mailbox_type == "team" or retiring
 
     def _check_role(self, role):
         if self.env.su:
@@ -141,6 +156,20 @@ class UmcMailbox(models.Model):
                 raise AccessError(_("You need '%(role)s' access on mailbox %(box)s.",
                                     role=dict(ROLES)[role], box=box.display_name))
         return True
+
+    def _check_configure(self, retiring=False):
+        if self.env.su:
+            return True
+        for box in self:
+            if not box._may_configure(self.env.user, retiring):
+                raise AccessError(_("Only the owner configures the personal mailbox %(box)s.", box=box.display_name)
+                                  if box.mailbox_type == "personal"
+                                  else _("You need 'Manage' access on mailbox %(box)s.", box=box.display_name))
+        return True
+
+    @api.model
+    def _my_mailboxes(self):
+        return self.search([("user_ids", "in", self.env.uid)])
 
     # ------------------------------------------------------------------ CRUD
     @api.model_create_multi
@@ -152,13 +181,13 @@ class UmcMailbox(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self._check_role("manage")
+        self._check_configure(retiring=set(vals) <= {"active"})
         if vals.get("email"):
             vals["email"] = vals["email"].strip().lower()
         return super().write(vals)
 
     def unlink(self):
-        self._check_role("manage")
+        self._check_configure(retiring=True)
         messages = self.env["umc.message"].sudo().search([("mailbox_id", "in", self.ids)])
         self.env["ir.attachment"].sudo().search(
             [("res_model", "=", "umc.message"), ("res_id", "in", messages.ids)]).unlink()
@@ -200,7 +229,7 @@ class UmcMailbox(models.Model):
 
     def action_connect_oauth(self):
         self.ensure_one()
-        self._check_role("manage")
+        self._check_configure()
         try:
             url = oauth.authorization_url(self.env, self.account_type, self._oauth_state(),
                                           login_hint=self.email)
@@ -284,7 +313,7 @@ class UmcMailbox(models.Model):
     def action_test_connection(self):
         """Log in to IMAP and SMTP, read the INBOX unread count, report in one notification."""
         self.ensure_one()
-        self._check_role("manage")
+        self._check_configure()
         box = self.sudo()
         try:
             imap = box._imap_connect()
@@ -327,7 +356,7 @@ class UmcMailbox(models.Model):
     @api.model
     def get_inbox_overview(self):
         """Entry point of the OWL unified inbox: my mailboxes, counters, role and plan."""
-        boxes = self.search([])
+        boxes = self._my_mailboxes()
         folders = self.env["umc.folder"].sudo().search([("mailbox_id", "in", boxes.ids), ("selectable", "=", True)])
         unified = {}
         for f in folders.filtered(lambda f: f.role != "other"):
@@ -365,16 +394,20 @@ class UmcMailboxMember(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         members = super().create(vals_list)
-        members.mailbox_id._check_role("manage")
+        members.mailbox_id._check_configure()
         for box in members.mailbox_id:
             if box.mailbox_type != "team":
                 box.sudo().mailbox_type = "team"
         return members
 
     def write(self, vals):
-        self.mailbox_id._check_role("manage")
-        return super().write(vals)
+        self.mailbox_id._check_configure()
+        res = super().write(vals)
+        if "mailbox_id" in vals:
+            self.mailbox_id._check_configure()
+            self.mailbox_id.filtered(lambda b: b.mailbox_type != "team").sudo().mailbox_type = "team"
+        return res
 
     def unlink(self):
-        self.mailbox_id._check_role("manage")
+        self.mailbox_id._check_configure()
         return super().unlink()

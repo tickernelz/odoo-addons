@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.mail import email_normalize, html2plaintext
 
 LIST_FILTERS = ("all", "unread", "starred", "in", "out")
@@ -31,6 +31,13 @@ class UmcThread(models.Model):
     is_starred = fields.Boolean()
     has_attachments = fields.Boolean()
     tag_ids = fields.Many2many("umc.tag", "umc_thread_tag_rel", "thread_id", "tag_id", "Tags")
+
+    def write(self, vals):
+        res = super().write(vals)
+        if not self.env.su:
+            self.flush_recordset()
+            self.check_access("write")
+        return res
 
     def _refresh_stats(self):
         for thread in self.exists():
@@ -185,6 +192,15 @@ class UmcMessage(models.Model):
     partner_id = fields.Many2one("res.partner", "Contact", ondelete="set null", index=True)
     attachment_ids = fields.Many2many("ir.attachment", "umc_message_attachment_rel", "message_id", "attachment_id")
     has_attachments = fields.Boolean()
+
+    def write(self, vals):
+        res = super().write(vals)
+        if not self.env.su:
+            self.flush_recordset()
+            self.check_access("write")
+            if any(msg.folder_id and msg.folder_id.sudo().mailbox_id != msg.mailbox_id for msg in self):
+                raise AccessError(_("A message stays in a folder of its own mailbox."))
+        return res
 
     def init(self):
         self.env.cr.execute("""
