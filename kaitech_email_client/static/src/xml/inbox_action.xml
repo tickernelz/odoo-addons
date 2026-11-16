@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="kaitech_email_client.Inbox">
+        <div t-attf-class="o_umc_inbox d-flex h-100 overflow-hidden {{ this.state.current ? 'o_umc_reading' : '' }}">
+
+            <!-- ============ Sidebar: unified folders + mailboxes ============ -->
+            <aside class="o_umc_sidebar d-flex flex-column flex-shrink-0 border-end">
+                <div class="p-3">
+                    <button class="btn btn-primary w-100" t-att-disabled="!this.canSend"
+                            t-on-click="() => this.compose('new')">New message</button>
+                </div>
+                <div class="o_umc_nav flex-grow-1 overflow-auto px-2 pb-3">
+                    <div class="o_umc_nav_title px-2 mt-1 mb-1">All mailboxes</div>
+                    <t t-foreach="this.unifiedRoles" t-as="role" t-key="role">
+                        <a href="#" t-attf-class="o_umc_nav_item d-flex align-items-center rounded px-2 py-1 {{ this.isActiveUnified(role) ? 'active' : '' }}"
+                           t-on-click.prevent="() => this.selectUnified(role)">
+                            <span class="flex-grow-1 text-truncate"
+                                  t-out="this.unifiedLabel(role)"/>
+                            <span t-if="this.unifiedCount(role)" class="o_umc_count" t-out="this.unifiedCount(role)"/>
+                        </a>
+                    </t>
+
+                    <div class="o_umc_nav_title px-2 mt-3 mb-1">Mailboxes</div>
+                    <t t-foreach="this.mailboxes" t-as="box" t-key="box.id">
+                        <div class="o_umc_box">
+                            <a href="#" class="o_umc_nav_item d-flex align-items-center rounded px-2 py-1"
+                               t-on-click.prevent="() => this.toggleBox(box)">
+                                <span class="o_umc_dot me-2" t-att-style="this.boxColor(box)"/>
+                                <span class="flex-grow-1 text-truncate" t-att-title="box.email" t-out="box.name"/>
+                                <span t-if="box.state === 'error'" class="badge text-bg-danger me-1" t-att-title="box.error">!</span>
+                                <span t-if="box.unread" class="o_umc_count" t-out="box.unread"/>
+                            </a>
+                            <div t-if="this.state.expanded[box.id]" class="ms-3">
+                                <t t-foreach="box.folders" t-as="folder" t-key="folder.id">
+                                    <a href="#" t-attf-class="o_umc_nav_item d-flex align-items-center rounded px-2 py-1 small {{ this.isActiveFolder(folder) ? 'active' : '' }} {{ folder.sync ? '' : 'text-muted' }}"
+                                       t-on-click.prevent="() => this.selectFolder(box, folder)">
+                                        <span class="flex-grow-1 text-truncate" t-out="folder.name"/>
+                                        <span t-if="folder.unread and (folder.role === 'inbox' or folder.role === 'spam')"
+                                              class="o_umc_count" t-out="folder.unread"/>
+                                    </a>
+                                </t>
+                                <div t-if="!box.folders.length" class="small text-muted px-2 py-1">Not synchronized yet</div>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="!this.mailboxes.length" class="text-muted small px-2">No mailbox yet.</div>
+                    <div class="o_umc_nav_title px-2 mt-3 mb-1">Tags</div>
+                    <t t-foreach="this.state.tags" t-as="tag" t-key="tag.id">
+                        <a href="#" t-attf-class="o_umc_nav_item o_umc_tag_nav d-flex align-items-center rounded px-2 py-1 {{ this.isActiveTag(tag) ? 'active' : '' }}"
+                           t-on-click.prevent="() => this.selectTag(tag)">
+                            <span class="o_umc_dot me-2" t-att-style="this.tagStyle(tag)"/>
+                            <span class="flex-grow-1 text-truncate" t-out="tag.name"/>
+                        </a>
+                    </t>
+                    <div t-if="!this.state.tags.length" class="text-muted small px-2">No tag yet.</div>
+                </div>
+                <div class="border-top p-2 small">
+                    <a href="#" class="d-block px-2 py-1" t-on-click.prevent="() => this.openMailboxes()">Manage mailboxes</a>
+                    <a t-if="this.state.notifyAsk" href="#" class="d-block px-2 py-1"
+                       t-on-click.prevent="() => this.askNotifications()">Enable desktop notifications</a>
+                </div>
+            </aside>
+
+            <!-- ============ Conversation list ============ -->
+            <section class="o_umc_list d-flex flex-column flex-shrink-0 border-end">
+                <div class="o_umc_list_head p-3 border-bottom">
+                    <div class="d-flex align-items-center mb-2">
+                        <h5 class="m-0 flex-grow-1 text-truncate" t-out="this.title"/>
+                        <button class="btn btn-sm btn-primary me-1 d-md-none" t-att-disabled="!this.canSend"
+                                t-on-click="() => this.compose('new')">New</button>
+                        <button class="btn btn-sm btn-light" t-att-disabled="this.state.syncing"
+                                t-on-click="() => this.sync()">
+                            <t t-if="this.state.syncing">Syncing...</t><t t-else="">Sync</t>
+                        </button>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <input type="search" class="form-control form-control-sm" placeholder="Search mail"
+                               t-att-value="this.state.search" t-on-input="(ev) => this.onSearchInput(ev)"/>
+                    </div>
+                    <div class="o_umc_filters btn-group btn-group-sm mt-2 w-100" role="group">
+                        <t t-foreach="this.listFilters" t-as="flt" t-key="flt[0]">
+                            <button t-attf-class="btn {{ this.state.listFilter === flt[0] ? 'btn-primary' : 'btn-light' }}"
+                                    t-att-data-filter="flt[0]" t-on-click="() => this.setFilter(flt[0])" t-out="flt[1]"/>
+                        </t>
+                    </div>
+                    <div t-if="this.state.sel.partnerId" class="mt-2 small">
+                        <a href="#" t-on-click.prevent="() => this.selectUnified('inbox')">Show all mail</a>
+                    </div>
+                </div>
+                <div class="flex-grow-1 overflow-auto">
+                    <t t-foreach="this.state.threads" t-as="th" t-key="th.id">
+                        <div t-attf-class="o_umc_row d-flex px-3 py-2 border-bottom {{ th.unread ? 'o_umc_unread' : '' }} {{ this.state.current and this.state.current.thread.id === th.id ? 'active' : '' }}"
+                             t-on-click="() => this.openThread(th)">
+                            <span class="o_umc_avatar flex-shrink-0 me-2" t-att-style="this.avatarColor(th.from)"
+                                  t-out="this.initial(th.from)"/>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex align-items-baseline">
+                                    <span class="o_umc_from flex-grow-1 text-truncate" t-out="th.from"/>
+                                    <span t-if="th.count > 1" class="text-muted small ms-1" t-out="th.count"/>
+                                    <span class="o_umc_date small text-muted ms-2 flex-shrink-0" t-out="this.fmtDate(th.date)"/>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="o_umc_subject flex-grow-1 text-truncate" t-out="th.subject"/>
+                                    <span t-if="th.attachments" class="ms-1 small text-muted" title="Attachments">&#128206;</span>
+                                    <span t-if="th.starred" class="ms-1 o_umc_star" title="Starred">&#9733;</span>
+                                </div>
+                                <div class="d-flex align-items-center small">
+                                    <span class="o_umc_dot me-1 flex-shrink-0" t-att-style="this.boxColor(th.mailbox)"
+                                          t-att-title="th.mailbox.name"/>
+                                    <span class="text-muted text-truncate flex-grow-1" t-out="th.snippet"/>
+                                </div>
+                                <div t-if="th.tags.length" class="d-flex flex-wrap gap-1 mt-1">
+                                    <t t-foreach="th.tags" t-as="tag" t-key="tag.id">
+                                        <span class="o_umc_tag badge" t-att-style="this.tagStyle(tag)" t-out="tag.name"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="!this.state.threads.length and !this.state.loading" class="text-center text-muted p-5">
+                        <div class="fs-4 mb-2">&#9993;</div>
+                        <div>No conversations here.</div>
+                    </div>
+                    <div t-if="this.state.threads.length &lt; this.state.total" class="p-3 text-center">
+                        <button class="btn btn-sm btn-light" t-att-disabled="this.state.loading"
+                                t-on-click="() => this.loadThreads(true)">Load more</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ Reading pane ============ -->
+            <section class="o_umc_reader flex-grow-1 d-flex flex-column overflow-hidden">
+                <t t-if="this.state.current">
+                    <t t-set="cur" t-value="this.state.current"/>
+                    <div class="o_umc_reader_head px-4 py-3 border-bottom">
+                        <div class="d-flex align-items-start">
+                            <button class="btn btn-sm btn-light me-2 o_umc_back" t-on-click="() => this.back()">&#8592;</button>
+                            <h4 class="flex-grow-1 m-0 me-3" t-out="cur.thread.subject"/>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mt-2">
+                            <t t-if="this.currentCanReply">
+                                <button class="btn btn-sm btn-primary" t-on-click="() => this.compose('reply', cur.messages[cur.messages.length - 1])">Reply</button>
+                                <button class="btn btn-sm btn-light" t-on-click="() => this.compose('reply_all', cur.messages[cur.messages.length - 1])">Reply all</button>
+                                <button class="btn btn-sm btn-light" t-on-click="() => this.compose('forward', cur.messages[cur.messages.length - 1])">Forward</button>
+                            </t>
+                            <button class="btn btn-sm btn-light" t-on-click="() => this.act('unread')">Mark unread</button>
+                            <t t-if="this.currentCanReply">
+                                <button class="btn btn-sm btn-light" t-on-click="() => this.act(cur.thread.starred ? 'unstar' : 'star')">
+                                    <t t-if="cur.thread.starred">Unstar</t><t t-else="">Star</t>
+                                </button>
+                                <button class="btn btn-sm btn-light" t-on-click="() => this.act('archive')">Archive</button>
+                                <button class="btn btn-sm btn-light" t-on-click="() => this.act('spam')">Spam</button>
+                                <button class="btn btn-sm btn-light text-danger" t-on-click="() => this.act('trash')">Delete</button>
+                            </t>
+                        </div>
+                        <div t-if="cur.thread.partner" class="mt-2 small">
+                            Contact:
+                            <a href="#" class="fw-bold" t-on-click.prevent="() => this.openPartner(cur.thread.partner)"
+                               t-out="cur.thread.partner.name"/>
+                        </div>
+                        <div class="o_umc_tags d-flex flex-wrap align-items-center gap-1 mt-2 small">
+                            <t t-foreach="cur.thread.tags" t-as="tag" t-key="tag.id">
+                                <span class="o_umc_tag badge" t-att-style="this.tagStyle(tag)" t-out="tag.name"/>
+                            </t>
+                            <button t-if="this.currentCanReply" class="btn btn-link btn-sm p-0 ms-1 o_umc_tag_edit"
+                                    t-on-click="() => this.toggleTagEdit()">
+                                <t t-if="cur.thread.tags.length">Edit tags</t><t t-else="">Add tag</t>
+                            </button>
+                        </div>
+                        <div t-if="this.state.tagEdit and this.currentCanReply" class="o_umc_tag_picker border rounded p-2 mt-2 small">
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                <t t-foreach="this.state.tags" t-as="tag" t-key="tag.id">
+                                    <button t-attf-class="btn btn-sm {{ this.hasTag(tag) ? 'btn-primary' : 'btn-light' }}"
+                                            t-on-click="() => this.toggleTag(tag)" t-out="tag.name"/>
+                                </t>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <input type="text" class="form-control form-control-sm o_umc_new_tag" placeholder="New tag"
+                                       t-att-value="this.state.newTag" t-on-input="(ev) => this.onNewTagInput(ev)"
+                                       t-on-keydown="(ev) => this.onNewTagKey(ev)"/>
+                                <button class="btn btn-sm btn-secondary" t-on-click="() => this.addTag()">Add</button>
+                            </div>
+                        </div>
+                        <div class="o_umc_links mt-2 small">
+                            <div class="d-flex flex-wrap align-items-center gap-1">
+                                <span class="text-muted me-1">Linked:</span>
+                                <t t-foreach="cur.links" t-as="link" t-key="link.id">
+                                    <span class="o_umc_link border rounded px-2 py-0 d-inline-flex align-items-center">
+                                        <a href="#" t-on-click.prevent="() => this.openRecord(link)">
+                                            <t t-out="link.model_label"/>: <b t-out="link.name"/>
+                                        </a>
+                                        <span t-if="link.primary" class="badge text-bg-info ms-1">Primary</span>
+                                        <a t-elif="this.currentCanReply" href="#" class="ms-1 text-muted" title="Make primary"
+                                           t-on-click.prevent="() => this.makePrimary(link)">&#9734;</a>
+                                        <a t-if="this.currentCanReply" href="#" class="ms-1 text-danger" title="Unlink"
+                                           t-on-click.prevent="() => this.removeLink(link)">&#215;</a>
+                                    </span>
+                                </t>
+                                <span t-if="!cur.links.length" class="text-muted">nothing</span>
+                                <t t-if="this.currentCanReply and this.linkableModels.length">
+                                    <button class="btn btn-sm btn-light ms-1 o_umc_link_btn" t-on-click="() => this.openLink()">Link to record</button>
+                                    <button t-if="this.canCreate('crm.lead')" class="btn btn-sm btn-light o_umc_new_lead"
+                                            t-on-click="() => this.createLead()">New lead</button>
+                                    <button t-if="this.canCreate('project.task')" class="btn btn-sm btn-light o_umc_new_task"
+                                            t-on-click="() => this.openLink('task')">New task</button>
+                                </t>
+                            </div>
+                            <div t-if="this.state.link.open" class="o_umc_link_picker border rounded p-2 mt-2">
+                                <div class="d-flex gap-2 mb-2">
+                                    <select t-if="this.state.link.mode === 'link'" class="form-select form-select-sm w-auto"
+                                            t-on-change="(ev) => this.onLinkModel(ev)">
+                                        <t t-foreach="this.linkableModels" t-as="m" t-key="m.model">
+                                            <option t-att-value="m.model" t-att-selected="m.model === this.state.link.model" t-out="m.label"/>
+                                        </t>
+                                    </select>
+                                    <span t-else="" class="align-self-center text-muted">Project of the new task:</span>
+                                    <input type="search" class="form-control form-control-sm o_umc_link_query" placeholder="Search"
+                                           t-att-value="this.state.link.query" t-on-input="(ev) => this.onLinkQuery(ev)"/>
+                                    <button class="btn btn-sm btn-light" t-on-click="() => this.closeLink()">Close</button>
+                                </div>
+                                <t t-foreach="this.state.link.results" t-as="r" t-key="r[0]">
+                                    <a href="#" class="o_umc_link_result d-block px-2 py-1 rounded" t-on-click.prevent="() => this.pickLink(r)" t-out="r[1]"/>
+                                </t>
+                                <div t-if="!this.state.link.results.length" class="text-muted px-2">No record found.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 overflow-auto px-4 py-3">
+                        <t t-foreach="cur.messages" t-as="msg" t-key="msg.id">
+                            <div class="o_umc_msg card mb-3">
+                                <div class="card-header bg-transparent d-flex align-items-start">
+                                    <span class="o_umc_avatar flex-shrink-0 me-2" t-att-style="this.avatarColor(msg.from_name or msg.from_email)"
+                                          t-out="this.initial(msg.from_name or msg.from_email)"/>
+                                    <div class="flex-grow-1 overflow-hidden small">
+                                        <div>
+                                            <a t-if="msg.partner" href="#" class="fw-bold" t-on-click.prevent="() => this.openPartner(msg.partner)"
+                                               t-out="msg.from_name or msg.from_email"/>
+                                            <b t-else="" t-out="msg.from_name or msg.from_email"/>
+                                            <span class="text-muted ms-1" t-out="'&lt;' + msg.from_email + '&gt;'"/>
+                                        </div>
+                                        <div class="text-muted text-truncate">To: <t t-out="msg.to"/></div>
+                                        <div t-if="msg.cc" class="text-muted text-truncate">Cc: <t t-out="msg.cc"/></div>
+                                    </div>
+                                    <span class="small text-muted ms-2 flex-shrink-0" t-out="this.fmtDate(msg.date, true)"/>
+                                </div>
+                                <div class="card-body p-3">
+                                    <iframe class="o_umc_frame w-100 border-0" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                                            t-att-srcdoc="this.frameDoc(msg)" t-on-load="(ev) => this.fitFrame(ev)"/>
+                                    <div t-if="msg.attachments.length" class="d-flex flex-wrap gap-2 mt-2">
+                                        <t t-foreach="msg.attachments" t-as="att" t-key="att.id">
+                                            <a class="o_umc_att border rounded px-2 py-1 small text-truncate"
+                                               t-attf-href="/web/content/{{ att.id }}?download=true" target="_blank">
+                                                &#128206; <t t-out="att.name"/> <span class="text-muted" t-out="this.fileSize(att.size)"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <div t-else="" class="flex-grow-1 d-flex align-items-center justify-content-center text-muted">
+                    <div class="text-center">
+                        <div class="o_umc_empty_icon mb-2">&#9993;</div>
+                        <div t-if="this.state.opening">Loading...</div>
+                        <div t-else="">Select a conversation</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="umc_signature_view_list" model="ir.ui.view">
+        <field name="name">umc.signature.list</field>
+        <field name="model">umc.signature</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="owner_id" widget="many2one_avatar_user"/>
+                <field name="mailbox_id"/>
+                <field name="is_default" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="umc_signature_view_form" model="ir.ui.view">
+        <field name="name">umc.signature.form</field>
+        <field name="model">umc.signature</field>
+        <field name="arch" type="xml">
+            <form string="Signature">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g. Formal"/>
+                            <field name="is_default"/>
+                        </group>
+                        <group>
+                            <field name="owner_id" widget="many2one_avatar_user"/>
+                            <field name="mailbox_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <field name="body" widget="html" options="{'height': 200}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_umc_signature" model="ir.actions.act_window">
+        <field name="name">Signatures</field>
+        <field name="res_model">umc.signature</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a signature</p>
+            <p>Personal signatures belong to you. Clear the owner and pick a mailbox to share one with its team.</p>
+        </field>
+    </record>
+
+    <record id="umc_tag_view_list" model="ir.ui.view">
+        <field name="name">umc.tag.list</field>
+        <field name="model">umc.tag</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_umc_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">umc.tag</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

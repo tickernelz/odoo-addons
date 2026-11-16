@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_umc_root" name="Email" sequence="6" action="action_umc_inbox"
+              web_icon="kaitech_email_client,static/description/icon.png"/>
+    <menuitem id="menu_umc_inbox" name="Inbox" parent="menu_umc_root" action="action_umc_inbox" sequence="10"/>
+    <menuitem id="menu_umc_mailboxes" name="Mailboxes" parent="menu_umc_root" action="action_umc_mailbox" sequence="20"/>
+    <menuitem id="menu_umc_signatures" name="Signatures" parent="menu_umc_root" action="action_umc_signature" sequence="30"/>
+    <menuitem id="menu_umc_tags" name="Tags" parent="menu_umc_root" action="action_umc_tag" sequence="40"/>
+    <menuitem id="menu_umc_config" name="Configuration" parent="menu_umc_root" sequence="90" groups="base.group_system"/>
+    <menuitem id="menu_umc_settings" name="Settings" parent="menu_umc_config" action="action_umc_settings" sequence="1"/>
+</odoo>

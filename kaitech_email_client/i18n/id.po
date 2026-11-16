@@ -1,0 +1,1717 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* kaitech_email_client
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-16 07:27+0000\n"
+"PO-Revision-Date: 2026-11-16 07:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid ""
+"%(box)s: the provider refused the session (%(err)s). Use 'Connect' again."
+msgstr "%(box)s: penyedia menolak sesi (%(err)s). Gunakan 'Hubungkan' lagi."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "%s new messages"
+msgstr "%s pesan baru"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "%s new messages."
+msgstr "%s pesan baru."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_res_config_settings__umc_microsoft_tenant
+msgid ""
+"'common' for any account, 'organizations' for work accounts only, or your "
+"tenant ID."
+msgstr ""
+"'common' untuk akun apa pun, 'organizations' hanya untuk akun kerja, atau ID"
+" tenant Anda."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "(deleted)"
+msgstr "(dihapus)"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "(no subject)"
+msgstr "(tanpa subjek)"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"<b>Read</b>: sees the conversations. <b>Read and reply</b>: also sends from this mailbox.\n"
+"                                <b>Manage</b>: also edits the settings and the members. The owner always manages."
+msgstr ""
+"<b>Baca</b>: melihat percakapan. <b>Baca dan balas</b>: juga mengirim dari kotak surat ini.\n"
+"                                <b>Kelola</b>: juga mengedit pengaturan dan anggota. Pemilik selalu dapat mengelola."
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "<span class=\"text-muted small ms-1\">Cc/Bcc</span>"
+msgstr "<span class=\"text-muted small ms-1\">Cc/Bcc</span>"
+
+#. module: kaitech_email_client
+#: model:ir.model.constraint,message:kaitech_email_client.constraint_umc_tag_name_uniq
+msgid "A tag with this name already exists."
+msgstr "Tag dengan nama ini sudah ada."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__access_token
+msgid "Access Token"
+msgstr "Token Akses"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__account_type
+msgid "Account"
+msgstr "Akun"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Add"
+msgstr "Tambah"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Add at least one recipient."
+msgstr "Tambahkan setidaknya satu penerima."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Add tag"
+msgstr "Tambah tag"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__signature
+msgid "Added to every message sent from this mailbox."
+msgstr "Ditambahkan ke setiap pesan yang dikirim dari kotak surat ini."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "All"
+msgstr "Semua"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "All inboxes"
+msgstr "Semua kotak masuk"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "All mailboxes"
+msgstr "Semua kotak surat"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__allowed_mailbox_ids
+msgid "Allowed Mailbox"
+msgstr "Kotak Surat yang Diizinkan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid ""
+"App registration with IMAP.AccessAsUser.All and SMTP.Send (Office 365 "
+"Exchange Online)."
+msgstr ""
+"Pendaftaran aplikasi dengan IMAP.AccessAsUser.All dan SMTP.Send (Office 365 "
+"Exchange Online)."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Archive"
+msgstr "Arsipkan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__archive
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Attach files"
+msgstr "Lampirkan file"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__attachment_ids
+msgid "Attachment"
+msgstr "Lampiran"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__attachment_ids
+msgid "Attachments"
+msgstr "Lampiran"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__bcc_emails
+msgid "Bcc"
+msgstr "Bcc"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__body
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__body
+msgid "Body"
+msgstr "Isi"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__body_html
+msgid "Body Html"
+msgstr "Isi Html"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__cc_emails
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__cc
+msgid "Cc"
+msgstr "Cc"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__show_cc
+msgid "Cc / Bcc"
+msgstr "Cc / Bcc"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Cc:"
+msgstr "Cc:"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Choose the project of the task."
+msgstr "Pilih proyek untuk tugas ini."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Close"
+msgstr "Tutup"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__color
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__color
+msgid "Color"
+msgstr "Warna"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_composer__to_emails
+msgid "Comma separated"
+msgstr "Dipisahkan koma"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__company_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: kaitech_email_client
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_config
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid ""
+"Configure the %s application first: Settings > Email Client > Gmail and "
+"Microsoft 365."
+msgstr ""
+"Konfigurasikan aplikasi %s terlebih dahulu: Pengaturan > Email Client > "
+"Gmail dan Microsoft 365."
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Connect"
+msgstr "Hubungkan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_mailbox
+msgid "Connect your first mailbox"
+msgstr "Hubungkan kotak surat pertama Anda"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__connected
+msgid "Connected"
+msgstr "Terhubung"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__connection_state
+msgid "Connection State"
+msgstr "Status Koneksi"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Connection failed"
+msgstr "Koneksi gagal"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_res_partner
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__partner_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__partner_id
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Contact:"
+msgstr "Kontak:"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Conversations cannot be linked to %s."
+msgstr "Percakapan tidak dapat ditautkan ke %s."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__auto_create_contacts
+msgid "Create a contact for senders that are not in Odoo yet."
+msgstr "Buat kontak untuk pengirim yang belum ada di Odoo."
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_signature
+msgid "Create a signature"
+msgstr "Buat tanda tangan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__auto_create_contacts
+msgid "Create missing contacts"
+msgstr "Buat kontak yang belum ada"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__create_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__create_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__is_default
+msgid "Default"
+msgstr "Default"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__direction
+msgid "Direction"
+msgstr "Arah"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Discard"
+msgstr "Buang"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__display_name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__name
+msgid "Display name"
+msgstr "Nama tampilan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__drafts
+msgid "Drafts"
+msgstr "Draf"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Edit tags"
+msgstr "Edit tag"
+
+#. module: kaitech_email_client
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_root
+msgid "Email"
+msgstr "Email"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Email Client"
+msgstr "Klien Email"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_record_link
+msgid "Email Client - conversation linked to an Odoo record"
+msgstr "Klien Email - percakapan yang ditautkan ke record Odoo"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_signature
+msgid "Email Client - signature"
+msgstr "Klien Email - tanda tangan"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_tag
+msgid "Email Client - tag"
+msgstr "Klien Email - tag"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_composer
+msgid "Email Client for Odoo Full - composer"
+msgstr "Klien Email untuk Odoo Full - penyusun pesan"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_thread
+msgid "Email Client for Odoo Full - conversation"
+msgstr "Klien Email untuk Odoo Full - percakapan"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_folder
+msgid "Email Client for Odoo Full - folder"
+msgstr "Klien Email untuk Odoo Full - folder"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox
+msgid "Email Client for Odoo Full - mailbox"
+msgstr "Klien Email untuk Odoo Full - kotak surat"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox_secret
+msgid "Email Client for Odoo Full - mailbox credentials"
+msgstr "Klien Email untuk Odoo Full - kredensial kotak surat"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_message
+msgid "Email Client for Odoo Full - message"
+msgstr "Klien Email untuk Odoo Full - pesan"
+
+#. module: kaitech_email_client
+#: model:ir.model,name:kaitech_email_client.model_umc_mailbox_member
+msgid "Email Client for Odoo Full - team mailbox member"
+msgstr "Klien Email untuk Odoo Full - anggota kotak surat tim"
+
+#. module: kaitech_email_client
+#: model:ir.actions.server,name:kaitech_email_client.cron_umc_sync_ir_actions_server
+msgid "Email Client: synchronize mailboxes"
+msgstr "Klien Email: sinkronisasi kotak surat"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__email
+msgid "Email address"
+msgstr "Alamat email"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/res_partner.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__umc_thread_count
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_users__umc_thread_count
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_partner_view_form_umc
+msgid "Emails"
+msgstr "Email"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__owner_id
+msgid "Empty for a signature shared on the mailbox."
+msgstr "Kosongkan untuk tanda tangan yang dibagikan di kotak surat."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Enable desktop notifications"
+msgstr "Aktifkan notifikasi desktop"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__error
+msgid "Error"
+msgstr "Error"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_thread__participants
+msgid "Every address seen in the conversation, comma separated"
+msgstr "Semua alamat yang muncul dalam percakapan, dipisahkan koma"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Everything is up to date"
+msgstr "Semuanya sudah terbaru"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__initial_days
+msgid ""
+"First synchronization: messages of the last N days (max 300 per folder)."
+msgstr ""
+"Sinkronisasi pertama: pesan dari N hari terakhir (maks. 300 per folder)."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__flags_pending
+msgid "Flags Pending"
+msgstr "Flag Tertunda"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__folder_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__folder_ids
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__other
+msgid "Folder"
+msgstr "Folder"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__folder_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Folders"
+msgstr "Folder"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"Folders are read from the server on every synchronization.\n"
+"                                Inbox and Sent are synchronized by default; tick others to see them in Odoo."
+msgstr ""
+"Folder dibaca dari server pada setiap sinkronisasi.\n"
+"                                Kotak Masuk dan Terkirim disinkronkan secara default; centang folder lain untuk melihatnya di Odoo."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__forward
+msgid "Forward"
+msgstr "Teruskan"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Forwarded message"
+msgstr "Pesan yang diteruskan"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__mailbox_id
+msgid "From"
+msgstr "Dari"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__from_email
+msgid "From Email"
+msgstr "Email Pengirim"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__from_name
+msgid "From Name"
+msgstr "Nama Pengirim"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__google
+msgid "Gmail / Google Workspace"
+msgstr "Gmail / Google Workspace"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Gmail and Microsoft 365 (OAuth2)"
+msgstr "Gmail dan Microsoft 365 (OAuth2)"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Google Workspace / Gmail"
+msgstr "Google Workspace / Gmail"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_google_client_id
+msgid "Google client ID"
+msgstr "Client ID Google"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_google_client_secret
+msgid "Google client secret"
+msgstr "Client secret Google"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__has_attachments
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__has_attachments
+msgid "Has Attachments"
+msgstr "Memiliki Lampiran"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__has_password
+msgid "Has Password"
+msgstr "Memiliki Kata Sandi"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__last_uid
+msgid "Highest UID already imported"
+msgstr "UID tertinggi yang sudah diimpor"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_partner__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__id
+msgid "ID"
+msgstr "ID"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__imap
+msgid "IMAP / SMTP"
+msgstr "IMAP / SMTP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__uid
+msgid "IMAP UID"
+msgstr "UID IMAP"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "IMAP and SMTP OK. %s unread in INBOX."
+msgstr "IMAP dan SMTP OK. %s belum dibaca di INBOX."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_port
+msgid "IMAP port"
+msgstr "Port IMAP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_security
+msgid "IMAP security"
+msgstr "Keamanan IMAP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__imap_host
+msgid "IMAP server"
+msgstr "Server IMAP"
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_mailbox
+msgid ""
+"IMAP/SMTP, Gmail or Microsoft 365. Share it with your team to answer from "
+"Odoo."
+msgstr ""
+"IMAP/SMTP, Gmail, atau Microsoft 365. Bagikan dengan tim Anda untuk membalas"
+" dari Odoo."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__initial_days
+msgid "Import the last (days)"
+msgstr "Impor (hari) terakhir"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__in_reply_to
+msgid "In Reply To"
+msgstr "Balasan Untuk"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__parent_id
+msgid "In reply to"
+msgstr "Balasan untuk"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.actions.client,name:kaitech_email_client.action_umc_inbox
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__inbox
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_inbox
+msgid "Inbox"
+msgstr "Kotak Masuk"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Incoming"
+msgstr "Masuk"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Incoming (IMAP)"
+msgstr "Masuk (IMAP)"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Invalid OAuth state."
+msgstr "State OAuth tidak valid."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Invalid address: %s"
+msgstr "Alamat tidak valid: %s"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__is_read
+msgid "Is Read"
+msgstr "Sudah Dibaca"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__is_starred
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__is_starred
+msgid "Is Starred"
+msgstr "Berbintang"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__last_date
+msgid "Last Date"
+msgstr "Tanggal Terakhir"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__last_error
+msgid "Last Error"
+msgstr "Error Terakhir"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__last_from
+msgid "Last From"
+msgstr "Terakhir Dari"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__last_sync
+msgid "Last Sync"
+msgstr "Sinkronisasi Terakhir"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__last_uid
+msgid "Last Uid"
+msgstr "UID Terakhir"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__write_uid
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__write_date
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Lead created: %s"
+msgstr "Prospek dibuat: %s"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__link_model
+msgid "Link Model"
+msgstr "Model Tautan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Link to record"
+msgstr "Tautkan ke record"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__link_ids
+msgid "Linked records"
+msgstr "Record tertaut"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Linked:"
+msgstr "Tertaut:"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Load more"
+msgstr "Muat lebih banyak"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Loading..."
+msgstr "Memuat..."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__link_ref
+msgid "Log on record"
+msgstr "Catat di record"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__recipients
+msgid "Lower-case addresses of To and Cc, comma separated"
+msgstr "Alamat Kepada dan Cc dalam huruf kecil, dipisahkan koma"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__mailbox_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__mailbox_id
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Mailbox"
+msgstr "Kotak surat"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Mailbox %s is not signed in. Use 'Connect' again."
+msgstr "Kotak surat %s belum masuk. Gunakan 'Hubungkan' lagi."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_mailbox
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_mailboxes
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_list
+msgid "Mailboxes"
+msgstr "Kotak surat"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Make primary"
+msgstr "Jadikan utama"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__manage
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__manage
+msgid "Manage"
+msgstr "Kelola"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Manage mailboxes"
+msgstr "Kelola kotak surat"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Mark unread"
+msgstr "Tandai belum dibaca"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__message_ids
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Message"
+msgstr "Pesan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__message_count
+msgid "Message Count"
+msgstr "Jumlah Pesan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__message_id
+msgid "Message-ID"
+msgstr "Message-ID"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__account_type__microsoft
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Microsoft 365 / Outlook"
+msgstr "Microsoft 365 / Outlook"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_client_id
+msgid "Microsoft application (client) ID"
+msgstr "ID aplikasi (klien) Microsoft"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_client_secret
+msgid "Microsoft client secret"
+msgstr "Client secret Microsoft"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_microsoft_tenant
+msgid "Microsoft tenant"
+msgstr "Tenant Microsoft"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__mode
+msgid "Mode"
+msgstr "Mode"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__res_model
+msgid "Model"
+msgstr "Model"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__my_role
+msgid "My access"
+msgstr "Akses saya"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "My mailboxes"
+msgstr "Kotak surat saya"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__name
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_tag__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__new
+msgid "New"
+msgstr "Baru"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New lead"
+msgstr "Prospek baru"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New message"
+msgstr "Pesan baru"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New tag"
+msgstr "Tag baru"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "New task"
+msgstr "Tugas baru"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_sync.py:0
+msgid "No %s folder on the server."
+msgstr "Tidak ada folder %s di server."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No conversations here."
+msgstr "Tidak ada percakapan di sini."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No mailbox yet."
+msgstr "Belum ada kotak surat."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No record found."
+msgstr "Tidak ada record yang ditemukan."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "No tag yet."
+msgstr "Belum ada tag."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__none
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__none
+msgid "None"
+msgstr "Tidak ada"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__normalized_subject
+msgid "Normalized Subject"
+msgstr "Subjek yang Dinormalisasi"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__connection_state__draft
+msgid "Not connected"
+msgstr "Tidak terhubung"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Not synchronized yet"
+msgstr "Belum disinkronkan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "OAuth client of type 'Web application' with the Gmail API enabled."
+msgstr "Klien OAuth dengan tipe 'Aplikasi web' dengan Gmail API diaktifkan."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "On %(date)s, %(who)s wrote:"
+msgstr "Pada %(date)s, %(who)s menulis:"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__mailbox_id
+msgid "Only offered when writing from this mailbox. Empty: every mailbox."
+msgstr ""
+"Hanya ditawarkan saat menulis dari kotak surat ini. Kosong: semua kotak "
+"surat."
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Options"
+msgstr "Opsi"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Outgoing"
+msgstr "Keluar"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Outgoing (SMTP)"
+msgstr "Keluar (SMTP)"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__owner_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_signature__owner_id
+msgid "Owner"
+msgstr "Pemilik"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__user_ids
+msgid "Owner + team members. Drives record rules, counters and notifications."
+msgstr ""
+"Pemilik + anggota tim. Menentukan aturan record, penghitung, dan notifikasi."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__participants
+msgid "Participants"
+msgstr "Peserta"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__password
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__password
+msgid "Password"
+msgstr "Kata Sandi"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Password saved"
+msgstr "Kata sandi disimpan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__path
+msgid "Path"
+msgstr "Path"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__mailbox_type__personal
+msgid "Personal"
+msgstr "Pribadi"
+
+#. module: kaitech_email_client
+#: model_terms:ir.actions.act_window,help:kaitech_email_client.action_umc_signature
+msgid ""
+"Personal signatures belong to you. Clear the owner and pick a mailbox to "
+"share one with its team."
+msgstr ""
+"Tanda tangan pribadi adalah milik Anda. Kosongkan pemilik dan pilih kotak "
+"surat untuk membagikannya dengan timnya."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__is_primary
+msgid "Primary"
+msgstr "Utama"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Project of the new task:"
+msgstr "Proyek tugas baru:"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__special_flags
+msgid "RFC 6154 flags reported by the server (\\All, \\Archive...)"
+msgstr "Flag RFC 6154 yang dilaporkan oleh server (\\All, \\Archive...)"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_folder__path
+msgid "Raw IMAP name (modified UTF-7)"
+msgstr "Nama IMAP mentah (UTF-7 termodifikasi)"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__read
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__read
+msgid "Read"
+msgstr "Baca"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__my_role__reply
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox_member__role__reply
+msgid "Read and reply"
+msgstr "Baca dan balas"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__flags_pending
+msgid "Read/unread changed in Odoo, not yet written to the server"
+msgstr "Status dibaca/belum dibaca diubah di Odoo, belum ditulis ke server"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_message__direction__in
+msgid "Received"
+msgstr "Diterima"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__recipients
+msgid "Recipients"
+msgstr "Penerima"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Reconnect"
+msgstr "Hubungkan ulang"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__res_id
+msgid "Record"
+msgstr "Record"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "Records of %s cannot be created from an email."
+msgstr "Record %s tidak dapat dibuat dari email."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_res_config_settings__umc_oauth_redirect_uri
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "Redirect URI"
+msgstr "Redirect URI"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__references
+msgid "References"
+msgstr "Referensi"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__refresh_token
+msgid "Refresh Token"
+msgstr "Refresh Token"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid ""
+"Register this exact URL in Google Cloud Console and in Microsoft Entra."
+msgstr ""
+"Daftarkan URL persis ini di Google Cloud Console dan di Microsoft Entra."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_res_config_settings__umc_oauth_redirect_uri
+msgid "Register this exact URL in Google Cloud and in Microsoft Entra."
+msgstr "Daftarkan URL persis ini di Google Cloud dan di Microsoft Entra."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_record_link__is_primary
+msgid "Replies sent from the inbox are logged on this record."
+msgstr "Balasan yang dikirim dari kotak masuk dicatat pada record ini."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__reply
+msgid "Reply"
+msgstr "Balas"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__reply_to
+msgid "Reply To"
+msgstr "Balas Ke"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_composer__mode__reply_all
+msgid "Reply all"
+msgstr "Balas semua"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__role
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__role
+msgid "Role"
+msgstr "Peran"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_port
+msgid "SMTP port"
+msgstr "Port SMTP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_security
+msgid "SMTP security"
+msgstr "Keamanan SMTP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__smtp_host
+msgid "SMTP server"
+msgstr "Server SMTP"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__ssl
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__imap_security__starttls
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__smtp_security__starttls
+msgid "STARTTLS"
+msgstr "STARTTLS"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__body_html
+msgid "Sanitized when the message is imported"
+msgstr "Dibersihkan saat pesan diimpor"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Search"
+msgstr "Cari"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Search mail"
+msgstr "Cari email"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Select a conversation"
+msgstr "Pilih percakapan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__selectable
+msgid "Selectable"
+msgstr "Dapat dipilih"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Send"
+msgstr "Kirim"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__sent
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_message__direction__out
+msgid "Sent"
+msgstr "Terkirim"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__sequence
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Servers"
+msgstr "Server"
+
+#. module: kaitech_email_client
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_settings
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_settings
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Show all mail"
+msgstr "Tampilkan semua email"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__name
+msgid "Shown in the unified inbox, e.g. 'Sales'"
+msgstr "Ditampilkan di kotak masuk terpadu, misalnya 'Penjualan'"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Sign-in"
+msgstr "Masuk"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid ""
+"Sign-in with the provider through <i>Connect</i>. No password is stored."
+msgstr ""
+"Masuk dengan penyedia melalui <i>Hubungkan</i>. Tidak ada kata sandi yang "
+"disimpan."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__signature_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__signature
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_signature_view_form
+msgid "Signature"
+msgstr "Tanda tangan"
+
+#. module: kaitech_email_client
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_signature
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_signatures
+msgid "Signatures"
+msgstr "Tanda tangan"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__oauth_email
+msgid "Signed in as"
+msgstr "Masuk sebagai"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__snippet
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__snippet
+msgid "Snippet"
+msgstr "Cuplikan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__spam
+msgid "Spam"
+msgstr "Spam"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__special_flags
+msgid "Special Flags"
+msgstr "Flag Khusus"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Star"
+msgstr "Bintangi"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Starred"
+msgstr "Berbintang"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__password
+msgid "Stored apart, never sent back to the browser."
+msgstr "Disimpan terpisah, tidak pernah dikirim kembali ke browser."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__subject
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__subject
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__subject
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "Subject"
+msgstr "Subjek"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Sync"
+msgstr "Sinkronisasi"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Sync now"
+msgstr "Sinkronkan sekarang"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Synchronization failed"
+msgstr "Sinkronisasi gagal"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__sync
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__sync_enabled
+msgid "Synchronize"
+msgstr "Sinkronkan"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Synchronized"
+msgstr "Tersinkronisasi"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Syncing..."
+msgstr "Menyinkronkan..."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+#: model:ir.actions.act_window,name:kaitech_email_client.action_umc_tag
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__tag_ids
+#: model:ir.ui.menu,name:kaitech_email_client.menu_umc_tags
+msgid "Tags"
+msgstr "Tag"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+msgid "Task created: %s"
+msgstr "Tugas dibuat: %s"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_mailbox__mailbox_type__team
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "Team"
+msgstr "Tim"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__member_ids
+msgid "Team members"
+msgstr "Anggota tim"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__template_id
+msgid "Template"
+msgstr "Templat"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid "Template not applied"
+msgstr "Templat tidak diterapkan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Test connection"
+msgstr "Uji koneksi"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "That record no longer exists."
+msgstr "Record tersebut sudah tidak ada."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_composer__link_ref
+msgid "The sent message is also logged in the chatter of this record."
+msgstr "Pesan yang dikirim juga dicatat di chatter record ini."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_sync.py:0
+msgid "The server refused the operation: %s"
+msgstr "Server menolak operasi: %s"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "The sign-in link expired. Start again from the mailbox."
+msgstr "Link masuk sudah kedaluwarsa. Mulai lagi dari kotak surat."
+
+#. module: kaitech_email_client
+#: model:ir.model.constraint,message:kaitech_email_client.constraint_umc_record_link_record_uniq
+msgid "This conversation is already linked to that record."
+msgstr "Percakapan ini sudah terhubung ke record tersebut."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "This conversation no longer exists."
+msgstr "Percakapan ini sudah tidak ada."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+msgid ""
+"This template fills in data from a %s; choose one under 'Log on record' "
+"first."
+msgstr ""
+"Templat ini mengisi data dari %s; pilih salah satu di 'Catat di record' "
+"terlebih dahulu."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__thread_id
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_record_link__thread_id
+msgid "Thread"
+msgstr "Thread"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_composer.py:0
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_composer__to_emails
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__to
+msgid "To"
+msgstr "Kepada"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "To:"
+msgstr "Kepada:"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_secret__token_expires_at
+msgid "Token Expires At"
+msgstr "Token Kedaluwarsa Pada"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__total_count
+msgid "Total Count"
+msgstr "Jumlah Total"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields.selection,name:kaitech_email_client.selection__umc_folder__role__trash
+msgid "Trash"
+msgstr "Sampah"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__mailbox_type
+msgid "Type"
+msgstr "Tipe"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "Type to set or replace"
+msgstr "Ketik untuk mengatur atau mengganti"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__uidvalidity
+msgid "Uidvalidity"
+msgstr "Uidvalidity"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox_secret__token_expires_at
+msgid "Unix time"
+msgstr "Waktu Unix"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "Unknown action."
+msgstr "Tindakan tidak dikenal."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_message.py:0
+msgid "Unknown filter."
+msgstr "Filter tidak dikenal."
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Unlink"
+msgstr "Lepaskan Tautan"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/js/inbox_action.js:0
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__unread_count
+msgid "Unread"
+msgstr "Belum Dibaca"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_folder__unread_count
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_thread__unread_count
+msgid "Unread Count"
+msgstr "Jumlah Belum Dibaca"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "Unstar"
+msgstr "Hapus Bintang"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_signature__is_default
+msgid "Used when the composer opens."
+msgstr "Digunakan saat composer dibuka."
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox_member__user_id
+msgid "User"
+msgstr "Pengguna"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__login
+msgid "Username"
+msgstr "Nama pengguna"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__user_ids
+msgid "Users with access"
+msgstr "Pengguna dengan akses"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_mailbox__login
+msgid "Usually the email address"
+msgstr "Biasanya alamat email"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
+msgid "With errors"
+msgstr "Dengan error"
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_link.py:0
+msgid "You are not allowed to create this record."
+msgstr "Anda tidak diizinkan membuat record ini."
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "You need '%(role)s' access on mailbox %(box)s."
+msgstr "Anda memerlukan akses '%(role)s' pada kotak surat %(box)s."
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.res_config_settings_view_form_umc
+msgid "common"
+msgstr "umum"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_signature_view_form
+msgid "e.g. Formal"
+msgstr "contoh: Formal"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "e.g. Sales"
+msgstr "contoh: Penjualan"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_composer_view_form
+msgid "name@company.com, other@company.com"
+msgstr "name@company.com, other@company.com"
+
+#. module: kaitech_email_client
+#. odoo-javascript
+#: code:addons/kaitech_email_client/static/src/xml/inbox_action.xml:0
+msgid "nothing"
+msgstr "tidak ada"
+
+#. module: kaitech_email_client
+#: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
+msgid "ventas@company.com"
+msgstr "ventas@company.com"

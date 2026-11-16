@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_umc_inbox" model="ir.actions.client">
+        <field name="name">Inbox</field>
+        <field name="tag">umc.inbox</field>
+    </record>
+
+    <!-- Composer (opened as a dialog from the inbox) -->
+    <record id="umc_composer_view_form" model="ir.ui.view">
+        <field name="name">umc.composer.form</field>
+        <field name="model">umc.composer</field>
+        <field name="arch" type="xml">
+            <form string="Message">
+                <field name="allowed_mailbox_ids" invisible="1"/> <!-- used in the conditions of this view -->
+                <field name="mode" invisible="1"/> <!-- used in the conditions of this view -->
+                <field name="parent_id" invisible="1"/> <!-- used in the conditions of this view -->
+                <group>
+                    <field name="mailbox_id" options="{'no_create': True, 'no_open': True}"/>
+                    <label for="to_emails"/>
+                    <div class="d-flex align-items-center">
+                        <field name="to_emails" class="flex-grow-1" placeholder="name@company.com, other@company.com"/>
+                        <field name="show_cc" widget="boolean_toggle" class="ms-2 w-auto" nolabel="1"/>
+                        <span class="text-muted small ms-1">Cc/Bcc</span>
+                    </div>
+                    <field name="cc_emails" invisible="not show_cc"/>
+                    <field name="bcc_emails" invisible="not show_cc"/>
+                    <field name="subject" placeholder="Subject"/>
+                    <field name="link_model" invisible="1"/>
+                    <field name="link_ref" options="{'no_create': True}"/>
+                    <field name="template_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="signature_id" options="{'no_create': True, 'no_open': True}"/>
+                </group>
+                <field name="body" widget="html" class="o_umc_composer_body" options="{'height': 320}"/>
+                <field name="attachment_ids" widget="many2many_binary" string="Attach files" nolabel="1" colspan="2"/>
+                <footer>
+                    <button name="action_send" type="object" string="Send" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Contact: smart button -->
+    <record id="res_partner_view_form_umc" model="ir.ui.view">
+        <field name="name">res.partner.form.kaitech_email_client</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_umc_open_emails" type="object" class="oe_stat_button" icon="fa-envelope-o"
+                        invisible="umc_thread_count == 0">
+                    <field name="umc_thread_count" widget="statinfo" string="Emails"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

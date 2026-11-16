@@ -1,0 +1,138 @@
+// Colors follow the Odoo theme: its Bootstrap variables (--body-bg, --secondary-color, …) change with dark mode.
+.o_umc_inbox {
+    background-color: var(--body-bg);
+
+    .o_umc_sidebar {
+        width: 240px;
+        background-color: var(--tertiary-bg);
+    }
+    .o_umc_nav_title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--secondary-color);
+    }
+    .o_umc_nav_item {
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+            background-color: rgba(var(--emphasis-color-rgb), 0.06);
+        }
+        &.active {
+            background-color: rgba(var(--primary-rgb), 0.18);
+            font-weight: 600;
+        }
+    }
+    .o_umc_count {
+        font-size: 12px;
+        font-weight: 700;
+        min-width: 20px;
+        text-align: right;
+    }
+    .o_umc_dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .o_umc_list {
+        width: 380px;
+    }
+    .o_umc_row {
+        cursor: pointer;
+        &:hover {
+            background-color: rgba(var(--emphasis-color-rgb), 0.04);
+        }
+        &.active {
+            background-color: rgba(var(--primary-rgb), 0.14);
+        }
+        .o_umc_from,
+        .o_umc_subject {
+            font-weight: 400;
+        }
+        &.o_umc_unread {
+            .o_umc_from,
+            .o_umc_subject {
+                font-weight: 700;
+            }
+            box-shadow: inset 3px 0 0 var(--primary);
+        }
+    }
+    .o_umc_avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #fff;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .o_umc_star {
+        color: #f3b200;
+    }
+    .o_umc_frame {
+        min-height: 60px;
+    }
+    .o_umc_att {
+        max-width: 260px;
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+            background-color: rgba(var(--emphasis-color-rgb), 0.05);
+        }
+    }
+    .o_umc_empty_icon {
+        font-size: 48px;
+        opacity: 0.3;
+    }
+    .o_umc_back {
+        display: none;
+    }
+
+    // Tablets: hide the reading pane until a conversation is opened.
+    @media (max-width: 1199.98px) {
+        .o_umc_list {
+            flex-grow: 1;
+        }
+        .o_umc_reader {
+            display: none !important;
+        }
+        &.o_umc_reading {
+            .o_umc_list {
+                display: none !important;
+            }
+            .o_umc_reader {
+                display: flex !important;
+            }
+            .o_umc_back {
+                display: inline-block;
+            }
+        }
+    }
+    // Phones: sidebar hidden, one column.
+    @media (max-width: 767.98px) {
+        .o_umc_sidebar {
+            display: none !important;
+        }
+        .o_umc_list {
+            width: 100%;
+        }
+    }
+    .o_umc_tag {
+        font-weight: 500;
+    }
+    .o_umc_filters .btn {
+        flex: 1 1 0;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    .o_umc_link_result {
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+            background-color: rgba(var(--emphasis-color-rgb), 0.06);
+        }
+    }
+}
