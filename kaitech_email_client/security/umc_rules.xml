@@ -37,35 +37,17 @@
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|', ('mailbox_id.owner_id', '=', user.id), ('mailbox_id.user_ids', 'in', [user.id])]</field>
     </record>
-    <record id="access_umc_folder_admin_rule" model="ir.rule">
-        <field name="name">Email Client: administrators see every folder</field>
-        <field name="model_id" ref="model_umc_folder"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
     <record id="access_umc_thread_user_rule" model="ir.rule">
         <field name="name">Email Client: threads of my mailboxes</field>
         <field name="model_id" ref="model_umc_thread"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|', ('mailbox_id.owner_id', '=', user.id), ('mailbox_id.user_ids', 'in', [user.id])]</field>
     </record>
-    <record id="access_umc_thread_admin_rule" model="ir.rule">
-        <field name="name">Email Client: administrators see every thread</field>
-        <field name="model_id" ref="model_umc_thread"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
     <record id="access_umc_message_user_rule" model="ir.rule">
         <field name="name">Email Client: messages of my mailboxes</field>
         <field name="model_id" ref="model_umc_message"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|', ('mailbox_id.owner_id', '=', user.id), ('mailbox_id.user_ids', 'in', [user.id])]</field>
-    </record>
-    <record id="access_umc_message_admin_rule" model="ir.rule">
-        <field name="name">Email Client: administrators see every message</field>
-        <field name="model_id" ref="model_umc_message"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
     </record>
     <record id="access_umc_thread_company_rule" model="ir.rule">
         <field name="name">Email Client: conversations multi-company</field>
@@ -93,22 +75,10 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
-    <record id="umc_signature_admin_rule" model="ir.rule">
-        <field name="name">Email Client: administrators see every signature</field>
-        <field name="model_id" ref="model_umc_signature"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
     <record id="umc_record_link_user_rule" model="ir.rule">
         <field name="name">Email Client: links of my mailboxes</field>
         <field name="model_id" ref="model_umc_record_link"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|', ('mailbox_id.owner_id', '=', user.id), ('mailbox_id.user_ids', 'in', [user.id])]</field>
-    </record>
-    <record id="umc_record_link_admin_rule" model="ir.rule">
-        <field name="name">Email Client: administrators see every link</field>
-        <field name="model_id" ref="model_umc_record_link"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
     </record>
 </odoo>

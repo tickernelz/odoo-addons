@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.2 (Kaitech) - 2026-11-16
+
+- A personal mailbox is its owner's alone, and a team mailbox opens only for its owner and assigned members.
+  Administrators no longer read every mailbox: they configure team mailboxes and archive or delete any mailbox,
+  but see no folder, conversation, message, attachment or record link of a mailbox they do not own or belong to.
+- Members left on a mailbox switched back to personal lose access.
+
 ## 1.5.0 (Kaitech) - 2026-11-16
 
 - Forked as kaitech_email_client: UNIR2 plan gate, UNIR2 connection and Sinap AI removed; every feature works without a plan.

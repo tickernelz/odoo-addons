@@ -28,17 +28,18 @@
             <form string="Mailbox">
                 <header>
                     <button name="action_connect_oauth" type="object" string="Connect" class="btn-primary"
-                            invisible="account_type == 'imap' or my_role != 'manage' or connection_state == 'connected'"/>
+                            invisible="account_type == 'imap' or not can_configure or connection_state == 'connected'"/>
                     <button name="action_connect_oauth" type="object" string="Reconnect"
-                            invisible="account_type == 'imap' or my_role != 'manage' or connection_state != 'connected'"/>
+                            invisible="account_type == 'imap' or not can_configure or connection_state != 'connected'"/>
                     <button name="action_test_connection" type="object" string="Test connection"
-                            invisible="my_role != 'manage'"/>
+                            invisible="not can_configure"/>
                     <button name="action_sync_now" type="object" string="Sync now"
-                            invisible="connection_state == 'draft'"/>
+                            invisible="connection_state == 'draft' or not my_role"/>
                     <field name="connection_state" widget="statusbar" statusbar_visible="draft,connected"/>
                 </header>
                 <sheet>
                     <field name="my_role" invisible="1"/> <!-- decides which parts of the form are shown -->
+                    <field name="can_configure" invisible="1"/>
                     <div class="alert alert-danger" role="alert" invisible="connection_state != 'error'">
                         <field name="last_error" readonly="1"/>
                     </div>
@@ -69,7 +70,7 @@
                                 <b>Read</b>: sees the conversations. <b>Read and reply</b>: also sends from this mailbox.
                                 <b>Manage</b>: also edits the settings and the members. The owner always manages.
                             </p>
-                            <field name="member_ids" readonly="my_role != 'manage'">
+                            <field name="member_ids" readonly="not can_configure">
                                 <list editable="bottom">
                                     <field name="user_id" widget="many2one_avatar_user"/>
                                     <field name="role"/>

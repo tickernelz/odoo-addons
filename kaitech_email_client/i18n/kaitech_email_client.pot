@@ -938,6 +938,11 @@ msgid "My access"
 msgstr ""
 
 #. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_mailbox__can_configure
+msgid "Can Configure"
+msgstr ""
+
+#. module: kaitech_email_client
 #: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_search
 msgid "My mailboxes"
 msgstr ""
@@ -1669,6 +1674,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/kaitech_email_client/models/umc_mailbox.py:0
 msgid "You need '%(role)s' access on mailbox %(box)s."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "You need 'Manage' access on mailbox %(box)s."
+msgstr ""
+
+#. module: kaitech_email_client
+#. odoo-python
+#: code:addons/kaitech_email_client/models/umc_mailbox.py:0
+msgid "Only the owner configures the personal mailbox %(box)s."
 msgstr ""
 
 #. module: kaitech_email_client

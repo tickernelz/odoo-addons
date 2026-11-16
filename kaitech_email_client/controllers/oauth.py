@@ -22,7 +22,7 @@ class UmcOAuthController(http.Controller):
             box, uid = Mailbox._from_oauth_state(state)
             if not box or uid != request.env.uid:
                 raise AccessError("state/user mismatch")
-            box._check_role("manage")
+            box._check_configure()
         except AccessError as exc:
             _logger.warning("Email Client OAuth callback rejected: %s", exc)
             return request.make_response(str(exc), status=403)

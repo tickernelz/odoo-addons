@@ -79,7 +79,7 @@ class UmcMailboxSync(models.Model):
 
     def umc_sync_now(self):
         """'Sync' button of the inbox: every mailbox I can read (or the given ones)."""
-        boxes = self or self.search([])
+        boxes = self or self._my_mailboxes()
         boxes._check_role("read")
         errors, new = [], 0
         for box in boxes.sudo():

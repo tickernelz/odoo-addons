@@ -1,6 +1,6 @@
 {
     "name": "Kaitech Email Client",
-    "version": "19.0.1.5.1",
+    "version": "19.0.1.5.2",
     "summary": "Email client inside Odoo: Gmail, Microsoft 365, IMAP and SMTP in one unified inbox, "
                "team mailboxes with permissions, conversations linked to contacts and records",
     "description": """
@@ -31,6 +31,7 @@ Unified inbox inside the Odoo backend, derived from "Email Client for Odoo Full"
         ],
         "web.assets_tests": [
             "kaitech_email_client/static/tests/tours/inbox_tour.js",
+            "kaitech_email_client/static/tests/tours/privacy_tour.js",
         ],
     },
     "images": ["static/description/banner.png"],
