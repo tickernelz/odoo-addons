@@ -98,16 +98,18 @@ class UmcThreadLinks(models.Model):
 
     @api.model
     def umc_unlink(self, link_id):
-        link = self.env["umc.record.link"].sudo().browse(int(link_id)).exists()
+        link = self.env["umc.record.link"].browse(int(link_id)).exists()
         if not link:
             return []
-        link.thread_id.check_access("read")
-        link.mailbox_id._check_role("reply")
+        link.check_access("read")
         thread = link.thread_id
+        thread.check_access("read")
+        thread.mailbox_id._check_role("reply")
         was_primary = link.is_primary
-        link.unlink()
-        if was_primary and thread.link_ids:
-            thread.link_ids[0].is_primary = True
+        link.sudo().unlink()
+        rest = thread.sudo().link_ids
+        if was_primary and rest:
+            rest[0].is_primary = True
         return thread.umc_links()
 
     def umc_links(self):

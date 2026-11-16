@@ -203,3 +203,24 @@ class TestEmailClient(TransactionCase):
         self.assertEqual(subjects(tag_id=tag.id), ["Quotation 50 units"])
         with self.assertRaises(AccessError):
             self.env["umc.thread"].with_user(self.read_user).umc_set_tags([self.thread.id], [])
+
+    def test_outsider_cannot_unlink_or_read_links(self):
+        partner = self.env["res.partner"].create({"name": "Hidden Partner"})
+        links = self.env["umc.thread"].with_user(self.reply_user).umc_link(self.thread.id, "res.partner", partner.id)
+        for user in (self.outsider, self.read_user):
+            with self.assertRaises(AccessError):
+                self.env["umc.thread"].with_user(user).umc_unlink(links[0]["id"])
+        self.assertEqual(self.thread.link_ids.res_id, partner.id)
+
+    def test_signature_cannot_be_moved_to_someone_else(self):
+        mine = self.env["umc.signature"].with_user(self.reply_user).create({"name": "Me", "body": "<p>x</p>"})
+        for vals in ({"owner_id": self.read_user.id}, {"owner_id": False, "mailbox_id": self.box.id}):
+            with self.assertRaises(AccessError), self.cr.savepoint():
+                mine.write(vals)
+        mine.invalidate_recordset()
+        self.assertEqual(mine.owner_id, self.reply_user)
+
+    def test_tags_are_created_but_not_renamed_by_users(self):
+        tag = self.env["umc.tag"].with_user(self.reply_user).create({"name": "Waiting"})
+        with self.assertRaises(AccessError):
+            tag.write({"name": "Renamed"})

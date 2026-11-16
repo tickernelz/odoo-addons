@@ -1715,3 +1715,13 @@ msgstr "tidak ada"
 #: model_terms:ir.ui.view,arch_db:kaitech_email_client.umc_mailbox_view_form
 msgid "ventas@company.com"
 msgstr "ventas@company.com"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,field_description:kaitech_email_client.field_umc_message__body_text
+msgid "Body Text"
+msgstr "Teks Isi"
+
+#. module: kaitech_email_client
+#: model:ir.model.fields,help:kaitech_email_client.field_umc_message__body_text
+msgid "Plain text of the body, searched by the inbox"
+msgstr "Teks polos isi email, dipakai pencarian kotak masuk"

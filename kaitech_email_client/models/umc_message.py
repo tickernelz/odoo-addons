@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.mail import email_normalize
-
+from odoo.tools.mail import email_normalize, html2plaintext
 
 LIST_FILTERS = ("all", "unread", "starred", "in", "out")
+BODY_SEARCH_MIN = 3
 
 
 class UmcThread(models.Model):
@@ -70,9 +70,10 @@ class UmcThread(models.Model):
                 fdom.append(("mailbox_id", "=", int(mailbox_id)))
             domain = [("folder_ids", "in", self.env["umc.folder"].search(fdom).ids)]
         if search:
-            domain += ["|", "|", "|", "|", ("subject", "ilike", search), ("participants", "ilike", search),
-                       ("snippet", "ilike", search), ("last_from", "ilike", search),
-                       ("message_ids.body_html", "ilike", search)]
+            fields_searched = ["subject", "participants", "snippet", "last_from"]
+            if len(search) >= BODY_SEARCH_MIN:
+                fields_searched.append("message_ids.body_text")
+            domain += ["|"] * (len(fields_searched) - 1) + [(name, "ilike", search) for name in fields_searched]
         if unread_only or list_filter == "unread":
             domain.append(("unread_count", ">", 0))
         if list_filter == "starred":
@@ -174,6 +175,8 @@ class UmcMessage(models.Model):
     recipients = fields.Char(help="Lower-case addresses of To and Cc, comma separated")
     date = fields.Datetime(index=True)
     body_html = fields.Html(sanitize=False, help="Sanitized when the message is imported")
+    body_text = fields.Text(compute="_compute_body_text", store=True, index="trigram",
+                            help="Plain text of the body, searched by the inbox")
     snippet = fields.Char()
     direction = fields.Selection([("in", "Received"), ("out", "Sent")], default="in", required=True)
     is_read = fields.Boolean(default=False, index=True)
@@ -188,6 +191,11 @@ class UmcMessage(models.Model):
             CREATE UNIQUE INDEX IF NOT EXISTS umc_message_folder_uid_uniq
             ON umc_message (folder_id, uid) WHERE uid IS NOT NULL AND folder_id IS NOT NULL
         """)
+
+    @api.depends("body_html")
+    def _compute_body_text(self):
+        for message in self:
+            message.body_text = " ".join(html2plaintext(message.body_html or "").split()) or False
 
     def _set_read(self, read):
         todo = self.filtered(lambda m: m.is_read != read)
