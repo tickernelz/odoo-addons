@@ -8,14 +8,14 @@ class TestReading(McpCase):
         with self.shared_env() as env:
             self.reader = new_user(env, 'mcp_read_user')
             _token, self.reader_raw = new_token(env, self.reader, scope='read')
-            self.system = new_user(env, 'mcp_read_system', groups=('base.group_user', 'base.group_system'))
-            _token, self.system_raw = new_token(env, self.system, scope='read')
             self.name = marker()
             self.partner = env['res.partner'].create({'name': self.name, 'city': 'Bandung', 'comment': '<p>long</p>'})
+            self.category = env['res.partner.category'].create({'name': self.name, 'partner_ids': [(4, self.partner.id)]})
 
-    def read(self, raw=None, **arguments):
-        result = self.call(raw or self.reader_raw, 'odoo_search_read', dict(
-            arguments, model='res.partner', domain=[('id', '=', self.partner.id)]))
+    def read(self, model='res.partner', **arguments):
+        record = self.partner if model == 'res.partner' else self.category
+        result = self.call(self.reader_raw, 'odoo_search_read', dict(
+            arguments, model=model, domain=[('id', '=', record.id)]))
         self.assertFalse(result['isError'], result)
         return result['structuredContent']['records'][0]
 
@@ -26,10 +26,10 @@ class TestReading(McpCase):
             self.assertNotIn(long_field, record)
 
     def test_without_compact_every_field_is_still_read(self):
-        record = self.read(self.system_raw)
-        self.assertIn('comment', record)
+        record = self.read('res.partner.category')
+        self.assertEqual(record['partner_ids'], [self.partner.id])
         self.assertIn('child_ids', record)
-        self.assertGreater(len(record), len(self.read(self.system_raw, compact=True)))
+        self.assertNotIn('partner_ids', self.read('res.partner.category', compact=True))
 
     def test_fields_given_win_over_compact(self):
         self.assertEqual(set(self.read(compact=True, fields=['comment'])), {'id', 'comment'})
