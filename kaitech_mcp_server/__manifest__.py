@@ -3,7 +3,7 @@
 # Part of kaitech.io. See LICENSE file for full copyright and licensing details.
 {
     'name': 'MCP Server Odoo',
-    'version': '19.0.2.0.0',
+    'version': '19.0.2.1.0',
     'summary': 'MCP Server, AI Integration, Claude, ChatGPT, Gemini, Grok, Cursor, n8n, LangChain, OAuth 2.0, PKCE, Bearer Token, Personal Access Token, REST API, Streamable HTTP, SSE, Async Jobs, Background Queue, BI Reporting, Pivot Table, Time Series, Cohort Analysis, Funnel, Top N, Export CSV, Export XLSX, Portal Pages, Public Dashboard, KPI Tiles, Module Generator, AI Code Generation, LLM, Automation, Audit Log, Rate Limiting, Redis, Schema Cache, Scoped Tokens, Field Allowlist, IP Allowlist, Odoo API, Odoo Connector, AI Assistant, Chatbot, Natural Language, Bulk Update, Bulk Create, Bulk Delete',
     'description': """
 MCP Server Odoo
@@ -39,9 +39,11 @@ Performance
 
 Tools (50+)
 -----------
-* CRUD: get_models, fields_get, search_read, create, write, unlink, call_method
+* CRUD: get_models, fields_get, search_read (compact), create, write, unlink, call_method, all writes with dry_run
+* Batch: up to 50 create/write/unlink/call_method steps in one transaction, steps refer to earlier results
 * Workflow: message_post, default_get, onchange, get_views, print_report, create_attachment
-* Analytics: count, name_search, read_group
+* Analytics: count, name_search, read_group (__count per group by default)
+* Server log: server_log_tail, admin scope only, credentials redacted
 * BI Reporting: pivot, time_series, top_n, cohort, funnel
 * Exports: export_csv, export_xlsx
 * Async jobs: submit_job, job_status, job_list, job_cancel

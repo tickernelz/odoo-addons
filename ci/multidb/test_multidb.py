@@ -198,7 +198,7 @@ def explore_and_call_each_database(tokens):
             "model": "res.partner", "method": "address_get", "ids": [partner_id], "args": [["contact"]],
             "dry_run": True})
         assert failed is False, found
-        assert found == {"result": {"contact": partner_id}, "dry_run": True}
+        assert (found["result"], found["dry_run"], found["changes"]["differences"]) == ({"contact": partner_id}, True, [])
     other = rpc("db_b", "tools/call", {"name": "describe_module", "arguments": {"module": "base"}}, token=tokens["db_a"])
     assert other.status_code == 401
 

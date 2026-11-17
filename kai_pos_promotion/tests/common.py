@@ -6,7 +6,7 @@ def tier_promo(env, name, tiers, **values):
     today = fields.Date.context_today(env['kai.pos.promo'])
     return env['kai.pos.promo'].create({
         'name': name,
-        'date_start': today,
+        'date_start': fields.Date.add(today, days=-1),
         'date_end': fields.Date.add(today, days=30),
         'tier_ids': [Command.create({'threshold': threshold, 'discount_type': kind, 'value': value})
                      for threshold, kind, value in tiers],

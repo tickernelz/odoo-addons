@@ -12,6 +12,9 @@ from . import artifact_tools
 from . import module_tools
 from . import sql_tools
 from . import explore_tools
+from . import batch_tools
+from . import log_tools
+from . import rehearsal
 from .explore import MAIL_GATEWAY_METHODS, callable_by_tool
 from .grants import Grant
 from .json_utils import odoo_json_default  # noqa: F401 — re-exported for callers
@@ -59,7 +62,7 @@ _WRITE_SCOPE_BLOCKED_TOOLS = frozenset({
     "odoo_call_method",   # call_method can do anything — admin only
     "odoo_generate_module",
     "odoo_install_generated_module",
-})
+}) | frozenset(log_tools.TOOL_HANDLERS)
 
 # External tool handlers merged from satellite modules.
 # module_tools uses a single dispatcher function (see _MODULE_TOOL_NAMES below).
@@ -70,6 +73,7 @@ _EXTERNAL_HANDLERS = {
     **artifact_tools.TOOL_HANDLERS,
     **sql_tools.TOOL_HANDLERS,
     **explore_tools.TOOL_HANDLERS,
+    **log_tools.TOOL_HANDLERS,
 }
 _GATED_TOOL_NAMES = frozenset(sql_tools.TOOL_HANDLERS) | explore_tools.TOOL_NAMES
 
@@ -92,7 +96,15 @@ def execute_tool(env, tool_name: str, args: dict):
     """
     _enforce_scope(env, tool_name)
     _enforce_model_access(env, tool_name, args)
+    if tool_name in rehearsal.TOOLS and rehearsal.wanted(args):
+        model_name = args.get("model")
+        allowed = _get_field_restrictions(env, model_name) if isinstance(model_name, str) else None
+        return rehearsal.rehearse_tool(
+            env, tool_name, args, lambda arguments: _dispatch(env, tool_name, arguments), allowed)
+    return _dispatch(env, tool_name, args)
 
+
+def _dispatch(env, tool_name: str, args: dict):
     handlers = {
         "odoo_get_models": _get_models,
         "odoo_fields_get": _fields_get,
@@ -102,6 +114,7 @@ def execute_tool(env, tool_name: str, args: dict):
         "odoo_execute_wizard": _execute_wizard,
         "odoo_unlink": _unlink,
         "odoo_call_method": _call_method,
+        "odoo_batch": _batch,
         # Analytics tools
         "odoo_count": _count,
         "odoo_name_search": _name_search,
@@ -198,6 +211,21 @@ def _enforce_model_access(env, tool_name: str, args: dict) -> None:
         )
 
 
+_COMPACT_TYPES = frozenset({
+    "char", "integer", "float", "monetary", "boolean", "date", "datetime", "selection", "many2one",
+})
+_NOISY_PREFIXES = ("message_", "activity_", "website_message", "__")
+
+
+def compact_fields(env, model_name: str) -> list:
+    """display_name and the short stored scalar fields of model_name."""
+    described = _resolve_model(env, model_name).fields_get(attributes=["type", "store"])
+    return ["display_name"] + [
+        name for name, field in described.items()
+        if field.get("store") and field.get("type") in _COMPACT_TYPES and not name.startswith(_NOISY_PREFIXES)
+    ]
+
+
 def _get_field_restrictions(env, model_name: str) -> list | None:
     """Return allowed field list for *model_name* from context restrictions, or None."""
     restrictions = env.context.get("mcp_restrictions")
@@ -276,6 +304,11 @@ def _search_read(env, args: dict):
     limit = args.get("limit", 80)
     offset = args.get("offset", 0)
     order = args.get("order")
+    compact = args.get("compact", False)
+    if not isinstance(compact, bool):
+        raise ValueError("'compact' must be true or false.")
+    if compact and not fields:
+        fields = compact_fields(env, model_name)
 
     # Silently intersect requested fields with allowlist
     allowed = _get_field_restrictions(env, model_name)
@@ -410,29 +443,16 @@ def _call_method(env, args: dict):
     method_args = args.get("args") or []
     method_kwargs = args.get("kwargs") or {}
 
-    dry_run = args.get("dry_run", False)
     if not isinstance(method_name, str) or not method_name:
         raise ValueError("'method' must be a method name.")
-    if not isinstance(dry_run, bool):
-        raise ValueError("'dry_run' must be true or false.")
 
     model = check_callable(env, model_name, method_name)
     target = model.browse(ids) if ids else model
-    if not dry_run:
-        return {"result": getattr(target, method_name)(*method_args, **method_kwargs)}
+    return {"result": getattr(target, method_name)(*method_args, **method_kwargs)}
 
-    cr = env.cr
-    cr.execute("SAVEPOINT mcp_call_method_dry_run")
-    cr.commit = _refuse_commit
-    try:
-        result = getattr(target, method_name)(*method_args, **method_kwargs)
-        env.flush_all()
-        result = json.loads(json.dumps(result, default=odoo_json_default))
-    finally:
-        del cr.commit
-        cr.execute("ROLLBACK TO SAVEPOINT mcp_call_method_dry_run")
-        env.invalidate_all()
-    return {"result": result, "dry_run": True}
+
+def _batch(env, args: dict):
+    return batch_tools.run_batch(env, args, execute_tool)
 
 
 def check_callable(env, model_name: str, method_name: str):
@@ -467,10 +487,6 @@ def _call_refusal(env, model_name: str, method_name: str, full_access: bool) -> 
         if getattr(vars(klass).get(method_name), "_api_private", False):
             return "marked @api.private"
     return None
-
-
-def _refuse_commit():
-    raise PermissionError("This method commits by itself, so dry_run cannot undo it: nothing was changed.")
 
 
 _MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024  # 10 MB
@@ -622,7 +638,7 @@ def _read_group(env, args: dict):
     model_name = args["model"]
     domain = args.get("domain") or []
     groupby = args.get("groupby") or []
-    fields = args.get("fields") or []
+    fields = args.get("fields") or ["__count"]
     limit = args.get("limit", 80)
     orderby = args.get("orderby")
 

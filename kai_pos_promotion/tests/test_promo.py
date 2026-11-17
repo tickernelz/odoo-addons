@@ -110,7 +110,7 @@ class TestPromoRules(PromoCommon):
 
     def test_dates_in_order(self):
         with self.assertRaises(ValidationError):
-            tier_promo(self.env, 'Backwards', [(1000, 'percent', 5)],
+            tier_promo(self.env, 'Backwards', [(1000, 'percent', 5)], date_start=fields.Date.today(),
                        date_end=fields.Date.add(fields.Date.today(), days=-1))
 
     def test_happy_hour_windows(self):
