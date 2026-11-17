@@ -10,7 +10,7 @@ from .redaction import redact
 _logger = logging.getLogger(__name__)
 
 MCP_PROTOCOL_VERSION = "2025-03-26"
-SERVER_INFO = {"name": "Odoo MCP Server", "version": "19.0.2.0.0"}
+SERVER_INFO = {"name": "Odoo MCP Server", "version": "19.0.2.1.0"}
 
 _PAYLOAD_MAX_CHARS = 4000
 

@@ -7,6 +7,9 @@ from ..services.portal_tools import TOOL_DEFINITIONS as _PORTAL_TOOL_DEFINITIONS
 from ..services.artifact_tools import TOOL_DEFINITIONS as _ARTIFACT_TOOL_DEFINITIONS
 from ..services.sql_tools import TOOL_DEFINITIONS as _SQL_TOOL_DEFINITIONS
 from ..services.explore_tools import TOOL_DEFINITIONS as _EXPLORE_TOOL_DEFINITIONS
+from ..services.batch_tools import TOOL_DEFINITIONS as _BATCH_TOOL_DEFINITIONS
+from ..services.log_tools import TOOL_DEFINITIONS as _LOG_TOOL_DEFINITIONS
+from ..services.rehearsal import PROPERTY as _DRY_RUN
 
 # ---------------------------------------------------------------------------
 # Static MCP tool definitions (schema advertised to AI clients via tools/list)
@@ -65,6 +68,15 @@ _TOOL_DEFINITIONS = [
                 "limit": {"type": "integer", "default": 80},
                 "offset": {"type": "integer", "default": 0},
                 "order": {"type": "string", "description": "e.g. 'name asc, date desc'"},
+                "compact": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": (
+                        "With no fields given, read id, display_name and short stored fields (text up to one line, "
+                        "numbers, dates, booleans, selections, many2one) instead of every field. "
+                        "Ignored when fields are given."
+                    ),
+                },
             },
             "required": ["model"],
         },
@@ -77,6 +89,7 @@ _TOOL_DEFINITIONS = [
             "properties": {
                 "model": {"type": "string"},
                 "values": {"type": "object", "description": "Field values for the new record"},
+                "dry_run": _DRY_RUN,
             },
             "required": ["model", "values"],
         },
@@ -90,6 +103,7 @@ _TOOL_DEFINITIONS = [
                 "model": {"type": "string"},
                 "ids": {"type": "array", "items": {"type": "integer"}},
                 "values": {"type": "object"},
+                "dry_run": _DRY_RUN,
             },
             "required": ["model", "ids", "values"],
         },
@@ -136,6 +150,7 @@ _TOOL_DEFINITIONS = [
             "properties": {
                 "model": {"type": "string"},
                 "ids": {"type": "array", "items": {"type": "integer"}},
+                "dry_run": _DRY_RUN,
             },
             "required": ["model", "ids"],
         },
@@ -159,12 +174,7 @@ _TOOL_DEFINITIONS = [
                 },
                 "args": {"type": "array", "default": []},
                 "kwargs": {"type": "object", "default": {}},
-                "dry_run": {
-                    "type": "boolean",
-                    "default": False,
-                    "description": "Run the method and roll the database back. Email, HTTP calls or "
-                                   "other connections the method uses are not undone.",
-                },
+                "dry_run": _DRY_RUN,
             },
             "required": ["model", "method"],
         },
@@ -383,7 +393,8 @@ _TOOL_DEFINITIONS = [
             "Aggregate and group records — the Odoo equivalent of SQL GROUP BY. "
             "Use for business analytics: total sales per customer, stock per warehouse, "
             "invoice amounts per month, etc. "
-            "fields syntax: 'field_name' for grouping, 'field_name:sum/count/avg/max/min' for aggregates."
+            "fields syntax: 'field_name' for grouping, 'field_name:sum/count/avg/max/min' for aggregates. "
+            "Without fields, every row carries __count, the number of records in the group."
         ),
         "inputSchema": {
             "type": "object",
@@ -445,6 +456,8 @@ def get_tool_definitions() -> list:
         + _MODULE_TOOL_DEFINITIONS
         + _SQL_TOOL_DEFINITIONS
         + _EXPLORE_TOOL_DEFINITIONS
+        + _BATCH_TOOL_DEFINITIONS
+        + _LOG_TOOL_DEFINITIONS
     )
 
 

@@ -1,6 +1,6 @@
 # MCP Server for Odoo — User Guide
 
-> **Version:** 19.0.2.0.0 · **License:** OPL-1 · **Author:** kaitech.io
+> **Version:** 19.0.2.1.0 · **License:** OPL-1 · **Author:** kaitech.io
 
 Turn Odoo into an AI-ready tool server. Connect Claude, ChatGPT, Gemini, Cursor, n8n, LangChain, and any MCP-capable client to live Odoo data — with OAuth 2.0 governance, audit logs, BI tools, portal pages, async jobs, and AI-driven module generation.
 
@@ -33,7 +33,25 @@ A Settings administrator opens these per token, on the **SQL and Code** tab of t
   `res_groups*`, `mcp_*`, ...) and password, token, secret and binary columns are never reachable, also through
   aliases in a query. Delete needs its own switch in Settings. Read-scope tokens only select.
 
-`odoo_call_method` refuses mail gateway methods and `@api.private` methods for every token, and takes `dry_run`.
+`odoo_call_method` refuses mail gateway methods and `@api.private` methods for every token.
+
+## Dry runs, batches, compact reads and the server log
+
+- `dry_run: true` on `odoo_create`, `odoo_write`, `odoo_unlink` and `odoo_call_method` runs the call in a savepoint,
+  answers as usual plus `changes` (rows inserted, updated and deleted per model, the created record, the deleted
+  records, and the field differences of the records written, limited to the fields the token may read), then rolls
+  everything back. The call log marks it as a dry run. A method that commits by itself is refused. Effects outside the
+  database (email, chat messages, HTTP calls) are not undone.
+- `odoo_batch` runs up to 50 `create`, `write`, `unlink` and `call_method` steps in one transaction. Each step passes
+  the same checks as its own tool (scope, model and field limits, access rights); a value `{"ref": "0.id"}` takes part
+  of an earlier step's result. When a step fails, no step is kept and the error names the step. `dry_run` applies to
+  the whole batch.
+- `odoo_search_read` with `compact: true` and no `fields` reads `display_name` and the short stored fields instead of
+  every field. `odoo_read_group` without `fields` answers `__count` per group.
+- `server_log_tail` reads the end of the log file named by the Odoo configuration (no other file), filtered by
+  `level`, `since_minutes`, `grep` and `logger`, at most 500 lines. It needs an admin-scope token of a Settings
+  administrator. Bearer tokens, Authorization and Cookie headers, session ids, passwords, API keys, access tokens and
+  key-like strings are replaced by `[REDACTED]` before `grep` runs, so `grep` cannot find a secret.
 
 ## Moving from kaitech_mcp
 
@@ -139,6 +157,8 @@ Read odoo://attachment/107 — how many rows are in this CSV?
 | `odoo_write` | Update one or more records |
 | `odoo_unlink` | Delete records permanently |
 | `odoo_call_method` | Call any `action_*` or `button_*` method |
+| `odoo_batch` | Up to 50 create/write/unlink/call_method steps in one transaction |
+| `server_log_tail` | Redacted end of the server log file *(admin scope)* |
 
 ### Workflow & Form Tools
 
