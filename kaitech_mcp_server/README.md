@@ -40,18 +40,20 @@ A Settings administrator opens these per token, on the **SQL and Code** tab of t
 - `dry_run: true` on `odoo_create`, `odoo_write`, `odoo_unlink` and `odoo_call_method` runs the call in a savepoint,
   answers as usual plus `changes` (rows inserted, updated and deleted per model, the created record, the deleted
   records, and the field differences of the records written, limited to the fields the token may read), then rolls
-  everything back. The call log marks it as a dry run. A method that commits by itself is refused. Effects outside the
-  database (email, chat messages, HTTP calls) are not undone.
+  everything back. With model limits on the token, rows of other models are only counted, in `rows_not_shown`. The
+  call log marks it as a dry run. A method that commits by itself is refused. Effects outside the database (email,
+  chat messages, HTTP calls) and work committed on a separate database cursor are not undone.
 - `odoo_batch` runs up to 50 `create`, `write`, `unlink` and `call_method` steps in one transaction. Each step passes
   the same checks as its own tool (scope, model and field limits, access rights); a value `{"ref": "0.id"}` takes part
-  of an earlier step's result. When a step fails, no step is kept and the error names the step. `dry_run` applies to
-  the whole batch.
+  of an earlier step's result. When a step fails, no step is kept and the error names the step; a step whose method
+  commits by itself fails. `dry_run` applies to the whole batch.
 - `odoo_search_read` with `compact: true` and no `fields` reads `display_name` and the short stored fields instead of
   every field. `odoo_read_group` without `fields` answers `__count` per group.
 - `server_log_tail` reads the end of the log file named by the Odoo configuration (no other file), filtered by
   `level`, `since_minutes`, `grep` and `logger`, at most 500 lines. It needs an admin-scope token of a Settings
-  administrator. Bearer tokens, Authorization and Cookie headers, session ids, passwords, API keys, access tokens and
-  key-like strings are replaced by `[REDACTED]` before `grep` runs, so `grep` cannot find a secret.
+  administrator. Bearer tokens, Authorization and Cookie headers, session ids, passwords, API keys, access tokens,
+  credentials in URLs and key-like strings are replaced by `[REDACTED]` before `grep` runs, so `grep` cannot find a
+  secret. `truncated` means more matching lines exist, `line_truncated` that a line was cut at 2000 characters.
 
 ## Moving from kaitech_mcp
 

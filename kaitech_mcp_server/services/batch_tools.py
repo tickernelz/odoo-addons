@@ -20,8 +20,9 @@ TOOL_DEFINITIONS = [{
         "(odoo_create, odoo_write, odoo_unlink, odoo_call_method) plus 'op', and passes the same token checks "
         "(scope, model and field limits, access rights). A value {\"ref\": \"<step>.<key>[.<key>...]\"} "
         "is replaced by part of an earlier step's result, e.g. {\"ref\": \"0.id\"} is the id step 0 created. "
-        "dry_run applies to the whole batch: it reports what would change and rolls back. Effects outside the "
-        "database (email, chat messages, HTTP calls) cannot be rolled back."
+        "A step whose method commits by itself is refused. dry_run applies to the whole batch: it reports what "
+        "would change and rolls back. Effects outside the database (email, chat messages, HTTP calls) and work "
+        "the code commits on a separate database cursor cannot be rolled back."
     ),
     "inputSchema": {
         "type": "object",
@@ -68,8 +69,13 @@ def run_batch(env, args: dict, execute_tool) -> dict:
     if rehearsal.wanted(args):
         result, changes = rehearsal.rehearse(env, lambda: _run_steps(env, steps, execute_tool))
         return dict(result, dry_run=True, changes=changes, note=rehearsal.NOTE)
-    with env.cr.savepoint():
-        return _run_steps(env, steps, execute_tool)
+    cr = env.cr
+    cr.commit = rehearsal.refuse_commit
+    try:
+        with cr.savepoint():
+            return _run_steps(env, steps, execute_tool)
+    finally:
+        del cr.commit
 
 
 def _run_steps(env, steps: list, execute_tool) -> dict:

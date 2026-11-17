@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from odoo.tools import config
 
-from .redaction import redact_line
+from .redaction import REDACTED, redact_line
 
 TOOL_NAME = "server_log_tail"
 DEFAULT_LINES = 100
@@ -20,9 +20,9 @@ TOOL_DEFINITIONS = [{
         "Read the last lines of the Odoo server log file named by the server configuration (no other file). "
         "Needs an admin-scope token of a Settings administrator. Filters: level (minimum), since_minutes, "
         "grep (case-insensitive text), logger (name or prefix, e.g. 'odoo.addons.kaitech_mcp_server'). "
-        "At most 500 lines; 'truncated' is true when more matching lines exist. Bearer tokens, Authorization "
-        "and Cookie headers, session ids, passwords, API keys, access tokens and key-like strings are "
-        "replaced by [REDACTED] before grep runs."
+        "At most 500 lines; 'truncated' is true when more matching lines exist, 'line_truncated' when a line was "
+        "cut at 2000 characters. Bearer tokens, Authorization and Cookie headers, session ids, passwords, API keys, "
+        "access tokens, credentials in URLs and key-like strings are replaced by [REDACTED] before grep runs."
     ),
     "inputSchema": {
         "type": "object",
@@ -51,16 +51,20 @@ def tail(env, args: dict) -> dict:
     if not path:
         raise ValueError("Odoo writes its log to standard output on this server: no log file is configured.")
     text, reached_start = _read_end(path)
-    entries = _entries(text.splitlines())
-    cutoff = datetime.now() - timedelta(minutes=wanted["since_minutes"]) if wanted["since_minutes"] else None
-    picked, used, truncated = [], 0, False
-    for stamp, level, logger, lines in reversed(entries):
+    cutoff = None
+    if wanted["since_minutes"]:
+        cutoff = (datetime.now() - timedelta(minutes=wanted["since_minutes"])).strftime("%Y-%m-%d %H:%M:%S")
+    grep = wanted["grep"]
+    picked, used, truncated, line_truncated = [], 0, False, False
+    for stamp, level, logger, lines in _entries_from_end(text.splitlines()):
         if cutoff and stamp < cutoff:
             break
         if not _kept(wanted, level, logger):
             continue
+        if grep and not _may_match(grep, lines):
+            continue
         shown = [redact_line(line[:MAX_LINE_CHARS]) for line in lines]
-        if wanted["grep"] and not any(wanted["grep"] in line.lower() for line in shown):
+        if grep and not any(grep in line.lower() for line in shown):
             continue
         if used >= wanted["lines"]:
             truncated = True
@@ -68,7 +72,7 @@ def tail(env, args: dict) -> dict:
         if len(shown) > wanted["lines"] - used:
             shown = shown[:wanted["lines"] - used]
             truncated = True
-        truncated = truncated or any(len(line) > MAX_LINE_CHARS for line in lines)
+        line_truncated = line_truncated or any(len(line) > MAX_LINE_CHARS for line in lines)
         picked.append(shown)
         used += len(shown)
     picked.reverse()
@@ -77,6 +81,7 @@ def tail(env, args: dict) -> dict:
         "count": used,
         "lines": [line for entry in picked for line in entry],
         "truncated": truncated,
+        "line_truncated": line_truncated,
         "scanned_from_file_start": reached_start,
     }
 
@@ -121,13 +126,22 @@ def _read_end(path: str) -> tuple:
     return data.decode("utf-8", "replace"), start == 0
 
 
-def _entries(lines: list) -> list:
-    entries = []
-    for line in lines:
+def _entries_from_end(lines: list):
+    """(stamp, level, logger, lines) of each log entry, newest first."""
+    following = []
+    for line in reversed(lines):
         header = _HEADER.match(line)
         if header:
-            stamp = datetime.strptime(header.group(1), "%Y-%m-%d %H:%M:%S")
-            entries.append((stamp, header.group(2), header.group(3), [line]))
-        elif entries:
-            entries[-1][3].append(line)
-    return entries
+            following.append(line)
+            following.reverse()
+            yield header.group(1), header.group(2), header.group(3), following
+            following = []
+        else:
+            following.append(line)
+
+
+def _may_match(grep: str, lines: list) -> bool:
+    """False only when no redaction of lines can contain grep."""
+    if any(char.isspace() or char in "[]" for char in grep) or grep in REDACTED.lower():
+        return True
+    return any(grep in line[:MAX_LINE_CHARS].lower() for line in lines)

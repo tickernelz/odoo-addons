@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from .common import McpCase, marker, new_token, new_user
 
 
@@ -8,9 +10,11 @@ class TestBatch(McpCase):
         with self.shared_env() as env:
             self.writer = new_user(env, 'mcp_batch_writer')
             _token, self.writer_raw = new_token(env, self.writer, scope='write')
+            self.admin = new_user(env, 'mcp_batch_admin', groups=('base.group_user', 'base.group_system'))
+            _token, self.admin_raw = new_token(env, self.admin, scope='admin')
 
-    def batch(self, steps, **arguments):
-        return self.call(self.writer_raw, 'odoo_batch', dict(arguments, steps=steps))
+    def batch(self, steps, raw=None, **arguments):
+        return self.call(raw or self.writer_raw, 'odoo_batch', dict(arguments, steps=steps))
 
     def count(self, *names):
         with self.shared_env() as env:
@@ -39,6 +43,24 @@ class TestBatch(McpCase):
         self.assertTrue(result['isError'])
         self.assertIn('Step 2 (write res.partner) failed', result['structuredContent']['error'])
         self.assertEqual(self.count(first, renamed), 0)
+
+    def test_a_step_that_commits_by_itself_keeps_no_step(self):
+        with self.shared_env() as env:
+            partner_class = type(env['res.partner'])
+
+        def committing(records):
+            records.write({'city': 'committed'})
+            records.env.cr.commit()
+
+        name = marker()
+        with patch.object(partner_class, 'create_company', committing, create=False):
+            result = self.batch([
+                {'op': 'create', 'model': 'res.partner', 'values': {'name': name}},
+                {'op': 'call_method', 'model': 'res.partner', 'method': 'create_company', 'ids': [{'ref': '0.id'}]},
+            ], raw=self.admin_raw)
+        self.assertIn('Step 1 (call_method res.partner) failed', result['structuredContent']['error'])
+        self.assertIn('commits by itself', result['structuredContent']['error'])
+        self.assertEqual(self.count(name), 0)
 
     def test_dry_run_reports_and_keeps_nothing(self):
         name = marker()

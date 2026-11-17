@@ -12,6 +12,7 @@ class TestDryRun(McpCase):
             _token, self.writer_raw = new_token(env, self.writer, scope='write')
             self.name = marker()
             self.partner = env['res.partner'].create({'name': self.name})
+            self.category = env['res.partner.category'].create({'name': self.name})
             self.messages = self.partner_messages(env)
 
     def partner_messages(self, env):
@@ -58,6 +59,19 @@ class TestDryRun(McpCase):
             token.field_restrictions = '{"res.partner": ["name"]}'
         [difference] = self.call(self.writer_raw, 'odoo_write', values)['structuredContent']['changes']['differences']
         self.assertEqual(set(difference['fields']), {'name'})
+
+    def test_rows_of_models_outside_the_token_allowlist_are_counted_not_named(self):
+        values = {'model': 'res.partner', 'values': {'name': marker(), 'category_id': [(6, 0, [self.category.id])]},
+                  'dry_run': True}
+        changes = self.call(self.writer_raw, 'odoo_create', values)['structuredContent']['changes']
+        self.assertIn('res_partner_res_partner_category_rel', [row['table'] for row in changes['rows']])
+        self.assertNotIn('rows_not_shown', changes)
+        with self.shared_env() as env:
+            token = env['mcp.token'].search([('user_id', '=', self.writer.id)])
+            token.allowed_model_ids = env['ir.model']._get('res.partner')
+        changes = self.call(self.writer_raw, 'odoo_create', values)['structuredContent']['changes']
+        self.assertEqual({row['model'] for row in changes['rows']}, {'res.partner'})
+        self.assertGreaterEqual(changes['rows_not_shown'], 1)
 
     def test_create_dry_run_names_the_record_and_keeps_nothing(self):
         name = marker()

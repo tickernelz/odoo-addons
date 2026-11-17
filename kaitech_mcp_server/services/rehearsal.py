@@ -7,8 +7,8 @@ from .json_utils import odoo_json_default
 
 TOOLS = frozenset({"odoo_create", "odoo_write", "odoo_unlink", "odoo_call_method"})
 NOTE = (
-    "Rolled back: nothing was stored. Effects outside the database (email, chat messages, "
-    "HTTP calls) are not undone."
+    "Rolled back: nothing was stored in this transaction. Effects outside the database (email, chat messages, "
+    "HTTP calls) and work the code committed on a separate database cursor are not undone."
 )
 PROPERTY = {
     "type": "boolean",
@@ -16,7 +16,8 @@ PROPERTY = {
     "description": (
         "Run the call inside a savepoint, report what it would change (rows per model, record ids, "
         "field differences) and roll everything back. Effects outside the database, such as email, "
-        "chat messages or HTTP calls the code makes, cannot be rolled back."
+        "chat messages or HTTP calls the code makes, and work it commits on a separate database cursor "
+        "cannot be rolled back."
     ),
 }
 _UNCOMPARED_FIELDS = frozenset({"write_date", "write_uid", "__last_update"})
@@ -52,7 +53,7 @@ def rehearse(env, run, before=None, after=None):
         seen = before() if before else None
         result = run()
         cr.flush()
-        changes = {"rows": _row_changes(env, counts, _row_counts(cr))}
+        changes = _visible_rows(env, _row_changes(env, counts, _row_counts(cr)))
         if after:
             changes.update(after(result, seen))
         result = _plain(result)
@@ -170,6 +171,22 @@ def _row_changes(env, before: dict, after: dict) -> list:
                 "inserted": delta[0], "updated": delta[1], "deleted": delta[2],
             })
     return rows
+
+
+def _visible_rows(env, rows: list) -> dict:
+    """The row changes of the models this token may use, and how many rows were left out."""
+    restrictions = env.context.get("mcp_restrictions") or {}
+    denied = restrictions.get("denied_models") or set()
+    allowed = restrictions.get("allowed_models") or set()
+    if not denied and not allowed:
+        return {"rows": rows}
+    shown = [
+        row for row in rows
+        if row["model"] and row["model"] not in denied and (not allowed or row["model"] in allowed)
+    ]
+    if len(shown) == len(rows):
+        return {"rows": shown}
+    return {"rows": shown, "rows_not_shown": len(rows) - len(shown)}
 
 
 def _saved_queues(cr) -> list:

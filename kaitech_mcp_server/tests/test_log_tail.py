@@ -9,7 +9,7 @@ LOG_FILE_PATH = 'odoo.addons.kaitech_mcp_server.services.log_tools.log_file_path
 SECRETS = (
     'abc123sessionvalue', 'FAKEbearerValue1234567890', 'hunter2secret', 'cookieSessionValue', 'k9fakekey',
     'sk-FAKEKEY1234567890abcd', 'ghp_FAKE1234567890abcdefgh', 'topsecretdb',
-    'Zm9vYmFyYmF6cXV4MTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1u', 'tokenSecretValue',
+    'Zm9vYmFyYmF6cXV4MTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1u', 'tokenSecretValue', 'pgSecretPass',
 )
 
 
@@ -39,7 +39,7 @@ class TestServerLogTail(McpCase):
                 '  login with password=hunter2secret failed',
                 f"{stamp(1)} 11 WARNING db odoo.http: {{'Cookie': 'session_id=cookieSessionValue', 'api_key': 'k9fakekey'}}"
                 ' sk-FAKEKEY1234567890abcd ghp_FAKE1234567890abcdefgh db_password = topsecretdb'
-                ' "access_token": "tokenSecretValue"',
+                ' "access_token": "tokenSecretValue" postgres://odoo:pgSecretPass@db:5432/x',
                 f'{stamp(0)} 11 INFO db odoo.modules: random Zm9vYmFyYmF6cXV4MTIzNDU2Nzg5MGFiY2RlZmdoaWprbG1u',
             ]) + '\n')
 
@@ -67,6 +67,16 @@ class TestServerLogTail(McpCase):
         self.assertEqual(self.tail(level='warning')['structuredContent']['count'], 4)
         self.assertEqual(self.tail(since_minutes=30)['structuredContent']['count'], 6)
         self.assertEqual(self.tail(grep='RANDOM')['structuredContent']['count'], 1)
+
+    def test_grep_finds_text_the_redaction_wrote(self):
+        self.assertEqual(self.tail(grep='[redacted]')['structuredContent']['count'], 6)
+
+    def test_a_line_cut_at_2000_characters_is_not_a_missing_line(self):
+        with open(self.path, 'a') as log:
+            log.write(f'{stamp(0)} 11 INFO db odoo.modules: longentry {"x " * 1500}\n')
+        answer = self.tail(grep='longentry')['structuredContent']
+        self.assertEqual((answer['count'], answer['truncated'], answer['line_truncated']), (1, False, True))
+        self.assertFalse(self.tail()['structuredContent']['truncated'])
 
     def test_grep_cannot_probe_a_redacted_secret(self):
         self.assertEqual(self.tail(grep='hunter2')['structuredContent']['count'], 0)
