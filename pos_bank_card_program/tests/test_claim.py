@@ -330,12 +330,17 @@ class TestClaim(BankCardCommon):
         })
 
     def test_finance_reads_pos_records_of_its_company_without_pos_groups(self):
+        method = self.env['pos.payment.method'].create({'name': 'Finance Read Method'})
+        self.outlet_1.payment_method_ids = [(4, method.id)]
         order = self.make_pos_order(self.outlet_1)
+        payment = self.env['pos.payment'].create({
+            'pos_order_id': order.id, 'amount': 0.0, 'payment_method_id': method.id})
         finance = self.finance
         self.assertNotIn(self.env.ref('point_of_sale.group_pos_user'), finance.all_group_ids)
         self.env.invalidate_all()
         self.assertEqual(order.with_user(finance).name, order.name)
         self.assertEqual(order.with_user(finance).session_id.config_id.name, 'Outlet 1')
+        self.assertEqual(payment.with_user(finance).pos_order_id, order)
         for model in ('pos.config', 'pos.order', 'pos.session', 'pos.payment'):
             records = self.env[model].with_user(finance)
             records.check_access('read')
@@ -357,6 +362,13 @@ class TestClaim(BankCardCommon):
             order.with_user(elsewhere).read(['name'])
         with self.assertRaises(AccessError):
             self.outlet_1.with_user(elsewhere).read(['name'])
+        self.assertFalse(self.env['pos.session'].with_user(elsewhere).search(
+            [('id', '=', order.session_id.id)]))
+        with self.assertRaises(AccessError):
+            order.session_id.with_user(elsewhere).read(['name'])
+        self.assertFalse(self.env['pos.payment'].with_user(elsewhere).search([('id', '=', payment.id)]))
+        with self.assertRaises(AccessError):
+            payment.with_user(elsewhere).read(['amount'])
 
     def test_finance_exports_outlet_and_order_names(self):
         import openpyxl
