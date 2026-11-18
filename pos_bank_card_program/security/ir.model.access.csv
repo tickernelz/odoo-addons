@@ -22,3 +22,7 @@ access_outstanding_finance,Outstanding finance,model_pos_bank_card_outstanding,g
 access_outstanding_manager,Outstanding manager,model_pos_bank_card_outstanding,group_bank_card_manager,1,0,0,0
 access_claim_wizard_finance,Claim wizard finance,model_pos_bank_card_claim_wizard,group_bank_card_finance,1,1,1,1
 access_claim_wizard_line_finance,Claim wizard line finance,model_pos_bank_card_claim_wizard_line,group_bank_card_finance,1,1,1,1
+access_pos_config_finance,POS config finance,point_of_sale.model_pos_config,group_bank_card_finance,1,0,0,0
+access_pos_order_finance,POS order finance,point_of_sale.model_pos_order,group_bank_card_finance,1,0,0,0
+access_pos_session_finance,POS session finance,point_of_sale.model_pos_session,group_bank_card_finance,1,0,0,0
+access_pos_payment_finance,POS payment finance,point_of_sale.model_pos_payment,group_bank_card_finance,1,0,0,0
