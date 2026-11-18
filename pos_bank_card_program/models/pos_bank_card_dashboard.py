@@ -82,7 +82,7 @@ class PosBankCardDashboard(models.AbstractModel):
                 domain, ['config_id'], ['__count', 'discount_amount:sum', 'bank_share_amount:sum'],
                 order='bank_share_amount:sum desc', limit=10):
             outlets.append({
-                'name': config.sudo().display_name if config else self.env._('No outlet'),
+                'name': config.display_name if config else self.env._('No outlet'),
                 'count': outlet_count, 'discount': money(disc), 'bank_share': money(share),
                 'share_percent': round(100.0 * share / bank_share, 1) if bank_share else 0.0})
 

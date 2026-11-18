@@ -120,6 +120,10 @@ Updating the translation catalogue:
 
 Access: Programme Manager maintains programmes and BIN ranges, Finance owns
 claims, and point of sale users only read programmes, usage, and quota rows.
+Finance also reads point of sale configs, orders, sessions, and payments of
+its own companies, so claim exports and reports show outlet and order names
+under the user's own rights; it cannot change them and gains no point of
+sale group, so it cannot open a session.
 The administrator receives both groups when the module is installed, and
 groups for other users are assigned manually.
 The reservation, release, and confirm calls perform their writes on those

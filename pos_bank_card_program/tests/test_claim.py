@@ -297,8 +297,7 @@ class TestClaim(BankCardCommon):
     def test_finance_with_billing_without_pos_groups_completes_the_flow(self):
         user = self.finance_billing
         usage = self.make_usage(config=self.outlet_1)
-        with self.assertRaises(AccessError):
-            usage.with_user(user).config_id.name
+        self.assertEqual(usage.with_user(user).config_id.name, 'Outlet 1')
         [row] = usage.with_user(user).web_read({'config_id': {'fields': {'display_name': {}}}})
         self.assertEqual(row['config_id'], {'id': self.outlet_1.id, 'display_name': 'Outlet 1'})
         visible = self.env['ir.ui.menu'].with_user(user)._visible_menu_ids()
@@ -318,6 +317,59 @@ class TestClaim(BankCardCommon):
         claim.action_reconcile()
         self.assertEqual(claim.state, 'paid')
         self.assertEqual(usage.claim_state, 'paid')
+
+    def make_pos_order(self, config):
+        session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': config.id})
+        return self.env['pos.order'].create({
+            'session_id': session.id,
+            'company_id': config.company_id.id,
+            'amount_tax': 0.0,
+            'amount_total': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+    def test_finance_reads_pos_records_of_its_company_without_pos_groups(self):
+        order = self.make_pos_order(self.outlet_1)
+        finance = self.finance
+        self.assertNotIn(self.env.ref('point_of_sale.group_pos_user'), finance.all_group_ids)
+        self.assertEqual(order.with_user(finance).name, order.name)
+        self.assertEqual(order.with_user(finance).session_id.config_id.name, 'Outlet 1')
+        for model in ('pos.config', 'pos.order', 'pos.session', 'pos.payment'):
+            records = self.env[model].with_user(finance)
+            records.check_access('read')
+            for operation in ('write', 'create', 'unlink'):
+                with self.assertRaises(AccessError, msg=f'{model} {operation}'):
+                    records.check_access(operation)
+        with self.assertRaises(AccessError):
+            order.with_user(finance).write({'general_customer_note': 'changed'})
+        with self.assertRaises(AccessError):
+            self.env['pos.session'].with_user(finance).create(
+                {'user_id': finance.id, 'config_id': self.outlet_2.id})
+
+        company_two = self.env['res.company'].create({'name': 'Company Two'})
+        elsewhere = self.make_user(
+            'claim_finance_elsewhere', 'pos_bank_card_program.group_bank_card_finance',
+            company_id=company_two.id, company_ids=[(6, 0, [company_two.id])])
+        self.assertFalse(self.env['pos.order'].with_user(elsewhere).search([('id', '=', order.id)]))
+        with self.assertRaises(AccessError):
+            order.with_user(elsewhere).read(['name'])
+        with self.assertRaises(AccessError):
+            self.outlet_1.with_user(elsewhere).read(['name'])
+
+    def test_finance_exports_outlet_and_order_names(self):
+        import openpyxl
+
+        order = self.make_pos_order(self.outlet_1)
+        self.make_usage(config=self.outlet_1, pos_order_id=order.id)
+        claim = self.run_wizard().with_user(self.finance)
+        claim.action_export_xlsx()
+        sheet = openpyxl.load_workbook(
+            io.BytesIO(base64.b64decode(claim.export_file)), read_only=True).active
+        rows = list(sheet.iter_rows(values_only=True))
+        detail = dict(zip(rows[0], rows[1]))
+        self.assertEqual(detail['Order'], order.name)
+        self.assertEqual(detail['Outlet'], 'Outlet 1')
 
     def test_wizard_period_starts_at_oldest_unclaimed_usage_of_the_bank(self):
         self.make_usage(date='2026-01-15 10:00:00')
