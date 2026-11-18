@@ -333,6 +333,7 @@ class TestClaim(BankCardCommon):
         order = self.make_pos_order(self.outlet_1)
         finance = self.finance
         self.assertNotIn(self.env.ref('point_of_sale.group_pos_user'), finance.all_group_ids)
+        self.env.invalidate_all()
         self.assertEqual(order.with_user(finance).name, order.name)
         self.assertEqual(order.with_user(finance).session_id.config_id.name, 'Outlet 1')
         for model in ('pos.config', 'pos.order', 'pos.session', 'pos.payment'):
@@ -363,6 +364,7 @@ class TestClaim(BankCardCommon):
         order = self.make_pos_order(self.outlet_1)
         self.make_usage(config=self.outlet_1, pos_order_id=order.id)
         claim = self.run_wizard().with_user(self.finance)
+        self.env.invalidate_all()
         claim.action_export_xlsx()
         sheet = openpyxl.load_workbook(
             io.BytesIO(base64.b64decode(claim.export_file)), read_only=True).active
